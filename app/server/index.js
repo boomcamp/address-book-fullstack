@@ -16,10 +16,14 @@ massive({
         app.set('db', db);
         app.use(express.json());
 
-        app.post('/register', user.register)
+        // New User
+        app.post('/api/register', user.register);
+
+        // Login User
+        app.post('/api/login', login.login)
 
         const port = 4000;
         app.listen('port', () => {
             console.log(`Listening on port ${port}`);
         })
-    });
+    })
