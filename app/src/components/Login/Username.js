@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppBar, Toolbar, Typography, makeStyles, CardActions } from '@material-ui/core';
+import { makeStyles, CardActions } from '@material-ui/core';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
@@ -55,12 +55,12 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function LoginPage(props) {
+export default function LoginPage({ nextStep, handleChange }) {
     const classes = useStyles();
 
     const cont = e => {
         e.preventDefault();
-        props.nextStep();
+        nextStep();
     }
 
     return (
@@ -85,7 +85,7 @@ export default function LoginPage(props) {
                             variant="outlined"
                             name="email"
                             type="email"
-                            onChange={e => props.handleChange(e)}
+                            onChange={e => handleChange(e)}
                         />
                     </CardContent>
                     <div className={classes.link}>

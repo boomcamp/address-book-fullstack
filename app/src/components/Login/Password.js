@@ -1,9 +1,10 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, InputAdornment } from '@material-ui/core';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 import { Card, CardContent, Button, TextField, Tooltip } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -93,6 +94,9 @@ export default function LoginPage(props) {
                             name="password"
                             type="password"
                             onChange={e => props.handleChange(e)}
+                            InputProps={{
+                                startAdornment: <InputAdornment position="end"><AlternateEmailIcon /></InputAdornment>
+                            }}
                         />
                     </CardContent>
                     <CardContent className={classes.link2}>
