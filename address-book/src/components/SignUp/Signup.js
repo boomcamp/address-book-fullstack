@@ -4,6 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
+import { Redirect } from "react-router-dom";
 
 export default function Signup() {
   const classes = useStyles();
@@ -56,12 +57,13 @@ export default function Signup() {
   const SignUp = e => {
     if (state.username && state.password) {
       axios
-        .post("/api/signup", {
+        .post("http://localhost:5000/api/signup", {
           username: state.username,
           password: state.password
         })
         .then(data => {
-          console.log(data);
+          sessionStorage.setItem("token", `Bearer ${data.data.token}`);
+          window.location.reload();
           return data;
         })
         .catch(err => {
@@ -69,6 +71,14 @@ export default function Signup() {
         });
     }
   };
+
+  if (sessionStorage.getItem("token")) {
+    alert("Redirecting to Login Page");
+    sessionStorage.removeItem("token");
+    return <Redirect to="/" />;
+  } else {
+    console.log("checking for token");
+  }
 
   return (
     <Fragment>
@@ -118,9 +128,7 @@ export default function Signup() {
               type="password"
             />
 
-            <Button type="submit" type='submit'>
-              Register
-            </Button>
+            <Button type="submit">Register</Button>
           </ValidatorForm>
         </div>
       </div>

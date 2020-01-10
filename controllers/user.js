@@ -1,34 +1,72 @@
 const argon2 = require("argon2");
-const secret = require("../secret")
+const secret = require("../secret");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   signup: (req, res) => {
     const db = req.app.get("db");
 
-    // const { password } = req.body;
+    const { username, password } = req.body;
 
-    console.log(req.body)
+    argon2
+      .hash(password)
+      .then(hash => {
+        return db.users.insert(
+          {
+            username,
+            password: hash
+          },
+          {
+            fields: ["id", "username"]
+          }
+        );
+      })
+      .then(user => {
+        const token = jwt.sign({ username: user.id }, secret);
+        res.status(201).json({ ...user, token });
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
+  },
+  login: (req, res) => {
+    const db = req.app.get("db");
 
-    // argon2
-    // .hash(password)
-    // .then(hash => {
-    //   return db.users.insert(
-    //     {
-    //       username,
-    //       password: hash
-    //     },
-    //     {
-    //       fields: ["id", "username"]
-    //     }
-    //   );
-    // })
-    // .then(user=>{
-    //     const token = jwt.sign({username: user.id}, secret);
-    //     res.status(201).json({...user, token})
-    // })
-    // .catch(err => {
-    //     console.error(err);
-    //     res.status(500).end();
-    // })
+
+    const { username, password } = req.body;
+
+    db.users
+      .findOne(
+        {
+          username
+        },
+        {
+          fields: ["id", "username", "password"]
+        }
+      )
+      .then(user => {
+        if (!user) {
+          throw new Error("Invalid username");
+        }
+
+        return argon2.verify(user.password, password).then(valid => {
+          if (!valid) {
+            throw new Error("Incorrect password");
+          }
+
+          const token = jwt.sign({ userid: user.id }, secret);
+          delete user.password;
+          res.status(200).json({ ...user, token });
+        });
+      })
+      .catch(err => {
+        if (["Invalid username", "Incorrect password"].includes(err.message)) {
+          res.status(400).json({ error: err.message });
+        } else {
+          console.error(err);
+          res.status(500).end();
+        }
+      });
   }
 };

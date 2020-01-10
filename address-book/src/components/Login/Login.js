@@ -3,7 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { Redirect } from "react-router-dom";
 
 export default function Login() {
   const classes = useStyles();
@@ -27,6 +29,35 @@ export default function Login() {
     });
   };
 
+  const Login = e => {
+    console.log(state.username, state.password);
+    if (state.username && state.password) {
+      axios({
+        method: "post",
+        url: "http://localhost:5000/api/login",
+        data: {
+          username: state.username,
+          password: state.password
+        }
+      })
+        .then(data => {
+          console.log(data);
+          sessionStorage.setItem("token", `Bearer ${data.data.token}`);
+          window.location.reload();
+          return data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  };
+
+  if (sessionStorage.getItem("token")) {
+    return <Redirect to="/addressbook" />;
+  } else {
+    console.log("checking for token");
+  }
+
   return (
     <Fragment>
       <div className="login-container" style={styles.loginContainer}>
@@ -37,6 +68,7 @@ export default function Login() {
             autoComplete="off"
             onError={errors => console.log(errors)}
             style={styles.inputfields}
+            onSubmit={Login}
           >
             <TextValidator
               id="outlined-required"
@@ -63,7 +95,9 @@ export default function Login() {
           </ValidatorForm>
         </div>
 
-        <Link style={styles.siguplink} to='/signup'>signup</Link>
+        <Link style={styles.siguplink} to="/signup">
+          signup
+        </Link>
       </div>
     </Fragment>
   );
