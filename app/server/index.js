@@ -17,13 +17,15 @@ massive({
         app.use(express.json());
 
         // New User
-        app.post('/api/register', user.register);
+        app.post('/api/register', user.newUser);
 
         // Login User
         app.post('/api/login', login.login)
-
-        const port = 4000;
-        app.listen('port', () => {
+        // app.get('/get/test', (req, res) => {
+        //     res.status(200).json({ 'name': 'psst' })
+        // })
+        const port = 3001;
+        app.listen(port, () => {
             console.log(`Listening on port ${port}`);
         })
-    })
+    })  

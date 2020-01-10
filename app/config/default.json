@@ -4,6 +4,6 @@
     "password": "book",
     "host": "localhost",
     "port": 5432,
-    "database": "book"
+    "database": "bookdb"
   }
 }
