@@ -6,6 +6,35 @@ import axios from 'axios'
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
+
+
+  // STYLES
+  const containerStyle = {
+        border: '1px solid lightgrey',
+        boxShadow: '4px 5px 5px 1px rgba(0,0,0,0.14)',
+        width: '450px',
+        height: '80%',
+        margin: '13% 0 1% 0',
+    }
+
+    const headerStyle = {
+        background: `#4B6573`, 
+        margin: `0`, 
+        color: `white`, 
+        padding: `30px 20px`, 
+        borderTopLeftRadius: `3px`, 
+        borderTopRightRadius: `3px`
+    }
+
+    const formStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '20px'
+    }
 
 export default function Signup() {
     const [user, setUser] = useState({
@@ -14,6 +43,7 @@ export default function Signup() {
         cPassword: "",
     })
     const [success, setSuccess] = useState(false);
+    const [showPassword, setShowpassword] = useState({ signPass: false, cPass:false});
 
     const handleSubmit = () => {
         axios.post(`/api/signup`, {
@@ -45,39 +75,15 @@ export default function Signup() {
         return () => {        };
     }, [user])
 
-    // STYLES
-    const containerStyle = {
-        border: '1px solid lightgrey',
-        boxShadow: '4px 5px 5px 1px rgba(0,0,0,0.14)',
-        width: '25%',
-        height: '80%',
-        margin: '13% 0 1% 0',
-    }
-
-    const headerStyle = {
-        background: `#4B6573`, 
-        margin: `0`, 
-        color: `white`, 
-        padding: `30px 20px`, 
-        borderTopLeftRadius: `3px`, 
-        borderTopRightRadius: `3px`
-    }
-
-    const formStyle = {
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '20px'
-    }
-
     if(success)
         return <Redirect to={{pathname: '/', state:'newUser' }} />
 
-    if(localStorage.getItem('token'))
+    if(sessionStorage.getItem('token'))
         return <Redirect to='/dashboard'/>
 
     return (
         <div style={{display:`flex`, flexDirection:`column`, alignItems:`center`}}>
-            <Paper style={containerStyle}>
+            <Paper style={containerStyle} className="container">
                 <h3 style={headerStyle}>Sign Up</h3>
 
                 <ValidatorForm
@@ -86,7 +92,8 @@ export default function Signup() {
                     onError={errors => console.log(errors)}>
 
                     <TextValidator
-                        style={{ padding: '10px 0' }}
+                        variant="outlined"
+                        style={{margin:`5px 0`}}
                         label="Username"
                         onChange={(e) => setUser({...user, username: e.target.value})}
                         name="username"
@@ -96,7 +103,8 @@ export default function Signup() {
                     ></TextValidator>
 
                     <TextValidator
-                        style={{ padding: '10px 0' }}
+                        variant="outlined"
+                        style={{margin:`5px 0`}}
                         type="password"
                         label="Password"
                         onChange={(e) => setUser({...user, password: e.target.value}) }
@@ -105,10 +113,24 @@ export default function Signup() {
                         validators={['required', 'passwordLength']}
                         errorMessages={['This Field is Required', 'Password Too Short!']}
                         autoComplete="false"
+                        type={showPassword.signPass ? 'text' : 'password'}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowpassword({ ...showPassword, signPass: !showPassword.signPass }) }
+                                    >
+                                    {showPassword.signPass ? <Visibility /> : <VisibilityOff />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                          }}
                     ></TextValidator>
 
                     <TextValidator
-                        style={{ padding: '10px 0' }}
+                        variant="outlined"
+                        style={{margin:`5px 0`}}
                         type="password"
                         label="Confirm Password"
                         onChange={(e) => setUser({...user, cPassword: e.target.value})}
@@ -117,13 +139,26 @@ export default function Signup() {
                         validators={['isPasswordMatch','required']}
                         errorMessages={['Password Mismatch', 'This Field is Required']}
                         autoComplete="false"
+                        type={showPassword.cPass ? 'text' : 'password'}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowpassword({ ...showPassword, cPass: !showPassword.cPass }) }
+                                    >
+                                    {showPassword.cPass ? <Visibility /> : <VisibilityOff />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                          }}
                     ></TextValidator>
 
                     <Button type="submit">Submit</Button>
                 </ValidatorForm>
             </Paper>
             
-            <Link style={{width:`25%`}} to="/">Already have an account? Sign in</Link>
+            <Link to="/">Already have an account? Sign in</Link>
         </div>
     )
 }

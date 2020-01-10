@@ -1,7 +1,8 @@
 const express = require('express');
 const massive = require('massive');
-var cors = require('cors')
+const cors = require('cors')
 const users = require('./controllers/users');
+const contacts = require('./controllers/contacts')
 
 massive({ 
     host: 'localhost',
@@ -17,6 +18,11 @@ massive({
 
     app.post('/api/signup', users.register)
     app.post('/api/login', users.login)
+
+    app.post('/api/contacts/:id', contacts.create);
+    app.get('/api/contacts/:id', contacts.list);
+    app.delete('/api/contacts/:id', contacts.delete);
+    app.put('/api/contacts/:id', contacts.update)
 
 
     const PORT = 3007

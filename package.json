@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon server/index.js",
     "client": "npm start --prefix address-book",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "docker": "docker-compose up db",
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run docker\"",
     "migrate": "node-pg-migrate"
   },
   "repository": {

@@ -4,8 +4,8 @@ import { SnackbarProvider } from 'notistack';
 import './App.css';
 
 // COMPONENTS
-import Login from './components/Login'
-import Signup from './components/Signup'
+import Login from './components/registerLogin/Login'
+import Signup from './components/registerLogin/Signup'
 import Dashboard from './components/Dashboard'
 
 function App() {
