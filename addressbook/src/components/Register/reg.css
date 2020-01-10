@@ -1,0 +1,18 @@
+.FormContainer {
+  width: 490px;
+  background-color: rgb(194, 215, 241);
+  margin-top: 150px;
+  padding-top: 40px;
+  box-shadow: 3px 5px 10px #888888;
+  border-radius: 10px;
+  padding-left: 20px;
+  
+}
+.formMainContainer{
+    display: flex;
+    justify-content: center;
+}
+.container{
+    margin-left: 20%;
+    
+}
