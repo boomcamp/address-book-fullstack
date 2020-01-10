@@ -31,7 +31,7 @@ massive({
       }
     }
 
-    app.post("/register", users.register);
+    app.post("/users/register", users.register);
     app.post("/login", users.login);
     app.get("/users/list", authentication, users.userlist);
 

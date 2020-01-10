@@ -1,49 +1,114 @@
 import React, { Component } from "react";
 import { Form, Icon, Input, Button, Card, Avatar } from "antd";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { Redirect } from "react-router-dom";
 
 const cardholder = {
-  backgroundColor: "#696969",
+  backgroundColor: "",
   height: "85%",
-  width: "30%"
+  width: "30%",
+  alignItem: "center"
 };
 
-export default class login extends Component {
+class login extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      redirect: true,
+      username: "",
+      password: ""
+    };
+  }
+
+  handleChange = e => {
+    this.setState({
+      [e.name + "Error"]: e.value ? false : true,
+      [e.name]: e.value
+    });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    axios({
+      method: "post",
+      url: "/login",
+      data: this.state
+    })
+      .then(response => {
+        console.log(response.data);
+        localStorage.setItem("token", response.data.token);
+      })
+      .catch(err => {
+        console.log("Invalid email and password");
+      });
+  };
+  handleClick = () => {
+    this.setState({
+      redirect: false
+    });
+    // localStorage.setItem("token", response.data.token);
+    this.props.history.push(`/main`);
+  };
+
   render() {
+    const { getFieldDecorator } = this.props.form;
+    // if (this.state.redirect) {
+    // }
     return (
       <React.Fragment>
         <Card style={cardholder}>
-          <Form>
+          <Form onSubmit={this.handleSubmit}>
             <Avatar size={64} icon="user" />
             <h1>Log In</h1>
             <Form.Item>
-              <Input
-                prefix={
-                  <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                }
-                placeholder="Username"
-              />
+              {getFieldDecorator("username", {
+                rules: [
+                  { required: true, message: "Please input your username!" }
+                ]
+              })(
+                <Input
+                  prefix={
+                    <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+                  }
+                  placeholder="Username"
+                  name="username"
+                  onChange={e => this.handleChange(e.target)}
+                />
+              )}
             </Form.Item>
             <Form.Item>
-              <Input
-                prefix={
-                  <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
-                }
-                type="password"
-                placeholder="Password"
-              />
+              {getFieldDecorator("password", {
+                rules: [
+                  { required: true, message: "Please input your Password!" }
+                ]
+              })(
+                <Input.Password
+                  allow="true"
+                  prefix={
+                    <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
+                  }
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  onChange={e => this.handleChange(e.target)}
+                />
+              )}
             </Form.Item>
-
             <Button
               type="primary"
               htmlType="submit"
-              className="login-form-button"
+              onClick={this.handleClick()}
             >
               Login
             </Button>
-            {/* <a href="">Log in</a> */}
+            <Link to="/register">Register</Link>
           </Form>
         </Card>
       </React.Fragment>
     );
   }
 }
+const LoginForm = Form.create()(login);
+export default LoginForm;
