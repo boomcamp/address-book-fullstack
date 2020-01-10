@@ -13,20 +13,17 @@ function login(req, res) {
         }, {
             fields: ['user_id', 'username', 'password', 'email']
         })
-        .then(user => {
+        .then(async user => {
             if (!user) {
                 throw new Error('Invalid Username');
             }
-            return argon2.verify(user.password, password)
-                .then(valid => {
-                    if (!valid) {
-                        throw new Error('Incorrect Password');
-                    }
-
-                    const token = jwt.sign({ user_id: user.id }, secret);
-                    delete user.password;
-                    res.status(200).json({ ...user, token });
-                });
+            const valid = await argon2.verify(user.password, password);
+            if (!valid) {
+                throw new Error('Incorrect Password');
+            }
+            const token = jwt.sign({ user_id: user.id }, secret);
+            delete user.password;
+            res.status(200).json({ ...user, token });
         })
         .catch(e => {
             console.error(e);

@@ -14,6 +14,10 @@ exports.up = (pgm) => {
             type: 'text',
             notNull: true,
         },
+        time_stamp: {
+            type: 'timestamp',
+            notNull: true
+        },
         user_id: {
             type: 'integer',
             references: 'users'
