@@ -5,7 +5,7 @@ const secret = require('../../secret');
 function newUser(req, res) {
     const db = req.app.get('db');
 
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     argon2
         .hash(password)
@@ -13,8 +13,9 @@ function newUser(req, res) {
             return db.users.insert({
                 username,
                 password: hash,
+                email
             }, {
-                fields: ['user_id', 'username', 'password'],
+                fields: ['user_id', 'username', 'password', 'email'],
                 deepInsert: true
             });
         })

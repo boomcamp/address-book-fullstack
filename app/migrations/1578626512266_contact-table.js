@@ -14,10 +14,6 @@ exports.up = (pgm) => {
             type: 'text',
             notNull: true,
         },
-        phone: {
-            type: 'integer',
-            notNull: true
-        },
         user_id: {
             type: 'integer',
             references: 'users'

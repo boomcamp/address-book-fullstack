@@ -11,7 +11,7 @@ function login(req, res) {
         .findOne({
             username,
         }, {
-            fields: ['user_id', 'username', 'password']
+            fields: ['user_id', 'username', 'password', 'email']
         })
         .then(user => {
             if (!user) {
@@ -26,7 +26,11 @@ function login(req, res) {
                     const token = jwt.sign({ user_id: user.id }, secret);
                     delete user.password;
                     res.status(200).json({ ...user, token });
-                })
+                });
+        })
+        .catch(e => {
+            console.error(e);
+            res.status(500).end();
         })
 }
 
