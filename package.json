@@ -1,11 +1,49 @@
 {
-  "name": "address-book-fullstack",
-  "version": "1.0.0",
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.8.3",
+    "@material-ui/icons": "^4.5.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.4.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.1",
+    "express": "^4.17.1",
+    "massive": "^6.1.4",
+    "node-pg-migrate": "^3.23.3",
+    "pg": "^7.17.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-hook-form": "^4.4.8",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.3.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "migrate": "node-pg-migrate"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "description": "For this project you'll be crafting an Address Book application. You'll be responsible for the user interface and its functionality, along with implementing a backend API to persist the data to a database and authorize users.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/serra-vp/address-book-fullstack.git"

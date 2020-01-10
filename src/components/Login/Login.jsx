@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 function Login() {
   const useStyles = makeStyles(theme => ({
@@ -24,11 +25,18 @@ function Login() {
       margin: theme.spacing(3, 0, 2),
     },
     caption: {
-      alignSelf: 'flex-start',
-      fontWeight: "bold"
+      alignSelf: 'center',
+      fontWeight: "bold",
+      flexDirection: 'column',
+      display: 'flex'
     },
     textField: {
       color: '#ffffff'
+    },
+    loginIcon: {
+      color: '#f19208',
+      fontSize: '6vh',
+      margin: 'auto'
     }
   }));
 
@@ -38,6 +46,7 @@ function Login() {
     <Container component="main" maxWidth="sm">
       <div className={classes.paper}>
         <Typography className={classes.caption} component="h1" variant="h5">
+          <AccountCircleIcon className={classes.loginIcon}/>
           Sign in
         </Typography>
         <form method="post" className={classes.form}>
@@ -46,11 +55,10 @@ function Login() {
             variant="outlined"
             margin="normal"
             required
-            type="email"
+            type="text"
             fullWidth
-            id="email"
-            label="Email"
-            name="email"
+            label="Username"
+            name="username"
             autoFocus
           />
           <TextField
