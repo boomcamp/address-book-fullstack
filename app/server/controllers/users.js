@@ -14,15 +14,14 @@ function newUser(req, res) {
                 username,
                 password: hash,
                 email,
-                contact: [
-                    {
-                        contact_id: undefined,
-                        fname: undefined,
-                        lname: undefined,
-                    }
-                ]
+                // contact: [
+                //     {
+                //         contact_id: undefined,
+                //         fname: undefined,
+                //         lname: undefined,
+                //     }
+                // ]
             }, {
-                fields: ['username', 'password', 'email', 'contact_id', 'fname', 'lname'],
                 deepInsert: true
             });
         })
@@ -83,25 +82,34 @@ function login(req, res) {
 
     db.users
         .findOne({
-            username,
+            username
         }, {
             fields: ['user_id', 'username', 'password', 'email']
         })
-        .then(async user => {
-            if (!user) {
+        .then(user  => {
+            if(!user) {
                 throw new Error('Invalid Username');
             }
-            const valid = await argon2.verify(user.password, password);
-            if (!valid) {
-                throw new Error('Incorrect Password');
-            }
-            const token = jwt.sign({ user_id: user.id }, secret);
-            delete user.password;
-            res.status(200).json({ ...user, token });
+
+            return argon2
+                .verify(iser.password, password)
+                .then(valid => {
+                    if(!valid) {
+                        throw new Error('Incorrect Password');
+                    }
+
+                    const token = jwt.sign({ user_id: user.id}, secret);
+                    delete user.password;
+                    res.status(200).json({ ...user, token})
+                })
         })
         .catch(e => {
-            console.error(e);
-            res.status(500).end();
+            if(['Invalid Username', 'Incorrect Passwor'].includes(e.message)) {
+                res.status(400).json({ error: e.message});
+            } else {
+                console.error(e);
+                res.status(500).end();
+            }
         })
 }
 
