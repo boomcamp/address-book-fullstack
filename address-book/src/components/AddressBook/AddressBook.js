@@ -12,9 +12,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import PersonIcon from '@material-ui/icons/Person';
+import Drawer from '@material-ui/core/Drawer';
+
 
 function SimpleDialog(props) {
     const { onClose, selectedValue, open } = props;
@@ -46,62 +49,35 @@ SimpleDialog.propTypes = {
 export default function UserManage() {
     var [token, emptyToken] = useState(false)
     const [state, setState] = useState({
+        left: false,
         columns: [
         { title: 'Email', field: 'email', filtering: false },
         { title: 'Username', field: 'uname' },
-        { title: 'FirstName', field: 'fname', filtering: false },
-        { title: 'LastName', field: 'lname', filtering: false },
-        { title: 'Active', field: 'active', lookup: { true: '🔵', false: '🔴'},
-            // render: x => {
-            //     // if(x.active === true){
-            //     //     return(<div className="active" title="Active"></div>)
-            //     // }else if(x.active === false){
-            //     //     return(<div className="inactive" title="Inactive"></div>)
-            //     // }
-            //     return((x.active)? 
-            //     <div className="inactive" title="Inactive"></div>
-            //     :<div className="active" title="Active"></div>)
-            // },
-            cellStyle:{
-                width: '1%'
-            }
-        },
         ],
     });
-    const [name, setName] = useState({uname: '', fname: '', lname: '', email: ''});
+    const [name, setName] = useState({uname: '', email: ''});
     const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = useState(false);
     const [selectedValue, setSelectedValue] = useState({uname: '', fname: '', lname: '', email: ''});
 
     useEffect(() => {
         axios
-        .get('http://localhost:3000/users', {
+        .get('http://localhost:5001/api/users', {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
         })
-        .then(res=>
-            {
-                let rdata = []
-                res.data.map((x) =>{
-                    rdata.push({
-                        id:x.id,
-                        email:x.email, 
-                        uname:x.username, 
-                        fname:x.firstName, 
-                        lname:x.lastName, 
-                        active:x.active,
-                        pass:x.password,
-                        plainpass:x.plainPassword
-                    })
-                    return rdata;
+        .then(res=>{
+            setState(contact=>{
+                return{ ...contact, data:res.data };
             })
-            setState(e => { return {...e, data:rdata} })
         })
+
         axios
-        .get(`http://localhost:3000/users?email=${localStorage.getItem('useremail')}`, {
+        .get(`http://localhost:5001/api/user/${localStorage.getItem('id')}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
         })
         .then(res=>
             {
-                setName(e =>{ return {...e, uname:res.data[0].firstName, fname:res.data[0].firstName, lname:res.data[0].lastName, email:res.data[0].email} })
+                setName(e =>{ return {...e, uname:res.data.username, email:res.data.email} })
             })
     },[])
     var onUpdate = (e) =>{
@@ -155,15 +131,50 @@ export default function UserManage() {
         setOpen(false);
         setSelectedValue(value);
     };
+    const addContact = () => {
+        setOpen1(true)
+    }
+    const toggleDrawer = (side, open) => event => {
+        setState({ ...state, [side]: open });
+    };
+    const sideList = side => (
+        <div
+            style={{width:'auto'}}
+            onClick={toggleDrawer(side, false)}
+            onKeyDown={toggleDrawer(side, false)}
+        >
+            <List>
+                <Button>
+                <ListItem>
+                    <ListIcon title="User Details" fontSize="large" variant="outlined" color="primary" onClick={handleClickOpen} style={{cursor: 'pointer'}}/>
+                    <ListItemText> User Details </ListItemText>
+                </ListItem>
+                </Button>
+            </List>
+            <List>
+                <Button>
+                <ListItem>
+                    <ListIcon title="Add Contacts" fontSize="large" variant="outlined" color="primary" onClick={addContact} style={{cursor: 'pointer'}}/>
+                    <ListItemText> Add Contacts </ListItemText>
+                </ListItem>
+                </Button>
+            </List>
+            <Divider />
+        </div>
+    );
     return (
         <React.Fragment>
             <AppBar position="static" color="default" elevation={0}>
                 <Toolbar>
                     <Button title="Logout User" size="small" variant="outlined" color="primary" onClick={logout}>
                         Logout
-                    </Button>&nbsp;
-                    <ListIcon title="User Details" fontSize="large" onClick={handleClickOpen} style={{cursor: 'pointer'}}/>
-                    <SimpleDialog selectedValue={name.email} open={open} onClose={handleClose}/>
+                    </Button>
+                    <Button onClick={toggleDrawer('left', true)}><ListIcon/></Button>
+                    <Drawer open={state.left} onClose={toggleDrawer('left', false)}>
+                        {sideList('left')}
+                    </Drawer>
+
+                    <SimpleDialog selectedValue={name} open={open} onClose={handleClose}/>
                 </Toolbar>
             </AppBar>
             <MaterialTable
@@ -173,17 +184,17 @@ export default function UserManage() {
                 columns={state.columns}
                 data={state.data}
                 editable={{
-                    // onRowAdd: newData =>
-                    // new Promise((resolve, reject) => {
-                    //     setTimeout(() => {
-                    //     resolve();
-                    //     setState(prevState => {
-                    //         const data = [...prevState.data];
-                    //         data.push(newData);
-                    //         return { ...prevState, data };
-                    //     });
-                    //     }, 600);
-                    // }),
+                    onRowAdd: newData =>
+                    new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                        resolve();
+                        setState(prevState => {
+                            const data = [...prevState.data];
+                            data.push(newData);
+                            return { ...prevState, data };
+                        });
+                        }, 600);
+                    }),
                     onRowUpdate: (newData, oldData) =>
                     new Promise(resolve => {
                         setTimeout(() => {

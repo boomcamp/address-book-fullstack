@@ -53,12 +53,12 @@ export default function SignIn() {
   const loginthis = () =>{
     axios
     .post('http://localhost:5001/api/login', {
-      "username": values.username,
-      "password": values.pass,
+        "username": values.username,
+        "password": values.pass,
     }).then((res,i)=>{
-      localStorage.setItem('token', res.data.token)
-      localStorage.setItem('username', values.username)
-      setValues({...values, success: true})
+        localStorage.setItem('token', res.data.token)
+        localStorage.setItem('id', res.data.id)
+        setValues({...values, success: true})
     })
     .catch(err => setValues({...values, error: true}))
   }
@@ -83,9 +83,7 @@ export default function SignIn() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        {/* <Avatar className={classes.avatar}> */}
-          <LockOutlinedIcon fontSize="large"/>
-        {/* </Avatar> */}
+        <LockOutlinedIcon fontSize="large"/>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>

@@ -58,23 +58,16 @@ export default function SignUp() {
     });
 
     const signthis = () =>{
-    //   if(values.cpass === values.pass){
         axios
         .post('http://localhost:5001/api/users', {
-        //   "firstName": values.fname,
-        //   "lastName": values.lname,
           "email": values.email,
           "username": values.username,
           "password": values.pass,
-        //   "plainpassword": values.pass,
           "active": true,
         }).then(res => {
           alert('Success!');
           setValues({...values, success: true});
         }).catch(err => setValues({...values, error: true}))
-    //   }else{
-    //     alert('Password did not match')
-    //   }
     }
     if(values.success){
       return (<Redirect to='/login'/>)
@@ -94,9 +87,7 @@ export default function SignUp() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        {/* <Avatar className={classes.avatar}> */}
-          <PersonPinIcon fontSize="large"/>
-        {/* </Avatar> */}
+        <PersonPinIcon fontSize="large"/>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
@@ -106,35 +97,6 @@ export default function SignUp() {
           onError={errors => console.log(errors)}
         >
           <Grid container spacing={2}>
-            {/* <Grid item xs={12} sm={6}>
-              <TextValidator
-                autoComplete="fname"
-                name="fname"
-                variant="outlined"
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
-                errorMessages={['This field is required', 'Must contain letters only.']}
-                onChange={eventhandler}
-                value={values.fname}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextValidator
-                variant="outlined"
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lname"
-                autoComplete="lname"
-                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
-                errorMessages={['This field is required', 'Must contain letters only.']}
-                onChange={eventhandler}
-                value={values.lname}
-              />
-            </Grid> */}
             <Grid item xs={12}>
               <TextValidator
                 variant="outlined"
@@ -192,20 +154,6 @@ export default function SignUp() {
                 }}
               />
             </Grid>
-            {/* <Grid item xs={12} sm={6}>
-              <TextValidator
-                name="cpass"
-                variant="outlined"
-                fullWidth
-                type="password"
-                id="confirmpass"
-                label="Confirm Password"
-                validators={['required']}
-                errorMessages={['This field is required']}
-                onChange={eventhandler}
-                value={values.cpass}
-              />
-            </Grid> */}
           </Grid>
           <Button
             type="submit"

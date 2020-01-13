@@ -71,5 +71,16 @@ module.exports = {
             console.error(err);
             res.status(500).end();
         });
+    },
+    getUser: (req, res) => {
+        const db = req.app.get('db')
+
+        db.users
+        .findOne(req.params.id)
+        .then(user => res.status(201).json(user))
+        .catch(err =>{
+            console.err(err)
+            res.status(500).end()
+        })
     }
 }
