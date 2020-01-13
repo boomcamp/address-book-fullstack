@@ -37,12 +37,10 @@ export default class addcontact extends Component {
   handleCancel = () => {
     this.setState({ visible: false });
   };
-  handleChange = e => {
-    this.setState({
-      [e.name + "Error"]: e.value ? false : true,
-      [e.name]: e.value
-    });
-  };
+
+  handleInput=(input, e)=>{
+    this.setState({[input]:e.target.value,})
+  }
   handleSubmit = e => {
     axios
       .post("/contact", {
@@ -99,7 +97,7 @@ export default class addcontact extends Component {
                     <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="Firstname"
-                  onChange={e => this.handleChange(e.target)}
+                  onChange={this.handleInput('first_name')}
                 />
               </Form.Item>
               <Form.Item>
@@ -108,7 +106,7 @@ export default class addcontact extends Component {
                     <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="Lastname"
-                  onChange={e => this.handleChange(e.target)}
+                  onChange={this.handleInput('last_name')}
                 />
               </Form.Item>
               <Form.Item>
@@ -119,7 +117,7 @@ export default class addcontact extends Component {
                     <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="Home phone"
-                  onChange={e => this.handleChange(e.target)}
+                  onChange={this.handleInput('home_phone')}
                 />
               </Form.Item>
               <Form.Item>
@@ -128,7 +126,7 @@ export default class addcontact extends Component {
                     <Icon type="mobile" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="Mobile phone"
-                  onChange={e => this.handleChange(e.target)}
+                  onChange={this.handleInput('mobile_phone')}
                 />
               </Form.Item>
               <Form.Item>
@@ -137,7 +135,7 @@ export default class addcontact extends Component {
                     <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="Work phone"
-                  onChange={e => this.handleChange(e.target)}
+                  onChange={this.handleInput('work_phone')}
                 />
               </Form.Item>
               <Form.Item>
@@ -146,7 +144,7 @@ export default class addcontact extends Component {
                     <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="email"
-                  onChange={e => this.handleChange(e.target)}
+                  onChange={this.handleInput('email')}
                 />
               </Form.Item>
               <Form.Item>
@@ -155,7 +153,7 @@ export default class addcontact extends Component {
                     <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="City"
-                  onChange={e => this.handleChange(e.target)}
+                  onChange={this.handleInput('city')}
                 />
               </Form.Item>
               <Form.Item>
@@ -164,7 +162,7 @@ export default class addcontact extends Component {
                     <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="State or Province"
-                  onChange={e => this.handleChange(e.target)}
+                  onChange={this.handleInput('state_or_province')}
                 />
               </Form.Item>
               <Form.Item>
@@ -173,7 +171,7 @@ export default class addcontact extends Component {
                     <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="Postal code"
-                  onChange={e => this.handleChange(e.target)}
+                  onChange={this.handleInput('postal_code')}
                 />
               </Form.Item>
               <Form.Item>
@@ -182,7 +180,7 @@ export default class addcontact extends Component {
                     <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="Country"
-                  onChange={e => this.handleChange(e.target)}
+                  onChange={this.handleInput('country')}
                 />
               </Form.Item>
             </Form>
