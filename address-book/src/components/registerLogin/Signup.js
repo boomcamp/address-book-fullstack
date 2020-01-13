@@ -154,7 +154,7 @@ export default function Signup() {
                           }}
                     ></TextValidator>
 
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">Signup</Button>
                 </ValidatorForm>
             </Paper>
             

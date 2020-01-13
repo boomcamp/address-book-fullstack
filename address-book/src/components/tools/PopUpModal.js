@@ -13,6 +13,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: `24%`
   },
   paper: {
+    width: `75%`,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],

@@ -58,7 +58,7 @@ module.exports = {
             });
         })
         .catch(err => {
-            if (['Invalid username', 'Incorrect password'].includes(err.message)) 
+            if (['Invalid Username', 'Incorrect Password'].includes(err.message)) 
                 res.status(400).json({ error: err.message });
             else {
               console.error(err);

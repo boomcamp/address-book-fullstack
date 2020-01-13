@@ -10,7 +10,7 @@ import Dashboard from './components/Dashboard'
 
 function App() {
     return (
-        <SnackbarProvider maxSnack={3}>
+        <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
             <BrowserRouter>
                 <Switch>
                     <Route exact path="/" component={Login}/>

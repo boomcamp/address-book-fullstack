@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Redirect} from 'react-router-dom'
+import { withSnackbar } from 'notistack';
 
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -41,9 +42,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Dashboard() {
+function Dashboard({enqueueSnackbar}) {
     const classes = useStyles();
     const [open, setOpen] = useState(true);
+
+    useEffect( () => {
+        if(sessionStorage.getItem('token'))
+            enqueueSnackbar('Welcome User!', {autoHideDuration: 2000,})
+    }, [enqueueSnackbar])
 
     if(!sessionStorage.getItem('token'))
         return <Redirect to='/'/>
@@ -63,3 +69,5 @@ export default function Dashboard() {
         </div>
     );
 }
+
+export default withSnackbar(Dashboard);

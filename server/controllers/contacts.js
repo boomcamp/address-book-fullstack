@@ -60,7 +60,18 @@ module.exports = {
 
     update: (req, res) => {
         const db = req.app.get('db');
-
+        const {firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country} = req.body
         
+        db.contacts
+        .update(
+            {id: req.params.id}, {firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
+        )
+        .then(contact => {
+            res.status(200).json(contact)
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).end();
+        })
     }
 }

@@ -13,7 +13,7 @@ const formStyle = {
     padding: '20px'
 }
 
-export default function CreateContactForm({closeFn}) {
+export default function CreateContactForm({closeFn, createRowFn}) {
     const [user, setUser] = useState({
         firstname: "",
         lastname: "",
@@ -25,7 +25,6 @@ export default function CreateContactForm({closeFn}) {
         stateProvince: "",
         postalCode: "",
         country: "",
-
     })
 
     const handleSubmit = () => {
@@ -49,7 +48,8 @@ export default function CreateContactForm({closeFn}) {
             }
         })
         .then(res => {
-            console.log(res)
+            // console.log(res.data)
+            createRowFn(res.data)
             closeFn();
         })
         .catch(err => {
@@ -84,19 +84,19 @@ export default function CreateContactForm({closeFn}) {
                         email = {user.email}
                     />       
             
-                <AddressFields 
-                        cityFn = {(e) => setUser({ ...user, city: e.target.value })}
-                        stateProvinceFn = {(e) => setUser({ ...user, stateProvince: e.target.value })}
-                        postalCodeFn ={(e) => setUser({ ...user, postalCode: e.target.value })}
-                        countryFn = {(e) => setUser({ ...user, country: e.target.value })}
-                        city = {user.city}
-                        stateProvince = {user.stateProvince}
-                        postalCode ={user.postalCode}
-                        country = {user.country}
-                />
+                    <AddressFields 
+                            cityFn = {(e) => setUser({ ...user, city: e.target.value })}
+                            stateProvinceFn = {(e) => setUser({ ...user, stateProvince: e.target.value })}
+                            postalCodeFn ={(e) => setUser({ ...user, postalCode: e.target.value })}
+                            countryFn = {(e) => setUser({ ...user, country: e.target.value })}
+                            city = {user.city}
+                            stateProvince = {user.stateProvince}
+                            postalCode ={user.postalCode}
+                            country = {user.country}
+                    />
                 </div>
 
-                <Button type="submit">Submit</Button>
+                <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`}}>Create Contact</Button>
             </ValidatorForm>
         </React.Fragment>
     )

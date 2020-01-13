@@ -73,6 +73,7 @@ function Login() {
                     onError={errors => console.log(errors)}>    
 
                     <TextValidator
+                        error={status.error}
                         variant="outlined"                                                                                                                                                                                                                                                                                                  
                         style={{margin:`5px 0`}}
                         label="Username"
@@ -84,6 +85,7 @@ function Login() {
                     ></TextValidator>
 
                     <TextValidator
+                        error={status.error}
                         variant="outlined"
                         style={{margin:`5px 0`}}
                         type="password"
@@ -111,7 +113,7 @@ function Login() {
                     
                     { (status.error) ? <h5 style={{color:`red`, margin:`5px`}}>Incorrect Username/Password</h5> : null}
                     
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">Login</Button>
                 </ValidatorForm>
             </Paper>
 

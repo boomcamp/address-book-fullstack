@@ -13,7 +13,7 @@ const formStyle = {
     padding: '20px'
 }
 
-export default function UpdateContactForm({ closeFn, row }) {
+export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
     const [user, setUser] = useState({
         firstname: "",
         lastname: "",
@@ -44,7 +44,6 @@ export default function UpdateContactForm({ closeFn, row }) {
         return () => { };
     }, [])
 
-
     const handleSubmit = () => {
         axios({
             method: 'put',
@@ -66,54 +65,56 @@ export default function UpdateContactForm({ closeFn, row }) {
             }
         })
         .then(res => {
-            console.log(res.data)
+            // console.log(res.data[0])
+            updateRowFn(row, res.data[0])
+            closeFn();
         })
         .catch(err => {
             console.log(err)
         })
     }
-    
+
     return (
         <React.Fragment>
-        <h1 style={{textAlign:`center`}}>Update Contact</h1 >
-        <ValidatorForm
-            style={formStyle}
-            onSubmit={handleSubmit}
-            onError={errors => console.log(errors)}>
-        
-            <NameFields 
-                firstnameFn = {(e) => setUser({ ...user, firstname: e.target.value })}
-                lastnameFn = {(e) => setUser({ ...user, lastname: e.target.value })}
-                firstname = {user.firstname}
-                lastname = {user.lastname}
-            />
+            <h1 style={{textAlign:`center`}}>Update Contact</h1 >
+            <ValidatorForm
+                style={formStyle}
+                onSubmit={handleSubmit}
+                onError={errors => console.log(errors)}>
             
-            <div style={{display: `flex`, margin:`0 0 30px 0`}}>
-                <ContactFields 
-                    homePhoneFn = {(e) => setUser({ ...user, homePhone: e.target.value })}
-                    mobilePhoneFn = {(e) => setUser({ ...user, mobilePhone: e.target.value })}
-                    workPhoneFn = {(e) => setUser({ ...user, workPhone: e.target.value })}
-                    emailFn = {(e) => setUser({ ...user, email: e.target.value })}
-                    homePhone = {user.homePhone}
-                    mobilePhone = {user.mobilePhone}
-                    workPhone = {user.workPhone}
-                    email = {user.email}
-                />       
-        
-            <AddressFields 
-                    cityFn = {(e) => setUser({ ...user, city: e.target.value })}
-                    stateProvinceFn = {(e) => setUser({ ...user, stateProvince: e.target.value })}
-                    postalCodeFn ={(e) => setUser({ ...user, postalCode: e.target.value })}
-                    countryFn = {(e) => setUser({ ...user, country: e.target.value })}
-                    city = {user.city}
-                    stateProvince = {user.stateProvince}
-                    postalCode ={user.postalCode}
-                    country = {user.country}
-            />
-            </div>
+                <NameFields 
+                    firstnameFn = {(e) => setUser({ ...user, firstname: e.target.value })}
+                    lastnameFn = {(e) => setUser({ ...user, lastname: e.target.value })}
+                    firstname = {user.firstname}
+                    lastname = {user.lastname}
+                />
+                
+                <div style={{display: `flex`, margin:`0 0 30px 0`}}>
+                    <ContactFields 
+                        homePhoneFn = {(e) => setUser({ ...user, homePhone: e.target.value })}
+                        mobilePhoneFn = {(e) => setUser({ ...user, mobilePhone: e.target.value })}
+                        workPhoneFn = {(e) => setUser({ ...user, workPhone: e.target.value })}
+                        emailFn = {(e) => setUser({ ...user, email: e.target.value })}
+                        homePhone = {user.homePhone}
+                        mobilePhone = {user.mobilePhone}
+                        workPhone = {user.workPhone}
+                        email = {user.email}
+                    />       
+            
+                    <AddressFields 
+                            cityFn = {(e) => setUser({ ...user, city: e.target.value })}
+                            stateProvinceFn = {(e) => setUser({ ...user, stateProvince: e.target.value })}
+                            postalCodeFn ={(e) => setUser({ ...user, postalCode: e.target.value })}
+                            countryFn = {(e) => setUser({ ...user, country: e.target.value })}
+                            city = {user.city}
+                            stateProvince = {user.stateProvince}
+                            postalCode ={user.postalCode}
+                            country = {user.country}
+                    />
+                </div>
 
-            <Button type="submit">Submit</Button>
-        </ValidatorForm>
-    </React.Fragment>
+                <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`}}>Update</Button>
+            </ValidatorForm>
+        </React.Fragment>
     )
 }

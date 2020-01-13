@@ -1,5 +1,7 @@
 import React from 'react'
 import { TextValidator } from 'react-material-ui-form-validator';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 
 export default function NameFields({firstnameFn, lastnameFn, firstname, lastname}) {
@@ -13,6 +15,14 @@ export default function NameFields({firstnameFn, lastnameFn, firstname, lastname
                 value={firstname}
                 validators={['required']}
                 errorMessages={['This Field is Required']}
+                InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AccountCircle />
+                      </InputAdornment>
+                    ),
+                  }}
+           
             ></TextValidator>
 
             <TextValidator
@@ -24,6 +34,13 @@ export default function NameFields({firstnameFn, lastnameFn, firstname, lastname
                 value={lastname}
                 validators={['required']}
                 errorMessages={['This Field is Required']}
+                InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AccountCircle />
+                      </InputAdornment>
+                    ),
+                }}
             ></TextValidator>
         </React.Fragment>
     )
