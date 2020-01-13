@@ -35,46 +35,6 @@ function newUser(req, res) {
         })
 }
 
-function getAllData(req, res) {
-    const db = req.app.get('db');
-
-    db.users
-        .find()
-        .then(users => res.status(200).json(users))
-        .catch(e => {
-            console.error(e);
-            res.status(500).end();
-        })
-}
-
-function getDataById(req, res) {
-    const db = req.app.get('db');
-    const { user_id } = req.params.id;
-
-    db.users
-        .findOne(user_id)
-        .then(user => res.status(200).json(user))
-        .catch(e => {
-            console.error(e);
-            res.status(500).end();
-        })
-}
-
-function updateUser(req, res) {
-    const db = req.app.get('db');
-    const { user_id } = req.params.id;
-
-    db.users
-        .update({
-            user_id: user_id
-        })
-        .then(user => res.status(201).send(user))
-        .catch(e => {
-            console.error(e);
-            res.status(500).end();
-        })
-}
-
 function login(req, res) {
     const db = req.app.get('db');
 
@@ -113,17 +73,6 @@ function login(req, res) {
         })
 }
 
-function deleteUser(req, res) {
-    const db = req.app.get('db');
-
-    const { user_id } = req.params.id;
-
-    db.users
-        .findOne({
-            user_id: user_id
-        })
-}
-
 module.exports = {
-    newUser, getAllData, getDataById, updateUser, login, deleteUser
+    newUser, login
 }
