@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import axios from 'axios';
+
 import Username from './Login/Username';
 import Password from './Login/Password';
 
@@ -34,6 +36,19 @@ export default class Login extends Component {
         });
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault();
+
+        axios({
+            method: "post",
+            url: `http://localhost:3001/api/register`,
+            data: this.state.data
+        })
+            .then(e => {
+                this.props.history.push("/addressbook")
+            })
+            .catch(e => console.log(e))
+    }
 
     // handleLogin = (e) => {
     //     e.preventDefault();

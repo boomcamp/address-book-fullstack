@@ -3,8 +3,20 @@ import { makeStyles, CardActions } from '@material-ui/core';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-import { Card, CardContent, Button, TextField, Tooltip } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Card, CardContent, Button, Tooltip } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import clsx from 'clsx';
+import Divider from '@material-ui/core/Divider';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+
+import Register from '../Register';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -57,11 +69,20 @@ const useStyles = makeStyles(theme => ({
 
 export default function LoginPage({ nextStep, handleChange }) {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
 
     const cont = e => {
         e.preventDefault();
         nextStep();
     }
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <div className={classes.root}>
@@ -76,20 +97,24 @@ export default function LoginPage({ nextStep, handleChange }) {
                 />
                 <form onSubmit={cont}>
                     <CardContent className={classes.cardcontent}>
-                        <TextField
-                            required
-                            id="email"
-                            className={classes.textField}
-                            label="Email"
-                            margin="normal"
-                            variant="outlined"
-                            name="email"
-                            type="email"
-                            onChange={e => handleChange(e)}
-                        />
+                        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                            <InputLabel htmlFor="username">Username</InputLabel>
+                            <OutlinedInput
+                                required
+                                id="username"
+                                name="username"
+                                type="username"
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <AccountBoxIcon />
+                                    </InputAdornment>
+                                }
+                                labelWidth={70}
+                            />
+                        </FormControl>
                     </CardContent>
                     <div className={classes.link}>
-                        <Tooltip title="You don't have permission to do this">
+                        <Tooltip title="Beta">
                             <span>
                                 <Button disabled size="small" color="primary" >
                                     Forgot Email?
@@ -99,14 +124,25 @@ export default function LoginPage({ nextStep, handleChange }) {
                     </div>
                     <CardContent className={classes.link2} >
                         <CardActions>
-                            <Link to="/register">
-                                <Button
-                                    size="small"
-                                    color="primary"
-                                >
-                                    Create an account
+                            <Button
+                                size="small"
+                                color="primary"
+                                onClick={handleClickOpen}>
+                                Create an account
                             </Button>
-                            </Link>
+                            <Dialog
+                                fullWidth
+                                maxWidth='sm'
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="register"
+                            >
+                                <DialogTitle id="register">Register</DialogTitle>
+                                <Divider />
+                                <DialogContent>
+                                    <Register handleClose={handleClose} />
+                                </DialogContent>
+                            </Dialog>
                         </CardActions>
                         <Button
                             className={classes.next}
@@ -118,6 +154,6 @@ export default function LoginPage({ nextStep, handleChange }) {
                     </CardContent>
                 </form>
             </Card>
-        </div>
+        </div >
     )
 }

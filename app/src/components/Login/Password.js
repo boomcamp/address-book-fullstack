@@ -2,10 +2,15 @@ import React from 'react'
 import { makeStyles, InputAdornment } from '@material-ui/core';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import clsx from 'clsx';
+import FormControl from '@material-ui/core/FormControl';
+import { Card, CardContent, Button, Tooltip } from '@material-ui/core';
+import InputLabel from '@material-ui/core/InputLabel';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
-import { Card, CardContent, Button, TextField, Tooltip } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -62,8 +67,20 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function LoginPage(props) {
+export default function LoginPage({ handleLogin, prevStep }) {
     const classes = useStyles();
+    const [values, setValues] = React.useState({
+        password: '',
+        showPassword: false
+    });
+
+    const handleClickShowPassword = () => {
+        setValues({ ...values, showPassword: !values.showPassword });
+    };
+
+    const handleMouseDownPassword = event => {
+        event.preventDefault();
+    };
 
     return (
         <div className={classes.root} >
@@ -71,36 +88,38 @@ export default function LoginPage(props) {
                 <CardHeader
                     avatar={
                         <Avatar aria-label="recipe" className={classes.avatar}>
-                            R
-          </Avatar>
+                            <PermIdentityIcon />
+                        </Avatar>
                     }
-                    action={
-                        <IconButton aria-label="settings">
-                            <MoreVertIcon />
-                        </IconButton>
-                    }
-                    title="Shrimp and Chorizo Paella"
-                    subheader="September 14, 2016"
+                    title="Sign In"
                 />
-                <form onSubmit={props.handleLogin}>
+                <form onSubmit={handleLogin}>
                     <CardContent className={classes.cardcontent}>
-                        <TextField
-                            required
-                            id="password"
-                            className={classes.textField}
-                            label="Password"
-                            margin="normal"
-                            variant="outlined"
-                            name="password"
-                            type="password"
-                            onChange={e => props.handleChange(e)}
-                            InputProps={{
-                                startAdornment: <InputAdornment position="end"><AlternateEmailIcon /></InputAdornment>
-                            }}
-                        />
+                        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                            <InputLabel htmlFor="password">Password</InputLabel>
+                            <OutlinedInput
+                                required
+                                id="password"
+                                name="password"
+                                type={values.showPassword ? 'text' : 'password'}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                labelWidth={70}
+                            />
+                        </FormControl>
                     </CardContent>
                     <CardContent className={classes.link2}>
-                        <Tooltip title="You don't have permission to do this">
+                        <Tooltip title="Beta">
                             <span>
                                 <Button disabled size="small" color="primary" className={classes.forgot}>
                                     Forgot Password?
@@ -112,7 +131,7 @@ export default function LoginPage(props) {
                                 variant="contained"
                                 color="primary"
                                 className={classes.back}
-                                onClick={props.prevStep}>
+                                onClick={prevStep}>
                                 Back
                         </Button>
                         </div>
