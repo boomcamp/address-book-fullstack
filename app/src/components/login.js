@@ -1,27 +1,51 @@
 import React, { Component } from "react";
-import { Form, Icon, Input, Button, Card, Avatar } from "antd";
+import { Form, Icon, Input, Button, Card, message } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
+import Image from "./img/logos.jpg";
 
-const cardholder = {
-  backgroundColor: "",
-  height: "85%",
-  width: "30%",
-  alignItem: "center"
+const container = {
+  display: "flex",
+  justifyContent: "center",
+  alignContent: "center",
+  width: "100%",
+  height: "100vh",
+  padding: "2%"
+  // backgroundColor: "rgba(0,0,0,.25)"
+};
+
+const formholder = {
+  display: "flex",
+  justifyContent: "center",
+  alignContent: "center",
+  padding: "30px",
+  width: "450px",
+  textAlign: "center",
+  height: "60%"
+
+  // ['@media (max-width:450px)']: {s
+  //      width: '95%',
+  //      marginTop: '50px',
+  //     },
 };
 
 class login extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      redirect: true,
       username: "",
       password: ""
     };
   }
 
+  componentDidMount(props) {
+    console.log(this.props);
+    if (localStorage.getItem("token")) {
+      this.props.history.push("/user");
+    }
+  }
   handleChange = e => {
     this.setState({
       [e.name + "Error"]: e.value ? false : true,
@@ -29,7 +53,7 @@ class login extends Component {
     });
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e, key) => {
     e.preventDefault();
     axios({
       method: "post",
@@ -39,73 +63,81 @@ class login extends Component {
       .then(response => {
         console.log(response.data);
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("id", response.data.id);
+        this.props.history.push("/user");
+        message.success({ content: "Successfully Login", key, duration: 2 });
       })
+
       .catch(err => {
-        console.log("Invalid email and password");
+        console.log("invalid username and password");
       });
-  };
-  handleClick = () => {
-    this.setState({
-      redirect: false
-    });
-    // localStorage.setItem("token", response.data.token);
-    this.props.history.push(`/main`);
   };
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    // if (this.state.redirect) {
-    // }
     return (
       <React.Fragment>
-        <Card style={cardholder}>
-          <Form onSubmit={this.handleSubmit}>
-            <Avatar size={64} icon="user" />
-            <h1>Log In</h1>
-            <Form.Item>
-              {getFieldDecorator("username", {
-                rules: [
-                  { required: true, message: "Please input your username!" }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Username"
-                  name="username"
-                  onChange={e => this.handleChange(e.target)}
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator("password", {
-                rules: [
-                  { required: true, message: "Please input your Password!" }
-                ]
-              })(
-                <Input.Password
-                  allow="true"
-                  prefix={
-                    <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                  onChange={e => this.handleChange(e.target)}
-                />
-              )}
-            </Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              onClick={this.handleClick()}
-            >
-              Login
-            </Button>
-            <Link to="/register">Register</Link>
-          </Form>
-        </Card>
+        <div style={container}>
+          <Card style={formholder}>
+            <Form onSubmit={this.handleSubmit}>
+              <img src={Image} alt="" />
+              <h1>SignIn</h1>
+              <Form.Item>
+                {getFieldDecorator("username", {
+                  rules: [
+                    { required: true, message: "Please input your username!" }
+                  ]
+                })(
+                  <Input
+                    prefix={
+                      <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    required={true}
+                    placeholder="Username"
+                    name="username"
+                    setfieldsvalue={this.state.username}
+                    onChange={e => this.handleChange(e.target)}
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator("password", {
+                  rules: [
+                    {
+                      required: true,
+                      message: "Please input your Password!"
+                    }
+                  ]
+                })(
+                  <Input.Password
+                    allow="true"
+                    prefix={
+                      <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    setfieldsvalue={this.state.firstname}
+                    onChange={e => this.handleChange(e.target)}
+                  />
+                )}
+              </Form.Item>
+
+              <Button
+                style={{
+                  backgroundColor: "#607C98",
+                  width: "400px",
+                  borderRadius: "20px"
+                }}
+                type="primary"
+                htmlType="submit"
+              >
+                SIGNIN
+              </Button>
+            </Form>
+            Don't have an account? <Link to="/register">SignUp Now!</Link>
+          </Card>
+        </div>
       </React.Fragment>
     );
   }

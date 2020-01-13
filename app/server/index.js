@@ -3,6 +3,7 @@ const massive = require("massive");
 const users = require("../controllers/users.js");
 const jwt = require("jsonwebtoken");
 const secret = require("../secret.js");
+const contact = require("../controllers/contact");
 
 massive({
   host: "localhost",
@@ -34,8 +35,7 @@ massive({
     app.post("/users/register", users.register);
     app.post("/login", users.login);
     app.get("/users/list", authentication, users.userlist);
-
-    app.get("");
+    app.post("/contact", contact.addcontact);
 
     const port = 5000;
 

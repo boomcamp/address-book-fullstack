@@ -89,7 +89,6 @@ function userlist(req, res) {
       res.status(500).end();
     });
 }
-
 module.exports = {
   register,
   login,
