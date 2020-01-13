@@ -45,7 +45,9 @@ class Login extends Component {
             "name",
             result.data.firstname + " " + result.data.lastname
           );
-          message.success("Sucessfully login");
+          message.success(
+            `Hi ${result.data.firstname}  ${result.data.lastname}!`
+          );
           this.props.history.push("/homepage");
         })
         .catch(err => {

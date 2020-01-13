@@ -76,7 +76,13 @@ class Register extends Component {
         })
         .then(res => {
           localStorage.setItem("token", res.data.token);
-          message.success("Sucessfully registered");
+          localStorage.setItem(
+            "name",
+            res.data.firstname + " " + res.data.lastname
+          );
+          message.success(
+            `Sucessfully registered, Welcome ${res.data.firstname} &nbsp; ${res.data.lastname}`
+          );
           console.log(res);
           this.props.history.push("/homepage");
         });

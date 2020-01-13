@@ -3,6 +3,7 @@ const massive = require("massive");
 const jwt = require("jsonwebtoken");
 const secret = require("../secret.js");
 const users = require("./controllers/users.js");
+const contacts = require("./controllers/contacts.js");
 const cors = require("cors");
 massive({
   host: "localhost",
@@ -20,6 +21,7 @@ massive({
     //users
     app.post("/api/register", users.register);
     app.post("/api/login", users.login);
+    app.post("/api/contacts", contacts.contact);
     // app.get("/api/users/:id", users.getById);
     app.get("/api/protected/data", (req, res) => {
       if (!req.headers.authorization) {
