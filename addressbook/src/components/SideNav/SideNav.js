@@ -101,9 +101,8 @@ export const SideNav = props => {
         className={clsx(classes.content, {
           [classes.contentShift]: open
         })}
-      >
-        <AddressBook data={props.data} />
-      </main>
+      ></main>
+      <AddressBook data={props.data} />
     </React.Fragment>
   );
 };
