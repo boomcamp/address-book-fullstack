@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import MaterialTable from "material-table";
-import { Container } from "@material-ui/core";
+import { Container, Typography, Badge } from "@material-ui/core";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { ThemeProvider } from "@material-ui/styles";
-import Typography from "@material-ui/core/Typography";
-import Badge from "@material-ui/core/Badge";
 
 export default function AddressBook(props) {
   if (!localStorage.getItem("Token")) {
@@ -33,10 +31,7 @@ export default function AddressBook(props) {
   useEffect(async () => {
     const result = await axios({
       method: "get",
-      url: `http://localhost:3000/users`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("Token")}`
-      }
+      url: `http://localhost:3004/contacts`
     });
     setState({ ...state, data: result.data });
   }, []);
@@ -54,45 +49,48 @@ export default function AddressBook(props) {
         style={{ paddingLeft: 10 }}
         title="Users Data"
         columns={[
-          { title: "Email Address", field: "email", filtering: false },
-          { title: "Firstname", field: "firstName", filtering: false },
-          { title: "Lastname", field: "lastName", filtering: false },
-          { title: "Username", field: "username", filtering: false },
           {
-            title: "Active Status",
-            field: "active",
-            lookup: {
-              true: "Active",
-              false: "Inactive"
+            title: "Firstname",
+            headerStyle: {
+              fontWeight: "bold"
             },
-            render: rowData => (
-              <ThemeProvider theme={theme}>
-                <Badge
-                  classes={{
-                    colorPrimary: classes.badge,
-                    colorSecondary: classes.badge
-                  }}
-                  color={
-                    rowData.active === "true" || rowData.active === true
-                      ? "primary"
-                      : "secondary"
-                  }
-                  badgeContent={" "}
-                  className={classes.margin}
-                >
-                  <Typography className={classes.padding}>
-                    {rowData.active === "true" || rowData.active === true
-                      ? "Active"
-                      : "Inactive"}
-                  </Typography>
-                </Badge>
-              </ThemeProvider>
-            ),
-            filtering: true
+            sorting: false,
+            field: "firstname"
+          },
+          {
+            title: "Lastname",
+            headerStyle: {
+              fontWeight: "bold"
+            },
+            field: "lastname"
+          },
+          {
+            title: "Home Phonenumber",
+            headerStyle: {
+              fontWeight: "bold"
+            },
+            sorting: false,
+            field: "home_phone"
+          },
+          {
+            title: "Mobile Phonenumber",
+            headerStyle: {
+              fontWeight: "bold"
+            },
+            sorting: false,
+            field: "mobile_phone"
+          },
+          {
+            title: "Work Phonenumber",
+            headerStyle: {
+              fontWeight: "bold"
+            },
+            sorting: false,
+            field: "work_phone"
           }
         ]}
         options={{
-          filtering: true
+          filtering: false
         }}
         data={[...state.data]}
         editable={{

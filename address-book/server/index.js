@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const secret = require("../secret");
 const cors = require("cors");
 const users = require("./controllers/users");
+const contacts = require("./controllers/contacts");
 
 massive({
   host: "localhost",
@@ -32,6 +33,8 @@ massive({
   app.post("/signup/users", users.signup);
   //   app.get("/api/protected/data", users.auth);
   app.post("/signin", users.login);
+  app.post("/contacts", contacts.create);
+  app.get("/contacts", contacts.getAll);
   const PORT = 3004;
   app.listen(PORT, () => {
     console.log(`Server is Listening on port ${PORT}`);
