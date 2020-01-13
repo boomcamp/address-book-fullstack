@@ -13,9 +13,16 @@ function newUser(req, res) {
             return db.users.insert({
                 username,
                 password: hash,
-                email
+                email,
+                contact: [
+                    {
+                        contact_id: undefined,
+                        fname: undefined,
+                        lname: undefined,
+                    }
+                ]
             }, {
-                fields: ['user_id', 'username', 'email'],
+                fields: ['username', 'password', 'email', 'contact_id', 'fname', 'lname'],
                 deepInsert: true
             });
         })
