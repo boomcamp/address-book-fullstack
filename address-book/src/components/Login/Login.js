@@ -14,22 +14,23 @@ export default function Login() {
     password: ""
   });
 
-  const loginUserName = e => {
-    console.log(e.target.value);
+  const [errstate, seterrState] = useState({});
 
+  const loginUserName = e => {
+    e.persist();
     setState(prevState => {
       return { ...prevState, username: e.target.value };
     });
   };
 
   const EventChecker = e => {
+    e.persist();
     setState(prevState => {
       return { ...prevState, password: e.target.value };
     });
   };
 
   const Login = e => {
-    console.log(state.username, state.password);
     if (state.username && state.password) {
       axios({
         method: "post",
@@ -48,7 +49,8 @@ export default function Login() {
           return data;
         })
         .catch(err => {
-          console.log(err);
+          console.log(err.response);
+          seterrState({ ...err.response });
         });
     }
   };
@@ -72,6 +74,7 @@ export default function Login() {
             onSubmit={Login}
           >
             <TextValidator
+              error={errstate.status === 400 ? true : false}
               id="outlined-required"
               name="username"
               value={state.username}
@@ -82,6 +85,7 @@ export default function Login() {
               onChange={loginUserName}
             />
             <TextValidator
+              error={errstate.status === 400 ? true : false}
               id="outlined-password-input"
               name="password"
               value={state.password}
@@ -92,6 +96,13 @@ export default function Login() {
               onChange={EventChecker}
               type="password"
             />
+            {errstate.status === 400 ? (
+              <p style={{ color: "red", fontSize: "0.8em" }}>
+                {errstate.data.error}
+              </p>
+            ) : (
+              ""
+            )}
             <Button type="submit">Submit</Button>
           </ValidatorForm>
         </div>

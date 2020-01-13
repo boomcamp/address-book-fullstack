@@ -66,6 +66,7 @@ export default function ContactForm(highprops) {
   };
 
   function EditData(newdata, olddata) {
+    console.log(newdata.city);  
     axios
       .put(
         `http://localhost:5000/api/contact/update/${olddata.id}`,
@@ -76,7 +77,7 @@ export default function ContactForm(highprops) {
           mobile_phone: newdata.mobile_phone,
           work_phone: newdata.work_phone,
           email: newdata.email,
-          city: newdata.email,
+          city: newdata.city,
           state_or_province: newdata.state_or_province,
           postal_code: newdata.postal_code,
           country: newdata.country
@@ -92,7 +93,7 @@ export default function ContactForm(highprops) {
   function AddData(data) {
     axios({
       method: "post",
-      url: "http://localhost:5000/api/contact/save",
+      url: "/api/contact/save",
       data: {
         userid: sessionStorage.getItem("userid"),
         first_name: data.first_name,
@@ -118,6 +119,7 @@ export default function ContactForm(highprops) {
     } else {
       EditData(state, highprops.contactData);
     }
+    // window.location.reload();
   };
 
   const cancel = () => {

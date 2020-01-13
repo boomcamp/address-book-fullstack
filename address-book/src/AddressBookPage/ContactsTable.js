@@ -89,7 +89,7 @@ export default function ContactsTable(highprops) {
         mobile_phone: data.mobile_phone,
         work_phone: data.work_phone,
         email: data.email,
-        city: data.email,
+        city: data.city,
         state_or_province: data.state_or_province,
         postal_code: data.postal_code,
         country: data.country
