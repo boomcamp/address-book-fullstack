@@ -8,8 +8,11 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
+    "argon2": "^0.25.1",
     "axios": "^0.19.1",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "massive": "^6.1.4",
     "node-pg-migrate": "^3.23.3",
     "pg": "^7.17.0",
@@ -17,7 +20,8 @@
     "react-dom": "^16.12.0",
     "react-hook-form": "^4.4.8",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0"
+    "react-scripts": "3.3.0",
+    "react-toastify": "^5.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -54,5 +58,6 @@
   "bugs": {
     "url": "https://github.com/serra-vp/address-book-fullstack/issues"
   },
-  "homepage": "https://github.com/serra-vp/address-book-fullstack#readme"
+  "homepage": "https://github.com/serra-vp/address-book-fullstack#readme",
+  "proxy": "http://localhost:3002"
 }

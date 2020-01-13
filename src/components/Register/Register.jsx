@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from 'axios';
+import { Link, useHistory, } from "react-router-dom";
+import axios from "axios";
 
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,7 +11,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
-export default function Register() {
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+export default function Register(props) {
   const useStyles = makeStyles(theme => ({
     "@global": {
       body: {
@@ -35,9 +38,13 @@ export default function Register() {
 
   const classes = useStyles();
 
+  const history = useHistory();
+
   const [registerDetails, setRegisterDetails] = useState({
     username: "",
-    password: ""
+    password: "",
+    firstname: "",
+    lastname: ""
   });
 
   const [error, setError] = useState(false);
@@ -47,7 +54,6 @@ export default function Register() {
       ...registerDetails,
       [data.target.name]: data.target.value
     });
-    console.log(registerDetails);
   };
 
   const checkPasswordHandler = val => {
@@ -55,35 +61,65 @@ export default function Register() {
     setError(x);
   };
 
-  const [showLoading,setShowLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
 
   const onSubmitLoading = () => {
-    return (showLoading) && <LinearProgress />
-  }
-  
-  const submitFormFn = (e) => {
+    return showLoading && <LinearProgress />;
+  };
+
+  const submitFormFn = e => {
     e.preventDefault();
-    if(!error){
+    if (!error) {
       setShowLoading(true);
       axios({
-        method: 'POST',
-        url: 'http://localhost:3002/register',
+        method: "POST",
+        url: "http://localhost:3002/api/signup",
         data: registerDetails
-      }).then( res => {
-        localStorage.setItem('loginToken', res.data.token);
-      }).then( response => {
-        setShowLoading(false)
-        console.log('Success');
-      }).catch(error => {
-        console.log(error);
       })
+        .then(response => {
+          setShowLoading(false);
+        })
+        .then(res2 => {
+          history.push('/');
+        })
+        .catch(error => {
+          toast.error("Something went wrong. Please try again.", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+          });
+        });
+    }else{
+      setShowLoading(false);
+      toast.warning("Password do not match!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
     }
-  }
+  };
 
   return (
     <React.Fragment>
-      { onSubmitLoading() }
+      {onSubmitLoading()}
       <Container component="main" maxWidth="md">
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
         <CssBaseline />
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
@@ -91,7 +127,7 @@ export default function Register() {
           </Typography>
           <form onSubmit={e => submitFormFn(e)} className={classes.form}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={12} lg={12}>
                 <TextField
                   variant="outlined"
                   required
@@ -103,7 +139,7 @@ export default function Register() {
                   onChange={onChangeHandler}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6} md={6} lg={6}>
                 <TextField
                   variant="outlined"
                   required
@@ -115,7 +151,7 @@ export default function Register() {
                   onChange={onChangeHandler}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6} md={6} lg={6}>
                 <TextField
                   error={error}
                   variant="outlined"
@@ -127,6 +163,32 @@ export default function Register() {
                   type="password"
                   id="ConfirmPassword"
                   onChange={event => checkPasswordHandler(event.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} lg={6} md={6}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="firstname"
+                  label="Firstname"
+                  type="text"
+                  id="firstname"
+                  onChange={onChangeHandler}
+                  placeholder="ex. John"
+                />
+              </Grid>
+              <Grid item xs={12} lg={6} md={6}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="lastname"
+                  label="Lastname"
+                  type="text"
+                  id="lastname  "
+                  onChange={onChangeHandler}
+                  placeholder="ex. Doe"
                 />
               </Grid>
             </Grid>
