@@ -1,10 +1,10 @@
 const express = require("express");
 const massive = require("massive");
-const jwt = require("jsonwebtoken");
-const secret = require("../secret");
+const cors = require("cors");
 
 const users = require("./controllers/users");
 const contacts = require("./controllers/contacts");
+const auth = require("./controllers/auth");
 
 massive({
   host: "localhost",
@@ -17,32 +17,18 @@ massive({
 
   app.set("db", db);
   app.use(express.json());
+  app.use(cors());
 
-  const auth = (req, res, next) => {
-    if (!req.headers.authorization) {
-      return res.status(401).end();
-    }
+  app.post("/signup", users.create);
+  app.post("/login", users.login);
+  app.get("/users", users.listusers);
 
-    try {
-      const token = req.headers.authorization.split(" ")[1];
-      jwt.verify(token, secret);
-      next();
-    } catch (err) {
-      console.error(err);
-      res.status(401).end();
-    }
-  };
+  app.use(auth.token);
 
-  app.post("/api/signup", users.create);
-  app.post("/api/login", users.login);
-  app.get("/api/users/:id/book", users.getbook);
-
-  app.use(auth);
-
-  app.post("/api/book/:id", contacts.create);
-  app.get("/api/contacts/list", contacts.list);
-  app.patch("/api/contacts/:id", contacts.updateContact);
-
+  app.post("/contacts/create", contacts.create);
+  app.get("/contacts/list/:id", contacts.list);
+  app.patch("/contacts/edit/:id", contacts.update);
+  app.delete("/contacts/delete/:id", contacts.delete);
   const port = 3001;
 
   app.listen(port, () => {

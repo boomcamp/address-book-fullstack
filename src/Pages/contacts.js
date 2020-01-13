@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import React, { useState, useEffect } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -12,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import * as ls from "local-storage";
+import Layout from "../Layout/layout";
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -31,18 +30,6 @@ const StyledTableRow = withStyles(theme => ({
   }
 }))(TableRow);
 
-function createData(Firstname, Lastname, Phonenumber) {
-  return { Firstname, Lastname, Phonenumber };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Eclair", 262, 16.0),
-  createData("Cupcake", 305, 3.7),
-  createData("Gingerbread", 356, 16.0)
-];
-
 const useStyles = makeStyles({
   table: {
     minWidth: 700
@@ -52,43 +39,51 @@ const useStyles = makeStyles({
 export default function Contacts(props) {
   const classes = useStyles();
   const [stat, setStat] = useState(false);
+  const [rows, setRows] = useState([]);
+  const auth = ls.get("auth");
 
-  if (!ls.get("token")) {
-    props.history.push("/");
-  } else {
-    if (!stat) {
-      Axios({
-        method: "get",
-        url: `http://localhost:3001/users`,
-        headers: {
-          Authorization: `Bearer ${ls.get("token")}`
-        }
-      });
-      setStat(true);
+  useEffect(() => {
+    if (!auth.token) {
+      props.history.push("/");
+    } else {
+      if (!stat) {
+        Axios.get(`http://localhost:3001/contacts/list/${auth.id}`, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`
+          }
+        }).then(res => setRows(res.data));
+        setStat(true);
+      }
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Firstname</StyledTableCell>
-            <StyledTableCell align="right">Lastname</StyledTableCell>
-            <StyledTableCell align="right">Phonenumber</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map(row => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
-              </StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Layout history={props.history}>
+      <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Firstname</StyledTableCell>
+              <StyledTableCell align="right">Lastname</StyledTableCell>
+              <StyledTableCell align="right">Phonenumber</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map(row => (
+              <StyledTableRow key={row.first_name}>
+                <StyledTableCell component="th" scope="row">
+                  {row.first_name}
+                </StyledTableCell>
+                <StyledTableCell align="right">{row.last_name}</StyledTableCell>
+                <StyledTableCell align="right">
+                  {row.mobile_phone}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Layout>
   );
 }

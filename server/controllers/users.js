@@ -33,7 +33,7 @@ module.exports = {
           })
           .then(email => {
             const token = jwt.sign({ userId: email.id }, secret);
-            res.status(201).json({ ...email, token });
+            res.status(200).json({ ...email, token });
             db.book.insert({ userId: email.id });
           });
       })
@@ -83,16 +83,14 @@ module.exports = {
         }
       });
   },
-  getbook: (req, res) => {
+  listusers: (req, res) => {
     const db = req.app.get("db");
-    db.book.findOne({ userId: req.params.id }).then(book => {
-      res
-        .status(200)
-        .json({ book: book })
-        .catch(err => {
-          console.error(err);
-          res.status(500).end();
-        });
-    });
+    db.users
+      .find()
+      .then(user => res.status(200).json({ users: user }))
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
   }
 };

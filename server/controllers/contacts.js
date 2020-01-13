@@ -14,7 +14,7 @@ module.exports = {
       country
     } = req.body;
 
-    db.book.findOne({ userId: req.params.id }).then(data => {
+    db.book.findOne(userId).then(data => {
       return db.contacts
         .insert({
           bookId: data.id,
@@ -29,7 +29,7 @@ module.exports = {
           postal_code,
           country
         })
-        .then(contact => res.status(201).json(contact))
+        .then(contact => res.status(200).json(contact))
         .catch(err => {
           console.error(err);
           res.status(500).end();
@@ -39,14 +39,16 @@ module.exports = {
   list: (req, res) => {
     const db = req.app.get("db");
     db.contacts
-      .find()
-      .then(users => res.status(201).json(users))
+      .find({ bookId: req.params.id })
+      .then(contact => {
+        res.status(200).json(contact);
+      })
       .catch(err => {
         console.error(err);
         res.status(500).end();
       });
   },
-  updateContact: (req, res) => {
+  update: (req, res) => {
     const db = req.app.get("db");
     const { id } = req.params;
     const {
@@ -76,7 +78,17 @@ module.exports = {
         postal_code,
         country
       })
-      .then(contact => res.status(201).json(contact))
+      .then(contact => res.status(200).json(contact))
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
+  },
+  delete: (req, res) => {
+    const db = req.app.get("db");
+    db.contacts
+      .destroy({ id: req.params.id })
+      .then(contact => res.status(200).json(contact))
       .catch(err => {
         console.error(err);
         res.status(500).end();

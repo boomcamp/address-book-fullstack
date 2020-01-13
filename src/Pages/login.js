@@ -58,7 +58,7 @@ export default function Login(props) {
         password: user.password
       })
       .then(res => {
-        ls.set("token", res.data.token);
+        ls.set("auth", { token: res.data.token, id: res.data.id });
         props.history.push("/contacts");
       })
       .catch(error => {
@@ -69,7 +69,7 @@ export default function Login(props) {
         }
       });
   }
-  return ls.get("token") ? (
+  return ls.get("auth") ? (
     <Redirect to="/contacts" />
   ) : (
     <Container component="main" maxWidth="xs">
