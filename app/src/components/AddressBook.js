@@ -1,5 +1,13 @@
 import React from 'react';
 
+import Navbar from './Navbar';
+import Profiles from './AddressBookUsers/Profiles';
+
 export default function AddressBook() {
-    return <h1>Address Book</h1>
+    return (
+        <React.Fragment>
+            <Navbar />
+            <Profiles />
+        </React.Fragment>
+    );
 }

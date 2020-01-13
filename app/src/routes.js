@@ -11,6 +11,7 @@ export default function Routes() {
             <Route path="/" component={Home} exact />
             <Route path="/register" component={Register} />
             <Route path="/addressbook" component={AddressBook} />
+            <Route path="*" component={() => "404 - Page not Found!"} />
         </Switch>
     )
 }

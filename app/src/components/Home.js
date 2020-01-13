@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import axios from 'axios';
 
 import Username from './Login/Username';
@@ -10,7 +9,7 @@ export default class Login extends Component {
         super(props);
         this.state = {
             data: {
-                email: "",
+                username: "",
                 password: ""
             },
             step: 1,
@@ -32,38 +31,24 @@ export default class Login extends Component {
     handleChange = e => {
         this.setState({
             ...this.state,
-            data: { ...this.state.data, [e.target.name]: e.target.value }
-        });
+            data: {
+                ...this.state.data,
+                [e.target.name]: e.target.value
+            }
+        })
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-
+    handleLogin = (e) => {
         axios({
             method: "post",
-            url: `http://localhost:3001/api/register`,
+            url: `http://localhost:3001/api/login`,
             data: this.state.data
         })
             .then(e => {
-                this.props.history.push("/addressbook")
+                localStorage.setItem('token', e.data.accessToken);
             })
             .catch(e => console.log(e))
     }
-
-    // handleLogin = (e) => {
-    //     e.preventDefault();
-    //     axios({
-    //         method: "post",
-    //         url: `http://localhost:4000/login`,
-    //         data: this.state.data
-    //     })
-    //         .then(e => {
-    //             localStorage.setItem('token', e.data.accessToken)
-    //             this.props.history.push('/usermanager')
-
-    //         })
-    //         .catch(e => console.log(e))
-    // }
 
     render() {
         const { step } = this.state;
@@ -81,7 +66,7 @@ export default class Login extends Component {
                         nextStep={this.nextStep}
                         prevStep={this.prevStep}
                         handleChange={this.handleChange}
-                    // handleLogin={this.handleLogin}
+                        handleLogin={this.handleLogin}
                     />
                 )
             default:

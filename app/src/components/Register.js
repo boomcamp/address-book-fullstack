@@ -13,6 +13,8 @@ import FormControl from '@material-ui/core/FormControl';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 
+import axios from 'axios';
+
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
@@ -41,12 +43,19 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function Register({ handleClose, handleSubmit }) {
+export default function Register({ handleClose }) {
     const classes = useStyles();
     const [values, setValues] = React.useState({
         password: '',
         showPassword: false
     });
+    const [data, setData] = React.useState({
+        username: '',
+        password: '',
+        email: '',
+        fname: null,
+        lname: null
+    })
 
     const handleClickShowPassword = () => {
         setValues({ ...values, showPassword: !values.showPassword });
@@ -55,6 +64,32 @@ export default function Register({ handleClose, handleSubmit }) {
     const handleMouseDownPassword = event => {
         event.preventDefault();
     };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        axios({
+            method: "post",
+            url: `http://localhost:3001/api/register`,
+            headers: {
+                "Accept": 'application/json',
+                "Content-type": "application/json"
+            },
+            data: data
+        })
+            .then(e => {
+                localStorage.setItem('token', e.data.accessToken)
+                window.history.push("/addressbook")
+            })
+            .catch(e => console.log(e))
+    }
+
+    const handleChange = (e) => {
+        setData({
+            ...data,
+            [e.target.name]: e.target.value
+        })
+    }
 
     return (
         <div className={classes.root}>
@@ -68,6 +103,7 @@ export default function Register({ handleClose, handleSubmit }) {
                             id="username"
                             name="username"
                             type="username"
+                            onChange={handleChange}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <AccountBoxIcon />
@@ -83,6 +119,7 @@ export default function Register({ handleClose, handleSubmit }) {
                             id="password"
                             name="password"
                             type={values.showPassword ? 'text' : 'password'}
+                            onChange={handleChange}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
@@ -105,6 +142,7 @@ export default function Register({ handleClose, handleSubmit }) {
                             id="email"
                             name="email"
                             type="email"
+                            onChange={handleChange}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <AlternateEmailIcon />

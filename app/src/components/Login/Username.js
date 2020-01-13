@@ -104,6 +104,7 @@ export default function LoginPage({ nextStep, handleChange }) {
                                 id="username"
                                 name="username"
                                 type="username"
+                                onChange={handleChange}
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <AccountBoxIcon />

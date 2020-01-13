@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function LoginPage({ handleLogin, prevStep }) {
+export default function LoginPage({ handleLogin, prevStep, handleChange }) {
     const classes = useStyles();
     const [values, setValues] = React.useState({
         password: '',
@@ -101,6 +101,7 @@ export default function LoginPage({ handleLogin, prevStep }) {
                                 required
                                 id="password"
                                 name="password"
+                                onChange={handleChange}
                                 type={values.showPassword ? 'text' : 'password'}
                                 endAdornment={
                                     <InputAdornment position="end">
