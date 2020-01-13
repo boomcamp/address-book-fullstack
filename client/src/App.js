@@ -25,7 +25,9 @@ export default class App extends Component {
     const Obj = {
       email: this.state.email,
       username: this.state.username,
-      password: this.state.password
+      password: this.state.password,
+      firstName: this.state.fname,
+      lastName: this.state.lname
     };
     axios
       .post("http://localhost:4001/register", Obj)
@@ -80,8 +82,40 @@ export default class App extends Component {
       : toast.error("Fill Out All Fields");
   };
 
+  createContactHandler = event => {
+    event.preventDefault();
+    event.target.className += " was-validated";
+
+    const Obj = {
+      user_id: localStorage.getItem("userId"),
+      first_name: this.state.fname,
+      last_name: this.state.lname,
+      email: this.state.email,
+      home_phone: this.state.hphone,
+      mobile_phone: this.state.mphone,
+      work_phone: this.state.wphone,
+      city: this.state.city,
+      state_or_province: this.state.state_province,
+      postal_code: this.state.zip,
+      country: this.state.country
+    };
+    axios
+      .post("http://localhost:4001/contacts/create", Obj)
+      .then(() => {
+        toast.success(`Contact has been Successfully Added`);
+      })
+      .catch(errors => {
+        try {
+          toast.error(errors.response.data.error);
+        } catch {
+          console.log(errors);
+        }
+      });
+  };
+
   changeHandler = event => {
     this.setState({ [event.target.name]: event.target.value });
+    console.log([event.target.name], event.target.value);
   };
 
   render() {
@@ -101,6 +135,7 @@ export default class App extends Component {
           handleReg={this.handleReg}
           submitHandler={this.submitHandler}
           changeHandler={this.changeHandler}
+          createContactHandler={this.createContactHandler}
         />
       </HashRouter>
     );

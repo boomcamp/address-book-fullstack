@@ -31,6 +31,44 @@ export default class Registration extends React.Component {
               noValidate
             >
               <MDBRow>
+                <MDBCol md="6" className="mb-3">
+                  <label htmlFor="fname" className="grey-text">
+                    First name
+                  </label>
+                  <input
+                    name="fname"
+                    onChange={changeHandler}
+                    type="text"
+                    id="fname"
+                    className="form-control"
+                    placeholder="First name"
+                    required
+                  />
+                  <div className="invalid-feedback">
+                    Please provide a valid first name.
+                  </div>
+                  <div className="valid-feedback">Looks good!</div>
+                </MDBCol>
+                <MDBCol md="6" className="mb-3">
+                  <label htmlFor="lname" className="grey-text">
+                    Last name
+                  </label>
+                  <input
+                    name="lname"
+                    onChange={changeHandler}
+                    type="text"
+                    id="lname"
+                    className="form-control"
+                    placeholder="Last name"
+                    required
+                  />
+                  <div className="invalid-feedback">
+                    Please provide a valid last name.
+                  </div>
+                  <div className="valid-feedback">Looks good!</div>
+                </MDBCol>
+              </MDBRow>
+              <MDBRow>
                 <MDBCol md="12" className="mb-3">
                   <label htmlFor="username" className="grey-text">
                     Username

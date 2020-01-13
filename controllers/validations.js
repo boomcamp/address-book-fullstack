@@ -5,19 +5,21 @@ const secret = require("../secret");
 module.exports = {
   register: (req, res) => {
     const db = req.app.get("db");
-    const { username, email, password } = req.body;
+    const { username, email, password, firstName, lastName } = req.body;
 
     argon2
       .hash(password)
       .then(hash => {
         return db.users.insert(
           {
+            firstName,
+            lastName,
             username,
             email,
             password: hash
           },
           {
-            fields: ["id", "username", "email"]
+            fields: ["id", "firstName", "lastName", "username", "email"]
           }
         );
       })

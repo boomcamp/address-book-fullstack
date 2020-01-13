@@ -12,35 +12,39 @@ massive({
   database: "fullstack",
   user: "postgres",
   password: "fullstackDB"
-}).then(db => {
-  const app = express();
+})
+  .then(db => {
+    const app = express();
 
-  app.set("db", db);
-  app.use(cors());
-  app.use(express.json());
+    app.set("db", db);
+    app.use(cors());
+    app.use(express.json());
 
-  const auth = (req, res, next) => {
-    if (!req.headers.authorization) {
-      return res.status(401).end();
-    }
-    try {
-      const token = req.headers.authorization.split(" ")[1];
-      jwt.verify(token, secret);
-      next();
-    } catch (err) {
-      console.error(err);
-      res.status(401).end();
-    }
-  };
+    const auth = (req, res, next) => {
+      if (!req.headers.authorization) {
+        return res.status(401).end();
+      }
+      try {
+        const token = req.headers.authorization.split(" ")[1];
+        jwt.verify(token, secret);
+        next();
+      } catch (err) {
+        console.error(err);
+        res.status(401).end();
+      }
+    };
 
-  //USER'S ENDPOINT
-  app.post("/register", validate.register);
-  app.post("/login", validate.login);
+    //USER'S ENDPOINT
+    app.post("/register", validate.register);
+    app.post("/login", validate.login);
 
-  //CONTACT'S ENDPOINT
-  app.get("/contacts", auth, contact.allContacts);
-  const PORT = 4001;
-  app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-  });
-});
+    //CONTACT'S ENDPOINT
+    app.get("/contacts/:id/all", contact.allContacts);
+    app.post("/contacts/create", auth, contact.createContact);
+
+    const PORT = 4001;
+    app.listen(PORT, () => {
+      console.log(`Server listening on port ${PORT}`);
+    });
+  })
+  .catch(() => console.log("Error"));

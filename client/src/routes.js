@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 
 import Registration from "./components/Registration/Registration";
 import Login from "./components/Login/Login";
-import Users from "./components/Users/Users";
+import Sidenav from "./components/Sidenav/Sidenav";
 
 export default class Routes extends React.Component {
   render() {
@@ -11,11 +11,11 @@ export default class Routes extends React.Component {
       handleLogin,
       handleSignUp,
       accessToken,
-      userId,
       handleLogout,
       regSuccess,
       submitHandler,
-      changeHandler
+      changeHandler,
+      createContactHandler
     } = this.props;
     return (
       <Switch>
@@ -23,10 +23,10 @@ export default class Routes extends React.Component {
           exact
           render={() =>
             accessToken ? (
-              <Users
+              <Sidenav
                 handleLogout={handleLogout}
-                accessToken={accessToken}
-                userId={userId}
+                createContactHandler={createContactHandler}
+                changeHandler={changeHandler}
               />
             ) : (
               <Login
