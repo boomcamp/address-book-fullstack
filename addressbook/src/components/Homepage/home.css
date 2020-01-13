@@ -1,0 +1,22 @@
+.addHeader{
+    background-color: rgb(16, 40, 68);
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 20px;
+}
+.addBook{
+    color: #fff;
+    display: inline-flex;
+    font-size: 2vw;
+    margin-left: 10px;
+}
+.pop{
+   margin-right: 20px;
+   padding-top: 20px;
+}
+@media only screen and (max-width: 768px){
+    .addBook{
+        font-size: 3vw;
+    }
+}

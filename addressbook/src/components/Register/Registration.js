@@ -2,23 +2,16 @@ import React, { Component } from "react";
 import {
   Form,
   Input,
-  Tooltip,
   Icon,
-  Cascader,
-  Select,
-  Row,
-  Col,
-  Checkbox,
   Button,
-  AutoComplete,
-  Avatar
+  AutoComplete
 } from "antd";
 import "./reg.css";
 import axios from 'axios'
 import { Link } from "react-router-dom";
 import { message } from 'antd';
-const { Option } = Select;
-const AutoCompleteOption = AutoComplete.Option;
+// const { Option } = Select;
+// const AutoCompleteOption = AutoComplete.Option;
 class Registration extends Component {
   constructor(props) {
     super(props);
@@ -58,7 +51,7 @@ class Registration extends Component {
 
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -66,7 +59,7 @@ class Registration extends Component {
       }
 
     });
-    if (this.state.confirmPassword == this.state.password) {
+    if (this.state.confirmPassword === this.state.password) {
       axios
         .post('http://localhost:3003/api/register', this.state)
       .then(res => {
@@ -149,18 +142,14 @@ class Registration extends Component {
             <div className="container">
               <Form {...formItemLayout} onSubmit={(e)=>this.handleSubmit(e)}>
                 <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    flexDirection: 'column',
-                    marginRight: "100px"
-                  }}
+                 className='signUp'
                 >
-                  <Avatar size={100} icon="user" />
-                  <p >Sign Up</p>
+                  {/* <Avatar size={100} icon="user" /> */}
+                    Sign Up
+                 
                 </div>
                 
-                <br />
+                <hr className='kel'></hr>
                 <Form.Item>
                   {getFieldDecorator("username", {
                     rules: [
@@ -244,11 +233,8 @@ class Registration extends Component {
                   )}
                 </Form.Item>
                 <div
-                  style={{
-                    width: "100%",
-                    marginTop: "-20px",
-                    marginLeft: "-126px"
-                  }}
+                className='regContainer'
+               
                 >
                   <Form.Item {...tailFormItemLayout}>
                     <Button
@@ -262,12 +248,8 @@ class Registration extends Component {
                     </Button>
                   </Form.Item>
                   <p
-                    style={{
-                      width: "200px",
-                      display: "inline-flex",
-                      flexWrap: "nowrap",
-                      marginLeft: "140px"
-                    }}
+                   className=' accountAlready'
+                  
                   >
                     {" "}
                     already have an account?

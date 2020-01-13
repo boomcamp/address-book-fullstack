@@ -4,7 +4,7 @@ import "./login.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Form, Icon, Input, Button, Checkbox, Avatar } from "antd";
-import {message} from 'antd'
+import { message } from "antd";
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -30,14 +30,16 @@ class Login extends Component {
   };
   handleSubmit = e => {
     e.preventDefault();
- 
+
     axios
       .post(`http://localhost:3003/api/login`, this.state)
       .then(res => {
-        console.log(res.data.token)
-        localStorage.setItem('token', res.data.token)
-        this.props.history.push("/homepage");
-        message.success("Welcome " + this.state.username);
+        if (res.status == 200) {
+          localStorage.setItem("token", res.data.token);
+          console.log(res.data.token);
+          this.props.history.push("/homepage");
+          message.success("Welcome " + this.state.username);
+        }
       })
       .catch(err => {
         message.error("Incorrect Username or Password");
@@ -59,8 +61,10 @@ class Login extends Component {
             >
               <Avatar size={100} icon="user" />
             </div>
-            <br />
-            <Form onSubmit={e=>this.handleSubmit(e)} className="login-form">
+            <br/>
+            <hr style={{width:'77%',marginRight:'1000px'}}/>
+          
+            <Form onSubmit={e => this.handleSubmit(e)} className="login-form">
               <Form.Item>
                 {getFieldDecorator("username", {
                   rules: [
@@ -87,7 +91,7 @@ class Login extends Component {
                   ]
                 })(
                   <Input
-                  required
+                    required
                     prefix={
                       <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
                     }
@@ -108,7 +112,8 @@ class Login extends Component {
                 >
                   Log in
                 </Button>
-               <div style={{color:'white',display:'inline-flex'}}>Or</div>  <Link to="/signup">register now!</Link>
+                <div style={{ color: "white", display: "inline-flex" }}>Or</div>{" "}
+                <Link to="/signup">register now!</Link>
               </Form.Item>
             </Form>
           </div>

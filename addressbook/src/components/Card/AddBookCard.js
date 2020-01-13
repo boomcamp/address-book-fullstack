@@ -1,56 +1,73 @@
-import React, { Component } from 'react'
-import { Skeleton, Switch, Card, Icon, Avatar } from 'antd';
+import React, { Component } from "react";
+import { Button, Tooltip, Modal, Form } from "antd";
 
-const { Meta } = Card;
+import "./adduser.css";
 
 export default class AddBookCard extends Component {
-   constructor(props) {
-       super(props)
-   
-       this.state = {
-            loading:true
-       }
-   }
-   
-      onChange = checked => {
-        this.setState({ loading: !checked });
-      };
-    
-    render() {
-        return (
-            <div>
-            <Switch checked={!this.state.loading} onChange={this.onChange} />
-    
-            <Card style={{ width: 300, marginTop: 16 }} loading={this.state.loading}>
-              <Meta
-                avatar={
-                  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                }
-                title="Card title"
-                description="This is the description"
-              />
-            </Card>
-    
-            <Card
-              style={{ width: 300, marginTop: 16 }}
-              actions={[
-                <Icon type="setting" key="setting" />,
-                <Icon type="edit" key="edit" />,
-                <Icon type="ellipsis" key="ellipsis" />,
-              ]}
-            >
-              <Skeleton loading={this.state.loading} avatar active>
-                <Meta
-                  avatar={
-                    <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                  }
-                  title="Card title"
-                  description="This is the description"
-                />
-              </Skeleton>
-            </Card>
-          </div>
+  onChange = checked => {
+    this.setState({ loading: !checked });
+  };
 
-        )
-    }
+  state = { visible: false };
+
+  showModal = () => {
+    this.setState({
+      visible: true
+    });
+  };
+
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false
+    });
+  };
+
+  render() {
+    return (
+      <div>
+        <div className="addContainer">
+          <div className="adding">
+            <Tooltip title="Add Contact" placement="right">
+              <Button
+                icon="user-add"
+                className="add-user"
+                onClick={this.showModal}
+              ></Button>
+            </Tooltip>
+            <Tooltip title="Add Group" placement="right">
+              <Button icon="usergroup-add" className="add-user"></Button>
+            </Tooltip>
+          </div>
+        </div>
+
+        <Modal
+          title="Basic Modal"
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+        >
+          <form className='addcontactsForm'>
+            <input />
+            <input />
+            <input />
+            <input />
+            <input />
+            <input />
+            <input />
+            <input />
+            <input />
+            <input />
+          </form>
+        </Modal>
+      </div>
+    );
+  }
 }

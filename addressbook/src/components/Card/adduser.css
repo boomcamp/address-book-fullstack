@@ -1,0 +1,27 @@
+.add-user{
+    width: 130px;
+    margin-top: 10px;
+    background-color:#102844;
+    color:white;
+
+}
+.addContainer{
+  background-color: #102844;  
+  margin-top: 10px;
+  height: 83vh;
+  width: 175px;
+}
+.adding{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* flex-wrap: nowrap; */
+    justify-content: space-evenly;
+    padding-left: 4px;
+    margin-left:20px
+}
+.addcontactsForm{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 10px 10px 10px;
+}
