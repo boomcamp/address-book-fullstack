@@ -5,6 +5,7 @@ const secret = require("../../secret");
 const cors = require("cors");
 
 const users = require("./controllers/users");
+const contacts = require("./controllers/contacts");
 
 massive({
   host: "localhost",
@@ -33,12 +34,18 @@ massive({
     }
   };
 
+  //signup
   app.post("/signup/users", users.signup);
+  //signin
   app.post("/signin", users.login);
+
+  //fetching users
   app.get("/users", users.getAll);
   app.get("/users/:username", users.getById);
-  //   app.get("/api/protected/data", users.auth);
-  //   app.post("/api/login", users.login);
+
+  //contacts
+  app.post("/contacts/:userid", contacts.create);
+  app.get("/contacts/:userid", contacts.getContactByUser);
 
   const PORT = 3004;
   app.listen(PORT, () => {

@@ -3,8 +3,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -42,7 +40,6 @@ export default function SignIn(props) {
   const [password, setPassword] = useState("");
   const [errorMsgUsername, setErrorMsgUsername] = useState("");
   const [errorMsgPassword, setErrorMsgPassword] = useState("");
-  const [Token, setToken] = useState("");
 
   function validate(username, password, props) {
     if (password === "" || username === "") {
@@ -62,12 +59,15 @@ export default function SignIn(props) {
           password: password
         })
         .then(res => {
+          console.log(res);
           sessionStorage.setItem("isLoggedIn", true);
           localStorage.setItem("Token", res.data.token);
-          // console.log(res);
+          localStorage.setItem("username", username);
+          localStorage.setItem("userid", res.data.id);
           Swal.fire({
             icon: "success",
-            title: "Logged In Successfully!"
+            title: "Logged In Successfully!",
+            text: `Welcome ${username}!`
           }).then(() => {
             window.location = "/addressbook";
           });

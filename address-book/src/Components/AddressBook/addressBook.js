@@ -1,41 +1,76 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MaterialTable from "material-table";
 import AppBarAddress from "../AppBar/appBarAddress";
 import Swal from "sweetalert2";
 import { Container } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
+import axios from "axios";
 
 export default function AddressBook() {
   if (!localStorage.getItem("Token")) {
     Swal.fire({
-      icon: "error",
+      icon: "warning",
       title: "You must login first"
     }).then(function() {
       window.location = "/";
     });
   }
 
+  useEffect(async () => {
+    const result = await axios({
+      method: "get",
+      url: `http://localhost:3004/contacts/${localStorage.getItem("userid")}`
+    });
+    setState({ ...state, data: result.data });
+  }, []);
+
   const [state, setState] = React.useState({
     columns: [
-      { title: "Name", field: "name" },
-      { title: "Surname", field: "surname" },
-      { title: "Birth Year", field: "birthYear", type: "numeric" },
       {
-        title: "Birth Place",
-        field: "birthCity",
-        lookup: { 34: "İstanbul", 63: "Şanlıurfa" }
+        title: "Firstname",
+        headerStyle: {
+          fontWeight: "bold"
+        },
+        sorting: false,
+        field: "firstname"
+      },
+      {
+        title: "Lastname",
+        headerStyle: {
+          fontWeight: "bold"
+        },
+        field: "lastname"
+      },
+      {
+        title: "Home Phonenumber",
+        headerStyle: {
+          fontWeight: "bold"
+        },
+        sorting: false,
+        field: "home_phone"
+      },
+      {
+        title: "Mobile Phonenumber",
+        headerStyle: {
+          fontWeight: "bold"
+        },
+        sorting: false,
+        field: "mobile_phone"
+      },
+      {
+        title: "Work Phonenumber",
+        headerStyle: {
+          fontWeight: "bold"
+        },
+        sorting: false,
+        field: "work_phone"
       }
     ],
-    data: [
-      { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 },
-      {
-        name: "Zerya Betül",
-        surname: "Baran",
-        birthYear: 2017,
-        birthCity: 34
-      }
-    ]
+    data: []
   });
+
+  // axios.get("http://localhost:3004/contacts", {}).then(res => {
+  //   setState({ ...state, data: res.data });
+  // });
 
   if (!localStorage.getItem("Token")) {
     return null;
@@ -44,55 +79,13 @@ export default function AddressBook() {
       <div>
         <AppBarAddress />
         <div style={{ display: "flex", margin: "50px auto" }}>
-          <Container>
+          <Container maxWidth="lg">
             <MaterialTable
-              title="Editable Example"
+              title="Contact List"
               columns={state.columns}
               data={state.data}
-              editable={{
-                onRowAdd: newData =>
-                  new Promise(resolve => {
-                    setTimeout(() => {
-                      resolve();
-                      setState(prevState => {
-                        const data = [...prevState.data];
-                        data.push(newData);
-                        return { ...prevState, data };
-                      });
-                    }, 600);
-                  }),
-                onRowUpdate: (newData, oldData) =>
-                  new Promise(resolve => {
-                    setTimeout(() => {
-                      resolve();
-                      if (oldData) {
-                        setState(prevState => {
-                          const data = [...prevState.data];
-                          data[data.indexOf(oldData)] = newData;
-                          return { ...prevState, data };
-                        });
-                      }
-                    }, 600);
-                  }),
-                onRowDelete: oldData =>
-                  new Promise(resolve => {
-                    setTimeout(() => {
-                      resolve();
-                      setState(prevState => {
-                        const data = [...prevState.data];
-                        data.splice(data.indexOf(oldData), 1);
-                        return { ...prevState, data };
-                      });
-                    }, 600);
-                  })
-              }}
             />
           </Container>
-          <Grid item xs={6} sm={3}>
-            <Grid item style={{ margin: "0 auto" }}>
-              User's Profile
-            </Grid>
-          </Grid>
         </div>
       </div>
     );
