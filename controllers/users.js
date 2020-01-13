@@ -5,7 +5,7 @@ const secret = require("../secret");
 module.exports = {
   register: (req, res) => {
     const { users } = req.app.get("db");
-    const { username, email, password } = req.body;
+    const { username, email, password, firstName, lastName } = req.body;
     users
       .findOne({ email: email })
       .then(user => {
@@ -17,12 +17,12 @@ module.exports = {
           .hash(password)
           .then(hash => {
             return users.insert(
-              { username, email, password: hash },
-              { fields: ["id", "username", "email"] }
+              { username, email, password: hash, firstName, lastName },
+              { fields: ["id", "username", "email", "firstName", "lastName"] }
             );
           })
           .then(user => {
-            const token = jwt.sign({ userId: user.id }, secret);
+            const token = jwt.sign({ userId: user.id }, secret.key);
             res.status(201).send({ ...user, token });
           });
       })
@@ -46,7 +46,7 @@ module.exports = {
           if (!valid) {
             throw new Error("Incorrect password");
           }
-          const token = jwt.sign({ userId: user.id }, secret);
+          const token = jwt.sign({ userId: user.id }, secret.key);
           delete user.password;
           res.status(200).json({ ...user, token });
         });

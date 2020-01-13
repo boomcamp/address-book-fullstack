@@ -13,7 +13,7 @@ export const Routes = props => {
         {user.token ? (
           <Route exact path="/" render={() => <SideNav data={props} />} />
         ) : (
-          <Route path="/" render={() => <Login data={props} />} />
+          <Route exact path="/" render={() => <Login data={props} />} />
         )}
         <Route path="/register" render={() => <Register data={props} />} />
       </Switch>

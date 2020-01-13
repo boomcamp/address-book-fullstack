@@ -8,21 +8,15 @@ exports.up = pgm => {
       type: "serial",
       primaryKey: true
     },
-    first_name: {
+    firstName: {
       type: "text",
       notNull: true
     },
-    last_name: {
+    lastName: {
       type: "text",
       notNull: true
-    },
-    home_phone: {
-      type: "text"
     },
     mobile_phone: {
-      type: "text"
-    },
-    work_phone: {
       type: "text"
     },
     email: {
@@ -32,14 +26,22 @@ exports.up = pgm => {
     city: {
       type: "text"
     },
-    state_or_province: {
+    state: {
       type: "text"
     },
-    postal_code: {
+    postalCode: {
       type: "text"
     },
     country: {
       type: "text"
+    },
+    userId: {
+      type: "integer",
+      notNull: true,
+      references: '"users"'
+    },
+    groupId: {
+      type: "integer"
     }
   });
 };

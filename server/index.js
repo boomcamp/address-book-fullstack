@@ -1,11 +1,11 @@
 const express = require("express");
 const massive = require("massive");
-const data = require("../controllers/data");
 const user = require("../controllers/users");
-const addressbook = require("../controllers/addressbook");
 const contacts = require("../controllers/contacts");
 const { auth } = require("../controllers/auth");
-const bodyParser = require("body-parser");
+const valid = require("../controllers/validate");
+const cors = require("cors");
+const groups = require("../controllers/groups");
 
 massive({
   host: "localhost",
@@ -15,8 +15,6 @@ massive({
   password: "fullstackdb"
 }).then(db => {
   const app = express();
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());
   // database
   app.set("db", db);
 
@@ -27,20 +25,23 @@ massive({
 
   // middleware
   app.use(express.json());
-
-  // database endpoints
-  app.get("/api/data/users", data.users);
-  app.get("/api/data/contacts", data.contacts);
+  app.use(cors());
 
   // users endpoints
   app.post("/api/register", user.register);
   app.post("/api/login", user.login);
 
-  // addressbook endpoint
-  app.get("/api/user/:id/addressbook", auth, addressbook.list);
-
-  // contacts endpoint
+  // contact endpoints
+  app.get("/api/user/:id/addressbook", auth, contacts.list);
   app.post("/api/contacts", auth, contacts.addNewContact);
+  app.patch("/api/contacts/:id", auth, valid.contact, contacts.updateContact);
+  app.delete("/api/contacts/:id", auth, valid.contact, contacts.deleteContact);
+  app.get("/api/contacts/:id", auth, valid.contact, contacts.viewDetails);
+
+  // group endpoints
+  app.post("/api/groups", auth, groups.addNew);
+  app.delete("/api/groups/:id", auth, groups.delete);
+  app.get("/api/groups/:id/list", auth, valid.group, groups.list);
 
   // listen
   app.listen(port, () => {

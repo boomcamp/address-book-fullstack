@@ -9,7 +9,7 @@ import {
   Box,
   blue,
   decoration
-} from "../style/style";
+} from "../styles/login";
 import { TextField } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
