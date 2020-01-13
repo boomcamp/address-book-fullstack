@@ -3,6 +3,7 @@ const massive = require("massive");
 const cors = require("cors");
 
 const user = require("./controllers/users");
+const contacts = require("./controllers/contacts");
 
 massive({
 	host: "localhost",
@@ -21,6 +22,9 @@ massive({
 	app.post("/users/login", user.login);
 	app.get("/users", user.getUsers);
 	app.get("/users/:username", user.getByUsersByUsername);
+
+	app.post("/contacts", contacts.create);
+	app.get("/contacts", contacts.getList);
 
 	const PORT = 3006;
 	app.listen(PORT, () => {

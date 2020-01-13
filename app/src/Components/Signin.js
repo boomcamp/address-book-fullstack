@@ -95,6 +95,7 @@ export default function SignIn() {
 					});
 					sessionStorage.setItem("isLoggedIn", true);
 					localStorage.setItem("Token", res.data.token);
+					localStorage.setItem("user", JSON.stringify(res.data));
 					history.push("/home");
 				})
 				.catch(err => {
