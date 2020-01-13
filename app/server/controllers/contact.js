@@ -77,17 +77,22 @@ function addUser(req, res) {
     db.contact
         .insert({
             fname: fname,
-            lname: lname,
-            addressbook: [
-                {
-                    user_id: user_id,
-                    contact_id: undefined
-                }
-            ]
+            lname: lname
         }, {
             deepInsert: true
         })
-        .then(user => res.status(201).json(user))
+        .then(function(contact){
+            const contact_id = contact.id;
+
+            db.addressbook
+                .insert({
+                    user_id,
+                    contact_id
+                }, {
+                    deepInsert: true
+                })
+                res.status(201).json({ ...contact })
+        })
         .catch(e => {
             console.error(e);
             res.status(500).end();
