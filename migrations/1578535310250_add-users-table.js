@@ -12,6 +12,14 @@ exports.up = pgm => {
       type: "text",
       notNull: true
     },
+    fname: {
+      type: "text",
+      notNull: true
+    },
+    lname: {
+      type: "text",
+      notNull: true
+    },
     email: {
       type: "text",
       notNull: true

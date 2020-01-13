@@ -25,19 +25,17 @@ export default class Login extends React.Component {
       <Div>
         <MDBRow>
           <Form>
-            <form onSubmit={e => this.props.mySubmitHandler(e)}>
+            <form onSubmit={this.props.mySubmitHandler}>
               <p className="h4 text-center mb-4">Sign in</p>
               <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
                 Your username
               </label>
               <input
-                onChange={username =>
-                  this.props.myUsernameHandler(username.target.value)
-                }
+                name="username"
+                onChange={this.props.myChangeHandler}
                 type="text"
                 id="defaultFormRegisterConfirmEx3"
                 className="form-control"
-                name="username"
                 placeholder="Your Username"
                 required
               />
@@ -47,9 +45,8 @@ export default class Login extends React.Component {
                 Your password
               </label>
               <input
-                onChange={password =>
-                  this.props.myPasswordHandler(password.target.value)
-                }
+                name="password"
+                onChange={this.props.myChangeHandler}
                 type="password"
                 id="defaultFormLoginPasswordEx"
                 className="form-control"
@@ -71,14 +68,20 @@ export default class Login extends React.Component {
               <div className="text-center register">
                 Don't have an account yet?
                 <br />
-                <button className="btn-register">
+                <MDBBtn
+                  className="btn-register"
+                  color="white"
+                  style={{
+                    borderRadius: 10
+                  }}
+                >
                   <Link
                     to="/register"
                     onClick={() => this.props.redirectHandler()}
                   >
                     Sign up here
                   </Link>
-                </button>
+                </MDBBtn>
               </div>
             </form>
           </Form>

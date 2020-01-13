@@ -1,23 +1,34 @@
 import React from "react";
 import {
-  MDBTable,
-  MDBTableBody,
-  MDBTableHead,
   MDBNavbar,
   MDBNavbarBrand,
   MDBNavbarNav,
   MDBNavbarToggler,
   MDBCollapse,
   MDBNavItem,
-  MDBNavLink
+  MDBNavLink,
+  MDBBtn,
+  MDBModal,
+  MDBModalBody,
+  MDBModalHeader,
+  MDBModalFooter
 } from "mdbreact";
 import { BrowserRouter as Router } from "react-router-dom";
+import MaterialTable from "material-table";
+import styled from "styled-components";
+
+import Modal from "../Modal/Modal";
+
+const Div = styled.div`
+  margin-top: 100px;
+`;
 
 export default class Users extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapse: false
+      collapse: false,
+      modal14: false
     };
     this.onClick = this.onClick.bind(this);
   }
@@ -28,6 +39,13 @@ export default class Users extends React.Component {
     });
   }
 
+  handleToggle = nr => () => {
+    let modalNumber = "modal" + nr;
+    this.setState({
+      [modalNumber]: !this.state[modalNumber]
+    });
+  };
+
   render() {
     const bgBlue = { backgroundColor: "#4285f4" };
     return (
@@ -36,7 +54,7 @@ export default class Users extends React.Component {
           <header>
             <MDBNavbar style={bgBlue} dark expand="md" scrolling fixed="top">
               <MDBNavbarBrand href="/">
-                <strong>Navbar</strong>
+                <strong>Address Book</strong>
               </MDBNavbarBrand>
               <MDBNavbarToggler onClick={this.onClick} />
               <MDBCollapse isOpen={this.state.collapse} navbar>
@@ -45,13 +63,7 @@ export default class Users extends React.Component {
                     <MDBNavLink to="#">Home</MDBNavLink>
                   </MDBNavItem>
                   <MDBNavItem>
-                    <MDBNavLink to="#">Features</MDBNavLink>
-                  </MDBNavItem>
-                  <MDBNavItem>
-                    <MDBNavLink to="#">Pricing</MDBNavLink>
-                  </MDBNavItem>
-                  <MDBNavItem>
-                    <MDBNavLink to="#">Options</MDBNavLink>
+                    <MDBNavLink to="#">Contacts</MDBNavLink>
                   </MDBNavItem>
                 </MDBNavbarNav>
                 <MDBNavbarNav right>
@@ -60,7 +72,9 @@ export default class Users extends React.Component {
                       className="handleLogout"
                       onClick={this.props.handleLogout}
                       style={{
-                        border: "transparent"
+                        border: "transparent",
+                        backgroundColor: "transparent",
+                        color: "white"
                       }}
                     >
                       Log Out
@@ -69,38 +83,81 @@ export default class Users extends React.Component {
                 </MDBNavbarNav>
               </MDBCollapse>
             </MDBNavbar>
+            <Div>
+              <MaterialTable
+                title="Contacts"
+                columns={[
+                  { title: "Name", field: "name" },
+                  { title: "First Name", field: "fname" },
+                  { title: "Last Name", field: "lname" },
+                  {
+                    title: "Contact Number",
+                    field: "mobile_phone"
+                  },
+                  {
+                    title: "Email Address",
+                    field: "email"
+                  },
+                  {
+                    title: "Details",
+                    field: "details",
+                    render: rowData => (
+                      <React.Fragment>
+                        <MDBBtn color="primary" onClick={this.handleToggle(14)}>
+                          Details
+                        </MDBBtn>
+                        <MDBModal
+                          isOpen={this.state.modal14}
+                          handleToggle={this.handleToggle(14)}
+                          centered
+                        >
+                          <MDBModalHeader toggle={this.handleToggle(14)}>
+                            Details
+                          </MDBModalHeader>
+                          <MDBModalBody>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit, sed do eiusmod tempor incididunt ut labore et
+                            dolore magna aliqua. Ut enim ad minim veniam, quis
+                            nostrud exercitation ullamco laboris nisi ut aliquip
+                            ex ea commodo consequat.
+                          </MDBModalBody>
+                          <MDBModalFooter>
+                            <MDBBtn
+                              color="secondary"
+                              onClick={this.handleToggle(14)}
+                            >
+                              Close
+                            </MDBBtn>
+                            <MDBBtn color="primary">Save changes</MDBBtn>
+                          </MDBModalFooter>
+                        </MDBModal>
+                      </React.Fragment>
+                    )
+                  }
+                ]}
+                data={[
+                  {
+                    name: "Ja Morant",
+                    fname: "Demetrius",
+                    lname: "Morant",
+                    mobile_phone: "+693481368679",
+                    email: "jaCool@gmail.com"
+                  }
+                ]}
+                actions={[
+                  {
+                    icon: "add",
+                    tooltip: "Add User",
+                    isFreeAction: true,
+                    onClick: () => {
+                      return <Modal />;
+                    }
+                  }
+                ]}
+              />
+            </Div>
           </header>
         </Router>
-        <MDBTable>
-          <MDBTableHead color="primary-color">
-            <tr>
-              <th>#</th>
-              <th>First</th>
-              <th>Last</th>
-              <th>Handle</th>
-            </tr>
-          </MDBTableHead>
-          <MDBTableBody>
-            <tr>
-              <td>1</td>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>@twitter</td>
-            </tr>
-          </MDBTableBody>
-        </MDBTable>
       </div>
     );
   }

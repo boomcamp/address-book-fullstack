@@ -8,24 +8,28 @@ exports.up = pgm => {
       type: "serial",
       primaryKey: true
     },
-    first_name: {
+    userId: {
+      type: "integer",
+      notNull: true
+    },
+    fname: {
       type: "text",
       notNull: true
     },
-    last_name: {
+    lname: {
       type: "text",
       notNull: true
     },
     home_phone: {
-      type: "integer",
+      type: "text",
       notNull: true
     },
     mobile_phone: {
-      type: "integer",
+      type: "text",
       notNull: true
     },
     work_phone: {
-      type: "integer",
+      type: "text",
       notNull: true
     },
     email: {
@@ -41,7 +45,7 @@ exports.up = pgm => {
       notNull: true
     },
     postal_code: {
-      type: "integer",
+      type: "text",
       notNull: true
     },
     country: {

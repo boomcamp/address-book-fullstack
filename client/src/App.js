@@ -8,60 +8,30 @@ import Routes from "./components/Routes/Routes";
 export default class App extends React.Component {
   constructor() {
     super();
-    this.state = {
-      email: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
-      accessToken: null,
-      error: false,
-      redirect: false,
-      disabled: false
-    };
+    this.state = {};
   }
 
-  myEmailHandler = email => {
-    this.setState({ email: email });
+  myChangeHandler = event => {
+    this.setState({ [event.target.name]: event.target.value });
   };
 
-  myPasswordHandler = password => {
-    this.setState({ password: password });
-  };
-
-  confirmPasswordHandler = confirmPassword => {
-    if (this.state.password !== confirmPassword) {
-      this.setState({
-        error: true
-      });
-      console.log("Password do not match!");
-    } else {
-      this.setState({
-        error: false
-      });
-      alert("Password match!");
-    }
-  };
-
-  myUsernameHandler = username => {
-    this.setState({ username: username });
-  };
-
-  mySubmitHandler = e => {
-    e.preventDefault();
+  mySubmitHandler = event => {
+    event.preventDefault();
+    const Obj = {
+      username: this.state.username,
+      password: this.state.password
+    };
     const url = "http://localhost:5009/api/login";
     axios
-      .post(url, {
-        username: this.state.username,
-        password: this.state.password
-      })
+      .post(url, Obj)
       .then(res => {
-        localStorage.setItem("user", res.data.accessToken);
+        localStorage.setItem("user", res.data.token);
         this.setState({
-          accessToken: localStorage.getItem("user")
+          token: localStorage.getItem("user")
         });
         alert("Welcome!");
       })
-      .catch(err => alert(err.response));
+      .catch(err => alert(err.response.data.error));
   };
 
   redirectHandler = () => {
@@ -69,45 +39,45 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({ accessToken: localStorage.getItem("user") });
+    this.setState({ token: localStorage.getItem("user") });
   }
 
-  RegisterHandler = e => {
-    e.preventDefault();
+  RegisterHandler = event => {
+    event.preventDefault();
+    const Obj = {
+      username: this.state.username,
+      fname: this.state.fname,
+      lname: this.state.lname,
+      email: this.state.email,
+      password: this.state.password,
+      plainPassword: this.state.password
+    };
     const url = "http://localhost:5009/api/register";
     axios
-      .post(url, {
-        username: this.state.username,
-        email: this.state.email,
-        password: this.state.password,
-        plainPassword: this.state.password
-      })
+      .post(url, Obj)
       .then(() => {
         this.setState({
           redirect: true
         });
         alert("Success!!");
       })
-      .catch(err => alert(err.response));
+      .catch(err => alert(err.response.data.error));
   };
 
   handleLogout = () => {
     localStorage.clear();
-    this.setState({ accessToken: null, email: "null", password: "null" });
+    this.setState({ token: null, email: "null", password: "null" });
   };
 
   render() {
     return (
       <HashRouter>
         <Routes
-          myEmailHandler={this.myEmailHandler}
-          myUsernameHandler={this.myUsernameHandler}
-          myPasswordHandler={this.myPasswordHandler}
-          confirmPasswordHandler={this.confirmPasswordHandler}
+          myChangeHandler={this.myChangeHandler}
           mySubmitHandler={this.mySubmitHandler}
           RegisterHandler={this.RegisterHandler}
           handleLogout={this.handleLogout}
-          accessToken={this.state.accessToken}
+          token={this.state.token}
           redirect={this.state.redirect}
           redirectHandler={this.redirectHandler}
           error={this.state.error}

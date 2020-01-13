@@ -23,6 +23,9 @@ massive({
 
     app.post("/api/login", users.login);
 
+    app.post("/api/contacts/add", users.addContact);
+    app.get("/api/contacts", users.contacts);
+
     const PORT = 5009;
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);

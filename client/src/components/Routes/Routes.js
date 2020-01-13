@@ -8,26 +8,22 @@ import Users from "../Users/Users";
 export default class Routes extends React.Component {
   render() {
     const {
-      myEmailHandler,
-      myPasswordHandler,
-      confirmPasswordHandler,
-      myUsernameHandler,
       mySubmitHandler,
       RegisterHandler,
       handleLogout,
-      accessToken,
+      token,
       redirect,
-      redirectHandler
+      redirectHandler,
+      myChangeHandler
     } = this.props;
     return (
       <Switch>
         <Route
           exact
           render={() =>
-            accessToken === null ? (
+            token === null ? (
               <Login
-                myUsernameHandler={myUsernameHandler}
-                myPasswordHandler={myPasswordHandler}
+                myChangeHandler={myChangeHandler}
                 mySubmitHandler={mySubmitHandler}
                 redirectHandler={redirectHandler}
               />
@@ -43,11 +39,9 @@ export default class Routes extends React.Component {
               <Redirect from="*" to="/" />
             ) : (
               <Registration
-                myEmailHandler={myEmailHandler}
-                myUsernameHandler={myUsernameHandler}
-                myPasswordHandler={myPasswordHandler}
-                confirmPasswordHandler={confirmPasswordHandler}
+                myChangeHandler={myChangeHandler}
                 RegisterHandler={RegisterHandler}
+                redirectHandler={redirectHandler}
               />
             )
           }
