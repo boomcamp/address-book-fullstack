@@ -1,21 +1,34 @@
 import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
-import MaterialTable from "material-table";
+import MaterialTable, { MTableBodyRow } from "material-table";
+import { Chip } from "@material-ui/core";
+import "../App.css";
 
-export default function ContactsTable(props) {
+export default function ContactsTable(highprops) {
   const [state, setState] = useState({
     columns: [
       { title: "First Name", field: "first_name", filtering: false },
       { title: "Last Name", field: "last_name", filtering: false },
       { title: "Home Phone", field: "home_phone", filtering: false },
       { title: "Mobile Phone", field: "mobile_phone", filtering: false },
-      { title: "Work Phone", field: "work_phone", filtering: false },
-      { title: "Email", field: "email", filtering: false },
-      { title: "City", field: "city", filtering: false },
-      { title: "State/Province", field: "state_or_province", filtering: false },
-      { title: "Postal Code", field: "postal_code", filtering: false },
-      { title: "Country", field: "country", filtering: false }
-    ]
+      { title: "Work Phone", field: "work_phone", filtering: false }
+      // { title: "Email", field: "email", filtering: false },
+      // { title: "City", field: "city", filtering: false },
+      // { title: "State/Province", field: "state_or_province", filtering: false },
+      // { title: "Postal Code", field: "postal_code", filtering: false },
+      // { title: "Country", field: "country", filtering: false }
+    ],
+    components: {
+      Row: props => {
+        return (
+          <MTableBodyRow
+            {...props}
+            className="table-row-component"
+            onRowClick={() => highprops.contactTransfer(props)}
+          />
+        );
+      }
+    }
   });
 
   useEffect(() => {
@@ -69,6 +82,7 @@ export default function ContactsTable(props) {
       method: "post",
       url: "http://localhost:5000/api/contact/save",
       data: {
+        userid: data.key,
         first_name: data.first_name,
         last_name: data.last_name,
         home_phone: data.home_phone,
@@ -117,12 +131,13 @@ export default function ContactsTable(props) {
       style={{ borderRadius: 0 }}
       title="Contact List"
       columns={state.columns}
+      components={state.components}
       data={state.data}
       options={{
         actionsColumnIndex: -1,
         selection: true,
-        filtering: true
       }}
+
       actions={[
         {
           tooltip: "Remove All Selected Users",
@@ -137,34 +152,42 @@ export default function ContactsTable(props) {
               DeleteData(udata.id);
             });
           }
+        },
+        {
+          icon: "add",
+          tooltip: "Add User",
+          isFreeAction: true,
+          onClick: event => {
+            highprops.prepareNewData()
+          }
         }
       ]}
       editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.push(newData);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }).then(AddData(newData)),
+        // onRowAdd: newData =>
+        //   new Promise(resolve => {
+        //     setTimeout(() => {
+        //       resolve();
+        //       setState(prevState => {
+        //         const data = [...prevState.data];
+        //         data.push(newData);
+        //         return { ...prevState, data };
+        //       });
+        //     }, 600);
+        //   }).then(AddData(newData)),
 
-        onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              if (oldData) {
-                setState(prevState => {
-                  const data = [...prevState.data];
-                  data[data.indexOf(oldData)] = newData;
-                  return { ...prevState, data };
-                });
-              }
-            }, 600);
-          }).then(EditData(newData, oldData)),
+        // onRowUpdate: (newData, oldData) =>
+        //   new Promise(resolve => {
+        //     setTimeout(() => {
+        //       resolve();
+        //       if (oldData) {
+        //         setState(prevState => {
+        //           const data = [...prevState.data];
+        //           data[data.indexOf(oldData)] = newData;
+        //           return { ...prevState, data };
+        //         });
+        //       }
+        //     }, 600);
+        //   }).then(EditData(newData, oldData)),
 
         onRowDelete: oldData =>
           new Promise(resolve => {

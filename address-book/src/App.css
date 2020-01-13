@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.table-row-component{
+  cursor:pointer;
+}
+
+.table-row-component:hover{
+  background: rgb(241, 241, 241);
+}

@@ -1,6 +1,5 @@
 import React, { useState, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
@@ -43,6 +42,8 @@ export default function Login() {
         .then(data => {
           console.log(data);
           sessionStorage.setItem("token", `Bearer ${data.data.token}`);
+          sessionStorage.setItem("userid", data.data.id);
+
           window.location.reload();
           return data;
         })
