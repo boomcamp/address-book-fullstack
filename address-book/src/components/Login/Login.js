@@ -56,17 +56,17 @@ export default function SignIn() {
       "username": values.username,
       "password": values.pass,
     }).then((res,i)=>{
-      localStorage.setItem('token', res.data.accessToken)
+      localStorage.setItem('token', res.data.token)
       localStorage.setItem('username', values.username)
       setValues({...values, success: true})
     })
     .catch(err => setValues({...values, error: true}))
   }
   if(values.success){
-    return(<Redirect to='/Address-Book'/>)
+    return(<Redirect to='/addressbook'/>)
   }
   if(localStorage.getItem('token')){
-    return(<Redirect to='/Address-Book'/>)
+    return(<Redirect to='/addressbook'/>)
   }
   const eventhandler = (e) =>{
     let prevdata = Object.assign({}, values);
@@ -98,7 +98,7 @@ export default function SignIn() {
             variant="outlined"
             fullWidth
             id="username"
-            label="Email Address"
+            label="Username"
             name="username"
             autoComplete="username"
             validators={['required']}

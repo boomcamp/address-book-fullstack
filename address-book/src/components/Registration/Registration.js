@@ -45,36 +45,36 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp() {
     const classes = useStyles();
     const [values, setValues] = useState({
-      fname: '',
-      lname: '',
+    //   fname: '',
+    //   lname: '',
       email: '',
-      uname: '',
+      username: '',
     //   cpass: '',
       pass: '',
     //   active: false,
       success: false,
-      showPassword: false,
+    //   showPassword: false,
       error: false,
     });
 
     const signthis = () =>{
-      if(values.cpass === values.pass){
+    //   if(values.cpass === values.pass){
         axios
         .post('http://localhost:5001/api/users', {
         //   "firstName": values.fname,
         //   "lastName": values.lname,
           "email": values.email,
-          "username": values.uname,
+          "username": values.username,
           "password": values.pass,
         //   "plainpassword": values.pass,
-        //   "active": true,
+          "active": true,
         }).then(res => {
           alert('Success!');
           setValues({...values, success: true});
         }).catch(err => setValues({...values, error: true}))
-      }else{
-        alert('Password did not match')
-      }
+    //   }else{
+    //     alert('Password did not match')
+    //   }
     }
     if(values.success){
       return (<Redirect to='/login'/>)
@@ -156,15 +156,15 @@ export default function SignUp() {
                 fullWidth
                 id="username"
                 label="Username"
-                name="uname"
+                name="username"
                 autoComplete="username"
                 validators={['required']}
                 errorMessages={['This field is required']}
                 onChange={eventhandler}
-                value={values.uname}
+                value={values.username}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextValidator
                 variant="outlined"
                 fullWidth

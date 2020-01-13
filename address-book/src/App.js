@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-// import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
-import Routes from '../Routes';
+import { HashRouter } from 'react-router-dom';
 
-class App extends Component {
+import Routes from './route';
+
+export default class App extends Component{
   render() {
     return (
-      <Routes />
+        <HashRouter>
+          <Routes/>
+        </HashRouter>
     );
   }
 }
-
-export default App;

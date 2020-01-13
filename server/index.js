@@ -2,7 +2,8 @@ const express = require('express')
 const massive = require('massive')
 const jwt = require('jsonwebtoken');
 const secret = require('../secret.js');
-const users = require('./controllers/controllers.js')
+const cors = require('cors');
+const users = require('./controllers/controllers.js');
 
 massive({
     host: 'localhost',
@@ -14,6 +15,7 @@ massive({
     const app = express()
     app.set('db', db)
     app.use(express.json())
+    app.use(cors())
     const port = 5001;
 
     app.post('/api/users', users.create);
