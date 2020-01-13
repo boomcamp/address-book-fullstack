@@ -52,7 +52,7 @@ function login(req, res) {
             }
 
             return argon2
-                .verify(iser.password, password)
+                .verify(user.password, password)
                 .then(valid => {
                     if(!valid) {
                         throw new Error('Incorrect Password');
