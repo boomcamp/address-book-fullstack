@@ -128,7 +128,7 @@ export default function ContactsTable(highprops) {
 
   return (
     <MaterialTable
-      style={{ borderRadius: 0 }}
+      // style={{ borderRadius: 0, width: '50%'}}
       title="Contact List"
       columns={state.columns}
       components={state.components}

@@ -3,6 +3,8 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
 
 export default function ContactForm(highprops) {
   const classes = useStyles();
@@ -20,9 +22,24 @@ export default function ContactForm(highprops) {
     country: "Default"
   });
 
-  useEffect(() => {
-    console.log("high props update");
+  const [grpState, setgrpState] = useState({
+    selectedGroupName: {
+      title: "Default"
+    },
+    groupList: [
+      {
+        title: "work"
+      },
+      {
+        title: "home"
+      },
+      {
+        title: "crew"
+      }
+    ]
+  });
 
+  useEffect(() => {
     if (highprops.prepareNewData) {
       setState({
         first_name: "",
@@ -36,6 +53,13 @@ export default function ContactForm(highprops) {
         postal_code: "",
         country: ""
       });
+      setgrpState(prevState => {
+        return { ...prevState, selectedGroupName: "" };
+      });
+
+      console.log("settiing");
+
+      getGroup();
     }
 
     if (highprops.contactData) {
@@ -44,17 +68,40 @@ export default function ContactForm(highprops) {
       setState(prevState => {
         return { ...datatransfer };
       });
+
+      setGroup();
     }
   }, [highprops.contactData]);
 
+  const setGroup = () => {
+    // here
+    axios({
+      method: "get",
+      url: `http://localhost:5000/api/contacts/groups/reference/retrieve/${highprops.contactData.id}`,
+      headers: { Authorization: sessionStorage.getItem("token") }
+    })
+      .then(data => {
+        // console.log(data.data[0].group_name)
+        setgrpState(prevState => {
+          return {
+            ...prevState,
+            selectedGroupName: {
+              title: data.data[0].group_name
+            }
+          };
+        });
+
+        // console.log(data.data.group_name);
+      })
+      .catch(e => console.log(e));
+  };
+
   const stateUpdate = e => {
     e.persist();
+
     let property = e.target.name;
 
-    console.log(e.target.value);
-
     setState(prevState => {
-      console.log(prevState);
       if (e.target.value === null) {
         prevState[property] = "";
       } else {
@@ -63,10 +110,24 @@ export default function ContactForm(highprops) {
 
       return { ...prevState };
     });
+    console.log(state);
+  };
+
+  const grpStateUpdate = (event, value, reason) => {
+    setgrpState(prevState => {
+      return {
+        ...prevState,
+        selectedGroupName: {
+          title: value
+        }
+      };
+    });
+
+    console.log(grpState);
   };
 
   function EditData(newdata, olddata) {
-    console.log(newdata.city);  
+    console.log(newdata.city);
     axios
       .put(
         `http://localhost:5000/api/contact/update/${olddata.id}`,
@@ -91,6 +152,9 @@ export default function ContactForm(highprops) {
   }
 
   function AddData(data) {
+    let new_contact_reference;
+
+    // for contacts table reference
     axios({
       method: "post",
       url: "/api/contact/save",
@@ -109,9 +173,31 @@ export default function ContactForm(highprops) {
       },
       headers: { Authorization: sessionStorage.getItem("token") }
     })
-      .then(data => console.log(data))
+      .then(data => {
+        return data;
+      })
+      .then(addtoGroup)
       .catch(e => console.log(e));
   }
+
+  const addtoGroup = data => {
+    if (!grpState.selectedGroupName) {
+      return null;
+      // addtoGroup(grpState.selectedGroupName, new_contact_reference);
+    } else {
+      axios({
+        method: "post",
+        url: "http://localhost:5000/api/contacts/groups/reference",
+        data: {
+          group_name: grpState.selectedGroupName.title,
+          contactid: data.data.id
+        },
+        headers: { Authorization: sessionStorage.getItem("token") }
+      })
+        .then(data => console.log(data))
+        .catch(e => console.log(e));
+    }
+  };
 
   const saveData = () => {
     if (highprops.prepareNewData) {
@@ -136,9 +222,40 @@ export default function ContactForm(highprops) {
         postal_code: "",
         country: ""
       });
+
+      setgrpState(prevState => {
+        return { ...prevState, selectedGroupName: "" };
+      });
     } else {
       setState(highprops.contactData);
     }
+  };
+
+  const getGroup = () => {
+    axios({
+      method: "get",
+      url: "http://localhost:5000/api/contacts/groups",
+      headers: { Authorization: sessionStorage.getItem("token") }
+    })
+      .then(data => {
+        console.log(grpState);
+
+        let groupContainer = [];
+
+        data.data.map(gdata => {
+          groupContainer.push({ title: gdata.group_name });
+        });
+
+        setgrpState(prevState => {
+          return {
+            ...prevState,
+            groupList: groupContainer
+          };
+        });
+
+        console.log(grpState);
+      })
+      .catch(e => console.log(e));
   };
 
   return (
@@ -282,6 +399,24 @@ export default function ContactForm(highprops) {
               />
             </div>
 
+            <Autocomplete
+              freeSolo
+              id="group-box"
+              value={grpState.selectedGroupName}
+              options={grpState.groupList}
+              getOptionLabel={option => option.title}
+              style={{ width: 300 }}
+              onInputChange={grpStateUpdate}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  // onChange={grpStateUpdate}
+                  label="Add to a group"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
             <Button type="submit">Save</Button>
             <Button onClick={() => cancel()}>Cancel</Button>
           </ValidatorForm>

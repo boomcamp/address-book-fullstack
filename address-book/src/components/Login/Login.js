@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, {  useState, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
@@ -50,7 +50,7 @@ export default function Login() {
         })
         .catch(err => {
           console.log(err.response);
-          seterrState({ ...err.response });
+          seterrState(err.response);
         });
     }
   };
@@ -85,7 +85,7 @@ export default function Login() {
               onChange={loginUserName}
             />
             <TextValidator
-              error={errstate.status === 400 ? true : false}
+              error={(errstate.status === 400 ? true : false)}
               id="outlined-password-input"
               name="password"
               value={state.password}
