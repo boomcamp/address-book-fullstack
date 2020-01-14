@@ -11,6 +11,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
+import Header from "../Header/Header";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -107,6 +109,7 @@ export default function Register(props) {
 
   return (
     <React.Fragment>
+      <Header />
       {onSubmitLoading()}
       <Container component="main" maxWidth="md">
         <ToastContainer

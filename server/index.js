@@ -21,6 +21,8 @@ massive({
     app.post('/api/signup', users.signup);
     //Sign-in
     app.post('/api/login', users.login);
+    //get user 
+    app.get('/api/user/:id', users.getUser);
 
     const port = 3002;
     app.listen(port, () => {

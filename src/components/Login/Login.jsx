@@ -11,6 +11,8 @@ import Container from "@material-ui/core/Container";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
+import Header from "../Header/Header";
+
 function Login() {
   const useStyles = makeStyles(theme => ({
     paper: {
@@ -88,6 +90,7 @@ function Login() {
 
   return (
     <React.Fragment>
+      <Header />
       {onSubmitLoading()}
       <Container component="main" maxWidth="sm">
         <div className={classes.paper}>
