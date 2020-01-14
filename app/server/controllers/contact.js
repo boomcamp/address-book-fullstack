@@ -71,27 +71,34 @@ function searchUser(req, res) {
 
 function addUser(req, res) {
     const db = req.app.get('db');
-    const {user_id} = req.query;
-    const {fname, lname} = req.body;
+    const { user_id } = req.query;
+    const { fname, lname, home_phone, mobile_phone, work_phone, city, state, postal_code, country } = req.body;
 
     db.contact
         .insert({
-            fname: fname,
-            lname: lname
+            fname,
+            lname,
+            home_phone,
+            mobile_phone,
+            work_phone,
+            city,
+            state,
+            postal_code,
+            country
         }, {
             deepInsert: true
         })
-        .then(function(contact){
+        .then(function (contact) {
             const contact_id = contact.id;
 
             db.addressbook
                 .insert({
-                    user_id,
-                    contact_id
+                    user_id: user_id,
+                    contact_id: contact_id
                 }, {
                     deepInsert: true
                 })
-                res.status(201).json({ ...contact })
+            res.status(201).json({ ...contact })
         })
         .catch(e => {
             console.error(e);

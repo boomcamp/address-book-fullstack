@@ -89,7 +89,7 @@ export default function LoginPage({ nextStep, handleChange }) {
             <Card className={classes.card}>
                 <CardHeader
                     avatar={
-                        <Avatar aria-label="recipe" className={classes.avatar}>
+                        <Avatar aria-label="signin" className={classes.avatar}>
                             <PermIdentityIcon />
                         </Avatar>
                     }

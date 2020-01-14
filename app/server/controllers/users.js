@@ -13,20 +13,14 @@ function newUser(req, res) {
             return db.users.insert({
                 username,
                 password: hash,
-                email,
-                // contact: [
-                //     {
-                //         contact_id: undefined,
-                //         fname: undefined,
-                //         lname: undefined,
-                //     }
-                // ]
+                email
             }, {
                 deepInsert: true
-            });
+            })
         })
         .then(user => {
             const token = jwt.sign({ user_id: user.id }, secret);
+            delete user.password;
             res.status(201).json({ ...user, token });
         })
         .catch(e => {
@@ -44,28 +38,28 @@ function login(req, res) {
         .findOne({
             username
         }, {
-            fields: ['user_id', 'username', 'password', 'email']
+            fields: ['user_id', 'email', 'username', 'password']
         })
-        .then(user  => {
-            if(!user) {
+        .then(user => {
+            if (!user) {
                 throw new Error('Invalid Username');
             }
 
             return argon2
                 .verify(user.password, password)
                 .then(valid => {
-                    if(!valid) {
+                    if (!valid) {
                         throw new Error('Incorrect Password');
                     }
 
-                    const token = jwt.sign({ user_id: user.id}, secret);
+                    const token = jwt.sign({ user_id: user.id }, secret);
                     delete user.password;
-                    res.status(200).json({ ...user, token})
+                    res.status(200).json({ ...user, token })
                 })
         })
         .catch(e => {
-            if(['Invalid Username', 'Incorrect Passwor'].includes(e.message)) {
-                res.status(400).json({ error: e.message});
+            if (['Invalid Username', 'Incorrect Password'].includes(e.message)) {
+                res.status(400).json({ error: e.message });
             } else {
                 console.error(e);
                 res.status(500).end();

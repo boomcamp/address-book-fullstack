@@ -27,11 +27,11 @@ massive({
         // Fetch all users
         app.get('/api/contacts', contact.getAllData);
         // Fetch by user ID
-        app.get('/api/contacts/:contact_id', contact.getDataById);
+        app.get('/api/contacts/:id', contact.getDataById);
         // Search user
-        app.get('/api/contacts/', contact.searchUser);
+        app.get('/api/contacts', contact.searchUser);
         // Edit user
-        app.patch('/api/contacts/:contact_id', contact.updateUser);
+        app.patch('/api/contacts/:id', contact.updateUser);
         // Delete user
         app.delete('/api/contacts/', contact.deleteUser);
         // Add user

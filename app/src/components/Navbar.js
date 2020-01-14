@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import Divider from '@material-ui/core/Divider'
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,6 +39,11 @@ export default function Navbar() {
         setAnchorEl(null);
     };
 
+    const logOut = () => {
+        localStorage.clear();
+        window.history.push('/');
+    }
+
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -46,7 +51,7 @@ export default function Navbar() {
                     <div className={classes.width}>
                         <Typography variant="h6" className={classes.title}>
                             Address Book
-                    </Typography>
+                        </Typography>
                         {auth && (
                             <div>
                                 <IconButton
@@ -75,7 +80,7 @@ export default function Navbar() {
                                 >
                                     <MenuItem onClick={handleClose}>My account</MenuItem>
                                     <Divider />
-                                    <MenuItem onClick={handleClose}>Sign Out</MenuItem>
+                                    <MenuItem onClick={logOut}>Sign Out</MenuItem>
                                 </Menu>
                             </div>
                         )}
