@@ -14,8 +14,6 @@ function App() {
           <Route exact path="/" component={LoginForm} />
           <Route path="/signup" component={Register} />
           <Route path="/homepage" component={Home} />
-        
-
         </React.Fragment>
       </Router>
     </div>

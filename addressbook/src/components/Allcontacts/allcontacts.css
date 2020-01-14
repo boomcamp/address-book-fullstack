@@ -1,0 +1,7 @@
+.allActions{
+    display: flex;
+    justify-content: space-evenly;
+}
+.underline{
+    width: 100%;
+}

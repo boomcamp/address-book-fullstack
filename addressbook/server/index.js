@@ -2,7 +2,8 @@ const express = require("express");
 const massive = require("massive");
 const jwt = require("jsonwebtoken");
 const reg = require("./controllers/user");
-const cors = require('cors')
+const addcontact = require("./controllers/addcontacts");
+const cors = require("cors");
 massive({
   host: "localhost",
   port: 5432,
@@ -11,20 +12,17 @@ massive({
   password: "delfz"
 })
   .then(db => {
-   
     const app = express();
     app.set("db", db);
     app.use(express.json());
-    app.use(cors())
+    app.use(cors());
 
-    
     app.post("/api/register", reg.register);
     app.post("/api/login", reg.login);
 
-     
     app.get("/api/users", reg.list);
 
-
+    app.post("/api/create", addcontact.addcontact);
     app.get("/api/protected/data", (req, res) => {
       if (!req.headers.authorization) {
         return res.status(401).end();

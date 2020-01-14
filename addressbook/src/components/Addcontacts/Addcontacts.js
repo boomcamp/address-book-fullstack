@@ -28,9 +28,6 @@ export default class Addcontacts extends Component {
 
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
-          Open Modal with customized footer
-        </Button>
         <Modal
           visible={visible}
           title="Title"

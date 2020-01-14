@@ -12,6 +12,7 @@ module.exports = {
       .then(hash => {
         return db.users.insert(
           {
+            
             username,
             email,
             password: hash,
@@ -42,6 +43,7 @@ module.exports = {
         res.status(500).end();
       });
   },
+  
   login: (req, res) => {
     const db = req.app.get("db");
     const { username, password } = req.body;
@@ -52,7 +54,7 @@ module.exports = {
           username
         },
         {
-          fields: ["id", "username", "email", "password"]
+          fields: ["id", "username", "password"]
         }
       )
       .then(user => {

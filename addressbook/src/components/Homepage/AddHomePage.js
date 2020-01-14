@@ -3,9 +3,11 @@ import { message } from "antd";
 import axios from "axios";
 import { Layout, Menu, Icon, Popconfirm, Button, Tooltip } from "antd";
 import "./home.css";
-import Footers from '../Footer/Footer'
+import Footers from "../Footer/Footer";
 import Card from "../Card/AddBookCard";
 import Headers from "../Header/Header";
+import Allcontacts from '../Allcontacts/Allcontacts'
+import Addcontacts from "../Addcontacts/Addcontacts";
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -54,7 +56,9 @@ export default class AddHomePage extends Component {
             />
             <p>Address Book</p>
           </div>
+
           <div className="pop">
+            <Card />
             <Popconfirm
               placement="leftTop"
               title="Are you Sure to logout?"
@@ -64,16 +68,20 @@ export default class AddHomePage extends Component {
             >
               {/* <Chip icon={<ExitToAppIcon />} label="Logout" /> */}
               <Tooltip title="Logout">
-                <Button icon="logout"></Button>
+                <Icon
+                  className='logout'
+                  type="logout"
+                  style={{ fontSize: "25px", color: "#fff" }}
+                  theme="outlined"
+                ></Icon>
               </Tooltip>
-              ,
             </Popconfirm>
+
+            <Addcontacts />
           </div>
         </div>
-
-        <Headers />
-        <Card/>
-        <Footers/>
+        <div className='allContacts'><Allcontacts/></div> 
+        <Footers />
       </div>
     );
   }

@@ -1,15 +1,9 @@
 import React, { Component } from "react";
-import {
-  Form,
-  Input,
-  Icon,
-  Button,
-  AutoComplete
-} from "antd";
+import { Form, Input, Icon, Button, AutoComplete } from "antd";
 import "./reg.css";
-import axios from 'axios'
+import axios from "axios";
 import { Link } from "react-router-dom";
-import { message } from 'antd';
+import { message } from "antd";
 // const { Option } = Select;
 // const AutoCompleteOption = AutoComplete.Option;
 class Registration extends Component {
@@ -17,11 +11,10 @@ class Registration extends Component {
     super(props);
 
     this.state = {
-    
       username: "",
       email: "",
       password: "",
-      confirmPassword:''
+      confirmPassword: ""
     };
   }
 
@@ -29,7 +22,6 @@ class Registration extends Component {
     confirmDirty: false,
     autoCompleteResult: []
   };
-
 
   componentDidMount() {
     if (localStorage.getItem("token") != null) {
@@ -41,36 +33,31 @@ class Registration extends Component {
 
   handleChange = e => {
     console.log(e.value);
-    e.name === 'userName' ?
-    this.setState({ username: e.value }) :
-    e.name === 'email' ?
-      this.setState({ email: e.value }) :
-          e.name === 'password' ?
-            this.setState({ password: e.value }):
-            this.setState({ confirmPassword: e.value })
-
+    e.name === "userName"
+      ? this.setState({ username: e.value })
+      : e.name === "email"
+      ? this.setState({ email: e.value })
+      : e.name === "password"
+      ? this.setState({ password: e.value })
+      : this.setState({ confirmPassword: e.value });
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log("Received values of form: ", values);
       }
-
     });
     if (this.state.confirmPassword === this.state.password) {
-      axios
-        .post('http://localhost:3003/api/register', this.state)
-      .then(res => {
-        console.log(res.data.token)
-        localStorage.setItem('token', res.data.token)
+      axios.post("http://localhost:3003/api/register", this.state).then(res => {
+        console.log(res.data.token);
+        localStorage.setItem("token", res.data.token);
         this.props.history.push("/homepage");
         message.success("Welcome " + this.state.username);
-      })
-    }
-    else {
-      message.warning("Password and Confirm Password didn't match")
+      });
+    } else {
+      message.warning("Password and Confirm Password didn't match");
     }
   };
 
@@ -140,16 +127,13 @@ class Registration extends Component {
         <div className="formMainContainer">
           <div className="FormContainer">
             <div className="container">
-              <Form {...formItemLayout} onSubmit={(e)=>this.handleSubmit(e)}>
-                <div
-                 className='signUp'
-                >
+              <Form {...formItemLayout} onSubmit={e => this.handleSubmit(e)}>
+                <div className="signUp">
                   {/* <Avatar size={100} icon="user" /> */}
-                    Sign Up
-                 
+                  Sign Up
                 </div>
-                
-                <hr className='kel'></hr>
+
+                <hr className="kel"></hr>
                 <Form.Item>
                   {getFieldDecorator("username", {
                     rules: [
@@ -184,7 +168,7 @@ class Registration extends Component {
                     ]
                   })(
                     <Input
-                    required
+                      required
                       placeholder="Email"
                       name="email"
                       onChange={e => this.handleChange(e.target)}
@@ -204,7 +188,7 @@ class Registration extends Component {
                     ]
                   })(
                     <Input.Password
-                    required
+                      required
                       placeholder="Password"
                       name="password"
                       onChange={e => this.handleChange(e.target)}
@@ -227,15 +211,12 @@ class Registration extends Component {
                       onBlur={this.handleConfirmBlur}
                       placeholder="Confirm Password"
                       onChange={e => this.handleChange(e.target)}
-                      name="confirmPassword" 
+                      name="confirmPassword"
                       required
                     />
                   )}
                 </Form.Item>
-                <div
-                className='regContainer'
-               
-                >
+                <div className="regContainer">
                   <Form.Item {...tailFormItemLayout}>
                     <Button
                       type="primary"
@@ -247,13 +228,7 @@ class Registration extends Component {
                       Register
                     </Button>
                   </Form.Item>
-                  <p
-                   className=' accountAlready'
-                  
-                  >
-                    {" "}
-                    already have an account?
-                  </p>
+                  <p className=" accountAlready"> already have an account?</p>
                   <Link to="/">Login</Link>
                 </div>
               </Form>
