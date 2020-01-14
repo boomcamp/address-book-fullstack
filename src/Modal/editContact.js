@@ -11,6 +11,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Close from "@material-ui/icons/HighlightOff";
 import axios from "axios";
+import * as ls from "local-storage";
 import styled from "styled-components";
 
 const useStyles = makeStyles(theme => ({
@@ -34,85 +35,33 @@ const CloseButton = styled(Close)`
   float: right;
 `;
 
-export default function AddContactModal({
+export default function EditContactModal({
   open,
   setOpen,
-  headers,
-  match,
-  setRows,
-  rows
+  getContact,
+  headers
 }) {
   const classes = useStyles();
-  const [contact, setContact] = useState({
-    first_name: "",
-    last_name: "",
-    mobile_phone: "",
-    home_phone: "",
-    work_phone: "",
-    email: "",
-    state_or_province: "",
-    country: "",
-    city: "",
-    postal_code: ""
-  });
-
-  const [err, showErr] = useState({
-    first_name: {
-      required: false
-    },
-    last_name: {
-      required: false
-    },
-    mobile_phone: {
-      required: false
-    }
-  });
-
-  const requiredData = e => {
-    if (e.target.value.length === 0) {
-      showErr({
-        ...err,
-        [`${e.target.name}`]: {
-          required: true
-        }
-      });
-    } else {
-      showErr({
-        ...err,
-        [`${e.target.name}`]: {
-          required: false
-        }
-      });
-    }
-  };
-
-  function handleInput(e) {
-    setContact({
-      ...contact,
-      [`${e.target.name}`]: e.target.value
-    });
-    requiredData(e);
-  }
-
+  const [contact, setContact] = useState({});
   const handleClose = () => {
     setOpen(false);
   };
-
+  React.useEffect(() => {
+    setContact(getContact);
+  }, [getContact]);
   const addContact = e => {
     e.preventDefault();
     axios
-      .post(
-        `http://localhost:3001/contacts/create`,
+      .patch(
+        `http://localhost:3001/contacts/edit/${getContact.id}`,
         {
-          userId: match.params.id,
           ...contact
         },
         headers
       )
-      .then(res => {
-        alert("Contact Added");
+      .then(() => {
+        alert("Contact Succesfully edited");
         setOpen(false);
-        setRows([...rows, res.data]);
       })
       .catch(error => {
         console.log(error);
@@ -156,15 +105,12 @@ export default function AddContactModal({
                       fullWidth
                       id="firstname"
                       label="Firstname"
-                      name="first_name"
+                      name="firstname"
                       autoComplete="firstname"
-                      onBlur={e => requiredData(e)}
                       value={contact.first_name}
-                      onChange={handleInput}
-                      error={err.first_name.required}
-                      helperText={
-                        !err.first_name.required ? "" : "Required to fill out"
-                      }
+                      onChange={e => {
+                        setContact({ ...contact, first_name: e.target.value });
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -175,15 +121,12 @@ export default function AddContactModal({
                       fullWidth
                       id="lastname"
                       label="Lastname"
-                      name="last_name"
+                      name="lastname"
                       autoComplete="lastname"
-                      onBlur={e => requiredData(e)}
                       value={contact.last_name}
-                      onChange={handleInput}
-                      error={err.last_name.required}
-                      helperText={
-                        !err.last_name.required ? "" : "Required to fill out"
-                      }
+                      onChange={e => {
+                        setContact({ ...contact, last_name: e.target.value });
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
@@ -192,18 +135,18 @@ export default function AddContactModal({
                       margin="normal"
                       required
                       fullWidth
-                      name="mobile_phone"
+                      name="mobilephone"
                       label="Mobile Phone"
                       type="mobilephone"
                       id="mobilephone"
-                      autoComplete="mobile_phone"
-                      onBlur={e => requiredData(e)}
+                      autoComplete="mobilephone"
                       value={contact.mobile_phone}
-                      onChange={handleInput}
-                      error={err.mobile_phone.required}
-                      helperText={
-                        !err.mobile_phone.required ? "" : "Required to fill out"
-                      }
+                      onChange={e => {
+                        setContact({
+                          ...contact,
+                          mobile_phone: e.target.value
+                        });
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>

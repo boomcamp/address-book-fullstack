@@ -58,8 +58,13 @@ export default function Login(props) {
         password: user.password
       })
       .then(res => {
-        ls.set("auth", { token: res.data.token, id: res.data.id });
-        props.history.push("/contacts");
+        console.log(res.data);
+        ls.set("auth", {
+          token: res.data.token,
+          firstname: res.data.fname,
+          lastname: res.data.lname
+        });
+        props.history.push(`/contacts/${res.data.id}`);
       })
       .catch(error => {
         try {

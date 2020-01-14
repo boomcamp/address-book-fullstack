@@ -37,16 +37,16 @@ const useStyles = makeStyles(theme => ({
 export default function Registration(props) {
   const classes = useStyles();
   const [err, showErr] = useState({
-    userName: {
+    username: {
       required: false
     },
     email: {
       required: false
     },
-    firstName: {
+    fname: {
       required: false
     },
-    lastName: {
+    lname: {
       required: false
     },
     password: {
@@ -71,7 +71,15 @@ export default function Registration(props) {
     confirmpass: ""
   });
 
-  function requiredData(e) {
+  function handleInput(e) {
+    setUser({
+      ...user,
+      [`${e.target.name}`]: e.target.value
+    });
+    requiredData(e);
+  }
+
+  const requiredData = e => {
     if (e.target.value.length === 0) {
       showErr({
         ...err,
@@ -87,9 +95,9 @@ export default function Registration(props) {
         }
       });
     }
-  }
+  };
 
-  function checkPassword(e) {
+  const checkPassword = e => {
     if (e.target.value.length === 0) {
       setUser({
         ...user,
@@ -105,7 +113,7 @@ export default function Registration(props) {
     } else {
       setUser({ ...user, confirmpass: e.target.value, checkPass: "" });
     }
-  }
+  };
 
   function signUp(e) {
     e.preventDefault();
@@ -141,7 +149,7 @@ export default function Registration(props) {
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="fname"
                 variant="outlined"
                 required
                 fullWidth
@@ -150,14 +158,9 @@ export default function Registration(props) {
                 label="First Name"
                 autoFocus
                 onBlur={e => requiredData(e)}
-                onChange={e => {
-                  setUser({ ...user, fname: e.target.value });
-                  requiredData(e);
-                }}
-                error={err.firstName.required}
-                helperText={
-                  !err.firstName.required ? "" : "Required to fill out"
-                }
+                onChange={handleInput}
+                error={err.fname.required}
+                helperText={!err.fname.required ? "" : "Required to fill out"}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -168,17 +171,12 @@ export default function Registration(props) {
                 value={user.lname}
                 id="lastName"
                 label="Last Name"
-                name="lastName"
+                name="lname"
                 autoComplete="lname"
                 onBlur={e => requiredData(e)}
-                onChange={e => {
-                  setUser({ ...user, lname: e.target.value });
-                  requiredData(e);
-                }}
-                error={err.lastName.required}
-                helperText={
-                  !err.lastName.required ? "" : "Required to fill out"
-                }
+                onChange={handleInput}
+                error={err.lname.required}
+                helperText={!err.lname.required ? "" : "Required to fill out"}
               />
             </Grid>
             <Grid item xs={12}>
@@ -193,10 +191,7 @@ export default function Registration(props) {
                 name="email"
                 autoComplete="email"
                 onBlur={e => requiredData(e)}
-                onChange={e => {
-                  setUser({ ...user, email: e.target.value });
-                  requiredData(e);
-                }}
+                onChange={handleInput}
                 error={err.email.required}
                 helperText={!err.email.required ? "" : "Required to fill out"}
               />
@@ -208,17 +203,14 @@ export default function Registration(props) {
                 fullWidth
                 id="username"
                 label="Username"
-                name="userName"
+                name="username"
                 value={user.username}
                 autoComplete="userName"
                 onBlur={e => requiredData(e)}
-                onChange={e => {
-                  setUser({ ...user, username: e.target.value });
-                  requiredData(e);
-                }}
-                error={err.userName.required}
+                onChange={handleInput}
+                error={err.username.required}
                 helperText={
-                  !err.userName.required ? "" : "Required to fill out"
+                  !err.username.required ? "" : "Required to fill out"
                 }
               />
             </Grid>
@@ -234,10 +226,7 @@ export default function Registration(props) {
                 value={user.password}
                 autoComplete="current-password"
                 onBlur={e => requiredData(e)}
-                onChange={e => {
-                  setUser({ ...user, password: e.target.value });
-                  requiredData(e);
-                }}
+                onChange={handleInput}
                 error={err.password.required}
                 helperText={
                   !err.password.required ? "" : "Required to fill out"

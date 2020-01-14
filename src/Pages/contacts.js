@@ -7,10 +7,12 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { Link } from "react-router-dom";
+import Delete from "@material-ui/icons/Delete";
 import Axios from "axios";
 import * as ls from "local-storage";
 import Layout from "../Layout/layout";
+import EditContactModal from "../Modal/editContact";
+import DeleteContactModal from "../Modal/deleteContact";
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -36,22 +38,33 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Contacts(props) {
+export default function Contacts({ match, history }) {
   const classes = useStyles();
   const [stat, setStat] = useState(false);
   const [rows, setRows] = useState([]);
   const auth = ls.get("auth");
+  const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState({
+    status: false,
+    id: ""
+  });
+  const [getContact, setGetContact] = useState({});
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${auth.token}`
+    }
+  };
+  const handleOpen = () => setOpen(true);
 
   useEffect(() => {
     if (!auth.token) {
-      props.history.push("/");
+      history.push("/");
     } else {
       if (!stat) {
-        Axios.get(`http://localhost:3001/contacts/list/${auth.id}`, {
-          headers: {
-            Authorization: `Bearer ${auth.token}`
-          }
-        }).then(res => setRows(res.data));
+        Axios.get(
+          `http://localhost:3001/contacts/list/${match.params.id}`,
+          headers
+        ).then(res => setRows(res.data));
         setStat(true);
       }
     }
@@ -59,31 +72,70 @@ export default function Contacts(props) {
   }, []);
 
   return (
-    <Layout history={props.history}>
+    <Layout
+      history={history}
+      auth={auth}
+      headers={headers}
+      match={match}
+      setRows={setRows}
+      rows={rows}
+    >
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Firstname</StyledTableCell>
-              <StyledTableCell align="right">Lastname</StyledTableCell>
-              <StyledTableCell align="right">Phonenumber</StyledTableCell>
+              <StyledTableCell align="center">Lastname</StyledTableCell>
+              <StyledTableCell align="center">Phone Number</StyledTableCell>
+              <StyledTableCell align="center">Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map(row => (
-              <StyledTableRow key={row.first_name}>
-                <StyledTableCell component="th" scope="row">
+            {rows.map((row, i) => (
+              <StyledTableRow key={i}>
+                <StyledTableCell
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    handleOpen();
+                    setGetContact(row);
+                  }}
+                >
                   {row.first_name}
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.last_name}</StyledTableCell>
-                <StyledTableCell align="right">
+                <StyledTableCell align="center">
+                  {row.last_name}
+                </StyledTableCell>
+                <StyledTableCell align="center">
                   {row.mobile_phone}
+                </StyledTableCell>
+                <StyledTableCell
+                  align="center"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setOpenDelete({ status: true, id: row.id });
+                  }}
+                >
+                  <Delete />
                 </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <EditContactModal
+        open={open}
+        setOpen={setOpen}
+        getContact={getContact}
+        headers={headers}
+      />
+      <DeleteContactModal
+        open={openDelete.status}
+        setOpen={setOpenDelete}
+        contactId={openDelete.id}
+        rows={rows}
+        setRows={setRows}
+        headers={headers}
+      />
     </Layout>
   );
 }

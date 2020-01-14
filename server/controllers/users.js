@@ -57,7 +57,7 @@ module.exports = {
           username
         },
         {
-          fields: ["id", "username", "email", "password"]
+          fields: ["id", "username", "fname", "lname", "email", "password"]
         }
       )
       .then(user => {

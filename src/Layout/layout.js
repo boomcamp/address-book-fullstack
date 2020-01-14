@@ -92,7 +92,9 @@ const useStyles = makeStyles(theme => ({
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6)
+    padding: theme.spacing(6),
+    position: "fixed",
+    bottom: 0
   },
   icon: {
     marginRight: theme.spacing(2)
@@ -129,7 +131,6 @@ export default function Layout(props) {
   const handleMobileMenuOpen = event => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -192,7 +193,7 @@ export default function Layout(props) {
               <AccountCircleIcon />
             </Tooltip>
             <Typography className={classes.title} variant="h6" noWrap>
-              Welcome Eric Atento
+              Welcome {props.auth.firstname} {props.auth.lastname}
             </Typography>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
@@ -252,7 +253,14 @@ export default function Layout(props) {
       <footer className={classes.footer}>
         <Copyright />
       </footer>
-      <AddContactModal open={open} setOpen={setOpen} />
+      <AddContactModal
+        open={open}
+        setOpen={setOpen}
+        headers={props.headers}
+        match={props.match}
+        setRows={props.setRows}
+        rows={props.rows}
+      />
     </>
   );
 }

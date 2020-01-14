@@ -9,7 +9,7 @@ export default function Routes() {
     <Switch>
       <Route exact component={Login} path="/" />
       <Route component={SignUp} path="/signup" />
-      <Route component={Contacts} path="/contacts" />
+      <Route component={Contacts} path="/contacts/:id" />
     </Switch>
   );
 }
