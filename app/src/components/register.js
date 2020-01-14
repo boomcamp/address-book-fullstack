@@ -50,6 +50,7 @@ class register extends Component {
 
   handleSubmit = (e, key) => {
     e.preventDefault();
+
     axios({
       method: "post",
       url: "/users/register",
@@ -65,6 +66,7 @@ class register extends Component {
         console.log("nothing here");
       }
       console.log(response.data);
+
       message.success({ content: "Successfully Register", key, duration: 2 });
       this.props.history.replace("/user");
     });

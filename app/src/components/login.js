@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Form, Icon, Input, Button, Card, message } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
-// import { Redirect } from "react-router-dom";
 import Image from "./img/logos.jpg";
 
 const container = {
@@ -12,7 +11,6 @@ const container = {
   width: "100%",
   height: "100vh",
   padding: "2%"
-  // backgroundColor: "rgba(0,0,0,.25)"
 };
 
 const formholder = {
@@ -64,6 +62,7 @@ class login extends Component {
         console.log(response.data);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("id", response.data.id);
+        localStorage.setItem("username", response.data.username);
         this.props.history.push("/user");
         message.success({ content: "Successfully Login", key, duration: 2 });
       })

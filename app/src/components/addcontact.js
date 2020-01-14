@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { Form, Icon, Input, Button, Modal } from "antd";
+import { Form, Icon, Input, Button, Modal, Select, message } from "antd";
 import axios from "axios";
-export default class addcontact extends Component {
+import ContactTable from "./contactTable";
+
+class addcontact extends Component {
   constructor() {
     super();
 
@@ -27,25 +29,33 @@ export default class addcontact extends Component {
     });
   };
 
-  handleOk = () => {
+  handleCancel = () => {
+    this.setState({ visible: false });
+  };
+
+  handleInput = input => e => {
+    this.setState({ [input]: e.target.value });
+    console.log(input);
+  };
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log("Received values of form: ", values);
+      }
+    });
+
     this.setState({ loading: true });
     setTimeout(() => {
       this.setState({ loading: false, visible: false });
     }, 3000);
-  };
 
-  handleCancel = () => {
-    this.setState({ visible: false });
-  };
-  handleChange = e => {
-    this.setState({
-      [e.name + "Error"]: e.value ? false : true,
-      [e.name]: e.value
-    });
-  };
-  handleSubmit = e => {
-    axios
-      .post("/contact", {
+    // console.log(localStorage);
+
+    axios({
+      method: "post",
+      url: "/contact",
+      data: {
         first_name: this.state.first_name,
         last_name: this.state.last_name,
         home_phone: this.state.home_phone,
@@ -55,18 +65,40 @@ export default class addcontact extends Component {
         city: this.state.city,
         state_or_province: this.state.state_or_province,
         postal_code: this.state.postal_code,
-        country: this.state.country
-      })
-      .then(response => {
-        console.log(response.data);
+        country: this.state.country,
+        userid: localStorage.getItem("id")
+      }
+    }).then(response => {
+      this.setState({
+        first_name: "",
+        last_name: "",
+        home_phone: "",
+        mobile_phone: "",
+        work_phone: "",
+        email: "",
+        city: "",
+        state_or_province: "",
+        postal_code: "",
+        country: ""
       });
+      setTimeout(() => {
+        message.success({ content: "Successfully added contact", duration: 2 });
+        this.setState({ data: true });
+      }, 3000);
+    });
   };
-
   render() {
+    const { Option } = Select;
+
+    const { getFieldDecorator } = this.props.form;
     const { visible, loading } = this.state;
-    // const prefixSelector = getFieldDecorator("prefix", {
-    //   initialValue: "+63"
-    // });
+    const prefixSelector = getFieldDecorator("prefix", {
+      initialValue: "+63"
+    })(
+      <Select style={{ width: 70 }}>
+        <Option value="09">09</Option>
+      </Select>
+    );
     return (
       <div>
         <div>
@@ -85,110 +117,188 @@ export default class addcontact extends Component {
               <Button
                 key="submit"
                 type="primary"
+                htmlType="submit"
                 loading={loading}
-                onClick={this.handleOk}
+                onClick={this.handleSubmit}
               >
                 Add
               </Button>
             ]}
           >
-            <Form onSubmit={this.handleSubmit} className="login-form">
+            <Form className="login-form">
               <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Firstname"
-                  onChange={e => this.handleChange(e.target)}
-                />
+                {getFieldDecorator("first_name", {
+                  rules: [{ required: true, message: "Firstname is required" }]
+                })(
+                  <Input
+                    prefix={
+                      <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    required={true}
+                    placeholder="Firstname"
+                    onChange={this.handleInput("first_name")}
+                  />
+                )}
               </Form.Item>
               <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Lastname"
-                  onChange={e => this.handleChange(e.target)}
-                />
+                {getFieldDecorator("last_name", {
+                  rules: [{ required: true, message: "Lastname is required" }]
+                })(
+                  <Input
+                    prefix={
+                      <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    placeholder="Lastname"
+                    onChange={this.handleInput("last_name")}
+                  />
+                )}
               </Form.Item>
               <Form.Item>
-                <Input
-                  //   addonBefore={prefixSelector}
-                  style={{ width: "100%" }}
-                  prefix={
-                    <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Home phone"
-                  onChange={e => this.handleChange(e.target)}
-                />
+                {getFieldDecorator("Home", {
+                  rules: [
+                    {
+                      required: true,
+                      message: "Please input your Home number!"
+                    }
+                  ]
+                })(
+                  <Input
+                    addonBefore={prefixSelector}
+                    style={{ width: "100%" }}
+                    prefix={
+                      <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    placeholder="Home phone"
+                    onChange={this.handleInput("home_phone")}
+                  />
+                )}
               </Form.Item>
               <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="mobile" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Mobile phone"
-                  onChange={e => this.handleChange(e.target)}
-                />
+                {getFieldDecorator("phone", {
+                  rules: [
+                    {
+                      required: true,
+                      message: "Please input your mobile number!"
+                    }
+                  ]
+                })(
+                  <Input
+                    addonBefore={prefixSelector}
+                    prefix={
+                      <Icon
+                        type="mobile"
+                        style={{ color: "rgba(0,0,0,.25)" }}
+                      />
+                    }
+                    placeholder="Mobile phone"
+                    onChange={this.handleInput("mobile_phone")}
+                  />
+                )}
               </Form.Item>
               <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Work phone"
-                  onChange={e => this.handleChange(e.target)}
-                />
+                {getFieldDecorator("work", {
+                  rules: [
+                    {
+                      required: true,
+                      message: "Please input your work number!"
+                    }
+                  ]
+                })(
+                  <Input
+                    addonBefore={prefixSelector}
+                    prefix={
+                      <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    placeholder="Work phone"
+                    onChange={this.handleInput("work_phone")}
+                  />
+                )}
               </Form.Item>
               <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="email"
-                  onChange={e => this.handleChange(e.target)}
-                />
+                {getFieldDecorator("email", {
+                  rules: [
+                    {
+                      type: "email",
+                      message: "The input is not valid E-mail!"
+                    },
+                    {
+                      required: true,
+                      message: "Email is required!"
+                    }
+                  ]
+                })(
+                  <Input
+                    prefix={
+                      <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    placeholder="email"
+                    onChange={this.handleInput("email")}
+                  />
+                )}
               </Form.Item>
               <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="City"
-                  onChange={e => this.handleChange(e.target)}
-                />
+                {getFieldDecorator("city", {
+                  rules: [{ required: true, message: "City is required" }]
+                })(
+                  <Input
+                    prefix={
+                      <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    placeholder="City"
+                    onChange={this.handleInput("city")}
+                  />
+                )}
               </Form.Item>
               <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="State or Province"
-                  onChange={e => this.handleChange(e.target)}
-                />
+                {getFieldDecorator("state", {
+                  rules: [
+                    { required: true, message: "State or province is required" }
+                  ]
+                })(
+                  <Input
+                    prefix={
+                      <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    placeholder="State or Province"
+                    onChange={this.handleInput("state_or_province")}
+                  />
+                )}
               </Form.Item>
               <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Postal code"
-                  onChange={e => this.handleChange(e.target)}
-                />
+                {getFieldDecorator("postal", {
+                  rules: [
+                    { required: true, message: "Postal code is required" }
+                  ]
+                })(
+                  <Input
+                    prefix={
+                      <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    placeholder="Postal code"
+                    onChange={this.handleInput("postal_code")}
+                  />
+                )}
               </Form.Item>
               <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Country"
-                  onChange={e => this.handleChange(e.target)}
-                />
+                {getFieldDecorator("country", {
+                  rules: [{ required: true, message: "Country is required" }]
+                })(
+                  <Input
+                    prefix={
+                      <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
+                    }
+                    placeholder="Country"
+                    onChange={this.handleInput("country")}
+                  />
+                )}
               </Form.Item>
             </Form>
           </Modal>
         </div>
+        <ContactTable data={this.state.data} />
       </div>
     );
   }
 }
+const ContactForm = Form.create()(addcontact);
+export default ContactForm;

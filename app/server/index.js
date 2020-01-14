@@ -34,8 +34,12 @@ massive({
 
     app.post("/users/register", users.register);
     app.post("/login", users.login);
+
     app.get("/users/list", authentication, users.userlist);
     app.post("/contact", contact.addcontact);
+    app.get("/contact/view", contact.viewcontact);
+    app.get("/contact/list/:id", contact.contactlist);
+    app.delete("/delete/:id", contact.deletecontact);
 
     const port = 5000;
 

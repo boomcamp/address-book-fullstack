@@ -1,69 +1,148 @@
 import React, { Component } from "react";
-import { Table, Divider, Tabs, Input } from "antd";
+import { Table, Icon, Tabs } from "antd";
+import axios from "axios";
+import Edit from "./editContact";
 
-const data = [
-  {
-    key: "1",
-    firstName: "John",
-    lastName: "Brown",
-    city: "Legazpi",
-    address: "New York No. 1 Lake Park",
-    postal_code: "4500",
-    country: ""
-  }
-];
 export default class addressTable extends Component {
+  constructor() {
+    super();
+    this.state = {
+      data: []
+    };
+  }
+  componentDidMount = () => {
+    var arr = [];
+    axios({
+      method: "get",
+      url: `/contact/list/${localStorage.getItem("id")}`
+    }).then(res => {
+      res.data.map(data => {
+        arr.push({
+          first_name: data.first_name,
+          last_name: data.last_name,
+          home_phone: data.home_phone,
+          mobile_phone: data.mobile_phone,
+          work_phone: data.work_phone,
+          postal_code: data.postal_code,
+          state_or_province: data.state_or_province,
+          city: data.city,
+          key: data.id,
+          country: data.country
+        });
+        console.log(data);
+      });
+      this.setState({
+        data: arr
+      });
+    });
+  };
+
+  componentDidUpdate() {
+    setTimeout(() => {
+      this.loadAgain();
+    }, 4000);
+  }
+
+  loadAgain = () => {
+    var arr = [];
+    axios({
+      method: "get",
+      url: `/contact/list/${localStorage.getItem("id")}`
+    }).then(res => {
+      res.data.map(data => {
+        arr.push({
+          first_name: data.first_name,
+          last_name: data.last_name,
+          home_phone: data.home_phone,
+          mobile_phone: data.mobile_phone,
+          work_phone: data.work_phone,
+          postal_code: data.postal_code,
+          state_or_province: data.state_or_province,
+          city: data.city,
+          key: data.id,
+          country: data.country
+        });
+      });
+      this.setState({
+        data: arr
+      });
+    });
+  };
+  handleDelete = id => {
+    axios({
+      method: "delete",
+      url: `/delete/${id}`
+    }).then(res => {
+      console.log("deleted");
+    });
+  };
   render() {
     const { TabPane } = Tabs;
     const { Column } = Table;
-    const { Search } = Input;
 
+    // this.props.data ? this.loadAgain() : console.log("Null");
+    // console.log(this.props.data);
     return (
       <div>
         <Tabs defaultActiveKey="1" onChange={this.callback}>
           <TabPane tab="Contacts" key="1">
-            {" "}
-            <Table dataSource={data}>
+            <Table dataSource={this.state.data} key="table">
               <Column
                 title="First Name"
-                dataIndex="firstName"
-                key="firstName"
+                dataIndex="first_name"
+                key="first_name"
               />
-              <Column title="Last Name" dataIndex="lastName" key="lastName" />
-              <Column title="Address" dataIndex="address" key="address" />
-              <Column title="City" dataIndex="city" key="city" />
+              <Column title="Last Name" dataIndex="last_name" key="last_name" />
+              <Column
+                title="state_or_province"
+                dataIndex="state_or_province"
+                key="state_or_province"
+              />
+              <Column
+                title="Home phone"
+                dataIndex="home_phone"
+                key="home_phone"
+              />
+              <Column
+                title="Mobile phone"
+                dataIndex="mobile_phone"
+                key="mobile_phone"
+              />
+              <Column
+                title="Work phone"
+                dataIndex="work_phone"
+                key="work_phone"
+              />
               <Column
                 title="Postal Code"
                 dataIndex="postal_code"
                 key="postal_code"
               />
+              <Column title="City" dataIndex="city" key="city" />
               <Column title="Country" dataIndex="country" key="country" />
-
               <Column
-                title="Action"
-                key="action"
+                title="Edit"
+                key="edit"
                 render={(text, record) => (
                   <span>
-                    <a href="/">Invite {record.lastName}</a>
-                    <Divider type="vertical" />
-                    <a href="/">Delete</a>
+                    <Edit />
+                  </span>
+                )}
+              />
+              <Column
+                title="Delete"
+                key="id"
+                render={(text, record) => (
+                  <span>
+                    <Icon
+                      type="delete"
+                      theme="twoTone"
+                      onClick={this.handleDelete}
+                    />
                   </span>
                 )}
               />
             </Table>
-          </TabPane>
-          {/* <TabPane tab="Tab 2" key="2">
-            Content of Tab Pane 2
-          </TabPane>
-          <TabPane tab="Tab 3" key="3"> 
-            Content of Tab Pane 3
-          </TabPane> */}
-          <TabPane>
-            <Search
-              placeholder="input search text"
-              onSearch={value => console.log(value)}
-              style={{ width: 200 }}
-            />
           </TabPane>
         </Tabs>
       </div>
