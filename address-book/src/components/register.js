@@ -76,7 +76,7 @@ class Register extends Component {
     event.preventDefault();
     
     if (this.state.pword == this.state.cpword) {
-      alert("a")
+
       axios
         .post("/users", {
           firstname: this.state.fname,
@@ -87,7 +87,7 @@ class Register extends Component {
         }).then(res => {
        
           localStorage.setItem("token", res.data.token);
-          localStorage.setItem("create", this.state.lname)
+          localStorage.setItem("id", res.data.id)
           this.props.history.push("/addressbook");
           this.setState({
             firstname: "",

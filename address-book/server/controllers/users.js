@@ -16,11 +16,6 @@ function  create (req, res)  {
             firstname,
             lastname,
             password: hash,
-          
-        },
-        {
-          deepInsert: true,
-          fields: ['id', 'username', 'email','firstname','lastname'],
         }
       );
     })

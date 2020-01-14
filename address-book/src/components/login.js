@@ -78,10 +78,11 @@ class Login extends Component {
         password: this.state.pword
       })
       .then(res => {
-          console.log("asd",res.data)
+        
         if (res.data.error === undefined) {
           localStorage.setItem("auth", "logged in");
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("id", res.data.id)
           this.props.history.push("/register");
         } else if(res.data.error === 'Incorrect Password'){
             console.log(res.data.error)

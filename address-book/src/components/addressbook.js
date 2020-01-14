@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import Icon from "@material-ui/core/Icon";
+import Table from "./addressbooktable";
+import Search from "./search";
+
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
 import {
   TextField,
   Grid,
@@ -13,10 +17,7 @@ import {
 import axios from "axios";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
-
 import Container from "@material-ui/core/Container";
-import Contacts from "@material-ui/icons/Contacts";
-import Add from "@material-ui/icons/Add";
 import Box from "@material-ui/core/Box";
 import ExitToApp from "@material-ui/icons/ExitToApp";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -30,7 +31,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -60,7 +61,7 @@ class Addressbook extends Component {
   handleLogout = () => {
     this.props.history.push("/");
     localStorage.removeItem("token");
-    localStorage.removeItem("create");
+    localStorage.removeItem("id");
     localStorage.setItem("out", "logout");
   };
 
@@ -109,34 +110,16 @@ class Addressbook extends Component {
           autoHideDuration={2000}
           onClose={this.handleCloseSnackbar}
         />
-        <div className={classes.root}>
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" className={classes.title}>
-                Address Book
-              </Typography>
-              <Button
-                color="inherit"
-                onClick={e => {
-                  this.handleLogout(e);
-                }}
-              >
-                LogOut
-              </Button>
-            </Toolbar>
-          </AppBar>
-        </div>
-        <Container maxWidth="xl" className={classes.outer}></Container>
+       
+        {/* sample */}
+  
 
-        <Container maxWidth="xl" className={classes.root}>
+        <Container maxWidth="xl" className={classes.root}
+          style={{marginTop: '70px',
+          
+          }}
+
+        >
           <AppBar>
             <Toolbar>
               <Grid
@@ -158,7 +141,7 @@ class Addressbook extends Component {
                       color="inherit"
                       aria-label="menu"
                     >
-                      <Contacts />
+                      <RecentActorsIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
                       Address Book
@@ -166,17 +149,7 @@ class Addressbook extends Component {
                   </Grid>
                 </Box>
                 <Box>
-                  <Tooltip title="Add New Contact">
-                    <IconButton
-                      onClick={() =>
-                        this.setState({
-                          open: true
-                        })
-                      }
-                    >
-                      <Add className={classes.addIcon} />
-                    </IconButton>
-                  </Tooltip>
+                 
                   <Tooltip title="Logout">
                     <IconButton onClick={e => this.handleLogout(e)}>
                       <ExitToApp className={classes.exitIcon} />
@@ -186,228 +159,7 @@ class Addressbook extends Component {
               </Grid>
             </Toolbar>
           </AppBar>
-
-          <Dialog
-            fullWidth
-            maxWidth="sm"
-            open={this.state.open}
-            aria-labelledby="form-dialog-title"
-          >
-            <DialogTitle id="form-dialog-title">New Contact</DialogTitle>
-
-            <form
-              noValidate
-              autoComplete="off"
-              onSubmit={e => this.formCreateContact(e)}
-            >
-              <DialogContent>
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-around"
-                  alignItems="center"
-                >
-                  <TextField
-                    className={classes.textField}
-                    required
-                    id="standard-required"
-                    error={this.state.firstNameError}
-                    label="First Name"
-                    value={this.state.fName}
-                    onChange={e =>
-                      this.setState({
-                        fName: e.target.value
-                      })
-                    }
-                  />
-
-                  <TextField
-                    className={classes.textField}
-                    margin="dense"
-                    id="name"
-                    label="Last Name"
-                    type="text"
-                    value={this.state.lName}
-                    onChange={e =>
-                      this.setState({
-                        lName: e.target.value
-                      })
-                    }
-                  />
-                </Grid>
-
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-around"
-                  alignItems="center"
-                >
-                  <TextField
-                    className={classes.textField}
-                    margin="dense"
-                    id="name"
-                    label="Mobile Phone Number"
-                    type="text"
-                    value={this.state.mobile_phone}
-                    onChange={e =>
-                      this.setState({
-                        mobile_phone: e.target.value
-                      })
-                    }
-                  />
-
-                  <TextField
-                    className={classes.textField}
-                    margin="dense"
-                    id="name"
-                    label="Work Phone Number"
-                    value={this.state.work_phone}
-                    type="text"
-                    onChange={e =>
-                      this.setState({
-                        work_phone: e.target.value
-                      })
-                    }
-                  />
-                </Grid>
-
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-around"
-                  alignItems="center"
-                >
-                  <TextField
-                    className={classes.textField}
-                    margin="dense"
-                    id="name"
-                    value={this.state.home_phone}
-                    label="Home Phone Number"
-                    type="text"
-                    onChange={e =>
-                      this.setState({
-                        home_phone: e.target.value
-                      })
-                    }
-                  />
-
-                  <TextField
-                    className={classes.textField}
-                    margin="dense"
-                    id="name"
-                    label="Email"
-                    value={this.state.email}
-                    type="email"
-                    onChange={e =>
-                      this.setState({
-                        email: e.target.value
-                      })
-                    }
-                  />
-                </Grid>
-
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-around"
-                  alignItems="center"
-                >
-                  <TextField
-                    className={classes.textField}
-                    margin="dense"
-                    id="name"
-                    label="City"
-                    type="text"
-                    value={this.state.city}
-                    onChange={e =>
-                      this.setState({
-                        city: e.target.value
-                      })
-                    }
-                  />
-
-                  <TextField
-                    className={classes.textField}
-                    margin="dense"
-                    id="name"
-                    label="State/Province"
-                    type="text"
-                    value={this.state.state_or_province}
-                    onChange={e =>
-                      this.setState({
-                        state_or_province: e.target.value
-                      })
-                    }
-                  />
-                </Grid>
-
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-around"
-                  alignItems="center"
-                >
-                  <TextField
-                    className={classes.textField}
-                    margin="dense"
-                    id="name"
-                    value={this.state.postal_code}
-                    label="Postal Code"
-                    type="text"
-                    onChange={e =>
-                      this.setState({
-                        postal_code: e.target.value
-                      })
-                    }
-                  />
-
-                  <TextField
-                    className={classes.textField}
-                    margin="dense"
-                    id="name"
-                    label="Country"
-                    value={this.state.country}
-                    type="text"
-                    onChange={e =>
-                      this.setState({
-                        country: e.target.value
-                      })
-                    }
-                  />
-                </Grid>
-
-                <FormHelperText
-                  id="component-error-text"
-                  style={{
-                    color: `${this.state.helperColor}`,
-                    marginTop: "15px",
-                    justifyContent: "center",
-                    display: `${this.state.formHelper}`
-                  }}
-                >
-                  {this.state.errorMessege}
-                </FormHelperText>
-              </DialogContent>
-              <DialogActions>
-                <Button type="submit" color="primary">
-                  Add
-                </Button>
-                <Button
-                  onClick={() =>
-                    this.setState({
-                      open: false,
-                      formHelper: "none"
-                    })
-                  }
-                  color="primary"
-                >
-                  Cancel
-                </Button>
-              </DialogActions>
-            </form>
-          </Dialog>
-
-          <Dialog open={this.state.editDialog}>
+          {/* <Dialog open={this.state.editDialog}>
             <form onSubmit={e => this.formSubmitUpdateGroup(e)}>
               <DialogTitle>Edit Group Name</DialogTitle>
               <DialogContent>
@@ -449,8 +201,10 @@ class Addressbook extends Component {
                 </Button>
               </DialogActions>
             </form>
-          </Dialog>
+          </Dialog> */}
         </Container>
+        <Search />
+        <Table />
       </React.Fragment>
     );
   }
