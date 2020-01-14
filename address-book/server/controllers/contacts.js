@@ -40,7 +40,7 @@ function getContactByUser(req, res) {
   const { userid } = req.params;
 
   db.contacts
-    .find({ userid: userid })
+    .find({ userid })
     .then(contacts => res.status(200).json(contacts))
     .catch(err => {
       console.error(err);

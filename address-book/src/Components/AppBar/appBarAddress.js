@@ -13,7 +13,6 @@ const useStyles = makeStyles(theme => ({
   menuButton: {
     marginRight: theme.spacing(2)
   },
-  title: {},
   toolbar: {
     display: "flex",
     justifyContent: "space-between"
@@ -32,7 +31,7 @@ export default function ButtonAppBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar className={classes.toolbar}>
           <Typography variant="h6" className={classes.title}>
             Address Book

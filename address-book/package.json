@@ -10,6 +10,7 @@
     "argon2": "^0.25.1",
     "cors": "^2.8.5",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^2.2.0",
     "massive": "^6.1.4",
     "material-table": "^1.54.2",
     "node-pg-migrate": "^3.21.0",

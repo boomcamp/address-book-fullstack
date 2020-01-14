@@ -6,6 +6,7 @@ const cors = require("cors");
 
 const users = require("./controllers/users");
 const contacts = require("./controllers/contacts");
+const addressBook = require("./controllers/addressbook");
 
 massive({
   host: "localhost",
@@ -46,6 +47,7 @@ massive({
   //contacts
   app.post("/contacts/:userid", contacts.create);
   app.get("/contacts/:userid", contacts.getContactByUser);
+  app.post("/addressbook-add", addressBook.add);
 
   const PORT = 3004;
   app.listen(PORT, () => {
