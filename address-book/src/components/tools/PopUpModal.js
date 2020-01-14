@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: '55%',
-    marginLeft: `24%`
+    marginLeft: `24%`,
   },
   paper: {
     width: `75%`,

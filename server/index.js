@@ -18,13 +18,15 @@ massive({
 
     app.post('/api/signup', users.register)
     app.post('/api/login', users.login)
+    app.get('/api/user/:id', users.fetch)
 
     app.post('/api/contacts/:id', contacts.create);
     app.get('/api/contacts/:id', contacts.list);
     app.delete('/api/contacts/:id', contacts.delete);
     app.put('/api/contacts/:id', contacts.update)
 
+    app.get('/api/groups', contacts.group)
 
-    const PORT = 3007   
+    const PORT = 3007
     app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`) );
 })

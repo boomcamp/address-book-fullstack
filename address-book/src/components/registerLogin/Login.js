@@ -60,7 +60,7 @@ function Login() {
     }
 
     if(status.success || sessionStorage.getItem('token'))
-        return <Redirect to='/dashboard'/>
+        return <Redirect to='/dashboard' />
 
     return (
         <div style={{display:`flex`, flexDirection:`column`, alignItems:`center`}}>

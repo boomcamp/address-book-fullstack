@@ -7,6 +7,8 @@ import './App.css';
 import Login from './components/registerLogin/Login'
 import Signup from './components/registerLogin/Signup'
 import Dashboard from './components/Dashboard'
+import Group from './components/Group'
+import MyAccount from './components/MyAccount'
 
 function App() {
     return (
@@ -16,6 +18,8 @@ function App() {
                     <Route exact path="/" component={Login}/>
                     <Route exact path="/signup" component={Signup}/>
                     <Route exact path="/dashboard" component={Dashboard}/>
+                    <Route exact path="/account" component={MyAccount}/>
+                    <Route exact path="/group" component={Group}/>
                 </Switch>
             </BrowserRouter>
         </SnackbarProvider>

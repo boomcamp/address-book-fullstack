@@ -13,6 +13,11 @@ exports.up = pgm => {
             notNull: true,
             references: 'users', 
         },
+        groupId: {
+            type: 'integer',
+            notNull: false,
+            references: 'group_contact', 
+        },
         firstName: {
             type: 'text',
             notNull: true,

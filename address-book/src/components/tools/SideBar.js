@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -14,6 +15,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import GroupIcon from '@material-ui/icons/Group';
 
 const drawerWidth = 240;
 
@@ -56,12 +58,28 @@ export default function SideBar({handleOpenfn, open}) {
             <Divider />
 
             <List>
-                {['Dashboard', 'My Account'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <DashboardIcon /> : <AccountCircleIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
+                <Link to="/dashboard" style={{textDecoration:`none`, color:`black`}}> 
+                    <ListItem button>
+                        <ListItemIcon><DashboardIcon /></ListItemIcon>
+                        <ListItemText primary="Dashboard" />
                     </ListItem>
-                ))}
+                </Link>
+
+                <Link to="/group" style={{textDecoration:`none`, color:`black`}}> 
+                    <ListItem button>
+                            <ListItemIcon ><GroupIcon /></ListItemIcon>
+                            <ListItemText primary="Group Contacts" />
+                    </ListItem>
+                </Link>
+
+                <Link to="/account" style={{textDecoration:`none`, color:`black`}}> 
+                    <ListItem button>
+                            <ListItemIcon ><AccountCircleIcon /></ListItemIcon>
+                            <ListItemText primary="My Account" />
+                    </ListItem>
+                </Link>
+
+    
 
                 <ListItem button onClick={() => { sessionStorage.clear(); window.location.reload(); }}>
                     <ListItemIcon style={{ color: `red` }}><ExitToAppIcon /></ListItemIcon>

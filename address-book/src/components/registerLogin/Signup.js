@@ -42,7 +42,7 @@ export default function Signup() {
         password: "",
         cPassword: "",
     })
-    const [success, setSuccess] = useState(false);
+    const [status, setStatus] = useState({success: false, error: false});
     const [showPassword, setShowpassword] = useState({ signPass: false, cPass:false});
 
     const handleSubmit = () => {
@@ -52,9 +52,12 @@ export default function Signup() {
         })
         .then(res => {
             console.log(res)
-            setSuccess(true)
+            setStatus({...status, success: true})
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            console.log(err)
+            setStatus({...status, error: true})
+        })
     }
 
     useEffect(() => {
@@ -75,7 +78,7 @@ export default function Signup() {
         return () => {        };
     }, [user])
 
-    if(success)
+    if(status.success)
         return <Redirect to={{pathname: '/', state:'newUser' }} />
 
     if(sessionStorage.getItem('token'))
@@ -92,6 +95,7 @@ export default function Signup() {
                     onError={errors => console.log(errors)}>
 
                     <TextValidator
+                        error={status.error}
                         variant="outlined"
                         style={{margin:`5px 0`}}
                         label="Username"
@@ -153,7 +157,7 @@ export default function Signup() {
                             ),
                           }}
                     ></TextValidator>
-
+                      { (status.error) ? <h5 style={{color:`red`, margin:`5px`}}>Username Already Exist</h5> : null}
                     <Button type="submit">Signup</Button>
                 </ValidatorForm>
             </Paper>

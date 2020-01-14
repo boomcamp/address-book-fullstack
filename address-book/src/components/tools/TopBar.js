@@ -52,7 +52,7 @@ export default function TopBar({handleOpenfn, open}) {
                     className={clsx(classes.menuButton, open && classes.hide)}>
                     <MenuIcon />
                 </IconButton>
-                <h3>Address Book</h3>
+                <h3>Address Book Fullstack Project</h3>
             </Toolbar>
         </AppBar>
     )

@@ -7,27 +7,50 @@ module.exports = {
         const db = req.app.get('db');
         const {username, password} = req.body;
         
-        argon2
-        .hash(password)
-        .then(hash => {
-            return db.users.insert(
-                {
-                    username,
-                    password: hash,
-                },
-                {
-                    fields: ['id', 'username']
-                }
-            );
-        })
-        .then(user => {
-            const token = jwt.sign({userId: user.id}, secret);
-            res.status(201).json({...user, token});
+        db.users
+        .findOne(
+            {
+                username
+            },
+            {
+                fields: ['id', 'username']
+            }
+        ).then(user => {
+            if(user)
+                throw new Error('Username Already Exist');
+
+            argon2
+            .hash(password)
+            .then(hash => {
+                return db.users.insert(
+                    {
+                        username,
+                        password: hash,
+                    },
+                    {
+                        fields: ['id', 'username']
+                    }
+                );
+            })
+            .then(user => {
+                const token = jwt.sign({userId: user.id}, secret);
+                res.status(201).json({...user, token});
+            })
+            .catch(err => {
+                console.log(err)
+                res.status(500).end();
+            });
         })
         .catch(err => {
-            console.log(err)
-            res.status(500).end();
+            if (['Username Already Exist'].includes(err.message)) 
+                res.status(400).json({ error: err.message });
+            else {
+              console.error(err);
+              res.status(500).end();
+            }
         });
+
+       
     },
 
     login: (req, res) => {
@@ -66,4 +89,34 @@ module.exports = {
             }
         });
     },
+
+    fetch: (req, res) => {
+        const db = req.app.get('db');
+
+        if (!req.headers.authorization) 
+            return res.status(401).end();        
+
+        try {
+            const token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, secret);
+
+            db.users
+            .findOne(
+                {
+                    id: req.params.id
+                },
+                {
+                    fields: ['username']
+                }
+            )
+            .then(user => res.status(200).json(user))
+            .catch(err => {
+                console.log(err)
+                res.status(500).end()
+            })
+        } catch (err) {
+            console.error(err);
+            res.status(401).end();
+        }
+    }
 }
