@@ -21,10 +21,10 @@ massive({
 	app.post("/users", user.register);
 	app.post("/users/login", user.login);
 	app.get("/users", user.getUsers);
-	app.get("/users/:username", user.getByUsersByUsername);
+	app.get("/users/:username", user.getUsersByUsername);
 
-	app.post("/contacts", contacts.create);
-	app.get("/contacts", contacts.getList);
+	app.post("/contacts/:userid", contacts.create);
+	app.get("/contacts/:userid", contacts.getContactsByUser);
 
 	const PORT = 3006;
 	app.listen(PORT, () => {

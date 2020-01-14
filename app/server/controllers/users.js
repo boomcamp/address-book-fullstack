@@ -77,7 +77,7 @@ const getUsers = (req, res) => {
 		});
 };
 
-const getByUsersByUsername = (req, res) => {
+const getUsersByUsername = (req, res) => {
 	const db = req.app.get("db");
 	const { username } = req.body;
 
@@ -94,5 +94,5 @@ module.exports = {
 	register,
 	login,
 	getUsers,
-	getByUsersByUsername
+	getUsersByUsername
 };

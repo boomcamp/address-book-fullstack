@@ -8,8 +8,11 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import view from "../assets/images/eye.png";
+import trash from "../assets/images/delete.png";
+// import edit from "../assets/images/delete.png";
 
 const useStyles = makeStyles({
 	table: {
@@ -28,16 +31,20 @@ const useStyles = makeStyles({
 	view: {
 		width: "20px",
 		cursor: "pointer"
+	},
+	action: {
+		display: "flex",
+		justifyContent: "space-evenly"
 	}
 });
 
-export default function SimpleTable() {
+export default function SimpleTable(props) {
 	const classes = useStyles();
 
 	const [state, setState] = useState([]);
 
 	useEffect(() => {
-		axios.get("http://localhost:3006/contacts", {}).then(res => {
+		axios.get(`http://localhost:3006/contacts/${props.id}`).then(res => {
 			setState(res.data);
 		});
 	}, [setState]);
@@ -53,7 +60,9 @@ export default function SimpleTable() {
 						<TableCell className={classes.cellStyle}>Home Phone #</TableCell>
 						<TableCell className={classes.cellStyle}>Mobile Phone #</TableCell>
 						<TableCell className={classes.cellStyle}>Work Phone #</TableCell>
-						<TableCell className={classes.cellStyle}>Details</TableCell>
+						<TableCell align="center" className={classes.cellStyle}>
+							Action
+						</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
@@ -70,8 +79,13 @@ export default function SimpleTable() {
 							<TableCell>{row.home_phone}</TableCell>
 							<TableCell>{row.mobile_phone}</TableCell>
 							<TableCell>{row.work_phone}</TableCell>
-							<TableCell>
-								<img src={view} className={classes.view} alt="view" />
+							<TableCell className={classes.action}>
+								<Tooltip title="View Details">
+									<img src={view} className={classes.view} alt="view" />
+								</Tooltip>
+								<Tooltip title="Delete">
+									<img src={trash} className={classes.view} alt="delete" />
+								</Tooltip>
 							</TableCell>
 						</TableRow>
 					))}
