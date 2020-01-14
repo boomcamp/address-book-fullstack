@@ -16,7 +16,13 @@ exports.up = pgm => {
       type: "text",
       notNull: true
     },
-    mobile_phone: {
+    homePhone: {
+      type: "text"
+    },
+    mobilePhone: {
+      type: "text"
+    },
+    workPhone: {
       type: "text"
     },
     email: {

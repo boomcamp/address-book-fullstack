@@ -12,7 +12,7 @@ export const columnData = [
   },
   {
     title: "Mobile Phone",
-    field: "mobile_phone"
+    field: "mobilePhone"
   },
   {
     title: "Email Address",
@@ -21,6 +21,10 @@ export const columnData = [
   {
     title: "City",
     field: "city"
+  },
+  {
+    title: "State or Province",
+    field: "state"
   },
   {
     title: "Postal Code",

@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const Div = styled.div`
+  display: flex;
+  justify-content: center;
   padding-top: 206px;
   @media screen and (max-width: 600px) {
     padding: 15px;
