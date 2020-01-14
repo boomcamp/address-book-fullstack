@@ -13,29 +13,23 @@ import {
 import { TextField } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Axios from "axios";
-import { port } from "../../port";
+import { url } from "../../url";
 import { toast } from "react-toastify";
 
 export const Login = props => {
-  const {
-    handleOnChange,
-    setUser,
-    loginData,
-    setRedirect,
-    validation
-  } = props.data;
+  const { handleOnChange, setUser, loginData, setRedirect } = props.data;
   const [error, setError] = useState(false);
 
   const handleLogin = e => {
     e.preventDefault();
-    Axios.post(`http://localhost:${port}/api/login`, loginData)
+    Axios.post(`${url}/login`, loginData)
       .then(res => {
         setUser(res.data);
         toast.info("Login sucessful!", {
           position: toast.POSITION.TOP_CENTER
         });
       })
-      .catch(err => {
+      .catch(() => {
         setError(true);
       });
   };
@@ -50,10 +44,10 @@ export const Login = props => {
             error={error}
             onChange={e => handleOnChange("login", e.target)}
             style={marginBot}
-            name="email"
+            name="username"
             variant="outlined"
-            type="email"
-            label="Email"
+            type="username"
+            label="Username"
             fullWidth
             required
             helperText={error ? "Invalid username!" : ""}

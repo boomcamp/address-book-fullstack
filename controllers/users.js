@@ -34,13 +34,13 @@ module.exports = {
   },
   login: (req, res) => {
     const { users } = req.app.get("db");
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     users
-      .findOne({ email: email })
+      .findOne({ username: username })
       .then(user => {
         if (!user) {
-          throw new Error("Invalid email");
+          throw new Error("Invalid username");
         }
         return argon2.verify(user.password, password).then(valid => {
           if (!valid) {

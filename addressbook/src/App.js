@@ -5,6 +5,8 @@ import { Routes } from "./components/routes/Routes";
 import { useLocalStorage } from "./components/customHooks/useLocalStorage";
 import { ToastContainer } from "react-toastify";
 import "../node_modules/react-toastify/dist/ReactToastify.css";
+import { url } from "./url";
+import Axios from "axios";
 
 function App() {
   const [loginData, setloginData] = useState({});
@@ -15,6 +17,16 @@ function App() {
     confirmPasswordMsg: ""
   });
   const [redirect, setRedirect] = useState(false);
+  const [userData, setUserData] = useState(async () => {
+    try {
+      const response = await Axios.get(`${url}/user/${user.id}/addressbook`, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
+      setUserData(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  });
 
   const handleOnChange = (key, data, action) => {
     key === "login"
@@ -49,6 +61,8 @@ function App() {
         setRegistrationData={setRegistrationData}
         redirect={redirect}
         setRedirect={setRedirect}
+        userData={userData}
+        setUserData={setUserData}
       />
     </HashRouter>
   );

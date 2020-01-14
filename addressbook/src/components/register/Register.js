@@ -11,7 +11,7 @@ import {
 import { TextField } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Axios from "axios";
-import { port } from "../../port";
+import { url } from "../../url";
 import { toast } from "react-toastify";
 
 export const Register = props => {
@@ -26,7 +26,7 @@ export const Register = props => {
     e.preventDefault();
     const data = registrationData;
     delete data.confirmPassword;
-    Axios.post(`http://localhost:${port}/api/register`, data)
+    Axios.post(`${url}/register`, data)
       .then(res => {
         console.log(res);
         toast.info("registration sucessful!", {
@@ -44,11 +44,11 @@ export const Register = props => {
     <Div>
       <RegisterCont>
         <form onSubmit={e => handleRegister(e)}>
-          <Title>Address Book</Title>
+          <Title style={{ margin: "20px 0 0 0" }}>Address Book</Title>
           <Title>Create your Address Book Account</Title>
           <Name>
             <TextField
-              style={{ margin: "3px 3px 3px 0" }}
+              style={{ margin: "3px 6px 3px 0" }}
               onChange={e => handleOnChange("register", e.target)}
               name="firstName"
               variant="outlined"
@@ -58,7 +58,7 @@ export const Register = props => {
               required
             />
             <TextField
-              style={{ margin: "3px 0 3px 3px" }}
+              style={{ margin: "3px 0 3px 0" }}
               onChange={e => handleOnChange("register", e.target)}
               name="lastName"
               variant="outlined"
