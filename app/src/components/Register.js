@@ -43,14 +43,10 @@ export default function Register({ handleClose }) {
         axios({
             method: "post",
             url: `http://localhost:3001/api/register`,
-            headers: {
-                "Accept": 'application/json',
-                "Content-type": "application/json"
-            },
             data: data
         })
             .then(e => {
-                localStorage.setItem('token', e.data.token);
+                window.localtion.href = "#/";
             })
             .catch(e => console.log(e))
     }

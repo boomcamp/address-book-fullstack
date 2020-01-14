@@ -27,7 +27,7 @@ massive({
         // Fetch all users
         app.get('/api/contacts', contact.getAllData);
         // Fetch by user ID
-        app.get('/api/contacts/:id', contact.getDataById);
+        app.get('/api/contacts/:user_id', contact.getDataById);
         // Search user
         app.get('/api/contacts', contact.searchUser);
         // Edit user
