@@ -68,7 +68,7 @@ class Login extends React.Component {
               </MDBRow>
               <div className="text-center mb-4 mt-5">
                 <MDBBtn
-                  color="danger"
+                  gradient="blue"
                   type="submit"
                   className="btn-block z-depth-2"
                 >

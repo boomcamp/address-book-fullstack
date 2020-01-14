@@ -15,7 +15,16 @@ export default class Routes extends React.Component {
       regSuccess,
       submitHandler,
       changeHandler,
-      createContactHandler
+      createContactHandler,
+      isLoading,
+      handleEditOpen,
+      handleAddClose,
+      handleAddOpen,
+      isModal,
+      currentData,
+      editContactHandler,
+      deleteContactHandler,
+      deleteContact
     } = this.props;
     return (
       <Switch>
@@ -27,6 +36,15 @@ export default class Routes extends React.Component {
                 handleLogout={handleLogout}
                 createContactHandler={createContactHandler}
                 changeHandler={changeHandler}
+                isLoading={isLoading}
+                handleAddClose={handleAddClose}
+                handleEditOpen={handleEditOpen}
+                handleAddOpen={handleAddOpen}
+                isModal={isModal}
+                currentData={currentData}
+                editContactHandler={editContactHandler}
+                deleteContactHandler={deleteContactHandler}
+                deleteContact={deleteContact}
               />
             ) : (
               <Login

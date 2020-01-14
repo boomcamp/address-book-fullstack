@@ -22,15 +22,15 @@ exports.up = pgm => {
       notNull: true
     },
     home_phone: {
-      type: "integer",
+      type: "text",
       notNull: true
     },
     mobile_phone: {
-      type: "integer",
+      type: "text",
       notNull: true
     },
     work_phone: {
-      type: "integer",
+      type: "text",
       notNull: true
     },
     email: {
@@ -46,7 +46,7 @@ exports.up = pgm => {
       notNull: true
     },
     postal_code: {
-      type: "integer",
+      type: "text",
       notNull: true
     },
     country: {

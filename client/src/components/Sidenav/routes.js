@@ -9,7 +9,16 @@ export default class Routes extends React.Component {
       accessToken,
       handleLogout,
       createContactHandler,
-      changeHandler
+      changeHandler,
+      isLoading,
+      handleEditOpen,
+      handleAddOpen,
+      handleAddClose,
+      isModal,
+      currentData,
+      editContactHandler,
+      deleteContactHandler,
+      deleteContact
     } = this.props;
     return (
       <Switch>
@@ -21,6 +30,15 @@ export default class Routes extends React.Component {
               accessToken={accessToken}
               createContactHandler={createContactHandler}
               changeHandler={changeHandler}
+              isLoading={isLoading}
+              handleAddClose={handleAddClose}
+              handleEditOpen={handleEditOpen}
+              handleAddOpen={handleAddOpen}
+              isModal={isModal}
+              currentData={currentData}
+              editContactHandler={editContactHandler}
+              deleteContactHandler={deleteContactHandler}
+              deleteContact={deleteContact}
             />
           )}
           path="/"

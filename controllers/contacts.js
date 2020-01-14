@@ -35,5 +35,25 @@ module.exports = {
         console.error(err);
         res.status(500).end();
       });
+  },
+  editContact: (req, res) => {
+    const db = req.app.get("db");
+    db.contacts
+      .update({ id: req.params.id }, req.body)
+      .then(post => res.status(200).json(post))
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
+  },
+  deleteContact: (req, res) => {
+    const db = req.app.get("db");
+    db.contacts
+      .destroy({ id: req.params.id })
+      .then(post => res.status(200).json(post))
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
   }
 };

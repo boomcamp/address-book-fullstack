@@ -140,7 +140,7 @@ export default class Registration extends React.Component {
               </MDBRow>
               <div className="text-center mb-4 mt-3">
                 <MDBBtn
-                  color="danger"
+                  gradient="blue"
                   className="btn-block z-depth-2"
                   type="submit"
                 >

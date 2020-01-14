@@ -40,7 +40,9 @@ massive({
 
     //CONTACT'S ENDPOINT
     app.get("/contacts/:id/all", contact.allContacts);
-    app.post("/contacts/create", auth, contact.createContact);
+    app.post("/contacts/create", contact.createContact);
+    app.patch("/contacts/:id/edit", contact.editContact);
+    app.delete("/contacts/:id/delete", contact.deleteContact);
 
     const PORT = 4001;
     app.listen(PORT, () => {

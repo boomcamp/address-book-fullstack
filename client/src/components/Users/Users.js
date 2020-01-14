@@ -1,35 +1,46 @@
 import React from "react";
 import axios from "axios";
+import IconButton from "@material-ui/core/IconButton";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 import MaterialTable from "material-table";
-import { toast } from "react-toastify";
-
 import Modal from "../Modal/Modal";
+
 class Users extends React.Component {
   constructor() {
     super();
     this.state = {
-      isOpen: false,
       columns: [
         { title: "First Name", field: "first_name" },
         { title: "Last Name", field: "last_name" },
         {
-          title: "Home Phone",
-          field: "home_phone"
-        },
-        {
-          title: "Mobile Phone",
-          field: "mobile_phone"
-        },
-        {
-          title: "Work Phone",
-          field: "work_phone"
+          title: "Actions",
+          render: rowData => (
+            <React.Fragment>
+              <IconButton
+                onClick={() => this.props.handleEditOpen(rowData, "edit")}
+                aria-label="edit"
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => this.props.handleEditOpen(rowData, "delete")}
+                aria-label="delete"
+              >
+                <DeleteIcon />
+              </IconButton>
+            </React.Fragment>
+          )
         }
       ],
-      data: [],
-      addModal: false
+      data: []
     };
   }
   componentDidMount = () => {
+    this.fetchContact();
+  };
+
+  fetchContact = () => {
     axios
       .get(
         `http://localhost:4001/contacts/${localStorage.getItem("userId")}/all`
@@ -39,21 +50,25 @@ class Users extends React.Component {
       });
   };
 
-  toggleCollapse = () => {
-    this.setState({ isOpen: !this.state.isOpen });
-  };
-
-  handleAddOpen = () => {
-    this.setState({ addModal: true });
-  };
-
-  handleAddClose = () => {
-    this.setState({ addModal: false });
+  componentDidUpdate = () => {
+    if (this.props.isLoading) {
+      this.fetchContact();
+    }
   };
 
   render() {
-    const { accessToken, createContactHandler, changeHandler } = this.props;
-    // const userId = localStorage.getItem("userId");
+    const {
+      createContactHandler,
+      changeHandler,
+      handleEditOpen,
+      handleAddOpen,
+      handleAddClose,
+      isModal,
+      currentData,
+      editContactHandler,
+      deleteContactHandler,
+      deleteContact
+    } = this.props;
     return (
       <div>
         <MaterialTable
@@ -63,71 +78,43 @@ class Users extends React.Component {
           options={{
             pageSizeOptions: [10, 15, 20],
             pageSize: 10,
-            actionsColumnIndex: -1
+            actionsColumnIndex: -1,
+            selection: true,
+            grouping: true
           }}
           actions={[
             {
               icon: "add",
-              tooltip: "Add User",
+              tooltip: "Add Contact",
               isFreeAction: true,
-              onClick: this.handleAddOpen
+              onClick: handleAddOpen
+            },
+            {
+              icon: "add",
+              tooltip: "Add To Group",
+              onClick: rowData => {
+                console.log(rowData);
+              }
+            },
+            {
+              tooltip: "Remove All Selected Users",
+              icon: "delete",
+              onClick: (evt, data) =>
+                alert("You want to delete " + data.length + " rows")
             }
           ]}
-          editable={{
-            onRowUpdate: (newData, oldData) =>
-              new Promise(resolve => {
-                setTimeout(() => {
-                  resolve();
-                  if (oldData) {
-                    this.setState(prevState => {
-                      const data = [...prevState.data];
-                      data[data.indexOf(oldData)] = newData;
-                      return { ...prevState, data };
-                    });
-                  }
-                }, 400);
-                axios
-                  .patch(
-                    `http://localhost:3000/users/${newData.id}`,
-                    {
-                      email: newData.email,
-                      username: newData.username,
-                      firstName: newData.firstName,
-                      lastName: newData.lastName,
-                      active: newData.active
-                    },
-                    {
-                      headers: { Authorization: `Bearer ${accessToken}` }
-                    }
-                  )
-                  .then(toast.success("Account has been Successfully Edited!"))
-                  .catch(() => toast.success("Error Encountered!"));
-              }),
-            onRowDelete: oldData =>
-              new Promise(resolve => {
-                setTimeout(() => {
-                  resolve();
-                  this.setState(prevState => {
-                    const data = [...prevState.data];
-                    data.splice(data.indexOf(oldData), 1);
-                    return { ...prevState, data };
-                  });
-                }, 600);
-                axios
-                  .delete(`http://localhost:3000/users/${oldData.id}`, {
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                  })
-                  .then(toast.success("Account has been Successfully Deleted!"))
-                  .catch(() => toast.success("Error Encountered!"));
-              })
-          }}
         />
         <Modal
-          addModal={this.state.addModal}
-          handleAddOpen={this.handleAddOpen}
-          handleAddClose={this.handleAddClose}
+          isModal={isModal}
+          currentData={currentData}
           createContactHandler={createContactHandler}
+          editContactHandler={editContactHandler}
+          deleteContactHandler={deleteContactHandler}
           changeHandler={changeHandler}
+          handleAddClose={handleAddClose}
+          handleEditOpen={handleEditOpen}
+          handleAddOpen={handleAddOpen}
+          deleteContact={deleteContact}
         />
       </div>
     );
