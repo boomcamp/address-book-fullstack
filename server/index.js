@@ -22,8 +22,10 @@ massive({
 	app.get('/api/users', auth, users.userlist);
 
 	//Contacts
-	app.post('/api/contacts/create', contacts.create);
-	app.get('/api/contacts/userId-:id', contacts.view);
+	app.post('/api/contacts/create', auth, contacts.create);
+	app.get('/api/contacts/userId-:id', auth, contacts.view);
+	app.patch('/api/contacts/update/:id', auth, contacts.updateContact);
+	app.delete('/api/contacts/delete/:id', auth, contacts.deleteContact);
 
 	const port = 5000;
 	app.listen(port, () => console.log(`Server listening on port ${port}`));

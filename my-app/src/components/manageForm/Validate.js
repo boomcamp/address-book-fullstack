@@ -1,4 +1,4 @@
-export default function validateLogin(values) {
+export default function Validate(values) {
 	let errors = {};
 	if (!values.firstname) {
 		errors.firstname = 'First Name is required';

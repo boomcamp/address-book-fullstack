@@ -37,12 +37,15 @@ export default function SignIn(props) {
 	};
 
 	useEffect(() => {
+		if (localStorage.getItem('token')) {
+			props.history.push('/users');
+		}
 		if (localStorage.getItem('notif')) {
 			setNotif(localStorage.getItem('notif'));
 			setOpen(true);
 			localStorage.removeItem('notif');
 		}
-	}, [setOpen]);
+	}, [setOpen, props.history]);
 
 	const handleSubmit = e => {
 		e.preventDefault();

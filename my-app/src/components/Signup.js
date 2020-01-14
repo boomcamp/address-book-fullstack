@@ -31,6 +31,9 @@ export default function Signup(props) {
 	};
 
 	useEffect(() => {
+		if (localStorage.getItem('token')) {
+			props.history.push('/users');
+		}
 		const { firstname, lastname, username, email, password } = values;
 
 		if (Object.keys(errors).length === 0 && submit) {

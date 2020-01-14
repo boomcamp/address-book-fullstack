@@ -26,7 +26,7 @@ export default function HomePage(props) {
 	const classes = useStyles();
 	const theme = useTheme();
 
-	const [page, setPage] = useState('');
+	const [page, setPage] = useState('contact');
 	const [mobileOpen, setMobileOpen] = useState(false);
 
 	useEffect(() => {
@@ -41,9 +41,6 @@ export default function HomePage(props) {
 
 		axios
 			.get('/api/users', { headers: { Authorization: `Bearer ${token}` } })
-			.then(res => {
-				console.log(res.data);
-			})
 			.catch(err => console.log(err));
 	}, [token, props.history]);
 

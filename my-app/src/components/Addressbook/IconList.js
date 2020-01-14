@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,11 +13,8 @@ export default function IconList(props) {
 
 	const handleListItemClick = index => {
 		setSelectedIndex(index);
+		props.setPage(index);
 	};
-
-	useEffect(() => {
-		props.setPage(selectedIndex);
-	}, [selectedIndex, props]);
 
 	return (
 		<List component="nav" aria-label="main mailbox folders">
