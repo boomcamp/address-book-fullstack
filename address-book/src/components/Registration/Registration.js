@@ -45,8 +45,8 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp() {
     const classes = useStyles();
     const [values, setValues] = useState({
-    //   fname: '',
-    //   lname: '',
+      fname: '',
+      lname: '',
       email: '',
       username: '',
     //   cpass: '',
@@ -60,6 +60,8 @@ export default function SignUp() {
     const signthis = () =>{
         axios
         .post('http://localhost:5001/api/users', {
+          "fname": values.fname,
+          "lname": values.lname,
           "email": values.email,
           "username": values.username,
           "password": values.pass,
@@ -97,6 +99,35 @@ export default function SignUp() {
           onError={errors => console.log(errors)}
         >
           <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextValidator
+                autoComplete="fname"
+                name="fname"
+                variant="outlined"
+                fullWidth
+                id="firstName"
+                label="First Name"
+                autoFocus
+                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
+                errorMessages={['This field is required', 'Must contain letters only.']}
+                onChange={eventhandler}
+                value={values.fname}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextValidator
+                variant="outlined"
+                fullWidth
+                id="lastName"
+                label="Last Name"
+                name="lname"
+                autoComplete="lname"
+                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
+                errorMessages={['This field is required', 'Must contain letters only.']}
+                onChange={eventhandler}
+                value={values.lname}
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextValidator
                 variant="outlined"

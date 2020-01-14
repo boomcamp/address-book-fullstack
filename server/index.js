@@ -18,10 +18,10 @@ massive({
     app.use(cors())
     const port = 5001;
 
-    app.post('/api/users', users.create);
+    app.post('/api/users', users.createUsers);
     app.post('/api/login', users.login);
     app.get('/api/user/:id', users.getUser)
-    app.get('/api/protected/data', 
+    app.get('/api/protected/data', // ?
         function(req, res){
             const db = req.app.get('db')
 
@@ -40,6 +40,12 @@ massive({
             }
     });
     app.get('/api/users', users.getUsers)
+
+    app.post('/api/contacts', users.createContact)
+    app.get('/api/contacts', users.getContacts)
+    app.get('/api/contact/:id', users.getContact) // ?
+    app.patch('/api/contact/:id', users.updateContact)
+    app.delete('/api/contact/:id', users.deleteContact)
 
     app.listen(port, err=>{
         if(err){

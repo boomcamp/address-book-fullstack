@@ -3,19 +3,21 @@ const secret = require('../../secret.js');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-    create: (req, res) => {
+    createUsers: (req, res) => {
         const db = req.app.get('db');
-        const { username, email, password } = req.body;
+        const { fname, lname, username, email, password } = req.body;
 
         argon2
             .hash(password)
             .then(hash=>{
                 return db.users.insert({
+                    fname,
+                    lname,
                     username,
                     email,
                     password: hash,
                 },{
-                    fields: ['id', 'username', 'email', 'password']
+                    fields: ['id', 'fname', 'lname', 'username', 'email', 'password']
                 });
             })
             .then(user=>{
@@ -66,7 +68,7 @@ module.exports = {
 
         db.users
         .find()
-        .then(users => res.status(200).json(users))
+        .then(u => res.status(200).json(u))
         .catch(err => {
             console.error(err);
             res.status(500).end();
@@ -78,6 +80,106 @@ module.exports = {
         db.users
         .findOne(req.params.id)
         .then(user => res.status(201).json(user))
+        .catch(err =>{
+            console.err(err)
+            res.status(500).end()
+        })
+    },
+    createContact:(req, res) => {
+        const db = req.app.get('db')
+        const { 
+            userId,
+            f_name, 
+            l_name, 
+            home_phone, 
+            mobile_phone, 
+            work_phone, 
+            email, 
+            city, 
+            state_or_province, 
+            postal_code,
+            country } = req.body;
+
+        db.contacts
+        .save({
+            userId,
+            f_name, 
+            l_name, 
+            home_phone, 
+            mobile_phone, 
+            work_phone, 
+            email, 
+            city, 
+            state_or_province, 
+            postal_code,
+            country
+        })
+        .then(u => res.status(200).json(u))
+        .catch(err =>{
+            console.error(err)
+            res.status(500).end()
+        })
+    },
+    getContacts: (req, res) => {
+        const db = req.app.get('db')
+
+        db.contacts
+        .find()
+        .then(u => res.status(200).json(u))
+        .catch(err => {
+            console.error(err);
+            res.status(500).end();
+        });
+    },
+    getContact: (req, res) => {
+        const db = req.app.get('db')
+
+        db.contacts
+        .findOne(req.params.id)
+        .then(u => res.status(201).json(u))
+        .catch(err =>{
+            console.err(err)
+            res.status(500).end()
+        })
+    },
+    updateContact: (req, res) => {
+        const db = req.app.get('db')
+        const { f_name, 
+            l_name, 
+            home_phone, 
+            mobile_phone, 
+            work_phone, 
+            email, 
+            city, 
+            state_or_province, 
+            postal_code,
+            country } = req.body
+
+        db.contacts
+        .update(req.params.id, {
+            f_name: f_name, 
+            l_name: l_name, 
+            home_phone: home_phone, 
+            mobile_phone: mobile_phone, 
+            work_phone: work_phone, 
+            email: email, 
+            city: city, 
+            state_or_province: state_or_province, 
+            postal_code: postal_code,
+            country: country
+        })
+        .then(u => res.status(201).json(u))
+        .catch(err =>{
+            console.err(err)
+            res.status(500).end()
+        })
+    },
+    deleteContact: (req, res) => {
+        const db = req.app.get('db')
+
+        db.contacts
+        .destroy(req.params.id)
+        .then(u => res.status(201).json(u))
         .catch(err =>{
             console.err(err)
             res.status(500).end()

@@ -1,117 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import MaterialTable from 'material-table';
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import ListIcon from '@material-ui/icons/List';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import PropTypes from 'prop-types'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import PersonIcon from '@material-ui/icons/Person';
+import GroupIcon from '@material-ui/icons/Group';
+import Button from '@material-ui/core/Button';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import Drawer from '@material-ui/core/Drawer';
-
-
-function SimpleDialog(props) {
-    const { onClose, selectedValue, open } = props;
-    const handleClose = () => {
-      onClose(selectedValue);
-    };
-return (
-      <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-        <DialogTitle id="simple-dialog-title">User Details</DialogTitle>
-        <List>
-            <ListItem >
-              <ListItemAvatar>
-                <Avatar>
-                  <PersonIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={selectedValue} />
-            </ListItem>
-        </List>
-      </Dialog>
-    );
-}
-SimpleDialog.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    selectedValue: PropTypes.string.isRequired,
-};
+import MenuIcon from '@material-ui/icons/Menu';
+import { Typography } from '@material-ui/core';
+// import Settings from './Settings';
+// import AddressBook from './AddressBook';
+import UserDetails from './UserDetails';
+import Groups from './Groups';
+import Contacts from './Contacts';
 
 export default function UserManage() {
-    var [token, emptyToken] = useState(false)
-    const [state, setState] = useState({
-        left: false,
-        columns: [
-        { title: 'Email', field: 'email', filtering: false },
-        { title: 'Username', field: 'uname' },
-        ],
-    });
-    const [name, setName] = useState({uname: '', email: ''});
-    const [open, setOpen] = useState(false);
-    const [open1, setOpen1] = useState(false);
-    const [selectedValue, setSelectedValue] = useState({uname: '', fname: '', lname: '', email: ''});
-
+    var [token, emptyToken] = useState(false) // for what?
+    const [page, setPage] = useState('contacts')
+    const [toggle, setToggle] = useState({left:false})
+    // const [open1, setOpen1] = useState(false);
+    
+    
     useEffect(() => {
-        axios
-        .get('http://localhost:5001/api/users', {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
-        })
-        .then(res=>{
-            setState(contact=>{
-                return{ ...contact, data:res.data };
-            })
-        })
-
-        axios
-        .get(`http://localhost:5001/api/user/${localStorage.getItem('id')}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
-        })
-        .then(res=>
-            {
-                setName(e =>{ return {...e, uname:res.data.username, email:res.data.email} })
-            })
+        
     },[])
-    var onUpdate = (e) =>{
-        var tralse;
-        if(e.active === "true"){
-            tralse = true;
-        }else if(e.active === "false"){
-            tralse = false;
-        }
-        axios
-        .put(`http://localhost:3000/users/${e.id}`,{
-            "email": e.email,
-            "password": e.pass,
-            "plainPassword": e.plainpass,
-            "username": e.uname,
-            "firstName": e.fname,
-            "lastName": e.lname,
-            "active": tralse,
-        },{ headers: 
-            {Authorization: `Bearer ${localStorage.getItem('token')}`}
-        })
-        .then(res=>{
-            console.log(res)
-        })
-    }
-    var onDelete = (e) => {
-        axios
-        .delete(`http://localhost:3000/users/${e.id}`,{
-            headers: 
-            {Authorization: `Bearer ${localStorage.getItem('token')}`}
-        }).then(res=>{
-            console.log(res)
-        })
-    }
 
     const logout = () =>{
         localStorage.clear();
@@ -123,19 +39,20 @@ export default function UserManage() {
     if(!localStorage.getItem('token')){
         return(<Redirect to="/login"/>)
     }
-    const handleClickOpen = () => {
-        setOpen(true);
-      };
-    
-    const handleClose = value => {
-        setOpen(false);
-        setSelectedValue(value);
+    const openDetails = () => {
+        setPage('details')
     };
-    const addContact = () => {
-        setOpen1(true)
+    const openContacts = () => {
+        setPage('contacts')
     }
+    const openGroups = () => {
+        setPage('groups')
+    }
+    // const addContact = () => {
+    //     setOpen1(true)
+    // }
     const toggleDrawer = (side, open) => event => {
-        setState({ ...state, [side]: open });
+        setToggle({ ...toggle, [side]: open });
     };
     const sideList = side => (
         <div
@@ -145,82 +62,55 @@ export default function UserManage() {
         >
             <List>
                 <Button>
-                <ListItem>
-                    <ListIcon title="User Details" fontSize="large" variant="outlined" color="primary" onClick={handleClickOpen} style={{cursor: 'pointer'}}/>
+                <ListItem onClick={openDetails}>
+                    <ListIcon title="User Details" fontSize="small" variant="outlined" color="primary"  style={{cursor: 'pointer'}}/>
                     <ListItemText> User Details </ListItemText>
+                </ListItem>
+                </Button>
+            </List>
+            <Divider />
+            <List>
+                <Button>
+                <ListItem onClick={openContacts}>
+                    <ListIcon title="User Details" fontSize="small" variant="outlined" color="primary" style={{cursor: 'pointer'}}/>
+                    <ListItemText> Contacts </ListItemText>
                 </ListItem>
                 </Button>
             </List>
             <List>
                 <Button>
-                <ListItem>
-                    <ListIcon title="Add Contacts" fontSize="large" variant="outlined" color="primary" onClick={addContact} style={{cursor: 'pointer'}}/>
-                    <ListItemText> Add Contacts </ListItemText>
+                <ListItem onClick={openGroups}>
+                    <GroupIcon title="Add Contacts" fontSize="small" variant="outlined" color="primary" style={{cursor: 'pointer'}}/>
+                    <ListItemText> Add Groups </ListItemText>
                 </ListItem>
                 </Button>
             </List>
-            <Divider />
         </div>
     );
     return (
         <React.Fragment>
             <AppBar position="static" color="default" elevation={0}>
                 <Toolbar>
+                    <Button onClick={toggleDrawer('left', true)}><MenuIcon/></Button>
+                    <Drawer open={toggle.left} onClose={toggleDrawer('left', false)}>
+                        {sideList('left')}
+                    </Drawer>
+                    <Typography style={{flexGrow: "1"}}>
+                        Address Book
+                    </Typography>
                     <Button title="Logout User" size="small" variant="outlined" color="primary" onClick={logout}>
                         Logout
                     </Button>
-                    <Button onClick={toggleDrawer('left', true)}><ListIcon/></Button>
-                    <Drawer open={state.left} onClose={toggleDrawer('left', false)}>
-                        {sideList('left')}
-                    </Drawer>
-
-                    <SimpleDialog selectedValue={name} open={open} onClose={handleClose}/>
                 </Toolbar>
             </AppBar>
-            <MaterialTable
-                style={{width: '95%', margin: '50px auto'}}
-                options={{filtering: true, headerStyle: {backgroundColor: '#f5f5f5'}}}
-                title={`Welcome ${name.uname}!`}
-                columns={state.columns}
-                data={state.data}
-                editable={{
-                    onRowAdd: newData =>
-                    new Promise((resolve, reject) => {
-                        setTimeout(() => {
-                        resolve();
-                        setState(prevState => {
-                            const data = [...prevState.data];
-                            data.push(newData);
-                            return { ...prevState, data };
-                        });
-                        }, 600);
-                    }),
-                    onRowUpdate: (newData, oldData) =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                        resolve();
-                        if (oldData) {
-                            setState(prevState => {
-                            const data = [...prevState.data];
-                            data[data.indexOf(oldData)] = newData;
-                            return { ...prevState, data };
-                            });
-                        }
-                        }, 600);
-                    }).then(onUpdate(newData)),
-                    onRowDelete: oldData =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                        resolve();
-                        setState(prevState => {
-                            const data = [...prevState.data];
-                            data.splice(data.indexOf(oldData), 1);
-                            return { ...prevState, data };
-                        });
-                        }, 600);
-                    }).then(onDelete(oldData)),
-                }}
-            />
+            {page === 'details' ? (
+                <UserDetails/>
+            ) : page === 'groups' ? (
+                <Groups/>
+            ) : page === 'contacts' ? (
+                <Contacts/>
+            ) : null
+            }
         </React.Fragment>
     );
 }

@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 exports.shorthands = undefined;
 
 exports.up = pgm => {
@@ -7,6 +5,14 @@ exports.up = pgm => {
       id: {
         type: 'serial',
         primaryKey: true,
+      },
+      fname: {
+        type: 'text',
+        notNull: true,
+      },
+      lname: {
+        type: 'text',
+        notNull: true,
       },
       username: {
         type: 'text',
