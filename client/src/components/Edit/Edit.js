@@ -11,14 +11,14 @@ export default class Modal extends React.Component {
     return (
       <div>
         <Dialog
-          open={this.props.handleClickOpen}
-          onClose={this.props.handleClose}
+          open={this.props.ClickOpen}
+          onClose={this.props.ClickClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Add Contact"}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">{"Edit Contact"}</DialogTitle>
           <MDBCol>
-            <form onSubmit={this.props.ContactHandler}>
+            <form onSubmit={this.props.editHandler}>
               <DialogContent
                 style={{
                   display: "flex",
@@ -148,14 +148,14 @@ export default class Modal extends React.Component {
                 </MDBRow>
                 <div className="text-center mt-4">
                   <MDBBtn className="submit" color="indigo" type="submit">
-                    Create
+                    Edit
                   </MDBBtn>
                 </div>
               </DialogContent>
             </form>
           </MDBCol>
           <DialogActions>
-            <Button onClick={this.props.handleClose} color="primary">
+            <Button onClick={this.props.ClickClose} color="primary">
               Close
             </Button>
           </DialogActions>

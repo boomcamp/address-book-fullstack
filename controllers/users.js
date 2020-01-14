@@ -103,7 +103,7 @@ module.exports = {
     const db = req.app.get("db");
 
     db.contacts
-      .find()
+      .find({ userId: req.params.id })
       .then(contacts => res.status(200).json(contacts))
       .catch(err => {
         console.error(err);
@@ -112,7 +112,6 @@ module.exports = {
   },
   addContact: (req, res) => {
     const db = req.app.get("db");
-
     const { email } = req.body;
     db.contacts
       .findOne({
@@ -131,6 +130,16 @@ module.exports = {
         err.message
           ? res.status(400).json({ error: err.message })
           : res.status(500).end();
+      });
+  },
+  editContact: (req, res) => {
+    const db = req.app.get("db");
+
+    db.contacts
+      .update({ userId: req.params.id }, req.body)
+      .then(contact => res.status(200).json(contact))
+      .catch(err => {
+        console.error(err);
       });
   }
 };
