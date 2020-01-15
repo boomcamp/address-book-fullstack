@@ -7,8 +7,8 @@ export default function DateToday() {
 	// let sec = calendar.getUTCSeconds();
 	let year = calendar.getUTCFullYear();
 
-	let today = `${month + 1}/${date}/${year} ${
-		hours < 12 ? '0' + hours : hours - 12
-	}:${min < 10 ? '0' + min : min} ${hours < 12 ? 'AM' : 'PM'}`;
+	let today = `${hours < 12 ? hours : hours - 12}:${
+		min < 10 ? '0' + min : min
+	} ${hours < 12 ? 'AM' : 'PM'} ${month + 1}/${date}/${year}`;
 	return today;
 }

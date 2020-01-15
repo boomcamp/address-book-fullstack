@@ -4,6 +4,7 @@ const massive = require('massive');
 const auth = require('./controllers/auth');
 const users = require('./controllers/users');
 const contacts = require('./controllers/contacts');
+const groups = require('./controllers/groups');
 
 massive({
 	host: 'localhost',
@@ -26,6 +27,12 @@ massive({
 	app.get('/api/contacts/userId-:id', auth, contacts.view);
 	app.patch('/api/contacts/update/:id', auth, contacts.updateContact);
 	app.delete('/api/contacts/delete/:id', auth, contacts.deleteContact);
+
+	//Groups
+	app.post('/api/groups/create', auth, groups.createGroup);
+	app.get('/api/groups/userId-:id', auth, groups.viewGroup);
+	app.patch('/api/groups/update/:id', auth, groups.updateGroup);
+	app.delete('/api/groups/delete/:id', auth, groups.deleteGroup);
 
 	const port = 5000;
 	app.listen(port, () => console.log(`Server listening on port ${port}`));

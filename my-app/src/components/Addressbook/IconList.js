@@ -9,7 +9,7 @@ import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
 import GroupIcon from '@material-ui/icons/Group';
 
 export default function IconList(props) {
-	const [selectedIndex, setSelectedIndex] = useState('contact');
+	const [selectedIndex, setSelectedIndex] = useState('group');
 
 	const handleListItemClick = index => {
 		setSelectedIndex(index);
