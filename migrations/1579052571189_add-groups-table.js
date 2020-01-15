@@ -17,6 +17,7 @@ exports.up = (pgm) => {
       notNull: true,
       unique: true,
       length: 11,
+      references: '"users"',
       foreignKey: {
         name: 'address_book_userID_fk',
         table: 'users',

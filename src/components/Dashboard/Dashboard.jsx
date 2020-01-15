@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import Header from "../Header/Header";
-
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import AddContact from "./AddContact/AddContact";
+import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -11,20 +12,23 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Grid from "@material-ui/core/Grid";
-import Fab from "@material-ui/core/Fab";
-import { Add, AccountCircle } from "@material-ui/icons";
-import { Dialog, DialogContent, DialogActions, TextField, DialogTitle } from "@material-ui/core";
-import Button from '@material-ui/core/Button';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+import Fab from '@material-ui/core/Fab';
+import { DeleteOutline } from '@material-ui/icons';
+import { Button, ButtonGroup, Hidden } from '@material-ui/core';
+
+import ViewContact from './ViewContact/ViewContact';
+import EditContact from './EditContact/EditContact';
 
 function Dashboard() {
   const columns = [
-    { id: "First Name", label: "First Name", minWidth: 50 },
-    { id: "Last Name", label: "Last Name", minWidth: 50 },
+    { id: "First Name", label: "First Name", minWidth: 10 },
+    { id: "Last Name", label: "Last Name", minWidth: 10 },
+    { id: "Phone Number", label: "Phone Number", minWidth: 10 },
     {
       id: "Actions",
       label: "Actions",
-      minWidth: 50,
+      minWidth: 30,
       align: "right",
       format: value => value.toLocaleString()
     }
@@ -35,7 +39,7 @@ function Dashboard() {
       width: "100%"
     },
     container: {
-      maxHeight: 440
+      maxHeight: 840
     },
     table: {
       marginTop: "1%"
@@ -66,6 +70,9 @@ function Dashboard() {
       width: "100%", // Fix IE 11 issue.
       marginTop: theme.spacing(1)
     },
+    delete: {
+      color: '#fff',
+    },
   }));
 
   const classes = useStyles();
@@ -81,18 +88,25 @@ function Dashboard() {
     setPage(0);
   };
 
-  const [open, setOpen] = useState(false);
+  const sessionid = localStorage.getItem('sessionid');
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const [contactList, setcontactList] = useState([]);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const fetchContactsFn = () => {
+    axios({
+      method: 'get',
+      url: `http://localhost:3002/api/contacts/${sessionid}`
+    })
+    .then(response => {
+      setcontactList(response.data);
+    })
+    .catch(error => console.error(error))
+  }
 
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  useEffect(() => {
+    fetchContactsFn();
+    // eslint-disable-next-line
+  }, [])
 
   return (
     <React.Fragment>
@@ -118,7 +132,41 @@ function Dashboard() {
                           ))}
                         </TableRow>
                       </TableHead>
-                      <TableBody></TableBody>
+                      <TableBody>
+                      {contactList
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map(row => {
+                          return (
+                            <TableRow hover tabIndex={-1} key={row.abID}>
+                              <TableCell>
+                                {row.ab_firstName}
+                              </TableCell>
+                              <TableCell>
+                                {row.ab_lastName}
+                              </TableCell>
+                              <TableCell>
+                                {row.ab_phone_number ? row.ab_phone_number : 'N/A'}
+                              </TableCell>
+                              <TableCell align="right" className={classes.actionBtn}>
+                                <Hidden only={['xs', 'sm']} >
+                                  <ViewContact data={row} />
+                                  <EditContact data={row} />
+                                  <Fab size="medium" color="secondary" className={classes.delete} aria-label="delete">
+                                    <DeleteOutline />
+                                  </Fab>
+                                </Hidden>
+                                <Hidden only={['xl', 'lg', 'md']}>
+                                  <ButtonGroup size="small" variant="text">
+                                    <ViewContact data={row} />
+                                    <EditContact data={row} />
+                                    <Button color="secondary"><DeleteOutline /></Button>
+                                  </ButtonGroup>
+                                </Hidden>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                    </TableBody>
                     </Table>
                   </TableContainer>
                   <TablePagination
@@ -142,125 +190,7 @@ function Dashboard() {
             justify="flex-end"
             alignItems="flex-end"
           >
-            <Fab
-              onClick={handleClickOpen}
-              title="Add Contact"
-              className={classes.addBtn}
-              aria-label="add"
-            >
-              <Add />
-            </Fab>
-            <Dialog fullScreen={fullScreen} open={open} onClose={handleClose} aria-labelledby="Add-Contact-Dialog" maxWidth='md' fullWidth>
-              <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                Add Contact
-              </DialogTitle>
-              <DialogContent dividers>
-                <form className={classes.form}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} sm={12} md={6} lg={6}>
-                      <TextField
-                        autoFocus
-                        label="First Name"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={6}>
-                      <TextField
-                        autoFocus
-                        label="Last Name"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4} lg={4}>
-                      <TextField
-                        autoFocus
-                        label="Home Number"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4} lg={4}>
-                      <TextField
-                        autoFocus
-                        label="Mobile Number"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4} lg={4}>
-                      <TextField
-                        autoFocus
-                        label="Work Number"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                      <TextField
-                        autoFocus
-                        label="Email address"
-                        type="email"
-                        fullWidth
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={3}>
-                      <TextField
-                        autoFocus
-                        label="City"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={3}>
-                      <TextField
-                        autoFocus
-                        label="State"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={3}>
-                      <TextField
-                        autoFocus
-                        label="Country"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={3}>
-                      <TextField
-                        autoFocus
-                        label="Postal Code"
-                        type="text"
-                        fullWidth
-                        variant="outlined"  
-                      />
-                    </Grid>
-                  </Grid>
-                </form>
-              </DialogContent>
-              <DialogActions>
-                <Button autoFocus onClick={handleClose} color="secondary">
-                  Discard
-                </Button>
-                <Button onClick={handleClose} color="primary" autoFocus>
-                  Save
-                </Button>
-              </DialogActions>
-            </Dialog>
+          <AddContact fetchContactsFn={fetchContactsFn} sessionid={sessionid}/>
           </Grid>
         </Grid>
       </Grid>

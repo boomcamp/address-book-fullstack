@@ -11,8 +11,9 @@ exports.up = (pgm) => {
     userID: {
       type: 'int',
       notNull: true,
-      unique: true,
+      unique: false,
       length: 11,
+      references: '"users"',
       foreignKey: {
         name: 'address_book_userID_fk',
         table: 'users',
@@ -25,11 +26,12 @@ exports.up = (pgm) => {
     groupID: {
       type: 'int',
       notNull: false,
-      unique: true,
+      unique: false,
       length: 11,
+      references: '"groups"',
       foreignKey: {
         name: 'address_book_groupID_fk',
-        table: 'users',
+        table: 'groups',
         rules: {
           onDelete: 'CASCADE',
           onUpdate: 'CASCADE'
