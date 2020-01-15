@@ -6,7 +6,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
-import Queue from "@material-ui/icons/Queue";
 import Group from "@material-ui/icons/Group";
 import GroupAdd from "@material-ui/icons/GroupAdd";
 import Contacts from "@material-ui/icons/Contacts";
@@ -14,17 +13,22 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { Divider } from "@material-ui/core";
 
 const AddButton = styled.div`
-  border: 1px solid black;
-  background: none;
+  border: 1px solid #5f6dbd;
+  background: #3f51b5;
   border-radius: 5px;
   width: 90%;
   text-align: center;
   padding: 8px 0 0 0;
   font-size: 22px;
+  color: white;
 `;
 
+const icons = {
+  color: "#3f51b5"
+};
 const useStyles = makeStyles(theme => ({
   root: {
     width: "100%",
@@ -58,29 +62,38 @@ export const NestedList = props => {
       }
       className={classes.root}
     >
+      <Divider />
       <Link to="/" style={link}>
         <ListItem button>
           <ListItemIcon>
-            <Contacts />
+            <Contacts style={icons} />
           </ListItemIcon>
           <ListItemText primary="Contacts" />
         </ListItem>
       </Link>
       <ListItem button onClick={handleClick}>
         <ListItemIcon>
-          <Queue />
+          <Group style={icons} />
         </ListItemIcon>
         <ListItemText primary="Groups" />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItem button className={classes.nested}>
-            <ListItemIcon>
-              <Group />
-            </ListItemIcon>
-            <ListItemText primary="#Alawinatics" />
-          </ListItem>
+          {user.group ? (
+            <React.Fragment>
+              {user.group.map(x => (
+                <ListItem button className={classes.nested} key={x.id}>
+                  <ListItemIcon>
+                    <Group style={icons} />
+                  </ListItemIcon>
+                  <ListItemText primary={x.groupName} />
+                </ListItem>
+              ))}
+            </React.Fragment>
+          ) : (
+            ""
+          )}
           <ListItem button className={classes.nested}>
             <AddButton>
               <GroupAdd />

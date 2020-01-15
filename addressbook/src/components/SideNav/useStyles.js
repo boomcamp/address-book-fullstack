@@ -7,7 +7,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
-import { NestedList } from "../groups/list";
+import { NestedList } from "../groups/NestedList";
 
 const drawerWidth = 240;
 
@@ -39,8 +39,8 @@ export const useStyles = makeStyles(theme => ({
     width: drawerWidth
   },
   content: {
-    flexGrow: 2,
-    padding: theme.spacing(1)
+    flexGrow: 1,
+    padding: theme.spacing(3)
   }
 }));
 
@@ -62,7 +62,7 @@ export const DrawerCont = props => {
           }}
         >
           <ListItemIcon>
-            <ExitToApp />
+            <ExitToApp style={{ color: "#3f51b5" }} />
           </ListItemIcon>
           <ListItemText primary="Log Out" />
         </ListItem>

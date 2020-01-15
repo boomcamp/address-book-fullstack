@@ -40,8 +40,10 @@ massive({
 
   // group endpoints
   app.post("/api/groups", auth, groups.addNew);
+  app.patch("/api/groups", auth, valid.group, groups.editGroup);
   app.delete("/api/groups/:id", auth, groups.delete);
   app.get("/api/groups/:id/list", auth, valid.group, groups.list);
+  app.get("/api/groups/:id", auth, valid.group, groups.viewDetails);
 
   // listen
   app.listen(port, () => {

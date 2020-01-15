@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import React from "react";
+import { GroupName } from "./groupName";
 
 const Span = styled.span`
   text-transform: capitalize;
 `;
 
-export const columnData = [
+export const columnData = user => [
   {
     title: "Name",
     render: rowData => <Span>{rowData.firstName + " " + rowData.lastName}</Span>
@@ -36,7 +37,8 @@ export const columnData = [
   },
   {
     title: "Group",
-    field: "groupId"
+    field: "groupId",
+    render: rowData => <GroupName groupId={rowData.groupId} user={user} />
   }
 ];
 export const columnDataMobile = [

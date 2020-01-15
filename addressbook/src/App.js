@@ -25,7 +25,7 @@ function App() {
     }
   }, [user]);
 
-  const handleOnChange = (key, data, action) => {
+  const handleOnChange = (key, data) => {
     key === "login"
       ? setloginData({ ...loginData, [data.name]: data.value })
       : key === "register"
@@ -34,12 +34,12 @@ function App() {
           [data.name]: data.value
         })
       : setContact({ ...contact, [data.name]: data.value });
-    if (action && action === "confirmPassword") {
+    if (data.name === "confirmPassword") {
       registrationData.password !== data.value
         ? setValidation({
             ...validation,
-            password: true,
-            passwordMsg: "Password don't match!"
+            confirmPassword: true,
+            confirmPasswordMsg: "Password don't match!"
           })
         : setValidation({
             ...validation,

@@ -4,18 +4,32 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { TextField, Grid } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid/Grid";
+import { DialogContentText } from "@material-ui/core";
+import styled from "styled-components";
 
+const Box = styled.div`
+  display: flex;
+  width: 100%;
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
+`;
+const Item = styled.div`
+  padding: 5px;
+  width: 100%;
+`;
 export const DialogCont = props => {
   const { title, dialog, setDialog, rowData, passedFn, handleOnChange } = props;
   return (
-    <Dialog open={dialog} maxWidth={"lg"}>
+    <Dialog open={dialog} maxWidth={"lg"} onClose={() => setDialog(false)}>
       <form onSubmit={e => passedFn(e)}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2}>
-            <Grid container spacing={2} style={{ padding: "5px" }}>
-              <Grid item xs={6}>
+            <Box>
+              <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.firstName : ""}
@@ -26,8 +40,8 @@ export const DialogCont = props => {
                   required
                   variant="outlined"
                 />
-              </Grid>
-              <Grid item xs={6}>
+              </Item>
+              <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.lastName : ""}
@@ -39,10 +53,10 @@ export const DialogCont = props => {
                   required
                   variant="outlined"
                 />
-              </Grid>
-            </Grid>
-            <Grid container spacing={2} style={{ padding: "5px" }}>
-              <Grid item xs={4}>
+              </Item>
+            </Box>
+            <Box>
+              <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.homePhone : ""}
@@ -52,8 +66,8 @@ export const DialogCont = props => {
                   fullWidth
                   variant="outlined"
                 />
-              </Grid>
-              <Grid item xs={4}>
+              </Item>
+              <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.mobilePhone : ""}
@@ -64,8 +78,8 @@ export const DialogCont = props => {
                   required
                   variant="outlined"
                 />
-              </Grid>
-              <Grid item xs={4}>
+              </Item>
+              <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.workPhone : ""}
@@ -75,22 +89,24 @@ export const DialogCont = props => {
                   fullWidth
                   variant="outlined"
                 />
-              </Grid>
-            </Grid>
-            <Grid item xs={12} style={{ padding: "5px" }}>
-              <TextField
-                onChange={e => handleOnChange(title, e.target)}
-                defaultValue={rowData ? rowData.email : ""}
-                name="email"
-                type="email"
-                label="Email"
-                fullWidth
-                required
-                variant="outlined"
-              />
-            </Grid>
-            <Grid container spacing={2} style={{ padding: "5px" }}>
-              <Grid item xs={5}>
+              </Item>
+            </Box>
+            <Box>
+              <Item>
+                <TextField
+                  onChange={e => handleOnChange(title, e.target)}
+                  defaultValue={rowData ? rowData.email : ""}
+                  name="email"
+                  type="email"
+                  label="Email"
+                  fullWidth
+                  required
+                  variant="outlined"
+                />
+              </Item>
+            </Box>
+            <Box>
+              <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.city : ""}
@@ -101,8 +117,8 @@ export const DialogCont = props => {
                   required
                   variant="outlined"
                 />
-              </Grid>
-              <Grid item xs={5}>
+              </Item>
+              <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.state : ""}
@@ -113,8 +129,8 @@ export const DialogCont = props => {
                   required
                   variant="outlined"
                 />
-              </Grid>
-              <Grid item xs={2}>
+              </Item>
+              <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.postalCode : ""}
@@ -125,24 +141,83 @@ export const DialogCont = props => {
                   required
                   variant="outlined"
                 />
-              </Grid>
-            </Grid>
-            <Grid item xs={12} style={{ padding: "5px" }}>
-              <TextField
-                onChange={e => handleOnChange(title, e.target)}
-                defaultValue={rowData ? rowData.country : ""}
-                name="country"
-                type="country"
-                label="Country"
-                fullWidth
-                required
-                variant="outlined"
-              />
-            </Grid>
+              </Item>
+            </Box>
+            <Box>
+              <Item>
+                <TextField
+                  onChange={e => handleOnChange(title, e.target)}
+                  defaultValue={rowData ? rowData.country : ""}
+                  name="country"
+                  type="country"
+                  label="Country"
+                  fullWidth
+                  required
+                  variant="outlined"
+                />
+              </Item>
+            </Box>
           </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialog(false)} color="primary">
+            Close
+          </Button>
+          <Button type="submit" color="primary" autoFocus>
+            Submit
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  );
+};
+
+export const DeleteDialog = props => {
+  const {
+    deleteDialog,
+    setDeleteDialog,
+    handleDelete,
+    confirm,
+    setConfirm
+  } = props;
+  return (
+    <Dialog open={deleteDialog} onClose={() => setDeleteDialog(false)}>
+      <form onSubmit={e => handleDelete(e)}>
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Type "CONFIRM" to delete.</DialogContentText>
+          <TextField
+            error={confirm.status}
+            onChange={e => {
+              setConfirm({ ...confirm, text: e.target.value });
+            }}
+            label="CONFIRM"
+            helperText={confirm.status ? `please type "CONFIRM"` : ""}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialog(false)} color="primary">
+            Close
+          </Button>
+          <Button type="submit" color="primary" autoFocus>
+            Submit
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  );
+};
+export const Group = props => {
+  const { groupDialog, setGroupDialog, handleMovetoGroup } = props;
+  return (
+    <Dialog open={groupDialog} onClose={() => setGroupDialog(false)}>
+      <form onSubmit={e => handleMovetoGroup(e)}>
+        <DialogTitle>Add/Move to Group</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Select a group</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setGroupDialog(false)} color="primary">
             Close
           </Button>
           <Button type="submit" color="primary" autoFocus>

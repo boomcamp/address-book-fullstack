@@ -28,10 +28,10 @@ export const Register = props => {
     delete data.confirmPassword;
     Axios.post(`${url}/register`, data)
       .then(res => {
-        console.log(res);
         toast.info("registration sucessful!", {
           position: toast.POSITION.TOP_CENTER
         });
+        setRedirect(true);
       })
       .catch(err => {
         toast.info(err.response.data.error, {
@@ -101,9 +101,7 @@ export const Register = props => {
           <TextField
             error={validation.confirmPassword}
             style={{ margin: "3px 0 3px 0" }}
-            onChange={e =>
-              handleOnChange("register", e.target, "confirmPassword")
-            }
+            onChange={e => handleOnChange("register", e.target)}
             name="confirmPassword"
             variant="outlined"
             type="password"

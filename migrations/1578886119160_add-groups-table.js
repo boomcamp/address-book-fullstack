@@ -16,6 +16,10 @@ exports.up = pgm => {
       type: "integer",
       notNull: true,
       references: '"users"'
+    },
+    dateCreated: {
+      type: "text",
+      notNull: true
     }
   });
 };
