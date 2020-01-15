@@ -58,8 +58,6 @@ export default function ContactForm(highprops) {
       });
 
       console.log("settiing");
-
-      getGroup();
     }
 
     if (highprops.contactData) {
@@ -71,6 +69,7 @@ export default function ContactForm(highprops) {
 
       setGroup();
     }
+    getGroup();
   }, [highprops.contactData]);
 
   const setGroup = () => {
@@ -82,16 +81,30 @@ export default function ContactForm(highprops) {
     })
       .then(data => {
         // console.log(data.data[0].group_name)
-        setgrpState(prevState => {
-          return {
-            ...prevState,
-            selectedGroupName: {
-              title: data.data[0].group_name
-            }
-          };
-        });
-
-        // console.log(data.data.group_name);
+        try {
+          if (data.data[0].group_name) {
+            setgrpState(prevState => {
+              return {
+                ...prevState,
+                selectedGroupName: {
+                  title: data.data[0].group_name
+                },
+                recentGroupState: {
+                  title: data.data[0].group_name
+                }
+              };
+            });
+          }
+        } catch (err) {
+          setgrpState(prevState => {
+            return {
+              ...prevState,
+              selectedGroupName: {
+                title: ""
+              }
+            };
+          });
+        }
       })
       .catch(e => console.log(e));
   };
@@ -147,7 +160,10 @@ export default function ContactForm(highprops) {
           headers: { Authorization: sessionStorage.getItem("token") }
         }
       )
-      .then(data => console.log(data))
+      .then(data => {
+        return data;
+      })
+      .then(addtoGroup)
       .catch(e => console.log(e));
   }
 
@@ -181,21 +197,35 @@ export default function ContactForm(highprops) {
   }
 
   const addtoGroup = data => {
-    if (!grpState.selectedGroupName) {
-      return null;
-      // addtoGroup(grpState.selectedGroupName, new_contact_reference);
-    } else {
-      axios({
-        method: "post",
-        url: "http://localhost:5000/api/contacts/groups/reference",
-        data: {
-          group_name: grpState.selectedGroupName.title,
-          contactid: data.data.id
-        },
-        headers: { Authorization: sessionStorage.getItem("token") }
-      })
-        .then(data => console.log(data))
-        .catch(e => console.log(e));
+    try {
+      if (grpState.selectedGroupName) {
+        let id;
+
+        try {
+          if (data.data[0].id) {
+            id = data.data[0].id;
+          }
+        } catch (error) {
+          id = data.data.id;
+        }
+
+        console.log(id);
+
+        axios({
+          method: "post",
+          url: "http://localhost:5000/api/contacts/groups/reference",
+          data: {
+            group_name: grpState.selectedGroupName.title,
+            contactid: id,
+            past_group: grpState.recentGroupState.title,
+          },
+          headers: { Authorization: sessionStorage.getItem("token") }
+        })
+          .then(data => console.log(data))
+          .catch(e => console.log(e));
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 

@@ -69,67 +69,77 @@ module.exports = {
 
     const db = req.app.get("db");
 
-    const { group_name, contactid } = req.body;
+    const { group_name, contactid, past_group } = req.body;
 
-    // group name is present
+    let contact_added_date = new Date().toISOString().slice(0, 10);
+    let group_date_created = new Date().toISOString().slice(0, 10);
 
-    db.groups
-      .findOne({ group_name })
-      .then(data => {
+    // group name is already available
+    if (group_name === "") {
+      db.query(
+        `SELECT groups_track.id FROM groups_track INNER JOIN groups ON groups.id = groups_track.groupid WHERE groups.group_name = ${past_group} AND contactid = ${req.params.id};`
+      )
+        .then(data => {
+          console.log(data);
+          res.status(201).json(data);
+        })
+        .catch(err => {
+          res.status(500).end();
+        });
+    } else {
+      db.groups
+        .findOne({ group_name })
+        .then(data => {
+          // console.log()
 
-        // console.log()
-        let contact_added_date = new Date().toISOString().slice(0, 10);
+          db.groups_track
+            .save({
+              groupid: data.id,
+              contactid,
+              contact_added_date
+            })
+            .then(post => {
+              res.status(201).json(post);
+            })
+            .catch(err => {
+              res.status(500).end();
+            });
 
-        db.groups_track
-          .save({
-            groupid: data.id,
-            contactid,
-            contact_added_date
-          })
-          .then(post => {
-            res.status(201).json(post);
-          })
-          .catch(err => {
-            res.status(500).end();
-          });
+          // res.status(200).json(data);
+        })
+        .catch(err => {
+          // add new group name to table
+          // group name is new
 
-        // res.status(200).json(data);
-      })
-      .catch(err => {
-        // add new group name to table
+          db.groups
+            .save({
+              group_name,
+              group_date_created
+            })
+            .then(data => {
+              db.groups_track
+                .save({
+                  groupid: data.id,
+                  contactid,
+                  contact_added_date
+                })
+                .then(post => {
+                  res.status(201).json(post);
+                })
+                .catch(err => {
+                  console.log(err);
+                  res.status(500).end();
+                });
 
-        let group_date_created = new Date().toISOString().slice(0, 10);
+              // res.status(201).json(post);
+            })
+            .catch(err => {
+              res.status(500).end();
+            });
 
-        db.groups
-          .save({
-            group_name,
-            group_date_created
-          })
-          .then(data => {
-
-            db.groups_track
-              .save({
-                groupid: data.id,
-                contactid,
-                contact_added_date
-              })
-              .then(post => {
-                res.status(201).json(post);
-              })
-              .catch(err => {
-                res.status(500).end();
-              });
-
-            // res.status(201).json(post);
-          }).then({})
-          .catch(err => {
-            res.status(500).end();
-          });
-
-        res.status(500).end();
-      });
-
-    // group name is absent
+          // res.status(500).end();
+        });
+    }
   },
   retieve: (req, res) => {
     const db = req.app.get("db");
