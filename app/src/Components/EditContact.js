@@ -50,9 +50,10 @@ const useStyles = makeStyles(theme => ({
 
 export default function ResponsiveDialog(props) {
 	const [open, setOpen] = React.useState(false);
-	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
 	const theme = useTheme();
 	const classes = useStyles();
+	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
 	const {
 		firstname,
