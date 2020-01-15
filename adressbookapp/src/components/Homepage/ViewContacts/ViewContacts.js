@@ -1,124 +1,41 @@
 import React, { Component } from "react";
-import { Icon, Tooltip } from "antd";
+import { Icon } from "antd";
 import { Modal, Button } from "antd";
-import { Form, Input, message } from "antd";
-import axios from "axios";
-import "./addcontact.css";
-const key = "updatable";
-class AddContacts extends Component {
+import { Form, Input } from "antd";
+class ViewContacts extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      visible: false,
-      firstname: "",
-      lastname: "",
-      home_phone: "",
-      mobile_phone: "",
-      work_phone: "",
-      email: "",
-      city: "",
-      state: "",
-      postal: "",
-      country: ""
-    };
+    this.state = {};
   }
-  // componentDidMount() {}
-  // getAll = () => {};
-  showModal = () => {
-    this.setState({
-      name: "add contact",
-      visible: true
-    });
-  };
-  changeHandler(e) {
-    // console.log(e);
-    e.name === "firstname"
-      ? this.setState({ firstname: e.value })
-      : e.name === "lastname"
-      ? this.setState({ lastname: e.value })
-      : e.name === "home_phone"
-      ? this.setState({ home_phone: e.value })
-      : e.name === "mobile_phone"
-      ? this.setState({ mobile_phone: e.value })
-      : e.name === "work_phone"
-      ? this.setState({ work_phone: e.value })
-      : e.name === "email"
-      ? this.setState({ email: e.value })
-      : e.name === "city"
-      ? this.setState({ city: e.value })
-      : e.name === "state"
-      ? this.setState({ state: e.value })
-      : e.name === "postal"
-      ? this.setState({ postal: e.value })
-      : this.setState({ country: e.value });
-  }
-  // handleOk = () => {
-  //   this.setState({ loading: true, name: "adding to list contacts" });
-  //   setTimeout(() => {
-  //     this.setState({ loading: false, visible: false });
-  //   }, 1000);
-  // };
 
-  handleCancel = () => {
-    this.setState({ visible: false });
-  };
-  handleSubmit = e => {
-    const id = localStorage.getItem("id");
-    e.preventDefault();
-    // console.log(e);
-    axios
-      .post("http://localhost:4000/api/contacts", {
-        id: id,
-        firstname: this.state.firstname,
-        lastname: this.state.lastname,
-        home_phone: this.state.home_phone,
-        mobile_phone: this.state.mobile_phone,
-        work_phone: this.state.work_phone,
-        email: this.state.email,
-        city: this.state.city,
-        state_or_province: this.state.state,
-        postal_code: this.state.postal,
-        country: this.state.country
-      })
-      .then(result => {
-        message.loading({ content: "Saving contact...", key });
-        setTimeout(() => {
-          message.success({ content: "Successfully added!", key, duration: 2 });
-          this.props.form.setFieldsValue({
-            firstname: "",
-            lastname: "",
-            home_phone: "",
-            mobile_phone: "",
-            work_phone: "",
-            email: "",
-            city: "",
-            state_or_province: "",
-            postal_code: "",
-            country: ""
-          });
-          this.props.getAll();
-        }, 1000);
+  componentDidUpdate(nextProps) {
+    const contact = this.props.info;
+    if (nextProps.info !== this.props.info) {
+      this.props.form.setFieldsValue({
+        firstname: contact.firstname,
+        lastname: contact.lastname,
+        home_phone: contact.home_phone,
+        mobile_phone: contact.mobile_phone,
+        work_phone: contact.work_phone,
+        email: contact.email,
+        city: contact.city,
+        state_or_province: contact.state_or_province,
+        postal_code: contact.postal_code,
+        country: contact.country
       });
-  };
-  render() {
-    const { visible } = this.state;
-    const { getFieldDecorator } = this.props.form;
+    }
+  }
 
+  render() {
+    const { getFieldDecorator } = this.props.form;
     return (
       <div>
-        <Tooltip title="add contacts" placement="bottom">
-          <Icon
-            type="user-add"
-            style={{ fontSize: "30px", color: "#08c", cursor: "pointer" }}
-            onClick={this.showModal}
-          />
-        </Tooltip>
+        {" "}
         <Modal
-          visible={visible}
-          title="Contacts information"
+          visible={this.props.visible}
+          title={`${this.props.info.firstname} ${this.props.info.lastname}`}
           onOk={this.handleOk}
-          onCancel={this.handleCancel}
+          onCancel={this.props.onCancel}
           footer={null}
         >
           <Form
@@ -137,8 +54,6 @@ class AddContacts extends Component {
                   type="text"
                   placeholder="firstname"
                   name="firstname"
-                  setfieldsvalue={this.state.firstname}
-                  onChange={e => this.changeHandler(e.target)}
                 />
               )}
             </Form.Item>
@@ -153,7 +68,6 @@ class AddContacts extends Component {
                   type="text"
                   placeholder="lastname"
                   name="lastname"
-                  setfieldsvalue={this.state.lastname}
                   onChange={e => this.changeHandler(e.target)}
                 />
               )}
@@ -169,8 +83,6 @@ class AddContacts extends Component {
                   type="text"
                   placeholder="home_phone"
                   name="home_phone"
-                  setfieldsvalue={this.state.home_phone}
-                  onChange={e => this.changeHandler(e.target)}
                 />
               )}
             </Form.Item>
@@ -187,8 +99,6 @@ class AddContacts extends Component {
                   type="text"
                   placeholder="mobile_phone"
                   name="mobile_phone"
-                  setfieldsvalue={this.state.mobile_phone}
-                  onChange={e => this.changeHandler(e.target)}
                 />
               )}
             </Form.Item>
@@ -203,8 +113,6 @@ class AddContacts extends Component {
                   type="text"
                   placeholder="work_phone"
                   name="work_phone"
-                  setfieldsvalue={this.state.work_phone}
-                  onChange={e => this.changeHandler(e.target)}
                 />
               )}
             </Form.Item>
@@ -219,8 +127,6 @@ class AddContacts extends Component {
                   type="text"
                   placeholder="email"
                   name="email"
-                  setfieldsvalue={this.state.email}
-                  onChange={e => this.changeHandler(e.target)}
                 />
               )}
             </Form.Item>
@@ -256,8 +162,6 @@ class AddContacts extends Component {
                   type="text"
                   placeholder="state or province"
                   name="state"
-                  setfieldsvalue={this.state.state}
-                  onChange={e => this.changeHandler(e.target)}
                 />
               )}
             </Form.Item>
@@ -274,8 +178,6 @@ class AddContacts extends Component {
                   type="text"
                   placeholder="postal_code"
                   name="postal"
-                  setfieldsvalue={this.state.postal}
-                  onChange={e => this.changeHandler(e.target)}
                 />
               )}
             </Form.Item>
@@ -290,14 +192,12 @@ class AddContacts extends Component {
                   type="text"
                   placeholder="country"
                   name="country"
-                  setfieldsvalue={this.state.country}
-                  onChange={e => this.changeHandler(e.target)}
                 />
               )}
             </Form.Item>
             <br />
             <br />
-            <Button onClick={this.handleCancel}>cancel</Button>&nbsp;&nbsp;
+            <Button onClick={this.props.onCancel}>cancel</Button>&nbsp;&nbsp;
             <Button type="primary" htmlType="submit">
               save
             </Button>
@@ -308,4 +208,4 @@ class AddContacts extends Component {
   }
 }
 
-export default Form.create()(AddContacts);
+export default Form.create()(ViewContacts);

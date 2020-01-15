@@ -61,7 +61,6 @@ function getContactById(req, res) {
   const sort = req.query.sort;
   const groups = req.query.groups;
   if (groups == undefined) {
-    console.log(usersId);
     db.query(
       `select * from contacts INNER JOIN addressbook on contacts.id = addressbook.contactid where addressbook.userid = ${usersId} ORDER BY lastname `,
       []
@@ -93,8 +92,51 @@ function deleteContactById(req, res) {
       res.status(500).end();
     });
 }
+function updateContactById(req, res) {
+  const db = req.app.get("db");
+  const id = req.params.id;
+
+  const {
+    firstname,
+    lastname,
+    home_phone,
+    mobile_phone,
+    work_phone,
+    email,
+    city,
+    state_or_province,
+    postal_code,
+    country
+  } = req.body;
+
+  db.contacts
+    .update(
+      {
+        id: id
+      },
+      {
+        firstname,
+        lastname,
+        home_phone,
+        mobile_phone,
+        work_phone,
+        email,
+        city,
+        state_or_province,
+        postal_code,
+        country
+      }
+    )
+    .then(contact => {
+      res.status(200).json(contact);
+    })
+    .catch(err => {
+      res.status(500).end();
+    });
+}
 module.exports = {
   contact,
   getContactById,
-  deleteContactById
+  deleteContactById,
+  updateContactById
 };

@@ -26,6 +26,7 @@ massive({
     app.post("/api/contacts", contacts.contact);
     app.get("/api/contacts/:id", contacts.getContactById);
     app.delete("/api/contacts/:id", contacts.deleteContactById);
+    app.patch("/api/contacts/:id", contacts.updateContactById);
     // app.get("/api/users/:id", users.getById);
     app.get("/api/protected/data", (req, res) => {
       if (!req.headers.authorization) {

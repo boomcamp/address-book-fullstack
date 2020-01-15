@@ -1,59 +1,63 @@
 import React, { Component } from "react";
 import "./contact.css";
-import axios from "axios";
-import { Card, Icon, Tooltip } from "antd";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+import { Card, Icon, Tooltip, Avatar } from "antd";
+const { Meta } = Card;
 export default class Contacts extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      contacts: []
+      // contacts: []
     };
   }
+
   componentDidMount() {
-    const id = localStorage.getItem("id");
-    axios.get(`http://localhost:4000/api/contacts/${id}`).then(res => {
-      // console.log(res);
-      this.setState({
-        contacts: res.data
-      });
-    });
-  }
-  deleteHandler(e) {
-    console.log(e);
-    const id = e;
-    axios.delete(`http://localhost:4000/api/contacts/${id}`).then(res => {
-      setTimeout(window.location.reload.bind(window.location), 0);
-    });
+    this.props.getAll();
   }
   render() {
     return (
       <div className="card">
-        {this.state.contacts.map(result => {
-          // console.log(result.contactid);
+        {this.props.contacts.map(result => {
           const e = result.contactid;
+          const a = result;
           return (
             <Card
               style={{ width: 240, marginRight: 10, marginBottom: 10 }}
               actions={[
                 <Tooltip title="view" placement="bottom">
-                  <Icon type="eye" key="view" />
+                  <Icon
+                    type="eye"
+                    key="view"
+                    style={{ fontSize: "22px", color: "#08c" }}
+                    onClick={() => this.props.viewHandler(a)}
+                  />
                 </Tooltip>,
                 <Tooltip title="edit" placement="bottom">
-                  <Icon type="edit" key="view" />
+                  <Icon
+                    type="edit"
+                    key="view"
+                    // onClick={() => this.props.updateHandler(a)}
+                    style={{ fontSize: "22px", color: "rgb(0, 77, 64)" }}
+                  />
                 </Tooltip>,
                 <Tooltip title="delete" placement="bottom">
                   <Icon
                     type="delete"
                     key="view"
-                    onClick={() => this.deleteHandler(e)}
+                    onClick={() => this.props.deleteHandler(e)}
+                    style={{ fontSize: "22px", color: "red" }}
                   />
                 </Tooltip>
               ]}
+              key={result.contactid}
             >
-              {result.firstname} {result.lastname}
+              <Meta
+                avatar={
+                  <Avatar src="https://www.pngkey.com/png/detail/121-1219231_user-default-profile.png" />
+                }
+                title={`${result.firstname} ${result.lastname}`}
+                description={result.home_phone}
+              />
             </Card>
           );
         })}
