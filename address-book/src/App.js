@@ -4,6 +4,7 @@ import { Route, BrowserRouter, Switch, Redirect } from "react-router-dom";
 import SignIn from "./Components/Login/signIn";
 import SignUp from "./Components/Register/SignUp";
 import AddressBook from "./Components/AddressBook/addressBook";
+import ContactDetails from "./Components/ContactDetails/contactDetails";
 
 function App() {
   const [redirect, setRedirect] = useState(false);
@@ -25,6 +26,7 @@ function App() {
           />
           <Route path="/signup" component={SignUp} />
           <Route path="/addressbook" component={AddressBook} />
+          {/* <Route path="/contactdetails" component={ContactDetails} /> */}
         </Switch>
       </BrowserRouter>
     </div>

@@ -7,6 +7,7 @@ const cors = require("cors");
 const users = require("./controllers/users");
 const contacts = require("./controllers/contacts");
 const addressBook = require("./controllers/addressbook");
+const groups = require("./controllers/group");
 
 massive({
   host: "localhost",
@@ -46,8 +47,13 @@ massive({
 
   //contacts
   app.post("/contacts/:userid", contacts.create);
+  app.patch("/contacts/:contactid", contacts.updateContact);
+  app.delete("/deletecontacts/:contactid", contacts.deleteContact);
+  app.get("/contacts/:userid/:contactid", contacts.getContactByContactId);
   app.get("/contacts/:userid", contacts.getContactByUser);
   app.post("/addressbook-add", addressBook.add);
+
+  app.post("/groupcontacts/, groups.create");
 
   const PORT = 3004;
   app.listen(PORT, () => {

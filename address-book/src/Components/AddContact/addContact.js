@@ -12,6 +12,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import jwt from "jsonwebtoken";
 
 const styles = theme => ({
   root: {
@@ -66,26 +67,25 @@ export default function AddContact({ open, handleClose }) {
   const [state_or_province, setStateOrProvince] = useState("");
   const [postal_code, setPostalCode] = useState("");
   const [country, setCountry] = useState("");
-  //   const userId = localStorage.getItem("userid");
+  const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+  const [errorMsgFirstname, setErrorMsgFirstname] = useState("");
 
   const handleSave = props => {
     if (firstname !== "") {
+      setErrorMsgFirstname("");
       axios
-        .post(
-          `http://localhost:3004/contacts/${localStorage.getItem("userid")}`,
-          {
-            firstname: firstname,
-            lastname: lastname,
-            home_phone: home_phone,
-            work_phone: work_phone,
-            mobile_phone: mobile_phone,
-            city: city,
-            email: email,
-            state_or_province: state_or_province,
-            postal_code: postal_code,
-            country: country
-          }
-        )
+        .post(`http://localhost:3004/contacts/${tokenDecoded.userId}`, {
+          firstname: firstname,
+          lastname: lastname,
+          home_phone: home_phone,
+          work_phone: work_phone,
+          mobile_phone: mobile_phone,
+          city: city,
+          email: email,
+          state_or_province: state_or_province,
+          postal_code: postal_code,
+          country: country
+        })
         .then(() => {
           handleClose();
           Swal.fire({
@@ -103,6 +103,8 @@ export default function AddContact({ open, handleClose }) {
           });
         });
     } else {
+      setErrorMsgFirstname("This field is required");
+
       Swal.fire({
         title: "Failed to add new contact",
         text: "Firstname Required",
@@ -122,9 +124,11 @@ export default function AddContact({ open, handleClose }) {
       </DialogTitle>
       <DialogContent dividers>
         <form>
-          <Grid container spacing={1}>
+          <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
+                error={errorMsgFirstname === "" ? false : true}
+                helperText={errorMsgFirstname ? errorMsgFirstname : ""}
                 required
                 id="firstname"
                 name="firstname"
