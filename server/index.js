@@ -1,8 +1,11 @@
 const express = require('express');
 const massive = require('massive');
 const cors = require('cors')
+
 const users = require('./controllers/users');
 const contacts = require('./controllers/contacts')
+const group = require('./controllers/group')
+
 
 massive({ 
     host: 'localhost',
@@ -25,7 +28,11 @@ massive({
     app.delete('/api/contacts/:id', contacts.delete);
     app.put('/api/contacts/:id', contacts.update)
 
-    app.get('/api/groups', contacts.group)
+    app.get('/api/groups', group.list)
+    app.get('/api/groups/:id', group.contactList)
+    app.put('/api/groups/:id', group.removeContact)
+    app.put('/api/group/:id', group.updateGroup)
+    app.delete('/api/groups/:id', group.deleteGroup)
 
     const PORT = 3007
     app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`) );

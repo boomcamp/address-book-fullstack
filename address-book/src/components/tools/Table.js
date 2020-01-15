@@ -1,27 +1,45 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import MaterialTable, { MTableToolbar } from 'material-table';
+import MaterialTable, {MTableToolbar} from 'material-table';
 import { withSnackbar } from 'notistack';
-// import GroupAddIcon from '@material-ui/icons/GroupAdd';
+
+
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 import PopUpModal from './PopUpModal'
 import CreateContactForm from '../Contacts/CreateContactForm'
 import UpdateContactForm from '../Contacts/UpdateContactForm'
 import DetailedContact from '../Contacts/DetailedContact'
+import UpdateGroup from '../tools/fields/UpdateGroup'
 
-// const btnStyle = {
-//     display: `flex`,
-//     alignItems: `center`,
-//     border: `none`,
-//     color: `white`,
-//     backgroundColor: `#4c6572`,
-//     cursor: `pointer`,
-//     borderRadius: `5px`,
-//     padding: `10px`,
-//     margin: `8px`,
-// }
+    const btnStyleDelete = {
+        display: `flex`,
+        alignItems: `center`,
+        border: `none`,
+        color: `white`,
+        backgroundColor: `#f83e3f`,
+        cursor: `pointer`,
+        borderRadius: `5px`,
+        padding: `10px`,
+        margin: `5px`,
+        width: `130px`
+    }
 
-function Table({ state, setStateFn, createFn, updateFn, enqueueSnackbar}) {
+    const btnStyleEdit = {
+        display: `flex`,
+        alignItems: `center`,
+        border: `none`,
+        color: `white`,
+        backgroundColor: `#4c6572`,
+        cursor: `pointer`,
+        borderRadius: `5px`,
+        padding: `10px`,
+        margin: `5px`,
+        width: `130px`
+    }
+
+function Table({ groupObj, updateGroupListFn, state, setStateFn, createFn, updateFn, enqueueSnackbar}) {
     const [open, setOpen] = useState({
         create: false,
         update: {
@@ -42,7 +60,10 @@ function Table({ state, setStateFn, createFn, updateFn, enqueueSnackbar}) {
                 createFn(newData)
             }, 600);
         }).then(res => {
-            enqueueSnackbar('Successfully Created', { variant: 'success', autoHideDuration: 1000, })
+            if(!groupObj)
+                enqueueSnackbar('Successfully Created', { variant: 'success', autoHideDuration: 1000, })
+            if(groupObj)
+                enqueueSnackbar('Successfully Added to Group', { variant: 'success', autoHideDuration: 1000, })
         })
     }
 
@@ -60,16 +81,48 @@ function Table({ state, setStateFn, createFn, updateFn, enqueueSnackbar}) {
     }
 
     const deleteRow = (oldData) => {
-        axios.delete('/api/contacts/' + oldData.id, {
+        if(!groupObj){
+            axios
+            .delete('/api/contacts/' + oldData.id, {
+                headers: {
+                    Authorization: 'Bearer ' + sessionStorage.getItem('token')
+                }
+            })
+            .then(res => {
+                // console.log(res)
+                enqueueSnackbar('Successfully Deleted', { variant: 'success', autoHideDuration: 1000, })
+            })
+            .catch(err => { console.log(err) })
+        }
+
+        if(groupObj){
+            axios
+            .put('/api/groups/' + oldData.id, {
+                headers: {
+                    Authorization: 'Bearer ' + sessionStorage.getItem('token')
+                }
+            })
+            .then(res => {
+                // console.log(res)
+                enqueueSnackbar('Successfully Removed from the group', { variant: 'success', autoHideDuration: 1500, })
+            })
+            .catch(err => { console.log(err) })
+        }
+    }
+
+    const deleteGroup = (id) => {
+        axios
+        .delete('/api/groups/' + id, {
             headers: {
                 Authorization: 'Bearer ' + sessionStorage.getItem('token')
             }
         })
-            .then(res => {
-                console.log(res)
-                enqueueSnackbar('Successfully Deleted', { variant: 'success', autoHideDuration: 1000, })
-            })
-            .catch(err => { console.log(err) })
+        .then(res => {
+            console.log(res.data)
+            updateGroupListFn(res.data)
+            enqueueSnackbar('Successfully Deleted', { variant: 'success', autoHideDuration: 1000, })
+        })
+        .catch(err => { console.log(err) })
     }
 
     return (
@@ -78,7 +131,7 @@ function Table({ state, setStateFn, createFn, updateFn, enqueueSnackbar}) {
                 open={open.create}
                 closeFn={() => setOpen({ ...open, create: false })}
             >
-                <CreateContactForm createRowFn={createRow} closeFn={() => setOpen({ ...open, create: false })} />
+                <CreateContactForm addGroupId={(groupObj) ? groupObj.id : null} createRowFn={createRow} closeFn={() => setOpen({ ...open, create: false })} />
             </PopUpModal>
 
             <PopUpModal
@@ -95,12 +148,12 @@ function Table({ state, setStateFn, createFn, updateFn, enqueueSnackbar}) {
                 <DetailedContact row={open.detailedContact.row} />
             </PopUpModal>
 
-            {/* <PopUpModal
+            <PopUpModal
                 open={open.group}
                 closeFn={() => setOpen({ ...open, group: false })}
             >
-                <h1>CODE GOES HERE... </h1>
-            </PopUpModal> */}
+                <UpdateGroup updateGroupListFn={updateGroupListFn} groupObj={groupObj} closeFn={() => setOpen({ ...open, group: false })}/>
+            </PopUpModal>
 
 
             <MaterialTable
@@ -139,16 +192,30 @@ function Table({ state, setStateFn, createFn, updateFn, enqueueSnackbar}) {
                         textTransform: `uppercase`
                     },
                 }}
-                // components={{
-                //     Toolbar: props => (
-                //         <div>
-                //             <MTableToolbar {...props} />
-                //             <div style={{ padding: '0px 10px' }}>
-                //                 <button style={btnStyle} onClick={() => setOpen({ ...open, group: true })}><GroupAddIcon /> &nbsp;Create Group</button>
-                //             </div>
-                //         </div>
-                //     ),
-                // }}
+                components={{
+                    Toolbar: props => (
+                        <div>
+                            <MTableToolbar {...props} />
+                            <div style={{ padding: '0px 10px', display:`flex`}}>
+                                {/* <button style={btnStyle} onClick={() => setOpen({ ...open, group: true })}><GroupAddIcon /> &nbsp;Create Group</button> */}
+                                {(groupObj) ? (
+                                    <>
+                                        <button style={btnStyleEdit} onClick={() => setOpen({ ...open, group: true })}><EditIcon /> &nbsp;Edit Group</button>
+                                        <button 
+                                            style={btnStyleDelete} 
+                                            onClick={() => { 
+                                                if(window.confirm('Are you sure to delete this group?')){
+                                                    deleteGroup(groupObj.id)      
+                                                }
+                                            }}><DeleteIcon /> 
+                                            &nbsp;Delete Group
+                                        </button>
+                                    </>
+                                ) : null}
+                            </div>
+                        </div>
+                    ),
+                }}
                 // isLoading={true}
             />
         </React.Fragment>

@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import axios from 'axios'
-import dp from '../assets/download.jpeg'
+// import dp from '../assets/download.jpeg'
 import construction from '../assets/construction.jpeg'
 import TemplateMainPage from './tools/TemplateMainPage'
 import Paper from '@material-ui/core/Paper';
@@ -23,7 +23,7 @@ import Paper from '@material-ui/core/Paper';
     }
 
 export default function MyAccount() {
-    const [user, setUser] = useState();
+    // const [user, setUser] = useState();
 
     useEffect(() => {
         axios({

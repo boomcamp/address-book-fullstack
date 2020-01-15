@@ -5,7 +5,7 @@ const secret = require('../../secret')
 module.exports = {
     create: (req, res) => {
         const db = req.app.get('db');
-        const {firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country, groupAdd, groupName} = req.body
+        const {firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country, groupAdd, groupName, groupId} = req.body
         
         if (!req.headers.authorization) 
             return res.status(401).end();        
@@ -39,7 +39,7 @@ module.exports = {
 
                     if(!group){
                         db.group_contact
-                        .save({ groupName })
+                        .save({ groupName, userid: req.params.id})
                         .then(group => {
                             db.contacts
                             .save({
@@ -63,10 +63,22 @@ module.exports = {
                 })
             }   
          
-            if(!groupAdd){
+            else if(!groupAdd && !groupId){
                 db.contacts
                 .save({
                     userId: req.params.id, groupId: null, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
+                })
+                .then(contact => res.status(201).json(contact))
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).end()
+                })
+            }
+
+            else if(groupId){
+                db.contacts
+                .save({
+                    userId: req.params.id, groupId: groupId, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
                 })
                 .then(contact => res.status(201).json(contact))
                 .catch(err => {
@@ -146,7 +158,8 @@ module.exports = {
 
     update: (req, res) => {
         const db = req.app.get('db');
-        const {firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country} = req.body
+        const {firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country, groupName} = req.body
+        const {userId} = req.query
         
         if (!req.headers.authorization) 
             return res.status(401).end();
@@ -155,35 +168,59 @@ module.exports = {
             const token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, secret);
 
-            db.contacts
-            .update(
-                {id: req.params.id}, {firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
-            )
-            .then(contact => {
-                res.status(200).json(contact)
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(500).end();
-            })
+            if(groupName){
+                db.group_contact
+                .findOne( { groupName }, { fields:  ['id', 'groupName'] } )
+                .then(group => {
+                    if(group){
+                        db.contacts
+                        .update(
+                            {id: req.params.id}, {groupId: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
+                        )
+                        .then(contact => {
+                            res.status(200).json(contact)
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            res.status(500).end();
+                        })
+                    }
+                    if(!group){
+                        db.group_contact
+                        .save({ groupName, userid: userId})
+                        .then(group => {
+                            db.contacts
+                            .update(
+                                {id: req.params.id}, {groupId: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
+                            )
+                            .then(contact => {
+                                res.status(200).json(contact)
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                res.status(500).end();
+                            })
+                        })
+                    }
+
+                })
+            }
+            else if(!groupName){
+                db.contacts
+                .update(
+                    {id: req.params.id}, {groupId: null, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
+                )
+                .then(contact => {
+                    res.status(200).json(contact)
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).end();
+                })
+            }
         } catch (err) {
             console.error(err);
             res.status(401).end();
         }
-    },
-
-    group: (req, res) => {
-        const db = req.app.get('db');
-
-        db.group_contact
-        .find()
-        .then(group => {
-            res.status(200).json(group)
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).end();
-        })
-
     }
 }

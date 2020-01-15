@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 // ICONS
+import ContactsIcon from '@material-ui/icons/Contacts';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -60,8 +61,8 @@ export default function SideBar({handleOpenfn, open}) {
             <List>
                 <Link to="/dashboard" style={{textDecoration:`none`, color:`black`}}> 
                     <ListItem button>
-                        <ListItemIcon><DashboardIcon /></ListItemIcon>
-                        <ListItemText primary="Dashboard" />
+                        <ListItemIcon><ContactsIcon /></ListItemIcon>
+                        <ListItemText primary="Contacts" />
                     </ListItem>
                 </Link>
 
@@ -79,7 +80,7 @@ export default function SideBar({handleOpenfn, open}) {
                     </ListItem>
                 </Link>
 
-    
+                <Divider />
 
                 <ListItem button onClick={() => { sessionStorage.clear(); window.location.reload(); }}>
                     <ListItemIcon style={{ color: `red` }}><ExitToAppIcon /></ListItemIcon>

@@ -12,6 +12,11 @@ exports.up = (pgm) => {
             type: 'text',
             notNull: true,
         },
+        userId: {
+            type: 'integer',
+            notNull: true,
+            references: 'users', 
+        },
     })
 };
 

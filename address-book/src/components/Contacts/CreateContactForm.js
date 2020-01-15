@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import GroupIcon from '@material-ui/icons/Group';
-import MenuItem from '@material-ui/core/MenuItem';
+// import InputAdornment from '@material-ui/core/InputAdornment';
+// import GroupIcon from '@material-ui/icons/Group';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import axios from 'axios';
 
+import GroupSelect, {GroupCreate} from '../tools/GroupSelect'
 import NameFields from '../tools/fields/NameFields'
 import ContactFields from '../tools/fields/ContactFields'
 import AddressFields from '../tools/fields/AddressFields'
@@ -22,9 +22,10 @@ import AddressFields from '../tools/fields/AddressFields'
         // width:`30%`, 
         cursor:`pointer`,
         color: `#4c6571`,
+        textAlign:`right`,
     }
 
-export default function CreateContactForm({closeFn, createRowFn}) {
+export default function CreateContactForm({addGroupId, closeFn, createRowFn}) {
     const [user, setUser] = useState({
         firstname: "",
         lastname: "",
@@ -42,25 +43,6 @@ export default function CreateContactForm({closeFn, createRowFn}) {
         groupExist: false,
         groupName: "",
     })
-    const [groupName, setGroupName] = useState([])
-
-    useEffect(() => {
-        axios({
-            method: `get`,
-            url: `/api/groups`,
-            headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token')
-            }
-        })
-        .then(res => {
-            setGroupName(res.data)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-
-        return () => { };
-    }, [])
 
     const handleSubmit = () => {
         axios({
@@ -79,7 +61,8 @@ export default function CreateContactForm({closeFn, createRowFn}) {
                 "country": user.country,
                 
                 "groupAdd": group.groupAdd,
-                "groupName": group.groupName
+                "groupName": group.groupName,
+                "groupId": addGroupId
             }, 
             headers: {
               Authorization: 'Bearer ' + sessionStorage.getItem('token')
@@ -133,6 +116,7 @@ export default function CreateContactForm({closeFn, createRowFn}) {
                             country = {user.country}
                     />
                 </div>
+                { (!addGroupId) ?
                 <FormControlLabel
                     control={
                         <Checkbox
@@ -143,56 +127,17 @@ export default function CreateContactForm({closeFn, createRowFn}) {
                         />
                     }
                     label="Add to Group"
-                />
+                /> : null}
 
                 { (group.groupAdd && !group.groupExist) ? 
-                    <React.Fragment>
-                        <TextValidator
-                            style={{margin:`0 0 8px 0`}}
-                            label="Group Name"
-                            onChange={(e) => setGroup({...group, groupName: e.target.value})}
-                            name="groupName"
-                            value={group.groupName}
-                            validators={['required']}
-                            errorMessages={['This Field is Required']}
-                            InputProps={{
-                                startAdornment: (
-                                <InputAdornment position="start">
-                                    <GroupIcon />
-                                </InputAdornment>
-                                ),
-                            }}
-                        />
+                    <GroupCreate group={group.groupName} groupNameFn={(e) => setGroup({...group, groupName: e.target.value})}>
                         <span style={addGroupStyle} onClick={() => setGroup({...group, groupExist: true})} href="">Add to Existing Group</span>
-                    </React.Fragment>
+                    </GroupCreate>
                 : null }
                 { (group.groupExist) ? 
-                    <React.Fragment>
-                        <TextValidator
-                            style={{margin:`0 0 8px 0`}}
-                            select
-                            label="Group Name"
-                            value={group.groupName}
-                            onChange={(e) => setGroup({...group, groupName: e.target.value})}
-                            InputProps={{
-                                startAdornment: (
-                                <InputAdornment position="start">
-                                    <GroupIcon />
-                                </InputAdornment>
-                                ),
-                            }}
-                        >
-                            {
-                                groupName.map(x => (
-                                    <MenuItem value={x.groupName} key={x.id}>
-                                        {x.groupName}
-                                    </MenuItem>
-                                )) 
-                            }
-                            
-                        </TextValidator>
+                    <GroupSelect group={group.groupName} groupNameFn={(e) => setGroup({...group, groupName: e.target.value})}>
                         <span style={addGroupStyle} onClick={() => setGroup({...group, groupExist: false, groupAdd: true})} href="">Add to New Group</span>
-                    </React.Fragment>
+                    </GroupSelect>
                 : null }
 
                 <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`, margin:`30px 0`}}>Create Contact</Button>

@@ -3,18 +3,29 @@ import Button from '@material-ui/core/Button';
 import { ValidatorForm } from 'react-material-ui-form-validator';
 import axios from 'axios';
 
+import fetchGroupContact from '../tools/fetchGroupContact'
 import NameFields from '../tools/fields/NameFields'
 import ContactFields from '../tools/fields/ContactFields'
 import AddressFields from '../tools/fields/AddressFields'
+import GroupSelect, {GroupCreate} from '../tools/GroupSelect';
 
-const formStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '20px'
-}
+    const formStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '20px'
+    }
+
+    const addGroupStyle = {
+        // width:`30%`, 
+        cursor:`pointer`,
+        color: `#4c6571`,
+        textAlign:`right`,
+    }
 
 export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
     const [user, setUser] = useState({
+        groupId: "", 
+        groupName: "",
         firstname: "",
         lastname: "",
         homePhone: "",
@@ -25,11 +36,14 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
         stateProvince: "",
         postalCode: "",
         country: "",
-
+    })
+    const [group, setGroup] = useState({
+        groupExist: true,
     })
 
     useEffect(() => {
         setUser({
+            groupId: row.groupId,
             firstname: row.firstName,
             lastname: row.lastName,
             homePhone: row.homePhone,
@@ -41,13 +55,23 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
             postalCode: row.postalCode,
             country: row.country
         })
+
+        fetchGroupContact(`/api/groups?userId=` + sessionStorage.getItem('userId'))
+        .then(res => {
+            res.map(x => {
+                if(row.groupId == x.id)
+                    setUser(prevState => {return {...prevState, groupName: x.groupName}})
+            })
+        })
+        .catch(err => console.log(err))
+
         return () => { };
     }, [])
-
+    
     const handleSubmit = () => {
         axios({
             method: 'put',
-            url: '/api/contacts/' + row.id,
+            url: `/api/contacts/${+ row.id}?userId=${row.userId}`,
             data: {
                 "firstName": user.firstname,
                 "lastName": user.lastname,
@@ -59,6 +83,8 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
                 "stateProvince": user.stateProvince,
                 "postalCode": user.postalCode,
                 "country": user.country,
+
+                "groupName": user.groupName
             }, 
             headers: {
               Authorization: 'Bearer ' + sessionStorage.getItem('token')
@@ -113,7 +139,17 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
                     />
                 </div>
 
-                <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`}}>Update</Button>
+                { (!group.groupExist) ? 
+                    <GroupCreate group={user.groupName} groupNameFn={(e) => setUser({...user, groupName: e.target.value} )}>
+                        <span style={addGroupStyle} onClick={() => setGroup({...group, groupExist: true})} href="">Add to Existing Group</span>
+                    </GroupCreate>
+                : (group.groupExist || user.groupName) ? 
+                    <GroupSelect group={user.groupName} groupNameFn={(e) => setUser(prevState => { return {...prevState, groupName: e.target.value} })}>
+                        <span style={addGroupStyle}  onClick={() => setGroup({...group, groupExist: false})} href="">Add to New Group</span>
+                    </GroupSelect>
+                : null }
+
+                <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`, margin:`30px 0`}}>Update</Button>
             </ValidatorForm>
         </React.Fragment>
     )
