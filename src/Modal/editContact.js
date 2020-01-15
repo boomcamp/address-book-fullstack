@@ -11,7 +11,6 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Close from "@material-ui/icons/HighlightOff";
 import axios from "axios";
-import * as ls from "local-storage";
 import styled from "styled-components";
 
 const useStyles = makeStyles(theme => ({

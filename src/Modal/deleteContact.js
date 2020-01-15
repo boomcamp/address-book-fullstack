@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -69,7 +69,7 @@ export default function DeleteContactModal({
               alignItems="flex-start"
               item
               xs={12}
-              sm={20}
+              sm={12}
             >
               <Typography style={{ marginBottom: 40 }}>
                 Delete Contact?

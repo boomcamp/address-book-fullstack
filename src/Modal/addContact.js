@@ -194,7 +194,8 @@ export default function AddContactModal({
                       fullWidth
                       name="mobile_phone"
                       label="Mobile Phone"
-                      type="mobilephone"
+                      type="number"
+                      inputProps={{ pattern: "[0][9][0-9]{9}" }}
                       id="mobilephone"
                       autoComplete="mobile_phone"
                       onBlur={e => requiredData(e)}

@@ -43,15 +43,35 @@ module.exports = {
   },
   list: (req, res) => {
     const db = req.app.get("db");
-    db.contacts
-      .find({ bookId: req.params.id })
-      .then(contact => {
-        res.status(200).json(contact);
-      })
-      .catch(err => {
-        console.error(err);
-        res.status(500).end();
-      });
+    const { sort } = req.query;
+    db.book.findOne({ userId: req.params.id }).then(data => {
+      if (sort) {
+        db.contacts
+          .find(
+            { bookId: data.id },
+            {
+              order: [{ field: sort, direction: "asc" }]
+            }
+          )
+          .then(contact => {
+            res.status(200).json(contact);
+          })
+          .catch(err => {
+            console.error(err);
+            res.status(500).end();
+          });
+      } else {
+        db.contacts
+          .find({ bookId: data.id })
+          .then(contact => {
+            res.status(200).json(contact);
+          })
+          .catch(err => {
+            console.error(err);
+            res.status(500).end();
+          });
+      }
+    });
   },
   update: (req, res) => {
     const db = req.app.get("db");

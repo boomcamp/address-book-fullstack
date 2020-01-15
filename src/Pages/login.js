@@ -3,8 +3,6 @@ import { Link, Redirect } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -59,11 +57,8 @@ export default function Login(props) {
       })
       .then(res => {
         console.log(res.data);
-        ls.set("auth", {
-          token: res.data.token,
-          firstname: res.data.fname,
-          lastname: res.data.lname
-        });
+        ls.set("auth", res.data.token);
+        ls.set("user", { firstname: res.data.fname, lastname: res.data.lname });
         props.history.push(`/contacts/${res.data.id}`);
       })
       .catch(error => {
@@ -112,10 +107,7 @@ export default function Login(props) {
             onChange={handleInput}
             autoComplete="current-password"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+
           <Button
             onClick={() => login(user)}
             fullWidth

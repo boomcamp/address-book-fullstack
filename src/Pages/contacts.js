@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -42,43 +42,55 @@ export default function Contacts({ match, history }) {
   const classes = useStyles();
   const [stat, setStat] = useState(false);
   const [rows, setRows] = useState([]);
+  const [sort, setSort] = useState("");
+  const [filter, setFilter] = useState([]);
   const auth = ls.get("auth");
   const [open, setOpen] = useState(false);
+  const [getContact, setGetContact] = useState({});
   const [openDelete, setOpenDelete] = useState({
     status: false,
     id: ""
   });
-  const [getContact, setGetContact] = useState({});
   const headers = {
     headers: {
-      Authorization: `Bearer ${auth.token}`
+      Authorization: `Bearer ${ls.get("auth")}`
     }
   };
   const handleOpen = () => setOpen(true);
 
-  useEffect(() => {
-    if (!auth.token) {
-      history.push("/");
-    } else {
-      if (!stat) {
-        Axios.get(
-          `http://localhost:3001/contacts/list/${match.params.id}`,
-          headers
-        ).then(res => setRows(res.data));
-        setStat(true);
-      }
+  // const sortTable = e => {
+  //   setSort(e.target.value);
+  //   Axios.get(
+  //     `http://localhost:3001/contacts/list/${match.params.id}?sort=${e.target.value}`,
+  //     headers
+  //   );
+  // };
+
+  if (!auth) {
+    history.push("/");
+  } else {
+    if (!stat) {
+      Axios.get(
+        `http://localhost:3001/contacts/list/${match.params.id}`,
+        headers
+      ).then(res => {
+        setRows(res.data);
+        setFilter(res.data);
+      });
+      setStat(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }
 
   return (
     <Layout
       history={history}
+      user={ls.get("user")}
       auth={auth}
       headers={headers}
       match={match}
       setRows={setRows}
       rows={rows}
+      filter={filter}
     >
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="customized table">
