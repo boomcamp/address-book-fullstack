@@ -5,6 +5,8 @@ const secret = require("../secret");
 
 const validate = require("../controllers/validations");
 const contact = require("../controllers/contacts");
+const group = require("../controllers/groups");
+const addressbook = require("../controllers/addressbook.js");
 
 massive({
   host: "localhost",
@@ -43,6 +45,15 @@ massive({
     app.post("/contacts/create", contact.createContact);
     app.patch("/contacts/:id/edit", contact.editContact);
     app.delete("/contacts/:id/delete", contact.deleteContact);
+
+    //GROUP'S ENDPOINT
+    app.get("/groups/:id/all", group.groupsByUser);
+    app.get("/groups/:id/contacts", group.contactsByGroup);
+    app.post("/groups/create", group.createGroup);
+    app.patch("/groups/:id/add", group.addToGroup);
+
+    //ADDRESSBOOK ENDPOINT
+    app.get("/addressbook/:id/all", addressbook.fetchAddressBook);
 
     const PORT = 4001;
     app.listen(PORT, () => {

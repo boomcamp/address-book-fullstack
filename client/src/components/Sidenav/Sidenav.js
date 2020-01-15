@@ -23,6 +23,9 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import Collapse from "@material-ui/core/Collapse";
+import { MDBBtn, MDBIcon } from "mdbreact";
+import Button from "@material-ui/core/Button";
+import AddIcon from "@material-ui/icons/Add";
 import Routes from "./routes";
 
 const drawerWidth = 240;
@@ -74,7 +77,11 @@ function ResponsiveDrawer(props) {
     isModal,
     currentData,
     deleteContactHandler,
-    deleteContact
+    deleteContact,
+    groups,
+    contact,
+    addToGroup,
+    addToGroupHandler
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -95,8 +102,23 @@ function ResponsiveDrawer(props) {
     <div>
       <div className={classes.toolbar} />
       <Divider />
+      <div style={{ padding: "10px" }}>
+        <MDBBtn
+          color="info"
+          outline
+          style={{ borderRadius: "20px" }}
+          onClick={handleAddOpen}
+        >
+          <MDBIcon icon="plus" className="mr-1" /> Create Contact
+        </MDBBtn>
+      </div>
+      <Divider />
       <List>
-        <ListItem button key={"All Contacts"}>
+        <ListItem
+          button
+          key={"All Contacts"}
+          onClick={() => props.fetchContact(1, "all")}
+        >
           <ListItemIcon>
             <PersonIcon />
           </ListItemIcon>
@@ -111,12 +133,35 @@ function ResponsiveDrawer(props) {
         </ListItem>
         <Collapse in={openGroup} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button className={classes.nested}>
-              <ListItemIcon>
-                <StarBorder />
-              </ListItemIcon>
-              <ListItemText primary="Judgement of Knights" />
+            <ListItem
+              button
+              className={classes.nested}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignContent: "center"
+              }}
+            >
+              <Button variant="outlined">
+                <AddIcon />
+                Add a Group
+              </Button>
             </ListItem>
+            {groups
+              ? groups.map(e => (
+                  <ListItem
+                    button
+                    key={e.id}
+                    className={classes.nested}
+                    onClick={() => props.fetchContact(e.id, "group")}
+                  >
+                    <ListItemIcon>
+                      <StarBorder />
+                    </ListItemIcon>
+                    <ListItemText primary={e.group_name} />
+                  </ListItem>
+                ))
+              : ""}
           </List>
         </Collapse>
       </List>
@@ -225,6 +270,10 @@ function ResponsiveDrawer(props) {
           isModal={isModal}
           currentData={currentData}
           deleteContact={deleteContact}
+          contact={contact}
+          addToGroup={addToGroup}
+          addToGroupHandler={addToGroupHandler}
+          groups={groups}
         />
       </main>
     </div>

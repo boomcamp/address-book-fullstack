@@ -5,6 +5,20 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import { MDBCol, MDBRow } from "mdbreact";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Select from "react-select";
+
+const colourOptions = [
+  { value: "ocean", label: "Ocean", color: "#00B8D9", isFixed: true },
+  { value: "blue", label: "Blue", color: "#0052CC", isDisabled: true },
+  { value: "purple", label: "Purple", color: "#5243AA" },
+  { value: "red", label: "Red", color: "#FF5630", isFixed: true },
+  { value: "orange", label: "Orange", color: "#FF8B00" },
+  { value: "yellow", label: "Yellow", color: "#FFC400" },
+  { value: "green", label: "Green", color: "#36B37E" },
+  { value: "forest", label: "Forest", color: "#00875A" },
+  { value: "slate", label: "Slate", color: "#253858" },
+  { value: "silver", label: "Silver", color: "#666666" }
+];
 
 export default class Modal extends React.Component {
   render() {
@@ -16,11 +30,66 @@ export default class Modal extends React.Component {
       changeHandler,
       currentData,
       deleteContactHandler,
-      deleteContact
+      deleteContact,
+      addToGroup,
+      addToGroupHandler,
+      groups
     } = this.props;
+    console.log(groups);
+
+    const options = groups
+      ? Object.keys(groups).map(x => {
+          return {
+            label: groups[x].group_name,
+            value: groups[x].id
+          };
+        })
+      : " ";
+
     return (
       <div>
-        {deleteContact ? (
+        {addToGroup ? (
+          <Dialog
+            open={isModal}
+            onClose={handleAddClose}
+            fullWidth={true}
+            maxWidth="sm"
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Add to Group"}</DialogTitle>{" "}
+            <form
+              className="needs-validation"
+              onSubmit={e => addToGroupHandler(e, currentData)}
+              noValidate
+            >
+              <DialogContent
+                style={{ paddingTop: "60px", paddingBottom: "150px" }}
+              >
+                <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  defaultValue={options[0]}
+                  isDisabled={false}
+                  isLoading={false}
+                  isClearable={true}
+                  isRtl={false}
+                  isSearchable={true}
+                  name="color"
+                  options={options}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleAddClose} color="primary">
+                  Cancel
+                </Button>
+                <Button type="submit" color="primary" autoFocus>
+                  Agree
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+        ) : deleteContact ? (
           <Dialog
             open={isModal}
             onClose={handleAddClose}

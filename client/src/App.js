@@ -8,8 +8,7 @@ import "../node_modules/react-toastify/dist/ReactToastify.css";
 
 const initialState = {
   isLoading: false,
-  isModal: false,
-  deleteContact: false
+  isModal: false
 };
 
 export default class App extends Component {
@@ -26,6 +25,45 @@ export default class App extends Component {
     this.setState({
       accessToken: localStorage.getItem("user")
     });
+  };
+
+  componentDidUpdate = prevState => {
+    if (prevState.contacts === this.state.contacts || this.state.isLoading) {
+      this.fetchContact(1, "all");
+      axios
+        .get(
+          `http://localhost:4001/addressbook/${localStorage.getItem(
+            "userId"
+          )}/all`
+        )
+        .then(response => {
+          this.setState({
+            groups: response.data.allGroups
+          });
+        });
+    }
+  };
+
+  fetchContact = (id, val) => {
+    return val === "all"
+      ? axios
+          .get(
+            `http://localhost:4001/addressbook/${localStorage.getItem(
+              "userId"
+            )}/all`
+          )
+          .then(response => {
+            this.setState({
+              contacts: response.data
+            });
+          })
+      : axios
+          .get(`http://localhost:4001/groups/${id}/contacts`)
+          .then(response => {
+            this.setState({
+              contacts: response.data
+            });
+          });
   };
 
   handleSignUp = event => {
@@ -71,6 +109,7 @@ export default class App extends Component {
       username: this.state.username,
       password: this.state.password
     };
+
     this.state.username && this.state.password
       ? axios
           .post("http://localhost:4001/login", Obj)
@@ -80,7 +119,13 @@ export default class App extends Component {
             this.setState({
               accessToken: localStorage.getItem("user")
             });
+            this.setState({
+              isLoading: true
+            });
             toast(`Hello There! ${this.state.username}`);
+            this.setState({
+              isLoading: false
+            });
           })
           .catch(errors => {
             try {
@@ -126,24 +171,33 @@ export default class App extends Component {
         }
       });
   };
+
   deleteContactHandler = (event, rowData) => {
     event.preventDefault();
     this.setState({ isLoading: true });
-    axios
-      .delete(`http://localhost:4001/contacts/${rowData.id}/delete`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
-      })
-      .then(() => {
-        this.setState(initialState);
-        toast.success(`Contact has been Successfully Deleted`);
-      })
-      .catch(errors => {
-        try {
-          toast.error(errors.response.data.error);
-        } catch {
-          console.log(errors);
-        }
-      });
+    rowData.map(e =>
+      axios
+        .delete(`http://localhost:4001/contacts/${e.id}/delete`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("user")}`
+          }
+        })
+        .then(() => {
+          this.setState(initialState);
+          toast.success(`Contact has been Successfully Deleted`);
+        })
+        .catch(errors => {
+          try {
+            toast.error(errors.response.data.error);
+          } catch {
+            console.log(errors);
+          }
+        })
+    );
+  };
+
+  addToGroupHandler = (event, rowData) => {
+    event.preventDefault();
   };
 
   createContactHandler = event => {
@@ -185,7 +239,13 @@ export default class App extends Component {
   };
 
   handleEditOpen = (val, option) => {
-    option === "delete"
+    option === "addGroup"
+      ? this.setState({
+          addToGroup: true,
+          isModal: true,
+          currentData: val
+        })
+      : option === "delete"
       ? this.setState({ deleteContact: true, isModal: true, currentData: val })
       : this.setState({
           deleteContact: false,
@@ -218,19 +278,15 @@ export default class App extends Component {
         <ToastContainer />
         <Routes
           accessToken={this.state.accessToken}
-          userId={this.state.userId}
           handleOnChange={this.handleOnChange}
           handleLogin={this.handleLogin}
           handleSignUp={this.handleSignUp}
           handleLogout={this.handleLogout}
           regSuccess={this.state.regSuccess}
-          validation={this.state.validation}
-          confirm={this.state.confirm}
           handleReg={this.handleReg}
           submitHandler={this.submitHandler}
           changeHandler={this.changeHandler}
           createContactHandler={this.createContactHandler}
-          isLoading={this.state.isLoading}
           handleEditOpen={this.handleEditOpen}
           handleAddOpen={this.handleAddOpen}
           handleAddClose={this.handleAddClose}
@@ -238,7 +294,12 @@ export default class App extends Component {
           deleteContactHandler={this.deleteContactHandler}
           isModal={this.state.isModal}
           deleteContact={this.state.deleteContact}
+          addToGroup={this.state.addToGroup}
+          addToGroupHandler={this.addToGroupHandler}
           currentData={this.state.currentData}
+          contact={this.state.contacts}
+          groups={this.state.groups}
+          fetchContact={this.fetchContact}
         />
       </HashRouter>
     );

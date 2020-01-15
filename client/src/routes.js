@@ -24,7 +24,12 @@ export default class Routes extends React.Component {
       currentData,
       editContactHandler,
       deleteContactHandler,
-      deleteContact
+      deleteContact,
+      contact,
+      groups,
+      addToGroup,
+      addToGroupHandler,
+      fetchContact
     } = this.props;
     return (
       <Switch>
@@ -45,6 +50,11 @@ export default class Routes extends React.Component {
                 editContactHandler={editContactHandler}
                 deleteContactHandler={deleteContactHandler}
                 deleteContact={deleteContact}
+                contact={contact}
+                groups={groups}
+                addToGroup={addToGroup}
+                addToGroupHandler={addToGroupHandler}
+                fetchContact={fetchContact}
               />
             ) : (
               <Login
