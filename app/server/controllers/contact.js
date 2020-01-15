@@ -4,7 +4,7 @@ function getAllData(req, res) {
     db.contact
         .find()
         .then(users => {
-            res.status(200).json({ ...users });
+            res.status(200).json(users);
             console.log(users);
         })
         .catch(e => {

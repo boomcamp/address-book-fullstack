@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Navbar from './Navbar';
-import Account from './AddressBookUsers/Account';
 import Profile from './AddressBookUsers/Profile';
 
 const useStyles = makeStyles(theme => ({
@@ -13,9 +12,7 @@ const useStyles = makeStyles(theme => ({
     },
     row: {
         display: 'flex',
-        justifyContent: 'center',
-        width: 1366,
-        margin: 'auto'
+        justifyContent: 'center'
     }
 }));
 
@@ -28,7 +25,6 @@ export default function AddressBook() {
                 <Navbar />
                 <div className={classes.row}>
                     <Profile />
-                    <Account />
                 </div>
             </div>
         </React.Fragment>
