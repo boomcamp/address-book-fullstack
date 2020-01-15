@@ -2,10 +2,12 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-
 import Paper from "@material-ui/core/Paper";
 import Icon from "../assets/images/cont.png";
-// import edit from "../assets/images/edit.png";
+import editIcon from "../assets/images/draw.png";
+import close from "../assets/images/cross.png";
+
+import EditContact from "./EditContact";
 
 const useStyles = makeStyles(theme => ({
 	details: {
@@ -24,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 	head: {
 		padding: "5px",
 		textAlign: "left",
-		marginLeft: "9vw",
+		marginLeft: "4vw",
 		fontSize: "20px",
 		color: "white",
 		letterSpacing: "3px",
@@ -42,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 		marginTop: "1vh",
 		textAlign: "left",
 		fontStyle: "italic",
-		marginLeft: "10vw",
+		marginLeft: "5vw",
 		display: "flex",
 		alignItems: "center",
 		color: "white",
@@ -60,12 +62,71 @@ const useStyles = makeStyles(theme => ({
 		justifyContent: "space-evenly"
 	},
 	edit: {
-		width: "30px"
+		marginTop: "15px",
+		borderRadius: "50%",
+		padding: "10px",
+		width: "20%",
+		height: "25%",
+		background: "white",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+		alignItems: "center",
+		cursor: "pointer",
+		"&:hover": {
+			background: "#b3e8ff",
+			color: "purple"
+		},
+		"@media (max-width: 767px)": {
+			borderRadius: "0",
+			width: "50%",
+			flexDirection: "row",
+			background: "transparent",
+			"&:hover": {
+				background: "transparent",
+				color: "purple"
+			}
+		}
+	},
+	editIcon: {
+		width: "20px",
+		marginBottom: "10px",
+		"@media (max-width: 767px)": {
+			width: "20px"
+		}
+	},
+	title: {
+		textTransform: "Capitalize",
+		color: "Purple"
+	},
+	pad: {
+		paddingRight: "5px"
+	},
+	closeEdit: {
+		display: "flex",
+		flexDirection: "column"
+	},
+	"@media (max-width: 767px)": {
+		flexDirection: "row"
 	}
 }));
 
-export default function Details() {
+export default function Details(props) {
 	const classes = useStyles();
+	const { handleCloseDetails } = props;
+
+	const {
+		firstname,
+		lastname,
+		home_phone,
+		mobile_phone,
+		work_phone,
+		email,
+		city,
+		state_or_province,
+		postal_code,
+		country
+	} = props;
 
 	return (
 		<React.Fragment>
@@ -77,39 +138,69 @@ export default function Details() {
 					</span>
 				</Typography>
 				<Grid container>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={12} sm={5}>
 						<Typography className={classes.info}>
-							<b>First Name:</b> Utot
+							<b className={classes.pad}>First Name:</b>{" "}
+							<span className={classes.title}>{firstname}</span>
 						</Typography>
 						<Typography className={classes.info}>
-							<b>Last Name:</b> Utot
+							<b className={classes.pad}>Last Name:</b>{" "}
+							<span className={classes.title}>{lastname}</span>
 						</Typography>
 						<Typography className={classes.info}>
-							<b>Home Phone#: </b> 45441
+							<b className={classes.pad}>Home Phone#: </b>{" "}
+							<span className={classes.title}>{home_phone}</span>
 						</Typography>
 						<Typography className={classes.info}>
-							<b>Mobile Phone#: </b> 45441
+							<b className={classes.pad}>Mobile Phone#: </b>{" "}
+							<span className={classes.title}>{mobile_phone}</span>
 						</Typography>
 						<Typography className={classes.info}>
-							<b>Work Phone#: </b> 45441
+							<b className={classes.pad}>Work Phone#: </b>{" "}
+							<span className={classes.title}>{work_phone}</span>
 						</Typography>
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={12} sm={5}>
 						<Typography className={classes.info}>
-							<b>Email:</b> Utot@gmail.com
+							<b className={classes.pad}>Email:</b>{" "}
+							<span style={{ color: "purple" }}>{email}</span>
 						</Typography>
 						<Typography className={classes.info}>
-							<b>City:</b> Utot
+							<b className={classes.pad}>City:</b>{" "}
+							<span className={classes.title}>{city}</span>
 						</Typography>
 						<Typography className={classes.info}>
-							<b>State or Province: </b> tubol
+							<b className={classes.pad}>State or Province: </b>{" "}
+							<span className={classes.title}>{state_or_province}</span>
 						</Typography>
 						<Typography className={classes.info}>
-							<b>Postal Code: </b> 45441
+							<b className={classes.pad}>Postal Code: </b>{" "}
+							<span className={classes.title}>{postal_code}</span>
 						</Typography>
 						<Typography className={classes.info}>
-							<b>Country: </b> Philippines
+							<b className={classes.pad}>Country: </b>{" "}
+							<span className={classes.title}>{country}</span>
 						</Typography>
+					</Grid>
+					<Grid item xs={12} sm={2} align="center">
+						<div className={classes.closeEdit}>
+							<EditContact
+								firstname={firstname}
+								lastname={lastname}
+								home_phone={home_phone}
+								mobile_phone={mobile_phone}
+								work_phone={work_phone}
+								email={email}
+								city={city}
+								state_or_province={state_or_province}
+								postal_code={postal_code}
+								country={country}
+							/>
+							<div className={classes.edit} onClick={handleCloseDetails}>
+								<img src={close} alt="close" className={classes.editIcon} />
+								<span style={{ fontSize: "12px" }}>Close</span>
+							</div>
+						</div>
 					</Grid>
 				</Grid>
 			</Paper>

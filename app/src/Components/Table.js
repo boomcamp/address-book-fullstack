@@ -9,10 +9,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
-
 import view from "../assets/images/eye.png";
 import trash from "../assets/images/delete.png";
-// import edit from "../assets/images/delete.png";
+import addToGroup from "../assets/images/add-group.png";
 
 const useStyles = makeStyles({
 	table: {
@@ -40,8 +39,8 @@ const useStyles = makeStyles({
 
 export default function SimpleTable(props) {
 	const classes = useStyles();
-
 	const [state, setState] = useState([]);
+	const { handleViewDetails } = props;
 
 	useEffect(() => {
 		axios.get(`http://localhost:3006/contacts/${props.id}`).then(res => {
@@ -49,7 +48,6 @@ export default function SimpleTable(props) {
 		});
 	}, [setState]);
 
-	console.log(state);
 	return (
 		<TableContainer component={Paper}>
 			<Table className={classes.table} aria-label="simple table">
@@ -81,7 +79,19 @@ export default function SimpleTable(props) {
 							<TableCell>{row.work_phone}</TableCell>
 							<TableCell className={classes.action}>
 								<Tooltip title="View Details">
-									<img src={view} className={classes.view} alt="view" />
+									<img
+										src={view}
+										className={classes.view}
+										alt={row.id}
+										onClick={handleViewDetails}
+									/>
+								</Tooltip>
+								<Tooltip title="Add to Group">
+									<img
+										src={addToGroup}
+										className={classes.view}
+										alt="AddToGroup"
+									/>
 								</Tooltip>
 								<Tooltip title="Delete">
 									<img src={trash} className={classes.view} alt="delete" />

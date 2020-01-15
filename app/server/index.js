@@ -25,6 +25,8 @@ massive({
 
 	app.post("/contacts/:userid", contacts.create);
 	app.get("/contacts/:userid", contacts.getContactsByUser);
+	app.get("/contacts/:userid/:contactid", contacts.getContactByContactId);
+	app.patch("/contacts/:contactid", contacts.editContact);
 
 	const PORT = 3006;
 	app.listen(PORT, () => {

@@ -9,14 +9,14 @@ import MenuIcon from "@material-ui/icons/Menu";
 import swal from "sweetalert";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import AddIcon from "@material-ui/icons/Add";
-import Tooltip from "@material-ui/core/Tooltip";
-
+import Paper from "@material-ui/core/Paper";
 import ablogo from "../assets/images/address-book.png";
 import Table from "./Table";
 import Details from "./Details";
 import AddContact from "./AddContact";
 import SearchSort from "./SearchSort";
+import axios from "axios";
+import jwt from "jsonwebtoken";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -59,6 +59,7 @@ const useStyles = makeStyles(theme => ({
 		width: "97%",
 		height: "50vh",
 		overflow: "auto",
+		borderRadius: "5px",
 		"&::-webkit-scrollbar-track": {
 			webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.3)",
 			backgroundColor: "#F5F5F5",
@@ -72,7 +73,8 @@ const useStyles = makeStyles(theme => ({
 			backgroundColor: "#7c7cca"
 		},
 		"@media (max-width: 767px)": {
-			width: "100%"
+			width: "100%",
+			marginBottom: "5vh"
 		}
 	},
 	contacts: {
@@ -97,31 +99,32 @@ const useStyles = makeStyles(theme => ({
 		"@media (max-width: 767px)": {
 			width: "10%"
 		}
-	},
-	addIcon: {
-		color: "#7c7cca",
-		marginTop: "5px",
-		cursor: "pointer"
 	}
 }));
 
 export default function ButtonAppBar() {
+	const classes = useStyles();
+
 	const [openModal, setOpenModal] = React.useState(false);
-	const [firstName, setFirstName] = useState("");
+	const [vDetails, setVDetails] = React.useState(false);
 
-	const handleClickOpen = () => {
-		setOpenModal(true);
-	};
+	const [firstname, setFirstName] = useState("");
+	const [lastname, setLastName] = useState("");
+	const [home_phone, setHomePhone] = useState("");
+	const [mobile_phone, setMobilePhone] = useState("");
+	const [work_phone, setWorkPhone] = useState("");
+	const [email, setEmail] = useState("");
+	const [city, setCity] = useState("");
+	const [state_or_province, setStateOrProvince] = useState("");
+	const [postal_code, setPostalCode] = useState("");
+	const [country, setCountry] = useState("");
 
-	const handleClose = firstName => {
+	const handleClose = () => {
 		setOpenModal(false);
 	};
 
-	const handleChange = e => {
-		setFirstName(e.target.value);
-	};
-
 	let userInfo = JSON.parse(localStorage.getItem("user"));
+	let display;
 
 	if (!localStorage.getItem("Token")) {
 		swal({
@@ -132,7 +135,9 @@ export default function ButtonAppBar() {
 		});
 	}
 
-	const classes = useStyles();
+	const handleCloseDetails = () => {
+		setVDetails(false);
+	};
 
 	const logout = () => {
 		swal({
@@ -145,9 +150,49 @@ export default function ButtonAppBar() {
 		});
 	};
 
-	if (!localStorage.getItem("Token")) {
-		return null;
-	} else {
+	if (vDetails) {
+		display = (
+			<Details
+				firstname={firstname}
+				lastname={lastname}
+				firstname={firstname}
+				home_phone={home_phone}
+				mobile_phone={mobile_phone}
+				work_phone={work_phone}
+				email={email}
+				city={city}
+				state_or_province={state_or_province}
+				postal_code={postal_code}
+				country={country}
+				handleCloseDetails={handleCloseDetails}
+			/>
+		);
+	}
+
+	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+
+	const handleViewDetails = e => {
+		axios({
+			method: "get",
+			url: `http://localhost:3006/contacts/${tokenDecoded.userId}/${e.target.alt}`
+		}).then(res => {
+			const data = res.data[0];
+
+			setFirstName(data.firstname);
+			setLastName(data.lastname);
+			setHomePhone(data.home_phone);
+			setMobilePhone(data.mobile_phone);
+			setWorkPhone(data.work_phone);
+			setEmail(data.email);
+			setCity(data.city);
+			setStateOrProvince(data.state_or_province);
+			setPostalCode(data.postal_code);
+			setCountry(data.country);
+		});
+		setVDetails(true);
+	};
+
+	if (localStorage.getItem("Token")) {
 		return (
 			<div className={classes.root}>
 				<AppBar position="static" className={classes.headColor}>
@@ -192,28 +237,19 @@ export default function ButtonAppBar() {
 									Contact List
 								</Typography>
 								<Typography className={classes.add}>
-									<Tooltip title="Add New Contact">
-										<AddIcon
-											className={classes.addIcon}
-											onClick={handleClickOpen}
-										/>
-									</Tooltip>
+									<AddContact handleClose={handleClose} id={userInfo.id} />
 								</Typography>
 							</div>
-							<div className={classes.div}>
-								<Table id={userInfo.id} />
-							</div>
-							<Details />
+							<Paper className={classes.div}>
+								<Table id={userInfo.id} handleViewDetails={handleViewDetails} />
+							</Paper>
+							{display}
 						</Grid>
 					</Grid>
-					<AddContact
-						handleClose={handleClose}
-						openModal={openModal}
-						handleChange={handleChange}
-						firstName={firstName}
-					/>
 				</Container>
 			</div>
 		);
+	} else {
+		return null;
 	}
 }

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import axios from "axios";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -8,85 +7,83 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
+import editIcon from "../assets/images/draw.png";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 
-import AddIcon from "@material-ui/icons/Add";
-import Tooltip from "@material-ui/core/Tooltip";
-
 const useStyles = makeStyles(theme => ({
-	addIcon: {
-		color: "#7c7cca",
-		marginTop: "5px",
-		cursor: "pointer"
+	edit: {
+		marginTop: "15px",
+		borderRadius: "50%",
+		padding: "10px",
+		width: "20%",
+		height: "25%",
+		background: "white",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+		alignItems: "center",
+		cursor: "pointer",
+		"&:hover": {
+			background: "#b3e8ff",
+			color: "purple"
+		},
+		"@media (max-width: 767px)": {
+			borderRadius: "0",
+			width: "50%",
+			flexDirection: "row",
+			background: "transparent",
+			"&:hover": {
+				background: "transparent",
+				color: "purple"
+			}
+		}
+	},
+	editIcon: {
+		width: "20px",
+		marginBottom: "10px",
+		"@media (max-width: 767px)": {
+			width: "20px"
+		}
 	}
 }));
 
 export default function ResponsiveDialog(props) {
+	const [open, setOpen] = React.useState(false);
+	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+	const theme = useTheme();
 	const classes = useStyles();
 
-	const [openModal, setOpenModal] = React.useState(false);
-	const [firstname, setFirstName] = useState("");
-
-	const handleClose = firstName => {
-		setOpenModal(false);
-	};
-
-	const handleChange = e => {
-		setFirstName(e.target.value);
-		setRequired(false);
-	};
+	const {
+		firstname,
+		lastname,
+		home_phone,
+		mobile_phone,
+		work_phone,
+		email,
+		city,
+		state_or_province,
+		postal_code,
+		country
+	} = props;
 
 	const handleClickOpen = () => {
-		setOpenModal(true);
+		setOpen(true);
 	};
 
-	const [required, setRequired] = useState(false);
-	const [lastname, setLastName] = useState("");
-	const [home_phone, setHomePhone] = useState(null);
-	const [mobile_phone, setMobilePhone] = useState(null);
-	const [work_phone, setWorkPhone] = useState(null);
-	const [email, setEmail] = useState("");
-	const [city, setCity] = useState("");
-	const [state_or_province, setStateOrProvince] = useState("");
-	const [postal_code, setPostalCode] = useState(null);
-	const [country, setCountry] = useState("");
-
-	const theme = useTheme();
-	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-	const pass = firstname => {
-		if (firstname) {
-			axios
-				.post(`http://localhost:3006/contacts/${props.id}`, {
-					firstname,
-					lastname,
-					home_phone,
-					mobile_phone,
-					work_phone,
-					email,
-					city,
-					state_or_province,
-					postal_code,
-					country
-				})
-				.then(res => {
-					setOpenModal(false);
-					window.location = "/home";
-				});
-		} else {
-			setRequired(true);
-		}
+	const handleClose = () => {
+		setOpen(false);
 	};
 
 	return (
-		<React.Fragment>
-			<Tooltip title="Add New Contact">
-				<AddIcon className={classes.addIcon} onClick={handleClickOpen} />
-			</Tooltip>
+		<div>
+			<div className={classes.edit} onClick={handleClickOpen}>
+				<img src={editIcon} alt="edit" className={classes.editIcon} />
+				<span style={{ fontSize: "12px" }}>Edit</span>
+			</div>
 			<Dialog
 				fullScreen={fullScreen}
-				open={openModal}
+				open={open}
 				onClose={handleClose}
 				aria-labelledby="responsive-dialog-title"
 			>
@@ -94,21 +91,19 @@ export default function ResponsiveDialog(props) {
 					style={{ background: "#7c7cca" }}
 					id="responsive-dialog-title"
 				>
-					<span style={{ color: "white" }}>Add New Contact</span>
+					<span style={{ color: "white" }}>Edit Contact</span>
 				</DialogTitle>
 				<DialogContent>
 					<Grid container spacing={3}>
 						<Grid item xs={12} sm={6}>
 							<TextField
-								error={required}
-								helperText={required ? "This field is required!" : false}
 								required
 								id="firstName"
 								name="firstName"
 								label="First name"
 								fullWidth
 								autoComplete="fname"
-								onChange={handleChange}
+								value={firstname}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -118,9 +113,7 @@ export default function ResponsiveDialog(props) {
 								label="Last name"
 								fullWidth
 								autoComplete="lname"
-								onChange={e => {
-									setLastName(e.target.value);
-								}}
+								value={lastname}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -130,33 +123,27 @@ export default function ResponsiveDialog(props) {
 								label="Home Phone#"
 								fullWidth
 								autoComplete="hphone"
-								onChange={e => {
-									setHomePhone(e.target.value);
-								}}
+								value={home_phone}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
 								id="mobile_phone"
 								name="mobile_phone"
 								label="Mobile Phone#"
 								fullWidth
 								autoComplete="mphone"
-								onChange={e => {
-									setMobilePhone(e.target.value);
-								}}
+								value={mobile_phone}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
 								id="work_phone"
 								name="work_phone"
 								label="Work Phone#"
 								fullWidth
 								autoComplete="wphone"
-								onChange={e => {
-									setWorkPhone(e.target.value);
-								}}
+								value={work_phone}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -166,9 +153,7 @@ export default function ResponsiveDialog(props) {
 								label="Email Address"
 								fullWidth
 								autoComplete="email"
-								onChange={e => {
-									setEmail(e.target.value);
-								}}
+								value={email}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -178,9 +163,7 @@ export default function ResponsiveDialog(props) {
 								label="City"
 								fullWidth
 								autoComplete="city"
-								onChange={e => {
-									setCity(e.target.value);
-								}}
+								value={city}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -189,9 +172,7 @@ export default function ResponsiveDialog(props) {
 								name="state"
 								label="State/Province"
 								fullWidth
-								onChange={e => {
-									setStateOrProvince(e.target.value);
-								}}
+								value={state_or_province}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -201,9 +182,7 @@ export default function ResponsiveDialog(props) {
 								label="Zip / Postal code"
 								fullWidth
 								autoComplete="postal-code"
-								onChange={e => {
-									setPostalCode(e.target.value);
-								}}
+								value={postal_code}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -213,9 +192,7 @@ export default function ResponsiveDialog(props) {
 								label="Country"
 								fullWidth
 								autoComplete="country"
-								onChange={e => {
-									setCountry(e.target.value);
-								}}
+								value={country}
 							/>
 						</Grid>
 					</Grid>
@@ -232,13 +209,13 @@ export default function ResponsiveDialog(props) {
 					</Button>
 					<Button
 						style={{ color: "white" }}
-						onClick={() => pass(firstname)}
+						// onClick={() => pass(firstname)}
 						autoFocus
 					>
-						Add Contact
+						Save Changes
 					</Button>
 				</DialogActions>
 			</Dialog>
-		</React.Fragment>
+		</div>
 	);
 }
