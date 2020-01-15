@@ -8,8 +8,12 @@ const Span = styled.span`
 
 export const columnData = user => [
   {
-    title: "Name",
-    render: rowData => <Span>{rowData.firstName + " " + rowData.lastName}</Span>
+    title: "First Name",
+    field: "firstName"
+  },
+  {
+    title: "Last Name",
+    field: "lastName"
   },
   {
     title: "Mobile Phone",

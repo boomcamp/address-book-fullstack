@@ -46,7 +46,6 @@ export const DialogCont = props => {
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.lastName : ""}
                   name="lastName"
-                  name="lastName"
                   type="firstName"
                   label="Last Name"
                   fullWidth

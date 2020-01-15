@@ -6,6 +6,8 @@ import { useLocalStorage } from "./components/customHooks/useLocalStorage";
 import { ToastContainer } from "react-toastify";
 import "../node_modules/react-toastify/dist/ReactToastify.css";
 import { getUserData } from "./components/customHooks/getUserData";
+import Axios from "axios";
+import { url } from "./url";
 
 function App() {
   const [loginData, setloginData] = useState({});
@@ -18,6 +20,7 @@ function App() {
   const [redirect, setRedirect] = useState(false);
   const [userData, setUserData] = useState({});
   const [contact, setContact] = useState({});
+  const [group, setGroup] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -49,6 +52,17 @@ function App() {
     }
   };
 
+  const handleFilterByGroup = async id => {
+    if (!id) {
+      setGroup(null);
+      getUserData(user).then(user => setUserData(user));
+    }
+    const response = await Axios.get(`${url}/groups/${id}/list`, {
+      headers: { Authorization: `Bearer ${user.token}` }
+    });
+    setGroup(id);
+    setUserData({ ...userData, addressBook: response.data.contactList });
+  };
   return (
     <HashRouter>
       <ToastContainer />
@@ -67,6 +81,8 @@ function App() {
         setUserData={setUserData}
         setContact={setContact}
         contact={contact}
+        handleFilterByGroup={handleFilterByGroup}
+        group={group}
       />
     </HashRouter>
   );

@@ -16,7 +16,8 @@ export const Contacts = props => {
     user,
     handleOnChange,
     setContact,
-    contact
+    contact,
+    group
   } = props.data;
   const theme = createMuiTheme({
     palette: {
@@ -44,9 +45,13 @@ export const Contacts = props => {
   const addContact = async e => {
     e.preventDefault();
     try {
-      const response = await Axios.post(`${url}/contacts`, contact, {
-        headers: { Authorization: `Bearer ${user.token}` }
-      });
+      const response = await Axios.post(
+        `${url}/contacts`,
+        { ...contact, groupId: group },
+        {
+          headers: { Authorization: `Bearer ${user.token}` }
+        }
+      );
       toast.info(response.data.message, {
         position: toast.POSITION.TOP_CENTER
       });
@@ -172,7 +177,7 @@ export const Contacts = props => {
             pageSize: 10,
             actionsColumnIndex: -1,
             selection: multiSelect,
-            grouping: false
+            grouping: true
           }}
           actions={!multiSelect ? action1 : action2}
           onRowClick={(e, rowData) => {

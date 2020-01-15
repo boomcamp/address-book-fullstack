@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
@@ -14,6 +14,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Divider } from "@material-ui/core";
+import { AddGroup } from "./AddGroup";
 
 const AddButton = styled.div`
   border: 1px solid #5f6dbd;
@@ -41,68 +42,92 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const NestedList = props => {
-  const { user } = props.data;
+  const { user, userData, handleFilterByGroup, group } = props.data;
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
-
+  const [dialog, setDialog] = useState(false);
   const handleClick = () => {
     setOpen(!open);
   };
 
+  const handleAddGroup = e => {};
   return (
-    <List
-      component="nav"
-      aria-labelledby="nested-list-subheader"
-      subheader={
-        <ListSubheader component="div" id="nested-list-subheader">
-          <span style={{ textTransform: "capitalize" }}>
-            Hello {user.firstName + " " + user.lastName}!
-          </span>
-        </ListSubheader>
-      }
-      className={classes.root}
-    >
-      <Divider />
-      <Link to="/" style={link}>
-        <ListItem button>
-          <ListItemIcon>
-            <Contacts style={icons} />
-          </ListItemIcon>
-          <ListItemText primary="Contacts" />
-        </ListItem>
-      </Link>
-      <ListItem button onClick={handleClick}>
-        <ListItemIcon>
-          <Group style={icons} />
-        </ListItemIcon>
-        <ListItemText primary="Groups" />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          {user.group ? (
-            <React.Fragment>
-              {user.group.map(x => (
-                <ListItem button className={classes.nested} key={x.id}>
-                  <ListItemIcon>
-                    <Group style={icons} />
-                  </ListItemIcon>
-                  <ListItemText primary={x.groupName} />
-                </ListItem>
-              ))}
-            </React.Fragment>
-          ) : (
-            ""
-          )}
-          <ListItem button className={classes.nested}>
-            <AddButton>
-              <GroupAdd />
-            </AddButton>
+    <React.Fragment>
+      <List
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        subheader={
+          <ListSubheader component="div" id="nested-list-subheader">
+            <span style={{ textTransform: "capitalize" }}>
+              Hello {user.firstName + " " + user.lastName}!
+            </span>
+          </ListSubheader>
+        }
+        className={classes.root}
+      >
+        <Divider />
+        <Link to="/" style={link} onClick={() => handleFilterByGroup()}>
+          <ListItem button>
+            <ListItemIcon>
+              <Contacts style={icons} />
+            </ListItemIcon>
+            <ListItemText primary="Contacts" />
           </ListItem>
-        </List>
-      </Collapse>
-    </List>
+        </Link>
+        <ListItem button onClick={handleClick}>
+          <ListItemIcon>
+            <Group style={icons} />
+          </ListItemIcon>
+          <ListItemText primary="Groups" />
+          {open ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {userData ? (
+              userData.groups ? (
+                <React.Fragment>
+                  {userData.groups.map(x => (
+                    <ListItem
+                      button
+                      className={classes.nested}
+                      key={x.id}
+                      onClick={() => handleFilterByGroup(x.id)}
+                      style={group === x.id ? active : {}}
+                    >
+                      <ListItemIcon>
+                        <Group style={icons} />
+                      </ListItemIcon>
+                      <ListItemText primary={x.groupName} />
+                    </ListItem>
+                  ))}
+                </React.Fragment>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+            <ListItem
+              button
+              className={classes.nested}
+              onClick={() => setDialog(true)}
+            >
+              <AddButton>
+                <GroupAdd />
+              </AddButton>
+            </ListItem>
+          </List>
+        </Collapse>
+      </List>
+      <AddGroup
+        dialog={dialog}
+        setDialog={setDialog}
+        handleAddGroup={handleAddGroup}
+        data={props.data}
+      />
+    </React.Fragment>
   );
 };
 
 const link = { textDecoration: "none", color: "black" };
+const active = { background: "#cccccc" };
