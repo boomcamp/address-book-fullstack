@@ -14,7 +14,7 @@ function createContact(req, res) {
     postal_code,
     country
   } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   db.contacts
     .insert(
       {
@@ -63,7 +63,7 @@ function contactList(req, res) {
   const groups = req.query.groups;
 
   if (groups == undefined) {
-    console.log(sort)
+    // console.log(sort);
     db.query(
       `select * from contacts INNER JOIN address_book on contacts.id = address_book.contactid where address_book.userid = ${userId} ORDER BY last_name `,
       []
@@ -78,8 +78,71 @@ function contactList(req, res) {
     });
   }
 }
+// function deleteContact(req, res) {
+//   const db = req.app.get('db');
+
+//   const id = req.params.id;
+//   db.contacts
+//     .destroy({
+//       id
+//     }).then(contact => { res.status(200).json(contacts);
+//     }).catch(err => { res.status(500).end();
+//     })
+// }
+
+function deleteContact(req, res) {
+  const db = req.app.get("db");
+  const id = req.params.id;
+
+  db.query(
+    `
+  DELETE from address_book where contactid = ${id}`
+  )
+    .then(() => {
+      db.query(` DELETE from contacts where id = ${id}`);
+    })
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      res.status(500).end();
+    });
+}
+function updateContact(req, res) {
+  const db = req.app.get('db')
+  const {
+      first_name,
+      last_name,
+      home_phone,
+      mobile_phone,
+      work_phone,
+      email,
+      city,
+      state_or_province,
+      postal_code,
+      country
+
+  } = req.body
+
+    db.contacts
+    .update(req.params.id, {
+      first_name: first_name,
+      last_name: last_name,
+      home_phone: home_phone,
+      mobile_phone: mobile_phone,
+      work_phone: work_phone,
+      email: email,
+      city: city,
+      state_or_province: state_or_province,
+      postal_code: postal_code,
+      country: country
+    })
+    .then(item => res.status(200).json(item))
+}
 module.exports = {
   createContact,
   getById,
-  contactList
+  contactList,
+  deleteContact,
+  updateContact
 };

@@ -22,7 +22,7 @@ export default class New extends Component {
     this.setState({
       open: false,
       openModal:false
-
+      
     });
   };
   handleOpenModal = (e) => {

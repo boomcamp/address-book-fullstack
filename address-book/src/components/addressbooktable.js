@@ -4,10 +4,21 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Contact from "./new";
 import MaterialTable from "material-table";
-import { Grid } from "@material-ui/core";
-import GroupList from "./groupList"
+import { Grid, IconButton } from "@material-ui/core";
+import GroupList from "./groupList";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import axios from "axios";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import EditContacts from "./modal/editContacts";
+import Box from "@material-ui/core/Box";
+import Tooltip from "@material-ui/core/Tooltip";
 const styles = {
   main: {
     ["@media (max-width:640px)"]: {
@@ -22,7 +33,20 @@ class Addressbooktable extends Component {
     super(props);
 
     this.state = {
+      fname: "",
+      lname: "",
+      mobilephone: "",
+      workphone: "",
+      homephone: "",
+      prov: "",
+      city: "",
+      email: "",
+      postal: "",
+      country: "",
+      dataEdit: "",
+      openModal: false,
       data: [],
+      open: false,
       columns: [
         {
           title: "FirstName",
@@ -72,25 +96,177 @@ class Addressbooktable extends Component {
               {rowData.mobile_phone}
             </span>
           )
+        },
+        {
+          title: "Actions",
+
+          render: rowData => (
+            <div>
+              <span
+                style={{
+                  textDecoration: "none",
+                  color: "black",
+                  cursor: "pointer",
+                  marginRight: 20
+                }}
+              >
+                <Tooltip title="Edit Contact">
+                  <EditIcon
+                    onClick={() => this.handleOpenModal({ item: { rowData } })}
+                  />
+                </Tooltip>
+                <EditContacts
+                  handleCloseModal={this.handleCloseModal}
+                  openModal={this.state.openModal}
+                  dataEdit={this.state.dataEdit}
+                  setFields={this.setFields}
+
+                  fname={this.state.fname}
+                  lname={this.state.lname}
+                  email={this.state.email}
+                  postal={this.state.postal}
+                  city={this.state.city}
+                  prov={this.state.prov}
+                  mobilephone={this.state.mobilephone}
+                  homephone={this.state.homephone}
+                  workphone={this.state.workphone}
+                  country={this.state.country}
+                />
+              </span>
+
+              <span
+                style={{
+                  textDecoration: "none",
+                  color: "black",
+                  cursor: "pointer"
+                }}
+              >
+                <Tooltip title="Delete Contact">
+                  <DeleteIcon
+                    onClick={() => this.handleGetid({ item: { rowData } })}
+                  />
+                </Tooltip>
+              </span>
+            </div>
+          )
         }
       ]
     };
   }
+  handleOpenModal = item => {
+    const idEdit = item.item.rowData.contactid;
+    localStorage.setItem("idEdit", item.item.rowData.contactid);
+    axios.get(`/addressbook/view/${idEdit}`).then(res => {
+      this.setState({
+        fname: res.data.first_name,
+        lname: res.data.last_name,
+        city: res.data.city,
+        prov: res.data.state_or_province,
+        country: res.data.country,
+        mobile_phone: res.data.mobile_phone,
+        homephone: res.data.home_phone,
+        workphone: res.data.work_phone,
+        email: res.data.email,
+        postal: res.data.postal_code,
+      });
+
+      
+    });
+    this.setState({
+      openModal: true
+    });
+  };
+  handleCloseModal = () => {
+    localStorage.removeItem("idEdit");
+    this.setState({
+      openModal: false
+    });
+  };
 
   componentDidMount() {
+    this.getAll();
+  }
+
+  getAll = () => {
     const id = localStorage.getItem("id");
     axios.get(`/addressbook/${id}`).then(res => {
       this.setState({
         data: res.data
       });
     });
-  }
+  };
 
+  handleGetid = item => {
+    console.log(item.item.rowData.contactid);
+    localStorage.setItem("idDelete", item.item.rowData.contactid);
+
+    this.handleOpen();
+  };
+
+  handleOpen = () => {
+    this.setState({
+      open: true
+    });
+  };
+  handleClose = () => {
+    localStorage.removeItem("idDelete");
+    this.setState({
+      open: false
+    });
+  };
+  handleYes = () => {
+    axios
+      .delete(`/addressbook/deleteContact/${localStorage.getItem("idDelete")}`)
+      .then(res => {
+        localStorage.removeItem("idDelete");
+        this.getAll();
+        this.setState({
+          open: false
+        });
+      });
+  };
+  setFields = event => {
+    // this.setState({
+    //   fname: event.target.value
+    // })
+    var fieldname = event.target.name;
+    var fieldError = fieldname + "Error";
+    var value = event.target.value;
+    this.setState({
+      [fieldname]: value,
+      [fieldError]: value ? false : true
+    });
+    // console.log(fieldname);
+
+  };
   render() {
-    console.log(this.state.data);
+    // console.log(this.state.data);
     const { classes } = this.props;
     return (
       <React.Fragment>
+        <div>
+          <Dialog
+            open={this.state.open}
+            onClose={this.handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Confirmation"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Are you sure you want to Delete?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => this.handleYes()} color="primary">
+                Yes
+              </Button>
+              <Button onClick={this.handleClose} color="primary" autoFocus>
+                No
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
         <CssBaseline />
         <Container maxWidth="xl">
           <Typography
@@ -128,7 +304,6 @@ class Addressbooktable extends Component {
                 {/*Contact Table */}
                 <Grid
                   item
-                  xl={24}
                   lg={10}
                   md={9}
                   sm={12}
@@ -139,9 +314,8 @@ class Addressbooktable extends Component {
                 >
                   <MaterialTable
                     options={{
-                      search: false,
+                      // search: false,
                       paging: false,
-                      actionsColumnIndex: -1,
                       headerStyle: {
                         backgroundColor: "#01579b",
                         textAlign: "center",
@@ -157,32 +331,6 @@ class Addressbooktable extends Component {
                     fullWidth
                     columns={this.state.columns}
                     data={this.state.data}
-                    editable={{
-                      onRowUpdate: (newData, oldData) =>
-                        new Promise(resolve => {
-                          setTimeout(() => {
-                            resolve();
-                            if (oldData) {
-                              this.setState(prevState => {
-                                const data = [...prevState.data];
-                                data[data.indexOf(oldData)] = newData;
-                                return { ...prevState, data };
-                              });
-                            }
-                          }, 600);
-                        }),
-                      onRowDelete: oldData =>
-                        new Promise(resolve => {
-                          setTimeout(() => {
-                            resolve();
-                            this.setState(prevState => {
-                              const data = [...prevState.data];
-                              data.splice(data.indexOf(oldData), 1);
-                              return { ...prevState, data };
-                            });
-                          }, 600);
-                        })
-                    }}
                   />
                 </Grid>
               </Grid>

@@ -25,7 +25,8 @@ massive({
     app.post("/createcontact", contacts.createContact);
     app.get('/addressbook/view/:id', contacts.getById);
     app.get('/addressbook/:id', contacts.contactList);
-    
+    app.delete('/addressbook/deleteContact/:id', contacts.deleteContact);
+    app.patch('/addressbook/update/:id', contacts.updateContact)
     
     const PORT = 5000;
     app.listen(PORT, () => {
