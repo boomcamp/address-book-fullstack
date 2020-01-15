@@ -2,7 +2,7 @@ function getUsersAddress(req, res) {
   const db = req.app.get("db");
 
   db.addressbook
-    .find()
+    .find({ userid: req.params.id })
     .then(user => res.status(200).json(user))
     .catch(error => {
       console.error(error);

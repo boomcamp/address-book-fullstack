@@ -49,8 +49,6 @@ class register extends Component {
   };
 
   handleSubmit = (e, key) => {
-    e.preventDefault();
-
     axios({
       method: "post",
       url: "/users/register",
@@ -62,22 +60,12 @@ class register extends Component {
         password: this.state.password
       }
     }).then(response => {
-      if (e.target.value === "") {
-        console.log("nothing here");
-      }
-      console.log(response.data);
-
+      console.log(response);
+      localStorage.setItem("id", response.data.id);
+      localStorage.setItem("username", response.data.first_name);
       message.success({ content: "Successfully Register", key, duration: 2 });
       this.props.history.replace("/user");
     });
-  };
-
-  validatePassword = e => {
-    if (e.target.value.length < 8) {
-      console.log("invalid pass");
-    } else {
-      console.log("passw");
-    }
   };
 
   render() {
@@ -98,6 +86,7 @@ class register extends Component {
                     prefix={
                       <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
                     }
+                    required={true}
                     placeholder="Firstname"
                     name="first_name"
                     onChange={e => this.handleChange(e.target)}
@@ -186,7 +175,7 @@ class register extends Component {
                   borderRadius: "20px"
                 }}
                 htmlType="submit"
-                onChange={this.handleSubmit}
+                onClick={e => this.handleSubmit()}
               >
                 REGISTER
               </Button>

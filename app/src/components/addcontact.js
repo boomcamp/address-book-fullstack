@@ -33,16 +33,10 @@ class addcontact extends Component {
     this.setState({ visible: false });
   };
 
-<<<<<<< HEAD
   handleInput = input => e => {
     this.setState({ [input]: e.target.value });
     console.log(input);
   };
-=======
-  handleInput=(input, e)=>{
-    this.setState({[input]:e.target.value,})
-  }
->>>>>>> 1803b7cc9baddc6ba0316beb26b08a1c10b37de0
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -50,14 +44,10 @@ class addcontact extends Component {
         console.log("Received values of form: ", values);
       }
     });
-
     this.setState({ loading: true });
     setTimeout(() => {
       this.setState({ loading: false, visible: false });
     }, 3000);
-
-    // console.log(localStorage);
-
     axios({
       method: "post",
       url: "/contact",
@@ -133,7 +123,6 @@ class addcontact extends Component {
           >
             <Form className="login-form">
               <Form.Item>
-<<<<<<< HEAD
                 {getFieldDecorator("first_name", {
                   rules: [{ required: true, message: "Firstname is required" }]
                 })(
@@ -298,98 +287,6 @@ class addcontact extends Component {
                     onChange={this.handleInput("country")}
                   />
                 )}
-=======
-                <Input
-                  prefix={
-                    <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Firstname"
-                  onChange={this.handleInput('first_name')}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Lastname"
-                  onChange={this.handleInput('last_name')}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  //   addonBefore={prefixSelector}
-                  style={{ width: "100%" }}
-                  prefix={
-                    <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Home phone"
-                  onChange={this.handleInput('home_phone')}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="mobile" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Mobile phone"
-                  onChange={this.handleInput('mobile_phone')}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Work phone"
-                  onChange={this.handleInput('work_phone')}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="email"
-                  onChange={this.handleInput('email')}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="City"
-                  onChange={this.handleInput('city')}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="State or Province"
-                  onChange={this.handleInput('state_or_province')}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Postal code"
-                  onChange={this.handleInput('postal_code')}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  placeholder="Country"
-                  onChange={this.handleInput('country')}
-                />
->>>>>>> 1803b7cc9baddc6ba0316beb26b08a1c10b37de0
               </Form.Item>
             </Form>
           </Modal>

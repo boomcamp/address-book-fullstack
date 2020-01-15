@@ -59,7 +59,7 @@ class login extends Component {
       data: this.state
     })
       .then(response => {
-        console.log(response.data);
+        console.log(response);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("id", response.data.id);
         localStorage.setItem("username", response.data.username);
