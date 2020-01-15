@@ -1,0 +1,10 @@
+.group-definition-container{
+    /* border: 1px solid blue; */
+    width: 150px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(241, 241, 241);
+    margin: 5px;
+}

@@ -94,6 +94,8 @@ module.exports = {
           res.status(200).json(post);
         })
         .catch(err => {
+          console.error(err);
+
           res.status(500).end();
         });
     } catch (err) {

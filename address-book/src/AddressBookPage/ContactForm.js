@@ -40,7 +40,7 @@ export default function ContactForm(highprops) {
   });
 
   useEffect(() => {
-    if (highprops.prepareNewData) {
+    if (highprops.contactData===null) {
       setState({
         first_name: "",
         last_name: "",
@@ -57,7 +57,6 @@ export default function ContactForm(highprops) {
         return { ...prevState, selectedGroupName: "" };
       });
 
-      console.log("settiing");
     }
 
     if (highprops.contactData) {
@@ -107,6 +106,39 @@ export default function ContactForm(highprops) {
         }
       })
       .catch(e => console.log(e));
+  };
+
+  const addtoGroup = data => {
+    try {
+      if (grpState.selectedGroupName) {
+        let id;
+
+        try {
+          if (data.data[0].id) {
+            id = data.data[0].id;
+          }
+        } catch (error) {
+          id = data.data.id;
+        }
+
+        console.log("contact id is " + id);
+
+        axios({
+          method: "post",
+          url: "http://localhost:5000/api/contacts/groups/reference",
+          data: {
+            group_name: grpState.selectedGroupName.title,
+            contactid: id,
+            past_group: grpState.recentGroupState.title
+          },
+          headers: { Authorization: sessionStorage.getItem("token") }
+        })
+          .then(data => console.log(data))
+          .catch(e => console.log(e));
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const stateUpdate = e => {
@@ -196,41 +228,8 @@ export default function ContactForm(highprops) {
       .catch(e => console.log(e));
   }
 
-  const addtoGroup = data => {
-    try {
-      if (grpState.selectedGroupName) {
-        let id;
-
-        try {
-          if (data.data[0].id) {
-            id = data.data[0].id;
-          }
-        } catch (error) {
-          id = data.data.id;
-        }
-
-        console.log(id);
-
-        axios({
-          method: "post",
-          url: "http://localhost:5000/api/contacts/groups/reference",
-          data: {
-            group_name: grpState.selectedGroupName.title,
-            contactid: id,
-            past_group: grpState.recentGroupState.title,
-          },
-          headers: { Authorization: sessionStorage.getItem("token") }
-        })
-          .then(data => console.log(data))
-          .catch(e => console.log(e));
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const saveData = () => {
-    if (highprops.prepareNewData) {
+    if (highprops.contactData===null) {
       AddData(state);
     } else {
       EditData(state, highprops.contactData);
@@ -435,8 +434,9 @@ export default function ContactForm(highprops) {
               value={grpState.selectedGroupName}
               options={grpState.groupList}
               getOptionLabel={option => option.title}
-              style={{ width: 300 }}
+              // style={{ width: 300 }}
               onInputChange={grpStateUpdate}
+              className={classes.textfields}
               renderInput={params => (
                 <TextField
                   {...params}

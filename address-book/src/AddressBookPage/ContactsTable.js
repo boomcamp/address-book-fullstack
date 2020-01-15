@@ -69,6 +69,9 @@ export default function ContactsTable(highprops) {
   }, []);
 
   function DeleteData(data) {
+
+    console.log(data);
+    
     axios
       .delete(`http://localhost:5000/api/contact/delete/${data}`, {
         headers: { Authorization: sessionStorage.getItem("token") }

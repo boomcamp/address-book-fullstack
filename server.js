@@ -36,8 +36,8 @@ massive({
     app.post("/api/contacts/groups/reference", groups.addReference);
 
     app.get("/api/contacts/groups/reference/retrieve/:id", groups.retieve);
-    
-    
+    app.delete("/api/contacts/groups/reference/delete", groups.deleteToGroup);
+    app.get("/api/contacts/groups/active", groups.getGroupList);
 
     app.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`);
