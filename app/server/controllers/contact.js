@@ -19,7 +19,7 @@ function getDataById(req, res) {
 
     db.contact
         .findOne({
-            id: contact_id
+            contact_id
         })
         .then(contact => res.status(200).json(contact))
         .catch(e => {
@@ -34,7 +34,7 @@ function updateUser(req, res) {
 
     db.contact
         .update({
-            id: contact_id
+            contact_id
         }, req.body)
         .then(contact => res.status(201).send(contact))
         .catch(e => {
@@ -93,7 +93,7 @@ function addUser(req, res) {
             deepInsert: true
         })
         .then(function (contact) {
-            const contact_id = contact.id;
+            const contact_id = contact.contact_id;
 
             db.addressbook
                 .insert({
