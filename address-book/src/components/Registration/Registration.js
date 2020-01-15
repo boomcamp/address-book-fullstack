@@ -49,11 +49,8 @@ export default function SignUp() {
       lname: '',
       email: '',
       username: '',
-    //   cpass: '',
       pass: '',
-    //   active: false,
       success: false,
-    //   showPassword: false,
       error: false,
     });
 
@@ -65,7 +62,6 @@ export default function SignUp() {
           "email": values.email,
           "username": values.username,
           "password": values.pass,
-          "active": true,
         }).then(res => {
           alert('Success!');
           setValues({...values, success: true});

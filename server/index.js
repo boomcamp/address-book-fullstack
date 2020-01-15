@@ -47,6 +47,9 @@ massive({
     app.patch('/api/contact/:id', users.updateContact)
     app.delete('/api/contact/:id', users.deleteContact)
 
+    app.post('/api/address', users.addAddress)
+    app.get('/api/address/:id', users.getAdrress)
+    app.patch('/api/address/:id', users.updateAddress)
     app.listen(port, err=>{
         if(err){
             console.log(`Error Listening to Port ${port}`)

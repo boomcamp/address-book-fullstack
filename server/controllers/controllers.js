@@ -184,5 +184,44 @@ module.exports = {
             console.err(err)
             res.status(500).end()
         })
+    },
+    addAddress: (req, res) => {
+        const db = req.app.get('db')
+        const { userId, country, region, province, city } = req.body
+
+        db.address
+        .save({
+            userId, country, region, province, city
+        })
+        .then(u => res.status(200).json(u))
+        .catch(err =>{
+            console.error(err)
+            res.status(500).end()
+        })
+    },
+    getAdrress: (req, res) => {
+        const db = req.app.get('db')
+
+        db.address
+        .find({ userId: req.params.id })
+        .then(u => res.status(201).json(u))
+        .catch(err =>{
+            console.err(err)
+            res.status(500).end()
+        })
+    },
+    updateAddress: (req, res) => {
+        const db = req.app.get('db')
+        const { country, region, province, city } = req.body
+
+        db.address
+        .update({userId: req.params.id},{
+            country, region, province, city
+        })
+        .then(u => res.status(201).json(u))
+        .catch(err =>{
+            console.err(err)
+            res.status(500).end()
+        })
     }
 }

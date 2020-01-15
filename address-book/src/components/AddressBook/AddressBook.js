@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import ListIcon from '@material-ui/icons/List';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
@@ -12,8 +11,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Typography } from '@material-ui/core';
-// import Settings from './Settings';
-// import AddressBook from './AddressBook';
+import ContactsIcon from '@material-ui/icons/Contacts';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import UserDetails from './UserDetails';
 import Groups from './Groups';
 import Contacts from './Contacts';
@@ -22,12 +21,6 @@ export default function UserManage() {
     var [token, emptyToken] = useState(false) // for what?
     const [page, setPage] = useState('contacts')
     const [toggle, setToggle] = useState({left:false})
-    // const [open1, setOpen1] = useState(false);
-    
-    
-    useEffect(() => {
-        
-    },[])
 
     const logout = () =>{
         localStorage.clear();
@@ -48,9 +41,6 @@ export default function UserManage() {
     const openGroups = () => {
         setPage('groups')
     }
-    // const addContact = () => {
-    //     setOpen1(true)
-    // }
     const toggleDrawer = (side, open) => event => {
         setToggle({ ...toggle, [side]: open });
     };
@@ -63,7 +53,7 @@ export default function UserManage() {
             <List>
                 <Button>
                 <ListItem onClick={openDetails}>
-                    <ListIcon title="User Details" fontSize="small" variant="outlined" color="primary"  style={{cursor: 'pointer'}}/>
+                    <AccountCircleIcon title="User Details" fontSize="small" variant="outlined" color="primary"  style={{cursor: 'pointer'}}/>
                     <ListItemText> User Details </ListItemText>
                 </ListItem>
                 </Button>
@@ -72,7 +62,7 @@ export default function UserManage() {
             <List>
                 <Button>
                 <ListItem onClick={openContacts}>
-                    <ListIcon title="User Details" fontSize="small" variant="outlined" color="primary" style={{cursor: 'pointer'}}/>
+                    <ContactsIcon title="User Details" fontSize="small" variant="outlined" color="primary" style={{cursor: 'pointer'}}/>
                     <ListItemText> Contacts </ListItemText>
                 </ListItem>
                 </Button>

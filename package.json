@@ -4,6 +4,7 @@
   "description": "For this project you'll be crafting an Address Book application. You'll be responsible for the user interface and its functionality, along with implementing a backend API to persist the data to a database and authorize users.",
   "main": "index.js",
   "dependencies": {
+    "@material-ui/system": "^4.7.1",
     "argon2": "^0.25.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
