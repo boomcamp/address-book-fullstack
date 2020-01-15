@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
@@ -46,6 +46,7 @@ export const NestedList = props => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [dialog, setDialog] = useState(false);
+  const [groupDetails, setGroupDetails] = useEffect({});
   const handleClick = () => {
     setOpen(!open);
   };
@@ -123,6 +124,8 @@ export const NestedList = props => {
         dialog={dialog}
         setDialog={setDialog}
         handleAddGroup={handleAddGroup}
+        setGroupDetails={setGroupDetails}
+        groupDetails={groupDetails}
         data={props.data}
       />
     </React.Fragment>

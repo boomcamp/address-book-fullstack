@@ -23,13 +23,14 @@ const Item = styled.div`
 
 export const AddGroup = props => {
   const { userData } = props.data;
-  const { dialog, setDialog, handleAddGroup } = props;
+  const { dialog, setDialog, handleAddGroup, setGroupDetails } = props;
   return (
     <Dialog open={dialog} onClose={() => setDialog(false)}>
       <form onSubmit={e => handleAddGroup(e)}>
         <DialogTitle>Create Group</DialogTitle>
         <DialogContent>
           <TextField
+            onChange={e => setGroupDetails({ [e.target.name]: e.target.value })}
             name="groupName"
             type="groupName"
             label="Group Name"
