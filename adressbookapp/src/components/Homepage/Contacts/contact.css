@@ -6,3 +6,9 @@
   text-align: center;
   color: theme-palette-text-secondary;
 }
+.card{
+  display: flex;
+  padding: 10px;
+  margin: 20px;
+  flex-wrap: wrap;
+}

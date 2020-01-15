@@ -76,6 +76,7 @@ class Register extends Component {
         })
         .then(res => {
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("id", res.data.id);
           localStorage.setItem(
             "name",
             res.data.firstname + " " + res.data.lastname

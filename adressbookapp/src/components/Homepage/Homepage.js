@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Layout, Breadcrumb, Icon, message, Tabs } from "antd";
+import { Layout, Icon, message, Tabs } from "antd";
 import "./homepage.css";
 import Contacts from "./Contacts/Contacts";
+import AddContacts from "./AddContacts/AddContacts";
 const { Header, Content, Footer } = Layout;
 const TabPane = Tabs.TabPane;
 export default class Homepage extends Component {
@@ -35,7 +36,8 @@ export default class Homepage extends Component {
             style={{
               background: "#004d40",
               paddingLeft: 50,
-              paddingRight: 50
+              paddingRight: 50,
+              width: "100%"
             }}
           >
             <div className="logo" style={{ color: "white" }}>
@@ -57,26 +59,27 @@ export default class Homepage extends Component {
               <Icon type="logout" /> <span onClick={this.logout}>Logout</span>
             </div>
           </Header>
-          <Content style={{ padding: "0 50px" }}>
-            <Breadcrumb style={{ margin: "16px 0" }}></Breadcrumb>
+          <Content>
             <Layout style={{ padding: "24px 30px", background: "#fff" }}>
-              <Tabs defaultActiveKey="1" style={{ height: "80vh" }}>
+              <Tabs defaultActiveKey="1" style={{ height: "auto" }}>
                 <TabPane
                   tab={
                     <span style={{ fontSize: "19px" }}>
-                      <Icon type="user" />
-                      List of Contacts
+                      <Icon type="solution" />
+                      Contacts
                     </span>
                   }
                   key="1"
                 >
+                  <AddContacts />
+                  <br></br>
                   <Contacts />
                 </TabPane>
                 <TabPane
                   tab={
                     <span style={{ fontSize: "19px" }}>
                       <Icon type="team" />
-                      List of Groups
+                      Groups
                     </span>
                   }
                   key="2"
@@ -86,9 +89,9 @@ export default class Homepage extends Component {
               </Tabs>
             </Layout>
           </Content>
-          <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2018 Created by Ant UED
-          </Footer>
+          {/* <Footer style={{ textAlign: "center" }}>
+            Address Book App ©2020
+          </Footer> */}
         </Layout>
       </div>
     );

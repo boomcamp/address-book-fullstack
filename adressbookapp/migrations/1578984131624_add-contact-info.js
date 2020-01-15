@@ -8,11 +8,6 @@ exports.up = pgm => {
       type: "serial",
       primaryKey: true
     },
-    userId: {
-      type: "integer",
-      notNull: true,
-      references: '"users"' // this is how we associate a profile with a specific user.
-    },
     firstname: {
       type: "text",
       notNull: true
