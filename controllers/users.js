@@ -141,5 +141,16 @@ module.exports = {
       .catch(err => {
         console.error(err);
       });
+  },
+  deleteContact: (req, res) => {
+    const db = req.app.get("db");
+
+    db.contacts
+      .destroy({ id: req.params.id })
+      .then(contact => res.status(200).json(contact))
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
   }
 };

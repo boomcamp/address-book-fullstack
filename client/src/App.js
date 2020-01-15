@@ -8,7 +8,10 @@ import Routes from "./components/Routes/Routes";
 export default class App extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      data: [],
+      toggleModal: false
+    };
   }
 
   myChangeHandler = event => {
@@ -30,7 +33,7 @@ export default class App extends React.Component {
         this.setState({
           token: localStorage.getItem("user")
         });
-        alert("Welcome!");
+        alert(`Welcome ${res.data.username}!`);
       })
       .catch(err => alert(err.response.data.error));
   };
@@ -47,7 +50,11 @@ export default class App extends React.Component {
     };
     const url = "http://localhost:5009/api/register";
     axios
-      .post(url, Obj)
+      .post(url, Obj, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user")}`
+        }
+      })
       .then(() => {
         this.setState({
           redirect: true
@@ -74,7 +81,11 @@ export default class App extends React.Component {
     };
     const url = "http://localhost:5009/api/contacts/add";
     axios
-      .post(url, Obj)
+      .post(url, Obj, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user")}`
+        }
+      })
       .then(() => {
         this.setState({
           redirect: false
@@ -84,29 +95,15 @@ export default class App extends React.Component {
       .catch(err => alert(err.response.data.error));
   };
 
-  editHandler = event => {
-    event.preventDefault();
-    const Obj = {
-      userId: localStorage.getItem("userId"),
-      fname: this.state.fname,
-      lname: this.state.lname,
-      home_phone: this.state.homePhone,
-      work_phone: this.state.workPhone,
-      mobile_phone: this.state.mobilePhone,
-      email: this.state.email,
-      city: this.state.city,
-      state_or_province: this.state.state_or_province,
-      postal_code: this.state.postalCode,
-      country: this.state.country
-    };
-    const url = `http://localhost:3000/api/contacts/edit`;
+  DeleteHandler = rowData => {
     axios
-      .patch(url, Obj)
+      .delete(`http://localhost:5009/api/contacts/${rowData.id}/delete`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user")}`
+        }
+      })
       .then(() => {
-        this.setState({
-          redirect: false
-        });
-        alert("Success!!");
+        alert("Successfully Deleted");
       })
       .catch(err => alert(err.response.data.error));
   };
@@ -121,7 +118,7 @@ export default class App extends React.Component {
 
   handleLogout = () => {
     localStorage.clear();
-    this.setState({ token: null, email: "null", password: "null" });
+    this.setState({ token: null, username: "null", password: "null" });
   };
 
   render() {
@@ -131,11 +128,13 @@ export default class App extends React.Component {
           myChangeHandler={this.myChangeHandler}
           mySubmitHandler={this.mySubmitHandler}
           RegisterHandler={this.RegisterHandler}
-          ContactHandler={this.ContactHandler}
-          handleLogout={this.handleLogout}
-          token={this.state.token}
-          redirect={this.state.redirect}
           redirectHandler={this.redirectHandler}
+          ContactHandler={this.ContactHandler}
+          DeleteHandler={this.DeleteHandler}
+          handleLogout={this.handleLogout}
+          handleClose={this.handleClose}
+          redirect={this.state.redirect}
+          token={this.state.token}
           error={this.state.error}
         />
       </HashRouter>

@@ -38,6 +38,7 @@ massive({
     app.post("/api/contacts/add", users.addContact);
     app.get("/api/contacts/:id", users.contacts);
     app.patch("/api/contacts/:id/edit", users.editContact);
+    app.delete("/api/contacts/:id/delete", users.deleteContact);
 
     const PORT = 5009;
     app.listen(PORT, () => {

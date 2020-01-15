@@ -4,7 +4,20 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { MDBBtn, MDBCol, MDBRow } from "mdbreact";
+import { MDBBtn, MDBCol } from "mdbreact";
+import { TextField } from "@material-ui/core";
+import styled from "styled-components";
+
+const Form = styled.div`
+  display: flex;
+  width: 100%;
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
+`;
+const Input = styled.div`
+  padding: 5px;
+`;
 
 export default class Modal extends React.Component {
   render() {
@@ -13,10 +26,15 @@ export default class Modal extends React.Component {
         <Dialog
           open={this.props.handleClickOpen}
           onClose={this.props.handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Add Contact"}</DialogTitle>
+          <DialogTitle
+            id="alert-dialog-title"
+            style={{
+              marginLeft: 25
+            }}
+          >
+            {"Add Contact"}
+          </DialogTitle>
           <MDBCol>
             <form onSubmit={this.props.ContactHandler}>
               <DialogContent
@@ -25,130 +43,130 @@ export default class Modal extends React.Component {
                   flexDirection: "column"
                 }}
               >
-                <MDBRow>
-                  <MDBCol>
-                    <label>First Name</label>
-                    <input
+                <Form>
+                  <Input>
+                    <TextField
                       type="text"
                       id="fname"
                       name="fname"
-                      placeholder="Your first name.."
+                      label="First Name"
+                      fullWidth
                       onChange={this.props.myChangeHandler}
                       required
                     />
-                  </MDBCol>
+                  </Input>
 
-                  <MDBCol>
-                    <label>Last Name</label>
-                    <input
+                  <Input>
+                    <TextField
+                      label="Last Name"
                       type="text"
                       id="lname"
                       name="lname"
-                      placeholder="Your last name.."
+                      fullWidth
                       onChange={this.props.myChangeHandler}
                       required
                     />
-                  </MDBCol>
-                </MDBRow>
-                <MDBRow>
-                  <MDBCol>
-                    <label>Home Phone</label>
-                    <input
+                  </Input>
+                </Form>
+                <Form>
+                  <Input>
+                    <TextField
+                      label="Home Phone Number"
                       type="text"
                       id="home_phone"
                       name="homePhone"
-                      placeholder="Your home phone number.."
                       onChange={this.props.myChangeHandler}
                       required
+                      fullWidth
                     />
-                  </MDBCol>
-                  <MDBCol>
-                    <label>Mobile Phone</label>
-                    <input
+                  </Input>
+                  <Input>
+                    <TextField
+                      label="Mobile Phone Number"
                       type="text"
                       id="mobile_phone"
                       name="mobilePhone"
-                      placeholder="Your mobile phone number.."
                       onChange={this.props.myChangeHandler}
                       required
+                      fullWidth
                     />
-                  </MDBCol>
-                </MDBRow>
-                <MDBRow>
-                  <MDBCol>
-                    <label>Work Phone</label>
-                    <input
+                  </Input>
+                </Form>
+                <Form>
+                  <Input>
+                    <TextField
+                      label="Work Phone Number"
                       type="text"
                       id="work_phone"
                       name="workPhone"
-                      placeholder="Your work phone number.."
                       onChange={this.props.myChangeHandler}
                       required
+                      fullWidth
                     />
-                  </MDBCol>
-                  <MDBCol>
-                    <label>Email Address</label>
-                    <input
+                  </Input>
+                  <Input>
+                    <TextField
+                      label="Email Address"
                       type="email"
                       id="email"
                       name="email"
-                      placeholder="Your email address.."
                       onChange={this.props.myChangeHandler}
                       required
+                      fullWidth
                     />
-                  </MDBCol>
-                </MDBRow>
-                <MDBRow>
-                  <MDBCol>
-                    <label>City Name</label>
-                    <input
+                  </Input>
+                </Form>
+                <Form>
+                  <Input>
+                    <TextField
+                      label="City"
                       type="text"
                       id="city"
                       name="city"
-                      placeholder="City.."
                       onChange={this.props.myChangeHandler}
                       required
+                      fullWidth
                     />
-                  </MDBCol>
-                  <MDBCol>
-                    <label>State/Province</label>
-                    <input
+                  </Input>
+                  <Input>
+                    <TextField
+                      label="State or Province"
                       type="text"
                       id="state_or_province"
                       name="state_or_province"
-                      placeholder="Your state or province.."
                       onChange={this.props.myChangeHandler}
                       required
+                      fullWidth
                     />
-                  </MDBCol>
-                </MDBRow>
-                <MDBRow>
-                  <MDBCol>
-                    <label>Postal Code</label>
-                    <input
+                  </Input>
+                </Form>
+                <Form>
+                  <Input>
+                    <TextField
+                      label="Postal Code"
                       type="number"
                       id="postal_code"
                       name="postalCode"
-                      placeholder="Your postal code.."
                       onChange={this.props.myChangeHandler}
                       required
+                      fullWidth
                     />
-                  </MDBCol>
-                  <MDBCol>
-                    <label>Country</label>
-                    <input
+                  </Input>
+                  <Input>
+                    <TextField
+                      label="Country"
                       type="text"
                       id="country"
                       name="country"
-                      placeholder="Your country.."
                       onChange={this.props.myChangeHandler}
                       required
+                      fullWidth
                     />
-                  </MDBCol>
-                </MDBRow>
+                  </Input>
+                </Form>
                 <div className="text-center mt-4">
                   <MDBBtn className="submit" color="indigo" type="submit">
-                    Create
+                    Add
                   </MDBBtn>
                 </div>
               </DialogContent>
