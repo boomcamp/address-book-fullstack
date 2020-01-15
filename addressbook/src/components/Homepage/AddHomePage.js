@@ -6,22 +6,39 @@ import "./home.css";
 import Footers from "../Footer/Footer";
 import Card from "../Card/AddBookCard";
 import Headers from "../Header/Header";
-import Allcontacts from '../Allcontacts/Allcontacts'
+import Allcontacts from "../Allcontacts/Allcontacts";
 import Addcontacts from "../Addcontacts/Addcontacts";
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default class AddHomePage extends Component {
+
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+       id:'',
+       lastname:'',
+       allContacts:[],
+    }
+  }
+  
   componentDidMount() {
     if (localStorage.getItem("token") != null) {
       this.props.history.push("/homepage");
     } else {
       this.props.history.push("/");
     }
-
-    axios.get(`http://localhost:3003/api/users`).then(data => {
-      console.log(data);
-    });
+      axios.get(`http://localhost:3003/api/allContacts`).then(data => {
+        // console.log(data.lastname);
+        this.setState({ allContacts: data.data });
+        // data.data.map(e => {
+        //   console.log(e.lastname);
+        //   console.log(e);
+        //   this.setState({ lastname: e.lastname, firstname: e.firstname });
+        // });
+      });
+    
   }
 
   handleLogout = e => {
@@ -47,6 +64,7 @@ export default class AddHomePage extends Component {
   render() {
     return (
       <div>
+        
         <div className="addHeader">
           <div className="addBook">
             <Icon
@@ -69,7 +87,7 @@ export default class AddHomePage extends Component {
               {/* <Chip icon={<ExitToAppIcon />} label="Logout" /> */}
               <Tooltip title="Logout">
                 <Icon
-                  className='logout'
+                  className="logout"
                   type="logout"
                   style={{ fontSize: "25px", color: "#fff" }}
                   theme="outlined"
@@ -80,7 +98,10 @@ export default class AddHomePage extends Component {
             <Addcontacts />
           </div>
         </div>
-        <div className='allContacts'><Allcontacts/></div> 
+        
+        <div className="allContacts">
+          <Allcontacts allContacts={this.state.allContacts}/>
+        </div>
         <Footers />
       </div>
     );

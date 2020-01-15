@@ -1,7 +1,18 @@
-.allActions{
-    display: flex;
-    justify-content: space-evenly;
+.allActions {
+  display: flex;
+  justify-content: space-evenly;
+  
 }
-.underline{
-    width: 100%;
+.underline {
+  width: 100%;
+}
+.mainCon {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  flex-wrap: wrap;
+
+}
+.names{
+  font-size: 1.2em;
 }

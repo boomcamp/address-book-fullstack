@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-  Button,
+  
   Tooltip,
   Modal,
   Form,
@@ -9,6 +9,8 @@ import {
   Select,
   Popconfirm
 } from "antd";
+import { Drawer, Button } from 'antd';
+import Groups from '../Groups/Groups'
 import axios from "axios";
 import { message } from "antd";
 import "./adduser.css";
@@ -58,11 +60,29 @@ class AddBookCard extends Component {
   handleSubmit = e => {
     e.preventDefault();
     console.log(e);
-    axios.post("http://localhost:3003/api/create", this.state).then(res => {
-      console.log(res);
-      // this.props.history.push("/homepage");
-      message.success("adedd");
-    });
+
+    if (
+      this.state.firstname !== "" &&
+      this.state.lastname !== "" &&
+      this.state.home_phone !== "" &&
+      this.state.mobile_phone !== "" &&
+      this.state.work_phone !== "" &&
+      this.state.email !== "" &&
+      this.state.city !== "" &&
+      this.state.stae_or_province !== "" &&
+      this.state.postal_code !== "" &&
+      this.state.country !== ""
+    ) {
+      axios.post("http://localhost:3003/api/create", this.state).then(res => {
+        console.log(res);
+        // this.props.history.push("/homepage");
+        message.success("adedd");
+
+        setTimeout(window.location.reload.bind(window.location), 250);
+      });
+    } else {
+      message.warning("Please Complete the Form");
+    }
   };
   onChange = checked => {
     this.setState({ loading: !checked });
@@ -92,33 +112,43 @@ class AddBookCard extends Component {
   confirm = () => {
     message.info("Clicked on Yes.");
   };
+  showDrawer = () => {
+    this.setState({
+      visible: true,
+    });
+  };
 
+  onClose = () => {
+    this.setState({
+      visible: false,
+    });
+  };
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { autoCompleteResult } = this.state;
+    // const { autoCompleteResult } = this.state;
 
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 }
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 }
-      }
-    };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0
-        },
-        sm: {
-          span: 16,
-          offset: 8
-        }
-      }
-    };
+    // const formItemLayout = {
+    //   labelCol: {
+    //     xs: { span: 24 },
+    //     sm: { span: 8 }
+    //   },
+    //   wrapperCol: {
+    //     xs: { span: 24 },
+    //     sm: { span: 16 }
+    //   }
+    // };
+    // const tailFormItemLayout = {
+    //   wrapperCol: {
+    //     xs: {
+    //       span: 24,
+    //       offset: 0
+    //     },
+    //     sm: {
+    //       span: 16,
+    //       offset: 8
+    //     }
+    //   }
+    // };
     const prefixSelector = getFieldDecorator("prefix", {
       initialValue: "86"
     })(
@@ -132,6 +162,7 @@ class AddBookCard extends Component {
     // const { getFieldDecorator } = form;
     return (
       <div>
+       
         <div className="addContainer">
           <div className="adding">
             <Tooltip title="Add Contact" placement="bottom">
@@ -143,18 +174,11 @@ class AddBookCard extends Component {
                 onClick={this.showModal}
               ></Icon>
             </Tooltip>
-            <Tooltip title="Add Group" placement="bottom">
-              <Icon
-                type="usergroup-add"
-                style={{ fontSize: "25px", color: "#fff" }}
-                theme="outlined"
-                className="add-user"
-                onClick={this.showModal}
-              ></Icon>
-            </Tooltip>
+           
+            <Groups/>
           </div>
         </div>
-
+       
         <Modal
           title="Add Contact"
           visible={this.state.visible}
@@ -163,7 +187,12 @@ class AddBookCard extends Component {
           footer={null}
         >
           <div>
-            <Form onSubmit={e => this.handleSubmit(e)}>
+            <Form
+              onSubmit={e => {
+                e.preventDefault();
+                this.handleSubmit(e);
+              }}
+            >
               <div
                 style={{
                   display: "flex",
@@ -259,7 +288,7 @@ class AddBookCard extends Component {
                         />
                       }
                       style={{ width: "100%" }}
-                      placeholder="Mooile Phone Number"
+                      placeholder="Mobile Phone Number"
                       name="mobilePhone"
                       onChange={e => this.handleChange(e.target)}
                     />
@@ -311,6 +340,7 @@ class AddBookCard extends Component {
                       }
                       onChange={e => this.handleChange(e.target)}
                       placeholder="Email"
+                      required
                     />
                   )}
                 </Form.Item>

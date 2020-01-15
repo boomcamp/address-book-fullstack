@@ -19,8 +19,10 @@ massive({
 
     app.post("/api/register", reg.register);
     app.post("/api/login", reg.login);
-
+   
     app.get("/api/users", reg.list);
+    app.get("/api/allContacts", addcontact.allcontacts);
+    app.delete('/api/deleteContact/:id', addcontact.delete);
 
     app.post("/api/create", addcontact.addcontact);
     app.get("/api/protected/data", (req, res) => {
@@ -39,7 +41,7 @@ massive({
     });
     const PORT = 3003;
     app.listen(PORT, () => {
-      console.log(`Server listening on port ${PORT}`);
+      console.log(`Server d-,-b on port ${PORT}`);
     });
   })
   .catch(console.error);
