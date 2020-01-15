@@ -8,8 +8,9 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import clsx from 'clsx';
 import FormControl from '@material-ui/core/FormControl';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
-export default function Account() {
+export default function Account(props) {
     const classes = useStyles();
     const [data, setData] = React.useState({
         fname: '',
@@ -20,21 +21,23 @@ export default function Account() {
         city: '',
         state: '',
         postal_code: 0,
-        country: ''
+        country: '',
+        user_id: 0
     })
 
     const handleSubmit = (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        const decoded = jwt_decode(token);
+        const id = decoded.user_id
+
         axios({
             method: "post",
-            url: `http://localhost:3001/api/contacts`,
-            headers: {
-                "Accept": 'application/json',
-                "Content-type": "application/json"
-            },
+            url: `http://localhost:3001/api/contacts/${id}`,
             data: data
         })
             .then(e => {
-                window.History.push("/addressbook")
+                window.location.href = "#/addressbook"
             })
             .catch(e => console.log(e))
     }

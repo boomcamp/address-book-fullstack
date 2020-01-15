@@ -15,6 +15,7 @@ import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 
 import axios from 'axios';
 
+
 export default function Register({ handleClose }) {
     const classes = useStyles();
     const [values, setValues] = React.useState({
@@ -29,6 +30,7 @@ export default function Register({ handleClose }) {
         lname: undefined
     })
 
+
     const handleClickShowPassword = () => {
         setValues({ ...values, showPassword: !values.showPassword });
     };
@@ -40,12 +42,16 @@ export default function Register({ handleClose }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+
         axios({
             method: "post",
-            url: `http://localhost:3001/api/register`,
+            url: `http://localhost:3001/api/register/`,
             data: data
         })
             .then(e => {
+                localStorage.setItem('token', e.data.token);
+                localStorage.setItem('id', e.data.user_id);
+                localStorage.setItem('user', e.data.username);
                 window.localtion.href = "#/";
             })
             .catch(e => console.log(e))
@@ -123,7 +129,6 @@ export default function Register({ handleClose }) {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={handleClose}
                         >
                             Cancel
                         </Button>

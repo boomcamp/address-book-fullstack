@@ -39,12 +39,13 @@ export default class Login extends Component {
     }
 
     handleWarning = e => {
-        if(e.target.value.length === 0) {
+        if (e.target.value.length === 0) {
             this.state.warning({})
         }
     }
 
     handleLogin = (e) => {
+        e.preventDefault();
         axios({
             method: "post",
             url: `http://localhost:3001/api/login`,
@@ -53,9 +54,9 @@ export default class Login extends Component {
             .then(e => {
                 localStorage.setItem('token', e.data.token);
                 localStorage.setItem('id', e.data.user_id);
-                localStorage.setItem('user', e.data.user);
-                window.location.href = "#/addressbook"
+                localStorage.setItem('user', e.data.username);
             })
+            .then(e => window.location.href = "#/addressbook")
             .catch(e => console.log(e))
     }
 

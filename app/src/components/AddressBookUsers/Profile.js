@@ -1,73 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import Tooltip from '@material-ui/core/Tooltip';
-import clsx from 'clsx';
+import Grid from '@material-ui/core/Grid';
+
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
-    card: {
-        maxWidth: 345,
+    root: {
+        flexGrow: 1,
+        margin: 20
     },
-    media: {
-        height: 0,
-        paddingTop: '56.25%', // 16:9
-    },
-    expand: {
-        transform: 'rotate(0deg)',
-        marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
-            duration: theme.transitions.duration.shortest,
-        }),
-    },
-    expandOpen: {
-        transform: 'rotate(180deg)',
-    },
-    avatar: {
-        backgroundColor: red[500],
-    },
-    margin: {
-        margin: theme.spacing(3),
+    paper: {
+        padding: theme.spacing(2),
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: theme.palette.text.secondary,
     },
 }));
 
 export default function Profile() {
     const classes = useStyles();
+    const [users, setUsers] = useState([])
+
+    useEffect(() => {
+        if (localStorage.getItem('token')) {
+            axios({
+                method: 'get',
+                url: `http://localhost:3001/api/contacts`,
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+                .then(data => {
+                    setUsers([data.data])
+                    console.log(data.data)
+                })
+                .catch(e => console.log(e))
+        } else {
+            window.location.href = "/"
+        }
+    }, []);
 
     return (
         <React.Fragment>
-            <Card className={clsx(classes.card, classes.margin)}>
-                <CardMedia
-                    className={classes.media}
-                    image="../img_avatar3.png"
-                    title="Paella dish"
-                />
-                <CardContent>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        This impressive paella is a perfect party dish and a fun meal to cook together with your
-                        guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    </Typography>
-                </CardContent>
-                <CardActions disableSpacing>
-                    <Tooltip title="Edit Profile">
-                        <IconButton aria-label="Edit Profile">
-                            <EditIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Profile">
-                        <IconButton aria-label="Delete User">
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                </CardActions>
-            </Card>
+            <div className={classes.root}>
+                ADD USER
+                <Grid container spacing={3} direction='row' justify="center" alignItems="center">
+
+                </Grid>
+            </div>
         </React.Fragment>
     );
 }

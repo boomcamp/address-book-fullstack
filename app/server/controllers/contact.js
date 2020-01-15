@@ -4,7 +4,7 @@ function getAllData(req, res) {
     db.contact
         .find()
         .then(users => {
-            res.status(200).json({...users});
+            res.status(200).json({ ...users });
             console.log(users);
         })
         .catch(e => {
@@ -74,7 +74,8 @@ function searchUser(req, res) {
 
 function addUser(req, res) {
     const db = req.app.get('db');
-    const { user_id, fname, lname, home_phone, mobile_phone, work_phone, city, state, postal_code, country } = req.body;
+    const { fname, lname, home_phone, mobile_phone, work_phone, city, state, postal_code, country } = req.body;
+    const { user_id } = req.params
 
     db.contact
         .insert({
@@ -86,7 +87,8 @@ function addUser(req, res) {
             city,
             state,
             postal_code,
-            country
+            country,
+            user_id
         }, {
             deepInsert: true
         })

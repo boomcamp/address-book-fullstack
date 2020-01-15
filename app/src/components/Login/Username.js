@@ -85,76 +85,78 @@ export default function LoginPage({ nextStep, handleChange }) {
     };
 
     return (
-        <div className={classes.root}>
-            <Card className={classes.card}>
-                <CardHeader
-                    avatar={
-                        <Avatar aria-label="signin" className={classes.avatar}>
-                            <PermIdentityIcon />
-                        </Avatar>
-                    }
-                    title="Sign In"
-                />
-                <form onSubmit={cont}>
-                    <CardContent className={classes.cardcontent}>
-                        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                            <InputLabel htmlFor="username">Username</InputLabel>
-                            <OutlinedInput
-                                required
-                                id="username"
-                                name="username"
-                                type="username"
-                                onChange={handleChange}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <AccountBoxIcon />
-                                    </InputAdornment>
-                                }
-                                labelWidth={70}
-                            />
-                        </FormControl>
-                    </CardContent>
-                    <div className={classes.link}>
-                        <Tooltip title="Beta">
-                            <span>
-                                <Button disabled size="small" color="primary" >
-                                    Forgot Email?
+        <React.Fragment>
+            <div className={classes.root}>
+                <Card className={classes.card}>
+                    <CardHeader
+                        avatar={
+                            <Avatar aria-label="signin" className={classes.avatar}>
+                                <PermIdentityIcon />
+                            </Avatar>
+                        }
+                        title="Sign In"
+                    />
+                    <form onSubmit={cont}>
+                        <CardContent className={classes.cardcontent}>
+                            <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                                <InputLabel htmlFor="username">Username</InputLabel>
+                                <OutlinedInput
+                                    required
+                                    id="username"
+                                    name="username"
+                                    type="username"
+                                    onChange={handleChange}
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                            <AccountBoxIcon />
+                                        </InputAdornment>
+                                    }
+                                    labelWidth={70}
+                                />
+                            </FormControl>
+                        </CardContent>
+                        <div className={classes.link}>
+                            <Tooltip title="Beta">
+                                <span>
+                                    <Button disabled size="small" color="primary" >
+                                        Forgot Email?
                             </Button>
-                            </span>
-                        </Tooltip>
-                    </div>
-                    <CardContent className={classes.link2} >
-                        <CardActions>
+                                </span>
+                            </Tooltip>
+                        </div>
+                        <CardContent className={classes.link2} >
+                            <CardActions>
+                                <Button
+                                    size="small"
+                                    color="primary"
+                                    onClick={handleClickOpen}>
+                                    Create an account
+                            </Button>
+                                <Dialog
+                                    fullWidth
+                                    maxWidth='sm'
+                                    open={open}
+                                    onClose={handleClose}
+                                    aria-labelledby="register"
+                                >
+                                    <DialogTitle id="register">Register</DialogTitle>
+                                    <Divider />
+                                    <DialogContent>
+                                        <Register handleClose={handleClose} />
+                                    </DialogContent>
+                                </Dialog>
+                            </CardActions>
                             <Button
-                                size="small"
+                                className={classes.next}
+                                variant="contained"
                                 color="primary"
-                                onClick={handleClickOpen}>
-                                Create an account
-                            </Button>
-                            <Dialog
-                                fullWidth
-                                maxWidth='sm'
-                                open={open}
-                                onClose={handleClose}
-                                aria-labelledby="register"
-                            >
-                                <DialogTitle id="register">Register</DialogTitle>
-                                <Divider />
-                                <DialogContent>
-                                    <Register handleClose={handleClose} />
-                                </DialogContent>
-                            </Dialog>
-                        </CardActions>
-                        <Button
-                            className={classes.next}
-                            variant="contained"
-                            color="primary"
-                            type="submit">
-                            Next
+                                type="submit">
+                                Next
                     </Button>
-                    </CardContent>
-                </form>
-            </Card>
-        </div >
+                        </CardContent>
+                    </form>
+                </Card>
+            </div >
+        </React.Fragment>
     )
 }

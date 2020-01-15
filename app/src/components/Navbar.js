@@ -41,7 +41,7 @@ export default function Navbar() {
 
     const logOut = () => {
         localStorage.clear();
-        window.history.push('/');
+        window.location.href = "/"
     }
 
     return (

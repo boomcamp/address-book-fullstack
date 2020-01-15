@@ -35,7 +35,7 @@ massive({
         // Delete user
         app.delete('/api/contacts/', contact.deleteUser);
         // Add user
-        app.post('/api/contacts', contact.addUser);
+        app.post('/api/contacts/:user_id', contact.addUser);
 
         const port = 3001;
         app.listen(port, () => {

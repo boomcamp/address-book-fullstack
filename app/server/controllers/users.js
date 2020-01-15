@@ -51,8 +51,7 @@ function login(req, res) {
                     if (!valid) {
                         throw new Error('Incorrect Password');
                     }
-
-                    const token = jwt.sign({ user_id: user.id }, secret);
+                    const token = jwt.sign({ user_id: user.user_id }, secret);
                     delete user.password;
                     res.status(200).json({ ...user, token })
                 })
