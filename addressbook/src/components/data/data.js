@@ -48,7 +48,10 @@ export const columnData = user => [
 export const columnDataMobile = user => [
   {
     title: "Name",
-    render: rowData => <Span>{rowData.firstName + " " + rowData.lastName}</Span>
+    field: "firstName"
+  },
+  {
+    field: "lastName"
   },
   {
     title: "Group",

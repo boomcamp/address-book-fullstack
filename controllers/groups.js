@@ -18,10 +18,15 @@ module.exports = {
     });
   },
   delete: (req, res) => {
-    const { groups } = req.app.get("db");
+    const { groups, contacts } = req.app.get("db");
 
     const { id } = req.params;
     groups.destroy({ id: id }).then(() => {
+      contacts.find({ groupId: id }).then(list => {
+        list.map(contact =>
+          contacts.update({ id: contact.id }, { groupId: null })
+        );
+      });
       res.status(200).send({ message: "successfully deleted" });
     });
   },
