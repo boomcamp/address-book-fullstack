@@ -26,11 +26,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
 import Slide from '@material-ui/core/Slide';
-import Divider from '@material-ui/core/Divider';
 
 import axios from 'axios';
 import Account from './Account';
