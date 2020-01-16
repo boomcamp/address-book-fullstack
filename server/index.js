@@ -31,7 +31,7 @@ massive({
     //update contact
     app.patch('/api/contact/:id', contacts.updateContact);
     //delete contact 
-    //app.delete('/api/contact/:id')
+    app.delete('/api/contact/:id', contacts.deleteContact);
 
     const port = 3002;
     app.listen(port, () => {

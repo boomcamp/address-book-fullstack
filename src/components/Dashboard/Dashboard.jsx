@@ -13,18 +13,14 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Grid from "@material-ui/core/Grid";
 
-import Fab from '@material-ui/core/Fab';
-import { DeleteOutline } from '@material-ui/icons';
-import { Button, ButtonGroup, Hidden } from '@material-ui/core';
-
 import ViewContact from './ViewContact/ViewContact';
 import EditContact from './EditContact/EditContact';
+import DeleteContact from './DeleteContact/DeleteContact';
 
 function Dashboard() {
   const columns = [
-    { id: "First Name", label: "First Name", minWidth: 10 },
-    { id: "Last Name", label: "Last Name", minWidth: 10 },
-    { id: "Phone Number", label: "Phone Number", minWidth: 10 },
+    { id: "Name", label: "Name", minWidth: 30 },
+    { id: "Phone Number", label: "Phone Number", minWidth: 30 },
     {
       id: "Actions",
       label: "Actions",
@@ -51,27 +47,6 @@ function Dashboard() {
       marginTop: theme.spacing(2),
       alignItems: "center",
       border: "none"
-    },
-    addBtn: {
-      position: "fixed",
-      width: "60px",
-      height: "60px",
-      bottom: "20px",
-      right: "20px",
-      background: "#f19208",
-      color: "#fff",
-      margin: "1% 0 0 0",
-      "&:hover": {
-        background: "#f9ac39",
-        color: "#fff"
-      }
-    },
-    form: {
-      width: "100%", // Fix IE 11 issue.
-      marginTop: theme.spacing(1)
-    },
-    delete: {
-      color: '#fff',
     },
   }));
 
@@ -139,29 +114,15 @@ function Dashboard() {
                           return (
                             <TableRow hover tabIndex={-1} key={row.abID}>
                               <TableCell>
-                                {row.ab_firstName}
+                                {row.ab_firstName+" "+row.ab_lastName}
                               </TableCell>
                               <TableCell>
-                                {row.ab_lastName}
-                              </TableCell>
-                              <TableCell>
-                                {row.ab_phone_number ? row.ab_phone_number : 'N/A'}
+                                {row.ab_mobile_phone ? row.ab_mobile_phone : 'N/A'}
                               </TableCell>
                               <TableCell align="right" className={classes.actionBtn}>
-                                <Hidden only={['xs', 'sm']} >
-                                  <ViewContact data={row} />
-                                  <EditContact data={row} />
-                                  <Fab size="medium" color="secondary" className={classes.delete} aria-label="delete">
-                                    <DeleteOutline />
-                                  </Fab>
-                                </Hidden>
-                                <Hidden only={['xl', 'lg', 'md']}>
-                                  <ButtonGroup size="small" variant="text">
-                                    <ViewContact data={row} />
-                                    <EditContact data={row} />
-                                    <Button color="secondary"><DeleteOutline /></Button>
-                                  </ButtonGroup>
-                                </Hidden>
+                                <ViewContact data={row} />
+                                <EditContact fetchContactsFn={fetchContactsFn} data={row} />
+                                <DeleteContact fetchContactsFn={fetchContactsFn} contactName={row.ab_firstName+" "+row.ab_lastName} contactID={row.abID} />
                               </TableCell>
                             </TableRow>
                           );

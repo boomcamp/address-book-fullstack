@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Fab from "@material-ui/core/Fab";
 import { Dialog, DialogContent, DialogActions, TextField, DialogTitle } from "@material-ui/core";
-import Button from '@material-ui/core/Button';
+import {Button, ButtonGroup} from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -9,7 +9,10 @@ import { Edit } from '@material-ui/icons';
 import Hidden from '@material-ui/core/Hidden';
 import axios from 'axios';
 
-function EditContact({data}) {
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+function EditContact({data, fetchContactsFn}) {
 
   const useStyles = makeStyles(theme => ({
     edit: {
@@ -63,10 +66,26 @@ function EditContact({data}) {
       data: editedDetails
     })
     .then(response => {
-      console.log(response.data)
+      toast.success("Contact Details Updated. :>", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
+      fetchContactsFn();
     })
-    .error(error => {
+    .catch(error => {
       console.error(error);
+      toast.error("Something went wrong. Please try again.", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      });
     })
     setOpen(false);
   }
@@ -78,16 +97,29 @@ function EditContact({data}) {
   return (
     <React.Fragment>
       <Hidden only={['xs', 'sm']} >
-        <Fab size="medium" onClick={handleClickOpen}className={classes.edit} aria-label="edit">
+        <Fab size="medium" onClick={handleClickOpen} className={classes.edit} aria-label="edit">
           <Edit />
         </Fab>
       </Hidden>
       <Hidden only={['xl', 'lg', 'md']}>
-        <Button onClick={handleClickOpen} style={{color: '#f19208'}}>
-          <Edit />
-        </Button>
+        <ButtonGroup size="small" variant="text">
+          <Button onClick={handleClickOpen} style={{color: '#f19208'}}>
+            <Edit />
+          </Button>
+        </ButtonGroup>
       </Hidden>
       <Dialog fullScreen={fullScreen} open={open} onClose={handleClose} aria-labelledby="Add-Contact-Dialog" maxWidth='md' fullWidth>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
         <form onSubmit={updateContactFn} className={classes.form}>
           <DialogTitle id="customized-dialog-title" onClose={handleClose}>
             Edit Contact

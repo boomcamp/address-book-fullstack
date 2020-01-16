@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Fab from "@material-ui/core/Fab";
 import { Dialog, DialogContent, DialogActions, TextField, DialogTitle } from "@material-ui/core";
-import Button from '@material-ui/core/Button';
+import {Button, ButtonGroup} from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -44,9 +44,11 @@ function ViewContact({data}) {
         </Fab>
       </Hidden>
       <Hidden only={['xl', 'lg', 'md']}>
-        <Button onClick={handleClickOpen} style={{color: '#3d6dd0'}}>
-          <Visibility />
-        </Button>
+        <ButtonGroup size="small" variant="text">
+          <Button onClick={handleClickOpen} style={{color: '#3d6dd0'}}>
+            <Visibility />
+          </Button>
+        </ButtonGroup>
       </Hidden>
       <Dialog fullScreen={fullScreen} open={open} onClose={handleClose} aria-labelledby="Add-Contact-Dialog" maxWidth='md' fullWidth>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
