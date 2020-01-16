@@ -45,9 +45,14 @@ export const columnData = user => [
     render: rowData => <GroupName groupId={rowData.groupId} user={user} />
   }
 ];
-export const columnDataMobile = [
+export const columnDataMobile = user => [
   {
     title: "Name",
     render: rowData => <Span>{rowData.firstName + " " + rowData.lastName}</Span>
+  },
+  {
+    title: "Group",
+    field: "groupId",
+    render: rowData => <GroupName groupId={rowData.groupId} user={user} />
   }
 ];

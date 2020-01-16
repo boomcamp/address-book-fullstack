@@ -8,6 +8,7 @@ import { getUserData } from "../customHooks/getUserData";
 import { toast } from "react-toastify";
 import "../../App.css";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
+import { useWindowSize } from "../customHooks/useWindowSize";
 
 const fetch = async (user, group, userData, setUserData) => {
   const response = await Axios.get(`${url}/groups/${group}/list`, {
@@ -50,9 +51,7 @@ export const Contacts = props => {
         })
       : []
     : [];
-  const [windowWidth] = useState(() => {
-    return window.innerWidth;
-  });
+  const [windowWidth, windowHeight] = useWindowSize();
   const [dialog, setDialog] = useState(false);
   const [action, setAction] = useState("");
   const [confirm, setConfirm] = useState({
@@ -251,7 +250,9 @@ export const Contacts = props => {
           style={{ width: "100%" }}
           fullWidth
           title={groupName}
-          columns={windowWidth >= 600 ? columnData(user) : columnDataMobile}
+          columns={
+            windowWidth >= 600 ? columnData(user) : columnDataMobile(user)
+          }
           data={userData ? userData.addressBook : []}
           options={{
             pageSizeOptions: [10, 15, 20],

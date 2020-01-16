@@ -7,3 +7,6 @@ body {
 .MuiTableRow-root:hover {
   background: #cacaca;
 }
+.MuiTableBody-root {
+  overflow: auto;
+}
