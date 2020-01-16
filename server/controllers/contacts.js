@@ -33,10 +33,11 @@ module.exports = {
   },
   listContacts: (req, res) => {
     const db = req.app.get("db");
-    const { userID } = req.params;
+    const { userID, order } = req.params;
 
-    db.address_book
-    .find({ userID })
+    // db.address_book
+    // .find({ userID })
+    db.query(`SELECT * FROM address_book where "userID" = ${userID} ORDER BY "ab_lastName" ${order}`)
     .then(contacts => {
       res.status(200).send(contacts)
     })

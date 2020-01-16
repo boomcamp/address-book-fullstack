@@ -25,7 +25,7 @@ massive({
     //get user details
     app.get('/api/user/:id', users.getUser);
     //list all contacts 
-    app.get('/api/contacts/:userID', contacts.listContacts);
+    app.get('/api/contacts/:userID/:order', contacts.listContacts);
     //create contact
     app.post('/api/contact/:userID', contacts.addContact);
     //update contact

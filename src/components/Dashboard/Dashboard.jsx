@@ -11,24 +11,15 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
+import { TableSortLabel } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import { Chip, Avatar } from '@material-ui/core';
+import { Chip, Avatar, Typography } from '@material-ui/core';
 
 import ViewContact from './ViewContact/ViewContact';
 import EditContact from './EditContact/EditContact';
 import DeleteContact from './DeleteContact/DeleteContact';
 
 function Dashboard() {
-  const columns = [
-    { id: "Name", label: "Name", minWidth: 30 },
-    { id: "Phone Number", label: "Phone Number", minWidth: 30 },
-    {
-      id: "Actions",
-      minWidth: 30,
-      align: "right",
-      format: value => value.toLocaleString()
-    }
-  ];
 
   const useStyles = makeStyles(theme => ({
     root: {
@@ -67,10 +58,12 @@ function Dashboard() {
 
   const [contactList, setcontactList] = useState([]);
 
+  const [ sortDirection, setSortDirection ] = useState('desc');
+
   const fetchContactsFn = () => {
     axios({
       method: 'get',
-      url: `http://localhost:3002/api/contacts/${sessionid}`
+      url: `http://localhost:3002/api/contacts/${sessionid}/${(sortDirection === 'asc') ? 'DESC' : 'ASC'}`
     })
     .then(response => {
       setcontactList(response.data);
@@ -81,10 +74,23 @@ function Dashboard() {
   useEffect(() => {
     fetchContactsFn();
     // eslint-disable-next-line
-  }, [])
+  }, [sortDirection])
 
   const firstNameLetter = (name) => {
     return name.substring(0,1).toUpperCase();
+  }
+
+  const [ activeSort, setActiveSort ] = useState(false);
+
+  const sortByLastnameFn = () => {
+    (activeSort) || setActiveSort(true);
+    //( sortDirection === 'desc') ? setSortDirection('desc') : setSortDirection('asc');
+    if( sortDirection === 'desc'){
+      setSortDirection('asc')
+    }else{
+      setSortDirection('desc');
+    }
+    console.log('fired');
   }
 
   return (
@@ -100,15 +106,15 @@ function Dashboard() {
                     <Table stickyHeader aria-label="sticky table">
                       <TableHead>
                         <TableRow>
-                          {columns.map(column => (
-                            <TableCell
-                              key={column.id}
-                              align={column.align}
-                              style={{ minWidth: column.minWidth }}
-                            >
-                              {column.label}
-                            </TableCell>
-                          ))}
+                          <TableCell align="inherit" key="Name" style={{minWidth: 30}}>
+                            <TableSortLabel active={activeSort} onClick={sortByLastnameFn} direction={sortDirection}>
+                              Name
+                            </TableSortLabel>
+                          </TableCell>
+                          <TableCell align="inherit" key="Phone Number" style={{minWidth: 30}}>
+                            Phone Number
+                          </TableCell>
+                          <TableCell align="right" key="Actions" style={{minWidth: 30}} />                            
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -118,10 +124,12 @@ function Dashboard() {
                           return (
                             <TableRow hover tabIndex={-1} key={row.abID}>
                               <TableCell>
-                                <Chip variant="outlined" color="primary" avatar={<Avatar>{firstNameLetter(row.ab_firstName)}</Avatar>} label={row.ab_firstName+" "+row.ab_lastName}/>
+                                <Chip variant="outlined" color="primary" avatar={<Avatar>{firstNameLetter(row.ab_firstName)}</Avatar>} label={row.ab_lastName+", "+row.ab_firstName}/>
                               </TableCell>
                               <TableCell>
-                                {row.ab_mobile_phone ? row.ab_mobile_phone : 'N/A'}
+                                <Typography variant="overline" display="block" noWrap={false}gutterBottom>
+                                  {row.ab_mobile_phone ? row.ab_mobile_phone : 'N/A'}
+                                </Typography>
                               </TableCell>
                               <TableCell align="right" className={classes.actionBtn}>
                                 <ViewContact data={row} />

@@ -61,7 +61,7 @@ function AddContact(props) {
     state: "",
     postal_code: "",
     country: "",
-    mobile_phone: null,
+    mobile_phone: "",
     home_phone: null,
   });
 
@@ -85,8 +85,6 @@ function AddContact(props) {
         pauseOnHover: true,
         draggable: true
       });
-    })
-    .then(() => {
       setContactData({
         firstname: "",
         lastname: "",
@@ -99,6 +97,7 @@ function AddContact(props) {
         mobile_phone: null,
         home_phone: null,
       })
+      fetchContactsFn();  
     })
     .catch(error => {
       console.error(error);
@@ -112,7 +111,6 @@ function AddContact(props) {
       });
     })
     handleClose();
-    fetchContactsFn();  
   }
 
   return (
@@ -184,6 +182,7 @@ function AddContact(props) {
                     variant="outlined"
                     name="mobile_phone"
                     onChange={onHandleField}
+                    required
                   />
                 </Grid>
                 <Grid item xs={12} sm={12} md={4} lg={4}>
