@@ -18,13 +18,26 @@ const useStyles = makeStyles(theme => ({
 
 export default function AddressBook() {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <React.Fragment>
             <div className={classes.root}>
                 <Navbar />
                 <div className={classes.row}>
-                    <Profile />
+                    <Profile
+                        handleClickOpen={handleClickOpen}
+                        handleClose={handleClose}
+                        open={open}
+                    />
                 </div>
             </div>
         </React.Fragment>
