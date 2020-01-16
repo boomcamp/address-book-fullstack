@@ -5,6 +5,7 @@ const secret = require("../secret");
 const cors = require("cors");
 const users = require("./controllers/users");
 const contacts = require("./controllers/contacts");
+const group = require("./controllers/group");
 
 massive({
   host: "localhost",
@@ -33,8 +34,20 @@ massive({
   app.post("/signup/users", users.signup);
   //   app.get("/api/protected/data", users.auth);
   app.post("/signin", users.login);
-  app.post("/contacts", contacts.create);
-  app.get("/contacts", contacts.getAll);
+
+  app.get("/users", users.getAll);
+  app.get("/users/:username", users.getById);
+
+  app.post("/contacts/:userid", contacts.create);
+  app.get("/contacts/:userid", contacts.getContactByUser);
+  app.get("/contacts/:userid/:contactid", contacts.getContactByContactId);
+  app.patch("/contacts/:contactid", contacts.updateContact);
+  app.delete("/contacts/:contactid", contacts.deleteContact);
+
+  app.get("/group/:userid", group.getGroupsByUser);
+  app.post("/group/:userid", group.addGroup);
+  app.patch("/group/:groupid", group.updateGroupName);
+  app.delete("/group/:groupid", group.deleteGroup);
   const PORT = 3004;
   app.listen(PORT, () => {
     console.log(`Server is Listening on port ${PORT}`);

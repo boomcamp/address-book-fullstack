@@ -1,7 +1,6 @@
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
 const secret = require("../../secret");
-
 signup = (req, res) => {
   const db = req.app.get("db");
   const { firstname, lastname, username, email, password } = req.body;
@@ -73,8 +72,31 @@ login = (req, res) => {
       }
     });
 };
+function getAll(req, res) {
+  const db = req.app.get("db");
+  db.users
+    .find()
+    .then(users => res.status(200).json(users))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
+function getById(req, res) {
+  const db = req.app.get("db");
+  const { username } = req.body;
+  db.users
+    .findOne({ username: username })
+    .then(user => res.status(200).json(user))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
 module.exports = {
   signup,
   auth,
-  login
+  login,
+  getAll,
+  getById
 };

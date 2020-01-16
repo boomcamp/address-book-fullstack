@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
-import MaterialTable from "material-table";
-import { Container, Typography, Badge } from "@material-ui/core";
-import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
-import axios from "axios";
+import React, { useState } from "react";
+import { Container } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Swal from "sweetalert2";
-import { ThemeProvider } from "@material-ui/styles";
+import Modal from "./Modal";
+import Viewer from "./Viewer";
+import AddressBookTable from "./AddressBookTable";
+import GroupCard from "./GroupCard";
+import jwt from "jsonwebtoken";
 
-export default function AddressBook(props) {
+export default function AddressBook() {
+  const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
   if (!localStorage.getItem("Token")) {
     Swal.fire({
       title: "You must login first!",
@@ -22,193 +25,111 @@ export default function AddressBook(props) {
       window.location = "/";
     });
   }
-
-  const [state, setState] = useState({
-    columns: [],
-    data: []
-  });
+  const [open, setOpen] = React.useState(false);
+  const [willEdit, setWillEdit] = useState(false);
+  const [willOpenViewer, setWillOpenViewer] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+    setWillOpenViewer(false);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setWillEdit(false);
+  };
+  const [values, setValues] = useState({});
   const classes = useStyles();
-  useEffect(async () => {
-    const result = await axios({
-      method: "get",
-      url: `http://localhost:3004/contacts`
-    });
-    setState({ ...state, data: result.data });
-  }, []);
-  if (!state.data) {
-    localStorage.clear();
-    return null;
-  }
   return localStorage.getItem("Token") ? (
-    <Container
-      maxWidth="lg"
-      component="div"
-      className={`${classes.paper} ${classes.rooot}`}
-    >
-      <MaterialTable
-        style={{ paddingLeft: 10 }}
-        title="Users Data"
-        columns={[
-          {
-            title: "Firstname",
-            headerStyle: {
-              fontWeight: "bold"
-            },
-            sorting: false,
-            field: "firstname"
-          },
-          {
-            title: "Lastname",
-            headerStyle: {
-              fontWeight: "bold"
-            },
-            field: "lastname"
-          },
-          {
-            title: "Home Phonenumber",
-            headerStyle: {
-              fontWeight: "bold"
-            },
-            sorting: false,
-            field: "home_phone"
-          },
-          {
-            title: "Mobile Phonenumber",
-            headerStyle: {
-              fontWeight: "bold"
-            },
-            sorting: false,
-            field: "mobile_phone"
-          },
-          {
-            title: "Work Phonenumber",
-            headerStyle: {
-              fontWeight: "bold"
-            },
-            sorting: false,
-            field: "work_phone"
-          }
-        ]}
-        options={{
-          filtering: false
-        }}
-        data={[...state.data]}
-        editable={{
-          onRowUpdate: (newData, oldData) =>
-            new Promise(resolve => {
-              setTimeout(() => {
-                resolve();
-                if (oldData) {
-                  setState(prevState => {
-                    const data = [...prevState.data];
-                    data[data.indexOf(oldData)] = newData;
-                    return { ...prevState, data };
-                  });
-                }
-              }, 400);
-              axios
-                .patch(
-                  `http://localhost:3000/users/${newData.id}`,
-                  {
-                    email: newData.email,
-                    username: newData.username,
-                    firstName: newData.firstName,
-                    lastName: newData.lastName,
-                    active: newData.active
-                  },
-                  {
-                    headers: {
-                      Authorization: `Bearer ${localStorage.getItem("Token")}`
-                    }
-                  }
-                )
-                .then(
-                  Swal.fire({
-                    title: "Account has been edited!",
-                    icon: "success",
-                    button: true
-                  })
-                );
-            }),
-          onRowDelete: oldData =>
-            new Promise(resolve => {
-              setTimeout(() => {
-                resolve();
-                setState(prevState => {
-                  const data = [...prevState.data];
-                  data.splice(data.indexOf(oldData), 1);
-                  return { ...prevState, data };
-                });
-              }, 600);
-              axios
-                .delete(`http://localhost:3000/users/${oldData.id}`, {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("Token")}`
-                  }
-                })
-                .then(
-                  Swal.fire({
-                    icon: "success",
-                    title: "Account has been successfully deleted!"
-                  })
-                );
-            })
-        }}
+    <React.Fragment>
+      <Modal
+        handleClose={handleClose}
+        open={open}
+        teal={classes.teal}
+        willEdit={willEdit}
+        values={values}
+        setValues={setValues}
+        tokenDecoded={tokenDecoded}
       />
-    </Container>
+      <Container
+        maxWidth="lg"
+        component="div"
+        className={`${classes.paper} ${classes.rooot}`}
+      >
+        {willOpenViewer ? <Viewer values={values} /> : null}
+        <div
+          className={classes.table}
+          style={{ width: willOpenViewer ? "65%" : "100%" }}
+        >
+          <GroupCard tokenDecoded={tokenDecoded} />
+          <AddressBookTable
+            tokenDecoded={tokenDecoded}
+            handleClickOpen={handleClickOpen}
+            teal={classes.teal}
+            avatar={classes.avatar}
+            setValues={setValues}
+            buttonGroup={classes.buttonGroup}
+            setWillEdit={setWillEdit}
+            setWillOpenViewer={setWillOpenViewer}
+          />
+        </div>
+      </Container>
+    </React.Fragment>
   ) : null;
 }
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#11CB5F"
-    },
-    secondary: {
-      main: "#CB3311"
-    }
-  }
-});
 const useStyles = makeStyles(theme => ({
-  margin: {
-    margin: theme.spacing(2)
-  },
-  padding: {
-    padding: theme.spacing(0, 2)
-  },
-  badge: {
-    minWidth: "0px",
-    height: "12px",
-    marginTop: "12px"
-  },
   rooot: {
-    background: "#FFF",
-    borderRadius: "8px",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    // padding: "0 7.5%!important",
     left: "50%",
-    top: "50%",
+    top: "55%",
     position: "absolute",
     msTransform: "translate(-50%, -50%)",
     webkitTransform: "translate(-50%, -50%)",
     transform: "translate(-50%, -50%)",
     zIndex: "2",
-    maxHeight: "50rem",
+    // maxHeight: "50rem",
+    height: "calc(100vh - 64px)",
     overflowY: "auto"
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-    maxWidth: 300
   },
   paper: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row",
     margin: "0 auto",
-    padding: "0"
+    padding: "0",
+    justifyContent: "space-between",
+    flexWrap: "wrap"
   },
-  sele: {
-    display: "flex",
-    justifyContent: "flex-end",
-    paddingRight: 20
+  table: {
+    // width: ? "65%" : "100%",
+    background: "transparent",
+    borderRadius: "8px",
+    boxShadow: "none",
+    height: "100%!important"
+  },
+  "@media (max-width: 992px)": {
+    table: {
+      width: "100%!important",
+      marginTop: "30%!important"
+    }
+    // html: {
+    //   maxHeight: "100vh!important"
+    // },
+    // body: {
+    //   maxHeight: "100vh!important"
+    // }
+  },
+  teal: {
+    backgroundColor: "#26a69a!important",
+    color: "white"
+  },
+  avatar: {
+    width: "50px",
+    height: "50px",
+    fontSize: "1.25rem",
+    backgroundColor: "#3e51b5"
+  },
+  buttonGroup: {
+    "& > *": {
+      margin: theme.spacing(1)
+    }
   }
 }));

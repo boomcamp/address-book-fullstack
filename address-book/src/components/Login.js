@@ -47,6 +47,8 @@ export default function Login(props) {
         })
         .then(response => {
           localStorage.setItem("Token", response.data.token);
+          localStorage.setItem("username", username);
+          localStorage.setItem("userid", response.data.id);
           Swal.fire({
             icon: "success",
             title: "Logged In Successfully!"

@@ -16,13 +16,13 @@ exports.up = pgm => {
       type: "text"
     },
     home_phone: {
-      type: "integer"
+      type: "varchar"
     },
     mobile_phone: {
-      type: "integer"
+      type: "varchar"
     },
     work_phone: {
-      type: "integer"
+      type: "varchar"
     },
     email: {
       type: "text"
@@ -38,6 +38,9 @@ exports.up = pgm => {
     },
     country: {
       type: "text"
+    },
+    userid: {
+      type: "integer"
     }
   });
 };

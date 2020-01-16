@@ -55,7 +55,7 @@ export default function SignIn() {
         <CssBaseline />
         <BrowserRouter>
           <React.Fragment>
-            <AppBar position="static">
+            <AppBar position="fixed">
               <Toolbar className={classes.toolbar}>
                 <Typography variant="h6">Address Book</Typography>
                 <Switch>

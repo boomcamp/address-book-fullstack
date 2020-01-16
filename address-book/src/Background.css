@@ -19,9 +19,10 @@ body {
 
 .bg-boxes {
   /*Set the container for the svg elements to take up the whole window and hide objects outside of the window*/
-  height: calc(100% - 65px);
+  height: calc(100vh + 15px);
   min-height: 240px;
-  position: absolute;
+  /* position: absolute; */
+  position: relative;
   overflow: hidden;
   width: 100%;
   z-index: 1;

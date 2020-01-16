@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^7.2.1",
     "argon2": "^0.25.1",
     "axios": "^0.19.1",
+    "bulma": "^0.8.0",
     "cors": "^2.8.5",
     "jsonwebtoken": "^8.5.1",
     "massive": "^6.1.4",
