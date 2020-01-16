@@ -22,7 +22,7 @@
   cursor: pointer;
 }
 
-.tabs-container:hover{
+.tabs-container:hover {
   background: #2296cc;
 }
 
@@ -33,15 +33,55 @@
 .container-close {
   position: absolute;
   left: 96%;
-  top: 8px;
+  /* top: 8px; */
   cursor: pointer;
   color: rgb(155, 155, 155);
   z-index: 51;
 }
 
-.tabs-body-container {
+/* .tabs-body-container {
   position: absolute;
   z-index: 30;
-  background: white;
+  background: rgb(255, 255, 255);
   width: 100%;
+} */
+
+/* .form-contact-container {
+  width: 100%;
+  height: 100vh;
+  background: white;
+  z-index: 100;
+} */
+
+/* tablets */
+@media only screen and (min-width: 600px) {
+  .form-contact-container {
+    position: absolute;
+    width: 500px;
+    height: 90vh;
+    background: white;
+    z-index: 100;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  /* .tabs-body-container {
+    position: absolute;
+    z-index: 30;
+    background: rgb(255, 255, 255);
+    width: 500px;
+    height: 100vh;
+  } */
+}
+
+
+@media only screen and (min-width: 768px) {
+  .form-contact-container {
+    position: absolute;
+    width: 750px;
+    height: 100vh;
+    background: white;
+    z-index: 100;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
 }

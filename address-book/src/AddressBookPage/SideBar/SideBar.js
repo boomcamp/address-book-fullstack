@@ -86,30 +86,30 @@ export default function SideBar(highprops) {
 
         <div className="tabs-body-container">
           {state.contactGroups_tab ? (
-            <>
+             <div className="form-contact-container">
               <div className="container-close" onClick={() => close()}>
                 X
               </div>
               <GroupContacts setDataGroup={DataFromGroups} />
-            </>
+            </div>
           ) : (
             ""
           )}
 
           {state.addContact_tab ? (
-            <>
+            <div className="form-contact-container">
               <div className="container-close" onClick={() => close()}>
                 X
               </div>
               <ContactForm contactData={dataPass} />
-            </>
+            </div>
           ) : (
             ""
           )}
         </div>
       </div>
 
-      {/* <div className="black-overlay" /> */}
+      <div onClick={() => close()} className={!state.contactGroups_tab && !state.addContact_tab?'':"black-overlay"} />
     </>
   );
 }

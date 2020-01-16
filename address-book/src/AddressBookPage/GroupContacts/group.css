@@ -9,6 +9,7 @@
   margin: 5px;
   border-radius: 5px;
   color: white;
+  cursor: pointer;
 }
 
 .group-definition-container:hover {
@@ -17,45 +18,62 @@
 
 /* mobile phones */
 .group-context-container {
-  border: 1px solid red;
+  /* border: 1px solid lightgrey; */
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  padding: 10px;
+  /* padding: 10px; */
   height: 100vh;
   width: 100%;
   background: white;
+  margin-top: 50px;
+  /* position: fixed; */
 }
 
-.black-overlay {
-  background: black;
-  width: 100%;
-  position: fixed;
-  z-index: 10;
-  height: 100vh;
-  top: 0px;
-  opacity: 0.9;
+.get-all-container {
+  margin-top: 20px;
+  background: rgb(140, 140, 140);
 }
 
 /* tablets */
 @media only screen and (min-width: 600px) {
-  .group-context-container {
+  /* .group-context-container {
     width: 100%;
     border: 1px solid blue;
     position: absolute;
     z-index: 50;
     background: white;
+  } */
+
+  .group-context-container {
+    width: 498px;
+    height: 100vh;
+  }
+
+  .black-overlay {
+    background: black;
+    width: 100%;
+    position: absolute;
+    z-index: 20;
+    height: 100vh;
+    top: 90px;
+    opacity: 0.7;
   }
 }
 
 /* desktop */
 @media only screen and (min-width: 768px) {
-  .group-context-container {
+  /* .group-context-container {
     width: 100%;
     border: 1px solid green;
     position: absolute;
     z-index: 50;
     background: white;
+  } */
+
+  .group-context-container {
+    width: 750px;
+    height: 100vh;
   }
 }

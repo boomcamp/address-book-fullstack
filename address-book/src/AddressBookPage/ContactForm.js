@@ -26,6 +26,9 @@ export default function ContactForm(highprops) {
     selectedGroupName: {
       title: "Default"
     },
+    recentGroupState: {
+      title: ""
+    },
     groupList: [
       {
         title: "work"
@@ -93,7 +96,7 @@ export default function ContactForm(highprops) {
                   title: data.data[0].group_name
                 },
                 recentGroupState: {
-                  title: data.data[0].group_name
+                  title: data.data[0].group_name ? data.data[0].group_name : ""
                 }
               };
             });
@@ -133,7 +136,9 @@ export default function ContactForm(highprops) {
           data: {
             group_name: grpState.selectedGroupName.title,
             contactid: id,
-            past_group: grpState.recentGroupState.title
+            past_group: grpState.recentGroupState
+              ? grpState.recentGroupState.title
+              : ""
           },
           headers: { Authorization: sessionStorage.getItem("token") }
         })
@@ -296,9 +301,10 @@ export default function ContactForm(highprops) {
       <div
         style={{
           padding: "30px",
-          border: "1px solid lightgrey",
-          margin: "0 0 10px 0",
-          width: "100%"
+          // border: "1px solid lightgrey",
+          // margin: "0 0 10px 0",
+          // width: "100%"
+          background: "white"
         }}
       >
         <div className="input-fields">

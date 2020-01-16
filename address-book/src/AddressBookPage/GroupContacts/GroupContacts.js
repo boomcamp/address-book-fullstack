@@ -57,13 +57,44 @@ export default function GroupContacts(highprops) {
       });
   };
 
+  const getAllContacts = () => {
+    // here
+    axios({
+      method: "get",
+      url: `http://localhost:5000/api/contacts`,
+      headers: { Authorization: sessionStorage.getItem("token") }
+    })
+      .then(data => {
+        // console.log(data.data)
+        return highprops.setDataGroup(data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className="group-context-container">
+      <p style={{margin:'20px'}}>Active Contact Groups</p>
       {state
         ? state.map(data => {
-            return <GroupsContainer glist={data} getGroups={getGroups} closetab={highprops.close} />;
+            return (
+              <GroupsContainer
+                glist={data}
+                getGroups={getGroups}
+                closetab={highprops.close}
+              />
+            );
           })
         : ""}
+      <div
+        className="group-definition-container get-all-container"
+        onClick={() => {
+          getAllContacts();
+        }}
+      >
+        Show all contacts
+      </div>
     </div>
   );
 }

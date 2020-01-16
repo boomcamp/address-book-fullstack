@@ -22,7 +22,8 @@ module.exports = {
         city,
         state_or_province,
         postal_code,
-        country
+        country,
+        userid
       } = req.body;
 
       const db = req.app.get("db");
@@ -41,6 +42,19 @@ module.exports = {
           country
         })
         .then(post => {
+          console.log(post);
+
+          db.address_book
+            .save({
+              contactid: post.id,
+              userid: userid
+            })
+            .then(data => {
+              res.status(201).json(post);
+            })
+            .catch(err => {
+              res.status(500).end();
+            });
           res.status(201).json(post);
         })
         .catch(err => {
@@ -63,14 +77,32 @@ module.exports = {
 
       const db = req.app.get("db");
 
-      db.contacts
-        .find()
+      const { userid } = req.body;
+      
+      console.log(req.body)
+
+      db.query(
+        `SELECT contacts.id, first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_or_province, postal_code, country 
+        FROM contacts 
+        INNER JOIN address_book 
+        ON address_book.contactid = contacts.id 
+        WHERE address_book.userid = ${userid}`
+      )
         .then(post => {
           res.status(200).json(post);
         })
         .catch(err => {
           res.status(500).end();
         });
+
+      // db.contacts
+      //   .find()
+      //   .then(post => {
+      //     res.status(200).json(post);
+      //   })
+      //   .catch(err => {
+      //     res.status(500).end();
+      //   });
     } catch (err) {
       console.error(err);
       res.status(401).end();

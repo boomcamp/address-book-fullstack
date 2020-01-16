@@ -38,10 +38,16 @@ export default function ContactsTable(highprops) {
         return { ...state, data: highprops.tableData };
       });
     } else {
-      axios
-        .get("http://localhost:5000/api/contacts", {
-          headers: { Authorization: sessionStorage.getItem("token") }
-        })
+      axios({
+        method: "get",
+        url: "http://localhost:5000/api/contacts",
+        data: { userid: sessionStorage.getItem("userid") },
+        headers: { Authorization: sessionStorage.getItem("token") }
+      })
+        // .get("http://localhost:5000/api/contacts", {
+        //   data: { userid: sessionStorage.getItem("userid") },
+        //   headers: { Authorization: sessionStorage.getItem("token") }
+        // })
         .then(contacts => {
           console.log(contacts.data);
 

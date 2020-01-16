@@ -6,7 +6,6 @@ export default function GroupsContainer(highprops) {
       <div
         data-id={highprops.glist.id}
         className="group-definition-container"
-        style={style.groupDefinitionContainer}
         onClick={() => {
           highprops.getGroups(highprops.glist.id);
         }}
@@ -16,9 +15,3 @@ export default function GroupsContainer(highprops) {
     </div>
   );
 }
-
-const style = {
-  groupDefinitionContainer: {
-    cursor: "pointer"
-  }
-};
