@@ -30,7 +30,8 @@ export const Contacts = props => {
     handleOnChange,
     setContact,
     contact,
-    group
+    group,
+    setGroup
   } = props.data;
   const theme = createMuiTheme({
     palette: {
@@ -154,6 +155,21 @@ export const Contacts = props => {
     });
     setGroupDialog(false);
   };
+  const handleDeleteGroup = async () => {
+    try {
+      const response = await Axios.delete(`${url}/groups/${group}`, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
+      toast.info(response.data.message, {
+        position: toast.POSITION.TOP_CENTER
+      });
+      setGroup(null);
+      setGroupName("Contacts");
+      getUserData(user).then(user => setUserData(user));
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const action1 = [
     {
       icon: "add",
@@ -169,9 +185,14 @@ export const Contacts = props => {
       icon: "check",
       tooltip: "Multi Select",
       isFreeAction: true,
-      onClick: () => {
-        setMultiSelect(true);
-      }
+      onClick: () => setMultiSelect(true)
+    },
+    {
+      icon: "delete",
+      tooltip: "Delete Group",
+      isFreeAction: true,
+      disabled: group ? false : true,
+      onClick: () => handleDeleteGroup()
     }
   ];
   const action2 = [
@@ -189,9 +210,14 @@ export const Contacts = props => {
       icon: "clear",
       tooltip: "Remove Selection",
       isFreeAction: true,
-      onClick: () => {
-        setMultiSelect(false);
-      }
+      onClick: () => setMultiSelect(false)
+    },
+    {
+      icon: "delete",
+      tooltip: "Delete Group",
+      isFreeAction: true,
+      disabled: group ? false : true,
+      onClick: () => handleDeleteGroup()
     },
     {
       tooltip: "Remove selected Users",
@@ -211,11 +237,11 @@ export const Contacts = props => {
     }
   ];
   React.useEffect(() => {
+    if (group === null) {
+      return setGroupName("Contacts");
+    }
     if (group) {
       getGroupName(group, user, setGroupName);
-    }
-    if (group === null) {
-      setGroupName("Contacts");
     }
   }, [group, user]);
   return (
