@@ -17,14 +17,14 @@ import Dialog from '@material-ui/core/Dialog';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Grid from '@material-ui/core/Grid';
 import HouseIcon from '@material-ui/icons/House';
-// import CreateIcon from '@material-ui/icons/Create';
+import CreateIcon from '@material-ui/icons/Create';
 
 const useStyles = makeStyles(theme => ({
     container: {
         color: 'rgba(0, 0, 0, 0.87)',
         backgroundColor: '#fff',
         boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        height: '50vh',
+        height: '50%',
         borderRadius: '1%',
         width: '95%',
     },
@@ -52,13 +52,20 @@ const useStyles = makeStyles(theme => ({
 export default function UserDetails(props){
     const classes = useStyles();
     const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = useState(false);
     const [details, setDetails] = useState({
         fname: '', 
         lname: '', 
         email:'', 
-        id:''
+        id:'',
     });
     const [values, setValues] = useState({
+        country: '',
+        region: '',
+        province: '',
+        city: '',
+    });
+    const [values1, setValues1] = useState({
         country: '',
         region: '',
         province: '',
@@ -68,8 +75,8 @@ export default function UserDetails(props){
         country: '', 
         region: '', 
         province: '', 
-        city: '', 
-        added: false
+        city: '',
+        empty: true,
     });
 
     const addAddress = () => {
@@ -82,19 +89,36 @@ export default function UserDetails(props){
             "city": values.city,
         }).then(res=>{
             alert('Address Added')
-            setValues({ ...values, added: true});
+            setDetails({ ...details, empty: false});
+            window.location.reload(true)
         }).catch(err=>{
             console.error(err)
         })
-
     }
-    // const editAddress = () => {
-    //     axios
-    // }
     const eventhandler = (e) =>{
         let prevdata = Object.assign({}, values)
         prevdata[e.target.name] = e.target.value;
         setValues(prevdata)
+    }
+    const updateAddress = () => {
+        axios
+        .patch(`http://localhost:5001/api/address/${localStorage.getItem('id')}`, {
+            "userId": localStorage.getItem('id'),
+            "country": values1.country,
+            "region": values1.region,
+            "province": values1.province,
+            "city": values1.city,
+        }).then(res=>{
+            alert('Address Updated')
+            window.location.reload(true)
+        }).catch(err=>{
+            console.error(err)
+        })
+    }
+    const eventhandler1 = (e) =>{
+        let prevdata = Object.assign({}, values1)
+        prevdata[e.target.name] = e.target.value;
+        setValues1(prevdata)
     }
 
     useEffect(() =>{
@@ -105,16 +129,21 @@ export default function UserDetails(props){
                 return{ ...e, fname:res.data.fname, lname:res.data.lname, email:res.data.email, id:res.data.id };
             })
         })
+        
         axios
         .get(`http://localhost:5001/api/address/${localStorage.getItem('id')}`)
         .then(res => {
-            console.log(res)
-            setAddress(e=>{
-                return{ ...e, country:res.data[0].country, region:res.data[0].region, province:res.data[0].province, city:res.data[0].city, added: true };
-            })
+            // console.log(Object.keys(res.data).length)
+            if(Object.keys(res.data).length === 0){
+                console.log('Database is still Empty')
+            }else{
+                setAddress(e=>{
+                    return{ ...e, country:res.data[0].country, region:res.data[0].region, province:res.data[0].province, city:res.data[0].city, empty: false };
+                })
+            }
         })
     },[])
-
+    
     const openAdd = () => {
         setOpen(true);
     };
@@ -123,6 +152,13 @@ export default function UserDetails(props){
         setOpen(false);
     };
     
+    const openAdd1 = () => {
+        setOpen1(true);
+    };
+
+    const closeAdd1 = () => {
+        setOpen1(false);
+    };
     return(
         <React.Fragment>
             <CssBaseline />
@@ -154,109 +190,194 @@ export default function UserDetails(props){
                                 {details.email}
                             </ListItemText>
                         </ListItem>
-                        {/* {console.log(values)} */}
-                        {(!address.added) ? (
+                        {/* {console.log(address.empty)} */}
+                        {(address.empty) ? ( // empty === true, means maga add na muna ng address
                             <ListItem>
                                 <ListItemIcon>
                                     <Button variant="outlined" color="primary" onClick={openAdd}>
                                         Add Address
                                     </Button>
-                                    <Dialog onClose={closeAdd} aria-labelledby="simple-dialog-title" open={open}>
-                                        <Container component="main" maxWidth="xs">
-                                            <CssBaseline />
-                                            <DialogTitle id="simple-dialog-title">Address Details</DialogTitle>
-                                            <ValidatorForm
-                                                className={classes.form}
-                                                onSubmit={addAddress}
-                                                onError={errors => console.log(errors)}
-                                            >
-                                                <Grid container spacing={2}>
-                                                    <Grid item xs={12}>
-                                                        <TextValidator
-                                                            autoComplete="country"
-                                                            name="country"
-                                                            variant="outlined"
-                                                            fullWidth
-                                                            label="Country"
-                                                            autoFocus
-                                                            validators={['required', 'matchRegexp:^[A-Za-z]+$']}
-                                                            errorMessages={['This field is required', 'Must contain letters only.']}
-                                                            onChange={eventhandler}
-                                                            value={values.country}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={12}>
-                                                        <TextValidator
-                                                            autoComplete="region"
-                                                            name="region"
-                                                            variant="outlined"
-                                                            fullWidth
-                                                            label="Region"
-                                                            autoFocus
-                                                            validators={['required', 'matchRegexp:^[A-Za-z]+$']}
-                                                            errorMessages={['This field is required', 'Must contain letters only.']}
-                                                            onChange={eventhandler}
-                                                            value={values.region}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={12}>
-                                                        <TextValidator
-                                                            autoComplete="province"
-                                                            name="province"
-                                                            variant="outlined"
-                                                            fullWidth
-                                                            label="Province"
-                                                            autoFocus
-                                                            validators={['required', 'matchRegexp:^[A-Za-z]+$']}
-                                                            errorMessages={['This field is required', 'Must contain letters only.']}
-                                                            onChange={eventhandler}
-                                                            value={values.province}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={12}>
-                                                        <TextValidator
-                                                            autoComplete="city"
-                                                            name="city"
-                                                            variant="outlined"
-                                                            fullWidth
-                                                            label="City"
-                                                            autoFocus
-                                                            validators={['required', 'matchRegexp:^[A-Za-z]+$']}
-                                                            errorMessages={['This field is required', 'Must contain letters only.']}
-                                                            onChange={eventhandler}
-                                                            value={values.city}
-                                                        />
-                                                    </Grid>
-                                                </Grid>
-                                                <Button
-                                                    type="submit"
-                                                    fullWidth
-                                                    variant="contained"
-                                                    color="primary"
-                                                    className={classes.submit}
-                                                >   Add
-                                                </Button>
-                                            </ValidatorForm>
-                                        </Container>
-                                    </Dialog>
                                 </ListItemIcon>
                             </ListItem>
-                            ) : (
-                                <ListItem>
-                                    <ListItemIcon>
+                            ) : ( // empty === false, means maga update na ng address since hindi na empty ang address table
+                            <ListItem>
+                                <ListItemIcon>
+                                    <Avatar>
+                                        <HouseIcon />
+                                    </Avatar>
+                                </ListItemIcon>
+                                {/* contentEditable="true" */}
+                                <ListItemText secondary="Address">
+                                    {address.city} City, {address.province}, {address.region}, {address.country}
+                                </ListItemText>
+                                <ListItemIcon>
+                                    <Button onClick={openAdd1}>
                                         <Avatar>
-                                            <HouseIcon />
+                                            <CreateIcon/>
                                         </Avatar>
-                                    </ListItemIcon>
-                                    <ListItemText secondary="Address" contentEditable="true">
-                                        {address.city} City, {address.province}, {address.region}, {address.country}
-                                    </ListItemText>
-                                    {/* <ListItemIcon>
-                                        <CreateIcon onClick="editAddress"/>
-                                    </ListItemIcon> */}
-                                </ListItem>
-                            )
-                        }
+                                    </Button>
+                                </ListItemIcon>
+                            </ListItem>
+                        )}
+                        {(address.empty) ? (
+                        <Dialog onClose={closeAdd} aria-labelledby="simple-dialog-title" open={open}>
+                            <Container component="main" maxWidth="xs">
+                                <CssBaseline />
+                                <DialogTitle id="simple-dialog-title">Address Details</DialogTitle>
+                                    <ValidatorForm
+                                        className={classes.form}
+                                        onSubmit={addAddress}
+                                        onError={errors => console.log(errors)}
+                                    >
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={12}>
+                                            <TextValidator
+                                                autoComplete="country"
+                                                name="country"
+                                                variant="outlined"
+                                                fullWidth
+                                                label="Country"
+                                                autoFocus
+                                                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
+                                                errorMessages={['This field is required', 'Must contain letters only.']}
+                                                onChange={eventhandler}
+                                                value={values.country}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextValidator
+                                                autoComplete="region"
+                                                name="region"
+                                                variant="outlined"
+                                                fullWidth
+                                                label="Region"
+                                                autoFocus
+                                                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
+                                                errorMessages={['This field is required', 'Must contain letters only.']}
+                                                onChange={eventhandler}
+                                                value={values.region}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextValidator
+                                                autoComplete="province"
+                                                name="province"
+                                                variant="outlined"
+                                                fullWidth
+                                                label="Province"
+                                                autoFocus
+                                                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
+                                                errorMessages={['This field is required', 'Must contain letters only.']}
+                                                onChange={eventhandler}
+                                                value={values.province}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextValidator
+                                                autoComplete="city"
+                                                name="city"
+                                                variant="outlined"
+                                                fullWidth
+                                                label="City"
+                                                autoFocus
+                                                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
+                                                errorMessages={['This field is required', 'Must contain letters only.']}
+                                                onChange={eventhandler}
+                                                value={values.city}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Button
+                                        type="submit"
+                                        fullWidth
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.submit}
+                                    >   Add
+                                    </Button>
+                                </ValidatorForm>
+                            </Container>
+                        </Dialog>
+                        ) : (
+                        <Dialog onClose={closeAdd1} aria-labelledby="simple-dialog-title" open={open1}>
+                            <Container component="main" maxWidth="xs">
+                                <CssBaseline />
+                                <DialogTitle id="simple-dialog-title">Address Details</DialogTitle>
+                                    <ValidatorForm
+                                        className={classes.form}
+                                        onSubmit={updateAddress}
+                                        onError={errors => console.log(errors)}
+                                    >
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={12}>
+                                            <TextValidator
+                                                autoComplete="country"
+                                                name="country"
+                                                variant="outlined"
+                                                fullWidth
+                                                label="Country"
+                                                autoFocus
+                                                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
+                                                errorMessages={['This field is required', 'Must contain letters only.']}
+                                                onChange={eventhandler1}
+                                                value={values1.country}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextValidator
+                                                autoComplete="region"
+                                                name="region"
+                                                variant="outlined"
+                                                fullWidth
+                                                label="Region"
+                                                autoFocus
+                                                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
+                                                errorMessages={['This field is required', 'Must contain letters only.']}
+                                                onChange={eventhandler1}
+                                                value={values1.region}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextValidator
+                                                autoComplete="province"
+                                                name="province"
+                                                variant="outlined"
+                                                fullWidth
+                                                label="Province"
+                                                autoFocus
+                                                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
+                                                errorMessages={['This field is required', 'Must contain letters only.']}
+                                                onChange={eventhandler1}
+                                                value={values1.province}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextValidator
+                                                autoComplete="city"
+                                                name="city"
+                                                variant="outlined"
+                                                fullWidth
+                                                label="City"
+                                                autoFocus
+                                                validators={['required', 'matchRegexp:^[A-Za-z]+$']}
+                                                errorMessages={['This field is required', 'Must contain letters only.']}
+                                                onChange={eventhandler1}
+                                                value={values1.city}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Button
+                                        type="submit"
+                                        fullWidth
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.submit}
+                                    >   Update
+                                    </Button>
+                                </ValidatorForm>
+                            </Container>
+                        </Dialog>
+                        )}
                     </List>
                 </div>
             </Container>

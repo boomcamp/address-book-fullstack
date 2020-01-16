@@ -18,7 +18,7 @@ import Groups from './Groups';
 import Contacts from './Contacts';
 
 export default function UserManage() {
-    var [token, emptyToken] = useState(false) // for what?
+    var [token, emptyToken] = useState(false)
     const [page, setPage] = useState('contacts')
     const [toggle, setToggle] = useState({left:false})
 

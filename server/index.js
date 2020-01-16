@@ -48,7 +48,7 @@ massive({
     app.delete('/api/contact/:id', users.deleteContact)
 
     app.post('/api/address', users.addAddress)
-    app.get('/api/address/:id', users.getAdrress)
+    app.get('/api/address/:id', users.getAdrress) // ?
     app.patch('/api/address/:id', users.updateAddress)
     app.listen(port, err=>{
         if(err){

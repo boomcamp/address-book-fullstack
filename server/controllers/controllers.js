@@ -87,15 +87,15 @@ module.exports = {
     },
     createContact:(req, res) => {
         const db = req.app.get('db')
-        const { 
+        const {
             userId,
-            f_name, 
-            l_name, 
-            home_phone, 
-            mobile_phone, 
-            work_phone, 
-            email, 
-            city, 
+            f_name,
+            l_name,
+            home_phone,
+            mobile_phone,
+            work_phone,
+            email,
+            city,
             state_or_province, 
             postal_code,
             country } = req.body;
