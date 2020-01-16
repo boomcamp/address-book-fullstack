@@ -1,6 +1,6 @@
 const express = require('express');
 const massive = require('massive');
-const cors = require('cors')
+const cors = require('cors');
 
 const user = require('./controllers/users');
 const contact = require('./controllers/contact');

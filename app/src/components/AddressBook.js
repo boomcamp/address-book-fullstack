@@ -19,6 +19,7 @@ const useStyles = makeStyles(theme => ({
 export default function AddressBook() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -26,6 +27,14 @@ export default function AddressBook() {
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const menuOpen = event => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const menuClose = () => {
+        setAnchorEl(null);
     };
 
     return (
@@ -37,6 +46,9 @@ export default function AddressBook() {
                         handleClickOpen={handleClickOpen}
                         handleClose={handleClose}
                         open={open}
+                        anchorEl={anchorEl}
+                        menuOpen={menuOpen}
+                        menuClose={menuClose}
                     />
                 </div>
             </div>

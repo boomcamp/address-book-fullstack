@@ -77,8 +77,6 @@ export default function Navbar() {
                                     open={open}
                                     onClose={handleClose}
                                 >
-                                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                                    <Divider />
                                     <MenuItem onClick={logOut}>Sign Out</MenuItem>
                                 </Menu>
                             </div>

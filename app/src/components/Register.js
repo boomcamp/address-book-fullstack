@@ -129,6 +129,7 @@ export default function Register({ handleClose }) {
                         <Button
                             variant="contained"
                             color="primary"
+                            onClick={handleClose}
                         >
                             Cancel
                         </Button>
