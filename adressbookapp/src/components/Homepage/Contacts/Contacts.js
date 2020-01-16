@@ -32,14 +32,6 @@ export default class Contacts extends Component {
                     onClick={() => this.props.viewHandler(a)}
                   />
                 </Tooltip>,
-                <Tooltip title="edit" placement="bottom">
-                  <Icon
-                    type="edit"
-                    key="view"
-                    // onClick={() => this.props.updateHandler(a)}
-                    style={{ fontSize: "22px", color: "rgb(0, 77, 64)" }}
-                  />
-                </Tooltip>,
                 <Tooltip title="delete" placement="bottom">
                   <Icon
                     type="delete"

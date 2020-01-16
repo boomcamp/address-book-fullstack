@@ -5,6 +5,7 @@ import { Form, Input, message } from "antd";
 import axios from "axios";
 import "./addcontact.css";
 const key = "updatable";
+const { Search } = Input;
 class AddContacts extends Component {
   constructor(props) {
     super(props);
@@ -53,54 +54,79 @@ class AddContacts extends Component {
       ? this.setState({ postal: e.value })
       : this.setState({ country: e.value });
   }
-  // handleOk = () => {
-  //   this.setState({ loading: true, name: "adding to list contacts" });
-  //   setTimeout(() => {
-  //     this.setState({ loading: false, visible: false });
-  //   }, 1000);
-  // };
-
   handleCancel = () => {
     this.setState({ visible: false });
   };
   handleSubmit = e => {
     const id = localStorage.getItem("id");
     e.preventDefault();
-    // console.log(e);
-    axios
-      .post("http://localhost:4000/api/contacts", {
-        id: id,
-        firstname: this.state.firstname,
-        lastname: this.state.lastname,
-        home_phone: this.state.home_phone,
-        mobile_phone: this.state.mobile_phone,
-        work_phone: this.state.work_phone,
-        email: this.state.email,
-        city: this.state.city,
-        state_or_province: this.state.state,
-        postal_code: this.state.postal,
-        country: this.state.country
-      })
-      .then(result => {
-        message.loading({ content: "Saving contact...", key });
-        setTimeout(() => {
-          message.success({ content: "Successfully added!", key, duration: 2 });
-          this.props.form.setFieldsValue({
-            firstname: "",
-            lastname: "",
-            home_phone: "",
-            mobile_phone: "",
-            work_phone: "",
-            email: "",
-            city: "",
-            state_or_province: "",
-            postal_code: "",
-            country: ""
-          });
-          this.props.getAll();
-        }, 1000);
+    const {
+      firstname,
+      lastname,
+      home_phone,
+      mobile_phone,
+      email,
+      city,
+      state,
+      postal,
+      country
+    } = this.state;
+    if (
+      home_phone === "" ||
+      mobile_phone === "" ||
+      city === "" ||
+      firstname === "" ||
+      lastname === "" ||
+      state === "" ||
+      email === "" ||
+      postal === "" ||
+      country === ""
+    ) {
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          console.log("Received values of form: ", values);
+        }
       });
+    } else
+      axios
+        .post("http://localhost:4000/api/contacts", {
+          id: id,
+          firstname: this.state.firstname,
+          lastname: this.state.lastname,
+          home_phone: this.state.home_phone,
+          mobile_phone: this.state.mobile_phone,
+          work_phone: this.state.work_phone,
+          email: this.state.email,
+          city: this.state.city,
+          state_or_province: this.state.state,
+          postal_code: this.state.postal,
+          country: this.state.country
+        })
+        .then(result => {
+          message.loading({ content: "Saving contact...", key });
+          setTimeout(() => {
+            message.success({
+              content: "Successfully added!",
+              key,
+              duration: 2
+            });
+            this.props.form.setFieldsValue({
+              firstname: "",
+              lastname: "",
+              home_phone: "",
+              mobile_phone: "",
+              work_phone: "",
+              email: "",
+              city: "",
+              state_or_province: "",
+              postal_code: "",
+              country: ""
+            });
+            this.props.getAll();
+          }, 1000);
+        });
   };
+
   render() {
     const { visible } = this.state;
     const { getFieldDecorator } = this.props.form;
@@ -114,6 +140,11 @@ class AddContacts extends Component {
             onClick={this.showModal}
           />
         </Tooltip>
+        <Search
+          placeholder="search names"
+          style={{ width: 200, float: "right" }}
+          onChange={e => this.props.handleSearch(e)}
+        />
         <Modal
           visible={visible}
           title="Contacts information"

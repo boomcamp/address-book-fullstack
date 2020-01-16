@@ -62,7 +62,7 @@ function getContactById(req, res) {
   const groups = req.query.groups;
   if (groups == undefined) {
     db.query(
-      `select * from contacts INNER JOIN addressbook on contacts.id = addressbook.contactid where addressbook.userid = ${usersId} ORDER BY lastname `,
+      `select * from contacts INNER JOIN addressbook on contacts.id = addressbook.contactid where addressbook.userid = ${usersId} ORDER BY firstname `,
       []
     ).then(data => {
       res.status(200).json(data);

@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import { Layout, Icon, message, Tabs, Modal, Popconfirm } from "antd";
 import "./homepage.css";
 import Contacts from "./Contacts/Contacts";
+
 import AddContacts from "./AddContacts/AddContacts";
 import axios from "axios";
 import ViewContacts from "./ViewContacts/ViewContacts";
+
 const { confirm } = Modal;
 const { Header, Content } = Layout;
 const TabPane = Tabs.TabPane;
@@ -15,21 +17,49 @@ export default class Homepage extends Component {
     this.state = {
       contacts: [],
       info: [],
-      visible: false
+      visible: false,
+      disabled: true,
+      firstname: "",
+      lastname: "",
+      home_phone: "",
+      mobile_phone: "",
+      work_phone: "",
+      email: "",
+      city: "",
+      state_or_province: "",
+      postal_code: "",
+      country: ""
     };
     this.logout = this.logout.bind(this);
   }
+  componentDidMount() {
+    if (localStorage.getItem("token") != null) {
+      this.props.history.push("/homepage");
+      this.setState({
+        name: localStorage.getItem("name")
+      });
+    } else {
+      this.props.history.push("/");
+    }
+  }
   cancel(e) {}
   onCancel = () => {
-    this.setState({ visible: false });
+    this.setState({ visible: false, disabled: true, edit: "edit" });
   };
   getAll = () => {
     const id = localStorage.getItem("id");
     axios.get(`http://localhost:4000/api/contacts/${id}`).then(res => {
-      // console.log(res.data);
       this.setState({
         contacts: res.data
       });
+    });
+  };
+
+  onUpdate = e => {
+    const fieldName = e.target.name;
+    const val = e.target.value;
+    this.setState({
+      [fieldName]: val
     });
   };
 
@@ -53,47 +83,64 @@ export default class Homepage extends Component {
   };
 
   updateHandler = e => {
-    console.log("aw");
-    // let current = this;
-    // // console.log(this);
-    // confirm({
-    //   title: "Do you want to delete these person?",
-    //   onOk() {
-    //     const id = e;
-    //     axios.delete(`http://localhost:4000/api/contacts/${id}`).then(res => {
-    //       // console.log(this);
-    //       current.getAll();
-    //       message.success("Sucessfully deleted");
-    //     });
-    //   },
-    //   onCancel() {
-    //     // console.log("Cancel");
-    //   }
-    // });
+    this.setState({
+      disabled: false
+    });
+  };
+
+  onSave = e => {
+    const id = e;
+    axios
+      .patch(`http://localhost:4000/api/contacts/${id}`, {
+        firstname: this.state.firstname,
+        lastname: this.state.lastname,
+        home_phone: this.state.home_phone,
+        mobile_phone: this.state.mobile_phone,
+        work_phone: this.state.work_phone,
+        email: this.state.email,
+        city: this.state.city,
+        state_or_province: this.state.state_or_province,
+        postal_code: this.state.postal_code,
+        country: this.state.country
+      })
+      .then(res => {
+        this.getAll();
+        message.success("Updated successfully");
+        this.setState({
+          disabled: true,
+          visible: false
+        });
+      });
   };
 
   viewHandler = e => {
-    // console.log(e.firstname);
     this.setState({
       visible: true,
       info: e
     });
   };
-  componentDidMount() {
-    if (localStorage.getItem("token") != null) {
-      this.props.history.push("/homepage");
-      this.setState({
-        name: localStorage.getItem("name")
-      });
-    } else {
-      this.props.history.push("/");
-    }
-  }
+
   logout() {
     message.success("Sucessfully logout");
     this.props.history.push("/");
     localStorage.clear();
   }
+  handleSearch = e => {
+    // this.setState({
+    //   contacts: e
+    // });
+    const id = localStorage.getItem("id");
+    axios.get(`http://localhost:4000/api/contacts/${id}`).then(res => {
+      var searchData = res.data.filter(data => {
+        const names = data.firstname;
+        console.log(names);
+        // return names.toLowerCase().match(e.toLowerCase());
+        // this.setState({
+        //   contacts: res.data
+        // });
+      });
+    });
+  };
   render() {
     return (
       <div>
@@ -148,19 +195,26 @@ export default class Homepage extends Component {
                   <AddContacts
                     // contacts={this.state.contacts}
                     getAll={this.getAll}
+                    contacts={this.state.contacts}
+                    handleSearch={this.handleSearch}
                   />
                   <br></br>
                   <Contacts
                     contacts={this.state.contacts}
                     getAll={this.getAll}
                     deleteHandler={this.deleteHandler}
-                    updateHandler={this.updateHandler}
                     viewHandler={this.viewHandler}
                   />
                   <ViewContacts
                     visible={this.state.visible}
                     onCancel={this.onCancel}
                     info={this.state.info}
+                    updateHandler={this.updateHandler}
+                    disabled={this.state.disabled}
+                    edit={this.state.edit}
+                    details={this.state.details}
+                    onUpdate={this.onUpdate}
+                    onSave={this.onSave}
                   />
                 </TabPane>
                 <TabPane

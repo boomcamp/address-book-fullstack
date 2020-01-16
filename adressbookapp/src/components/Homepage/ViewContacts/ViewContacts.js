@@ -5,11 +5,15 @@ import { Form, Input } from "antd";
 class ViewContacts extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      // firstname: "", lastname: "", home_phone: "", mobile_phone: "", work_phone: "",
+      // email: "", city: "", state_or_province: "", postal_code: "", country: ""
+    };
   }
 
   componentDidUpdate(nextProps) {
     const contact = this.props.info;
+
     if (nextProps.info !== this.props.info) {
       this.props.form.setFieldsValue({
         firstname: contact.firstname,
@@ -27,6 +31,9 @@ class ViewContacts extends Component {
   }
 
   render() {
+    // console.log(this.props.info.contactid);
+    const id = this.props.info.contactid;
+    const contact = this.props.info;
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
@@ -41,7 +48,7 @@ class ViewContacts extends Component {
           <Form
             layout="inline"
             className="example-input"
-            onSubmit={this.handleSubmit}
+            // onSubmit={() => this.props.updateHandler(id)}
           >
             <Form.Item>
               {getFieldDecorator("firstname", {
@@ -54,6 +61,9 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="firstname"
                   name="firstname"
+                  disabled={this.props.disabled}
+                  setfieldsvalue={contact.firstname}
+                  onChange={e => this.props.onUpdate(e)}
                 />
               )}
             </Form.Item>
@@ -68,7 +78,9 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="lastname"
                   name="lastname"
-                  onChange={e => this.changeHandler(e.target)}
+                  setfieldsvalue={contact.lastname}
+                  disabled={this.props.disabled}
+                  onChange={e => this.props.onUpdate(e)}
                 />
               )}
             </Form.Item>
@@ -83,6 +95,9 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="home_phone"
                   name="home_phone"
+                  setfieldsvalue={contact.home_phone}
+                  disabled={this.props.disabled}
+                  onChange={e => this.props.onUpdate(e)}
                 />
               )}
             </Form.Item>
@@ -99,6 +114,9 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="mobile_phone"
                   name="mobile_phone"
+                  setfieldsvalue={contact.mobile_phone}
+                  disabled={this.props.disabled}
+                  onChange={e => this.props.onUpdate(e)}
                 />
               )}
             </Form.Item>
@@ -113,6 +131,9 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="work_phone"
                   name="work_phone"
+                  setfieldsvalue={contact.work_phone}
+                  disabled={this.props.disabled}
+                  onChange={e => this.props.onUpdate(e)}
                 />
               )}
             </Form.Item>
@@ -127,6 +148,9 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="email"
                   name="email"
+                  setfieldsvalue={contact.email}
+                  disabled={this.props.disabled}
+                  onChange={e => this.props.onUpdate(e)}
                 />
               )}
             </Form.Item>
@@ -144,8 +168,9 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="city"
                   name="city"
-                  setfieldsvalue={this.state.city}
-                  onChange={e => this.changeHandler(e.target)}
+                  setfieldsvalue={contact.city}
+                  disabled={this.props.disabled}
+                  onChange={e => this.props.onUpdate(e)}
                 />
               )}
             </Form.Item>
@@ -161,7 +186,10 @@ class ViewContacts extends Component {
                   }
                   type="text"
                   placeholder="state or province"
-                  name="state"
+                  name="state or province"
+                  setfieldsvalue={contact.state_or_province}
+                  disabled={this.props.disabled}
+                  onChange={e => this.props.onUpdate(e)}
                 />
               )}
             </Form.Item>
@@ -177,7 +205,10 @@ class ViewContacts extends Component {
                   }
                   type="text"
                   placeholder="postal_code"
-                  name="postal"
+                  name="postal_code"
+                  setfieldsvalue={contact.postal_code}
+                  disabled={this.props.disabled}
+                  onChange={e => this.props.onUpdate(e)}
                 />
               )}
             </Form.Item>
@@ -192,15 +223,32 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="country"
                   name="country"
+                  setfieldsvalue={contact.country}
+                  disabled={this.props.disabled}
+                  onChange={e => this.props.onUpdate(e)}
                 />
               )}
             </Form.Item>
             <br />
             <br />
             <Button onClick={this.props.onCancel}>cancel</Button>&nbsp;&nbsp;
-            <Button type="primary" htmlType="submit">
-              save
-            </Button>
+            {this.props.disabled ? (
+              <Button
+                type="primary"
+                htmlType="submit"
+                onClick={() => this.props.updateHandler(id)}
+              >
+                edit
+              </Button>
+            ) : (
+              <Button
+                type="primary"
+                htmlType="submit"
+                onClick={() => this.props.onSave(id)}
+              >
+                save
+              </Button>
+            )}
           </Form>
         </Modal>
       </div>
