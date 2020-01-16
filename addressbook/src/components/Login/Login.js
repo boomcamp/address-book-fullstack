@@ -35,6 +35,7 @@ class Login extends Component {
       .post(`http://localhost:3003/api/login`, this.state)
       .then(res => {
         if (res.status == 200) {
+          localStorage.setItem("id", res.data.id);
           localStorage.setItem("token", res.data.token);
           console.log(res.data.token);
           this.props.history.push("/homepage");

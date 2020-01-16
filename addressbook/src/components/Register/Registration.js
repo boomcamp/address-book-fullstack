@@ -53,6 +53,7 @@ class Registration extends Component {
       axios.post("http://localhost:3003/api/register", this.state).then(res => {
         console.log(res.data.token);
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("id",res.data.id)
         this.props.history.push("/homepage");
         message.success("Welcome " + this.state.username);
       });

@@ -9,17 +9,19 @@ import Headers from "../Header/Header";
 import Allcontacts from "../Allcontacts/Allcontacts";
 import Addcontacts from "../Addcontacts/Addcontacts";
 const { Header, Content, Footer, Sider } = Layout;
+
 const { SubMenu } = Menu;
 
 export default class AddHomePage extends Component {
 
   constructor(props) {
-    super(props)
+    super(props)  
   
     this.state = {
        id:'',
        lastname:'',
        allContacts:[],
+       ids:parseInt(localStorage.getItem('id'))
     }
   }
   
@@ -29,8 +31,14 @@ export default class AddHomePage extends Component {
     } else {
       this.props.history.push("/");
     }
-      axios.get(`http://localhost:3003/api/allContacts`).then(data => {
+    this.getCont()
+  }
+
+  getCont = () => {
+  const  id = localStorage.getItem('id')
+    axios.get(`http://localhost:3003/api/allContacts/${id}`).then(data => {
         // console.log(data.lastname);
+        // console.log(data)
         this.setState({ allContacts: data.data });
         // data.data.map(e => {
         //   console.log(e.lastname);
@@ -38,9 +46,10 @@ export default class AddHomePage extends Component {
         //   this.setState({ lastname: e.lastname, firstname: e.firstname });
         // });
       });
-    
   }
-
+handleSearch =(e)=>{
+  console.log(e)
+}
   handleLogout = e => {
     localStorage.clear();
     this.props.history.push("/");
@@ -95,12 +104,12 @@ export default class AddHomePage extends Component {
               </Tooltip>
             </Popconfirm>
 
-            <Addcontacts />
+            <Addcontacts   />
           </div>
         </div>
         
         <div className="allContacts">
-          <Allcontacts allContacts={this.state.allContacts}/>
+          <Allcontacts getCont={this.getCont} allContacts={this.state.allContacts}/>
         </div>
         <Footers />
       </div>

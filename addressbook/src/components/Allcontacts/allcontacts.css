@@ -15,4 +15,14 @@
 }
 .names{
   font-size: 1.2em;
+  
+}
+.names1{
+  
+  display: flex;
+  flex-wrap: wrap;
+}
+.lastFirstname{
+  display: flex;
+  flex-wrap: wrap;
 }

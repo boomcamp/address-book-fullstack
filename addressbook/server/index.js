@@ -21,9 +21,11 @@ massive({
     app.post("/api/login", reg.login);
    
     app.get("/api/users", reg.list);
-    app.get("/api/allContacts", addcontact.allcontacts);
+    app.get("/api/allContacts/:id", addcontact.allcontacts);
     app.delete('/api/deleteContact/:id', addcontact.delete);
-
+    app.patch('/api/update/:id', addcontact.update)
+    // app.get('/addressbook/:id', contacts.contactList);
+ 
     app.post("/api/create", addcontact.addcontact);
     app.get("/api/protected/data", (req, res) => {
       if (!req.headers.authorization) {

@@ -1,16 +1,7 @@
 import React, { Component } from "react";
-import {
-  
-  Tooltip,
-  Modal,
-  Form,
-  Icon,
-  Input,
-  Select,
-  Popconfirm
-} from "antd";
-import { Drawer, Button } from 'antd';
-import Groups from '../Groups/Groups'
+import { Tooltip, Modal, Form, Icon, Input, Select, Popconfirm } from "antd";
+import { Drawer, Button } from "antd";
+import Groups from "../Groups/Groups";
 import axios from "axios";
 import { message } from "antd";
 import "./adduser.css";
@@ -29,12 +20,16 @@ class AddBookCard extends Component {
       city: "",
       stae_or_province: "",
       postal_code: "",
-      country: ""
+      country: "",
+      userid:localStorage.getItem('id'),
     };
   }
 
   handleChange = e => {
+   var ids =localStorage.getItem('id')
     console.log(e.value);
+    // this.setState({userId:ids})
+    console.log(this.state.userid)
     e.name === "lname"
       ? this.setState({ lastname: e.value })
       : e.name === "fname"
@@ -55,7 +50,7 @@ class AddBookCard extends Component {
       ? this.setState({ postal_code: e.value })
       : e.name === "country"
       ? this.setState({ country: e.value })
-      : console.log(this.state.lastname);
+      :console.log("object")
   };
   handleSubmit = e => {
     e.preventDefault();
@@ -74,14 +69,14 @@ class AddBookCard extends Component {
       this.state.country !== ""
     ) {
       axios.post("http://localhost:3003/api/create", this.state).then(res => {
-        console.log(res);
-        // this.props.history.push("/homepage");
-        message.success("adedd");
-
+        console.log(res); 
+        console.log(this.state.userId)
+        message.success("Added Successfully!");
         setTimeout(window.location.reload.bind(window.location), 250);
       });
     } else {
-      message.warning("Please Complete the Form");
+      message.warning("Please Fill Out the Form");
+
     }
   };
   onChange = checked => {
@@ -114,13 +109,13 @@ class AddBookCard extends Component {
   };
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
   };
 
   onClose = () => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
   render() {
@@ -162,7 +157,6 @@ class AddBookCard extends Component {
     // const { getFieldDecorator } = form;
     return (
       <div>
-       
         <div className="addContainer">
           <div className="adding">
             <Tooltip title="Add Contact" placement="bottom">
@@ -174,11 +168,11 @@ class AddBookCard extends Component {
                 onClick={this.showModal}
               ></Icon>
             </Tooltip>
-           
-            <Groups/>
+
+            <Groups />
           </div>
         </div>
-       
+
         <Modal
           title="Add Contact"
           visible={this.state.visible}
