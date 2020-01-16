@@ -33,6 +33,12 @@ class Addressbooktable extends Component {
     super(props);
 
     this.state = {
+      disabled: true,
+      buttonChange: "Edit",
+      saveDisabled: true,
+      editButton: "flex",
+      saveButton: "none",
+
       fname: "",
       lname: "",
       mobilephone: "",
@@ -120,7 +126,6 @@ class Addressbooktable extends Component {
                   openModal={this.state.openModal}
                   dataEdit={this.state.dataEdit}
                   setFields={this.setFields}
-
                   fname={this.state.fname}
                   lname={this.state.lname}
                   email={this.state.email}
@@ -131,6 +136,15 @@ class Addressbooktable extends Component {
                   homephone={this.state.homephone}
                   workphone={this.state.workphone}
                   country={this.state.country}
+
+                  disabled={this.state.disabled}
+                  buttonChange={this.state.buttonChange}
+                  saveDisabled={this.state.saveDisabled}
+                  editButton={this.state.editButton}
+                  saveButton={this.state.saveButton}
+
+                  handleCancel={this.handleCancel}
+                  handleEdit={this.handleEdit}
                 />
               </span>
 
@@ -153,6 +167,32 @@ class Addressbooktable extends Component {
       ]
     };
   }
+  handleEdit=()=>{
+    this.setState({
+      disabled: false,
+      saveDisabled: false,
+      editButton: "none",
+      saveButton: "flex"
+    })
+  }
+  handleCancel = () => {
+    this.handleCloseModal()
+       this.setState({
+         fname: "",
+         lname: "",
+         homephone: "",
+         mobilephone: "",
+         workphone: "",
+         email: "",
+         city: "",
+         stateOrProvince: "",
+         postalcode: "",
+         country: "",
+         disabled: true,
+         editButton: true,
+         saveButton: "none"
+       });
+     };
   handleOpenModal = item => {
     const idEdit = item.item.rowData.contactid;
     localStorage.setItem("idEdit", item.item.rowData.contactid);
@@ -163,23 +203,25 @@ class Addressbooktable extends Component {
         city: res.data.city,
         prov: res.data.state_or_province,
         country: res.data.country,
-        mobile_phone: res.data.mobile_phone,
+        mobilephone: res.data.mobile_phone,
         homephone: res.data.home_phone,
         workphone: res.data.work_phone,
         email: res.data.email,
         postal: res.data.postal_code,
       });
-
+    
+      // console.log(this.state.mobilephone)
       
     });
     this.setState({
-      openModal: true
+      openModal: true,
+      disabled: true
     });
   };
   handleCloseModal = () => {
     localStorage.removeItem("idEdit");
     this.setState({
-      openModal: false
+      openModal: false,
     });
   };
 
@@ -226,6 +268,7 @@ class Addressbooktable extends Component {
       });
   };
   setFields = event => {
+    // console.log(event.target)
     // this.setState({
     //   fname: event.target.value
     // })

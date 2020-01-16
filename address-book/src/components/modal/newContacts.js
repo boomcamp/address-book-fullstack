@@ -83,6 +83,7 @@ export default class NewContacts extends Component {
       });
   };
   setFields = event => {
+    // console.log(event)
     var fieldname = event.target.name;
     var fieldError = fieldname + "Error";
     var value = event.target.value;

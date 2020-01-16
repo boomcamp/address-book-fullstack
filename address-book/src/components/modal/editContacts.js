@@ -12,39 +12,15 @@ import LocationCityIcon from "@material-ui/icons/LocationCity";
 import HomeIcon from "@material-ui/icons/Home";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import PhoneIcon from "@material-ui/icons/Phone";
+
 export default class EditContacts extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      disabled: true,
-      openModal: false,
-      id: "",
-      buttonChange: "Edit",
-      saveDisabled: true,
-      editButton: "flex",
-      saveButton: "none"
+      id: ""
     };
   }
-
-  handleCancel = () => {
-    this.props.handleCloseModal();
-    this.setState({
-      fname: "",
-      lname: "",
-      homephone: "",
-      mobilephone: "",
-      workphone: "",
-      email: "",
-      city: "",
-      stateOrProvince: "",
-      postalcode: "",
-      country: "",
-      disabled: false,
-      editButton: true,
-      saveButton: "none"
-    });
-  };
 
   handleUpdateContacts = () => {
     const id = localStorage.getItem("idEdit");
@@ -64,7 +40,7 @@ export default class EditContacts extends Component {
 
   render() {
     const { openModal, handleCloseModal, dataEdit } = this.props;
-    console.log(this.props.mobilephone)
+    // console.log(this.props.mobilephone);
     return (
       <React.Fragment>
         <Dialog
@@ -101,7 +77,7 @@ export default class EditContacts extends Component {
                   type="text"
                   name="fname"
                   value={this.props.fname}
-                  disabled={this.state.disabled}
+                  disabled={this.props.disabled}
                   onChange={e => {
                     this.props.setFields(e);
                   }}
@@ -125,7 +101,7 @@ export default class EditContacts extends Component {
                   type="text"
                   name="lname"
                   value={this.props.lname}
-                  disabled={this.state.disabled}
+                  disabled={this.props.disabled}
                   onChange={e => {
                     this.props.setFields(e);
                   }}
@@ -153,7 +129,7 @@ export default class EditContacts extends Component {
                   margin="normal"
                   type="text"
                   name="mobilephone"
-                  disabled={this.state.disabled}
+                  disabled={this.props.disabled}
                   value={this.props.mobilephone}
                   onChange={e => {
                     this.props.setFields(e);
@@ -167,6 +143,7 @@ export default class EditContacts extends Component {
                     )
                   }}
                 />
+
                 <TextField
                   required
                   id="standard-required"
@@ -175,7 +152,7 @@ export default class EditContacts extends Component {
                   type="text"
                   name="workphone"
                   value={this.props.workphone}
-                  disabled={this.state.disabled}
+                  disabled={this.props.disabled}
                   onChange={e => {
                     this.props.setFields(e);
                   }}
@@ -203,8 +180,8 @@ export default class EditContacts extends Component {
                   margin="normal"
                   type="text"
                   name="homephone"
-                  value={this.props.dataEdit.homephone}
-                  disabled={this.state.disabled}
+                  value={this.props.homephone}
+                  disabled={this.props.disabled}
                   onChange={e => {
                     this.props.setFields(e);
                   }}
@@ -226,7 +203,7 @@ export default class EditContacts extends Component {
                   margin="normal"
                   type="text"
                   name="email"
-                  disabled={this.state.disabled}
+                  disabled={this.props.disabled}
                   value={this.props.email}
                   onChange={e => {
                     this.props.setFields(e);
@@ -253,7 +230,7 @@ export default class EditContacts extends Component {
                   id="standard-required"
                   label={this.state.cityError ? "Required city" : "city"}
                   error={this.state.cityError}
-                  disabled={this.state.disabled}
+                  disabled={this.props.disabled}
                   margin="normal"
                   type="text"
                   name="city"
@@ -284,7 +261,7 @@ export default class EditContacts extends Component {
                   type="text"
                   name="prov"
                   value={this.props.prov}
-                  disabled={this.state.disabled}
+                  disabled={this.props.disabled}
                   onChange={e => {
                     this.props.setFields(e);
                   }}
@@ -314,7 +291,7 @@ export default class EditContacts extends Component {
                       : "Postal Code"
                   }
                   error={this.state.postal_codeError}
-                  disabled={this.state.disabled}
+                  disabled={this.props.disabled}
                   margin="normal"
                   type="text"
                   name="postal"
@@ -338,7 +315,7 @@ export default class EditContacts extends Component {
                     this.state.countryError ? "Required  Country" : "Country"
                   }
                   error={this.state.countryError}
-                  disabled={this.state.disabled}
+                  disabled={this.props.disabled}
                   margin="normal"
                   type="text"
                   name="country"
@@ -359,29 +336,22 @@ export default class EditContacts extends Component {
             </DialogContent>
             <DialogActions>
               <Button
-                style={{ display: `${this.state.editButton}` }}
-                onClick={() =>
-                  this.setState({
-                    disabled: false,
-                    saveDisabled: false,
-                    editButton: "none",
-                    saveButton: "flex"
-                  })
-                }
+                style={{ display: `${this.props.editButton}` }}
+                onClick={() => this.props.handleEdit()}
                 color="primary"
               >
                 Edit
               </Button>
               <Button
                 type="submit"
-                style={{ display: `${this.state.saveButton}` }}
-                disabled={this.state.saveDisabled}
+                style={{ display: `${this.props.saveButton}` }}
+                disabled={this.props.saveDisabled}
                 color="primary"
               >
                 Save
               </Button>
 
-              <Button onClick={() => this.handleCancel()} color="primary">
+              <Button onClick={() => this.props.handleCancel()} color="primary">
                 Cancel
               </Button>
             </DialogActions>

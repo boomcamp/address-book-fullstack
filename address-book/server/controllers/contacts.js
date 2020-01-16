@@ -78,18 +78,6 @@ function contactList(req, res) {
     });
   }
 }
-// function deleteContact(req, res) {
-//   const db = req.app.get('db');
-
-//   const id = req.params.id;
-//   db.contacts
-//     .destroy({
-//       id
-//     }).then(contact => { res.status(200).json(contacts);
-//     }).catch(err => { res.status(500).end();
-//     })
-// }
-
 function deleteContact(req, res) {
   const db = req.app.get("db");
   const id = req.params.id;

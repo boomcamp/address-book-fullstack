@@ -21,15 +21,33 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import PeopleOutline from "@material-ui/icons/PeopleOutline";
 
+
 export default class NewGroups extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      
+      groupName:""
+
     };
   }
 
+  handleCreateGroups=()=>{
+   const id = localStorage.getItem("id")
+    axios.post(`/createGroup`,{
+    userid: id,
+    group_name: this.state.groupName,
+    }
+    ).then(res =>{
+      this.setState({
+        groupName: ""
+      })
+    })
+    
+    this.props.handleCloseModal()
+  
+    console.log(this.state.groupName)
+  }
 
   render() {
     const {open, handleCloseModal} = this.props
@@ -63,7 +81,7 @@ export default class NewGroups extends Component {
               type="submit"
               color="primary"
               onClick={() =>
-                handleCloseModal()
+                this.handleCreateGroups()
               }
             >
               Add
