@@ -1,18 +1,21 @@
 import React from "react";
 
 export default function Header(props) {
-
-    const logout = () => {
-        console.log("logging out")
-        sessionStorage.removeItem('token')
-        window.location.reload();
-    }
+  const logout = () => {
+    console.log("logging out");
+    sessionStorage.removeItem("token");
+    window.location.reload();
+  };
 
   return (
     <>
       <div className="header-container" style={style.header}>
         <p style={style.title}>{props.title}</p>
-        <div className="logout-container" style={style.logout} onClick={()=>logout()}>
+        <div
+          className="logout-container"
+          style={style.logout}
+          onClick={() => logout()}
+        >
           <p>Logout</p>
         </div>
       </div>
@@ -27,18 +30,20 @@ const style = {
     alignItems: "center",
     height: "50px",
     width: "100%",
-    background: "#142273",
-    color: "white"
+    background: "#0277bd",
+    color: "#ffffff",
+    // boxShadow: '5px 10px #888888'
   },
   logout: {
-    background: "#1B0A40",
+    background: "#0277bd",
     height: "30px",
     width: "75px",
     fontSize: "0.89em",
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
-    cursor: "pointer"
+    cursor: "pointer",
+    colort: "white"
   },
   title: {
     fontSize: "0.89em"

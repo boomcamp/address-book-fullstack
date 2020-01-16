@@ -32,46 +32,52 @@ export default function ContactsTable(highprops) {
   });
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/contacts", {
-        headers: { Authorization: sessionStorage.getItem("token") }
-      })
-      .then(contacts => {
-        console.log(contacts.data);
-
-        let contact_data = [];
-
-        contacts.data.map(contact => {
-          contact_data.push({
-            key: contact.id,
-            id: contact.id,
-            first_name: contact.first_name,
-            last_name: contact.last_name,
-            home_phone: contact.home_phone,
-            mobile_phone: contact.mobile_phone,
-            work_phone: contact.work_phone,
-            email: contact.email,
-            city: contact.email,
-            state_or_province: contact.state_or_province,
-            postal_code: contact.postal_code,
-            country: contact.country
-          });
-        });
-
-        console.log(contact_data);
-        setState(state => {
-          return { ...state, data: contact_data };
-        });
-      })
-      .catch(e => {
-        console.warn(e);
+    if (highprops.tableData) {
+      console.log(highprops.tableData);
+      setState(state => {
+        return { ...state, data: highprops.tableData };
       });
-  }, []);
+    } else {
+      axios
+        .get("http://localhost:5000/api/contacts", {
+          headers: { Authorization: sessionStorage.getItem("token") }
+        })
+        .then(contacts => {
+          console.log(contacts.data);
+
+          let contact_data = [];
+
+          contacts.data.map(contact => {
+            contact_data.push({
+              key: contact.id,
+              id: contact.id,
+              first_name: contact.first_name,
+              last_name: contact.last_name,
+              home_phone: contact.home_phone,
+              mobile_phone: contact.mobile_phone,
+              work_phone: contact.work_phone,
+              email: contact.email,
+              city: contact.email,
+              state_or_province: contact.state_or_province,
+              postal_code: contact.postal_code,
+              country: contact.country
+            });
+          });
+
+          console.log(contact_data);
+          setState(state => {
+            return { ...state, data: contact_data };
+          });
+        })
+        .catch(e => {
+          console.warn(e);
+        });
+    }
+  }, [highprops.tableData]);
 
   function DeleteData(data) {
-
     console.log(data);
-    
+
     axios
       .delete(`http://localhost:5000/api/contact/delete/${data}`, {
         headers: { Authorization: sessionStorage.getItem("token") }
@@ -104,7 +110,7 @@ export default function ContactsTable(highprops) {
   }
 
   function EditData(newdata, olddata) {
-    console.log("old data : " + olddata.active);
+    // console.log("old data : " + olddata.active);
 
     axios
       .put(
@@ -138,9 +144,8 @@ export default function ContactsTable(highprops) {
       data={state.data}
       options={{
         actionsColumnIndex: -1,
-        selection: true,
+        selection: true
       }}
-
       actions={[
         {
           tooltip: "Remove All Selected Users",
@@ -161,7 +166,7 @@ export default function ContactsTable(highprops) {
           tooltip: "Add User",
           isFreeAction: true,
           onClick: event => {
-            highprops.prepareNewData()
+            highprops.prepareNewData();
           }
         }
       ]}

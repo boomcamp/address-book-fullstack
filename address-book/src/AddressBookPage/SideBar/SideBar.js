@@ -10,9 +10,10 @@ export default function SideBar(highprops) {
   });
 
   const [dataPass, setDataPass] = useState(null);
+  const [dataFromGroups, setdataFromGroups] = useState(false);
 
   useEffect(() => {
-    // console.log(highprops.newdataping);
+    console.log(dataPass);
 
     if (highprops.contactData) {
       setDataPass(highprops.contactData);
@@ -40,47 +41,75 @@ export default function SideBar(highprops) {
   };
 
   const close = () => {
+    console.log("closing");
     setState(prevState => {
       return { addContact_tab: false, contactGroups_tab: false };
     });
   };
 
+  const DataFromGroups = data => {
+    setdataFromGroups(true);
+    // setDataPass(data);
+    close();
+    highprops.setTableData(data);
+  };
+
   return (
     <>
-      <div className="header-menu-container">
-        <div
-          className={
-            state.contactGroups_tab
-              ? "tabs-container active-tab"
-              : "tabs-container"
-          }
-          onClick={() => {
-            change("open_groups");
-          }}
-        >
-          <p> Contact Groups </p>
+      <div className="main-container-tabs">
+        <div className="header-menu-container">
+          <div
+            className={
+              state.contactGroups_tab
+                ? "tabs-container active-tab"
+                : "tabs-container"
+            }
+            onClick={() => {
+              change("open_groups");
+            }}
+          >
+            <p> Contact Groups </p>
+          </div>
+          <div
+            className={
+              state.addContact_tab
+                ? "tabs-container active-tab"
+                : "tabs-container"
+            }
+            onClick={() => {
+              change("open_add");
+            }}
+          >
+            <p> Contact Form </p>
+          </div>
         </div>
-        <div
-          className={
-            state.addContact_tab
-              ? "tabs-container active-tab"
-              : "tabs-container"
-          }
-          onClick={() => {
-            change("open_add");
-          }}
-        >
-          <p> Add Contact </p>
+
+        <div className="tabs-body-container">
+          {state.contactGroups_tab ? (
+            <>
+              <div className="container-close" onClick={() => close()}>
+                X
+              </div>
+              <GroupContacts setDataGroup={DataFromGroups} />
+            </>
+          ) : (
+            ""
+          )}
+
+          {state.addContact_tab ? (
+            <>
+              <div className="container-close" onClick={() => close()}>
+                X
+              </div>
+              <ContactForm contactData={dataPass} />
+            </>
+          ) : (
+            ""
+          )}
         </div>
       </div>
 
-      <div className="tabs-body-container">
-        {state.addContact_tab ? (
-          <ContactForm contactData={dataPass} />
-        ) : (
-          <GroupContacts />
-        )}
-      </div>
+      {/* <div className="black-overlay" /> */}
     </>
   );
 }

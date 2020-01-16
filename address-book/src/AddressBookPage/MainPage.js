@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ContactsTable from "./ContactsTable";
 import Header from "./Header";
 import { Redirect } from "react-router-dom";
@@ -8,13 +8,18 @@ import SideBar from "./SideBar/SideBar";
 
 export default function MainPage() {
   const [state, setState] = useState(null);
-  let ping = 0;
+  const [tableState, setTableState] = useState(null);
 
   if (!sessionStorage.getItem("token")) {
     return <Redirect to="/" />;
   }
 
+  // useEffect(() => {
+
+  // }, [state]);
+
   const tranferData = data => {
+    // console.log(data)
     setState(data.data);
     // console.log(data.data)
   };
@@ -24,10 +29,18 @@ export default function MainPage() {
     setState(null);
   };
 
+  const setTableData = data => {
+    console.log(data.data);
+    setTableState(data.data);
+  };
+
   return (
     <>
+      {/* <div className="black-overlay" /> */}
+
       <Header title="Address Book" />
       <SideBar
+        setTableData={setTableData}
         contactData={state}
         prepareNewData={state === null ? true : false}
       />
@@ -38,6 +51,7 @@ export default function MainPage() {
       <ContactsTable
         contactTransfer={tranferData}
         prepareNewData={prepareNewData}
+        tableData={tableState}
       />
     </>
   );

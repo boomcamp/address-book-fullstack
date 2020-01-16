@@ -1,10 +1,61 @@
-.group-definition-container{
-    /* border: 1px solid blue; */
-    width: 150px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgb(241, 241, 241);
-    margin: 5px;
+.group-definition-container {
+  /* border: 1px solid blue; */
+  width: 250px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(2, 169, 244);
+  margin: 5px;
+  border-radius: 5px;
+  color: white;
+}
+
+.group-definition-container:hover {
+  background: #004c8b;
+}
+
+/* mobile phones */
+.group-context-container {
+  border: 1px solid red;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  height: 100vh;
+  width: 100%;
+  background: white;
+}
+
+.black-overlay {
+  background: black;
+  width: 100%;
+  position: fixed;
+  z-index: 10;
+  height: 100vh;
+  top: 0px;
+  opacity: 0.9;
+}
+
+/* tablets */
+@media only screen and (min-width: 600px) {
+  .group-context-container {
+    width: 100%;
+    border: 1px solid blue;
+    position: absolute;
+    z-index: 50;
+    background: white;
+  }
+}
+
+/* desktop */
+@media only screen and (min-width: 768px) {
+  .group-context-container {
+    width: 100%;
+    border: 1px solid green;
+    position: absolute;
+    z-index: 50;
+    background: white;
+  }
 }

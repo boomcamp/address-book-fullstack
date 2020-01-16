@@ -217,5 +217,21 @@ module.exports = {
       .catch(err => {
         res.status(500).end();
       });
+  },
+  getGroupsContacts: (req, res) => {
+    const db = req.app.get("db");
+
+    // const { groupid } = req.body;
+
+    db.query(
+      `SELECT 	contacts.id,	first_name,	last_name,	home_phone,	mobile_phone,	work_phone,	email,	city,	state_or_province,	postal_code,	country FROM contacts INNER JOIN groups_track ON contacts.id = groups_track.contactid WHERE groups_track.groupid = ${req.params.id};`
+    )
+      .then(data => {
+        // console.log("groups", data);
+        res.status(201).json(data);
+      })
+      .catch(err => {
+        res.status(500).end();
+      });
   }
 };

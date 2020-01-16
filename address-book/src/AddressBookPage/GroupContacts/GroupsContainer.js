@@ -1,9 +1,24 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from "react";
 
 export default function GroupsContainer(highprops) {
-    return (
-        <div>
-             <div className="group-definition-container">{highprops.glist}</div>
-        </div>
-    )
+  return (
+    <div>
+      <div
+        data-id={highprops.glist.id}
+        className="group-definition-container"
+        style={style.groupDefinitionContainer}
+        onClick={() => {
+          highprops.getGroups(highprops.glist.id);
+        }}
+      >
+        {highprops.glist.group_name}
+      </div>
+    </div>
+  );
 }
+
+const style = {
+  groupDefinitionContainer: {
+    cursor: "pointer"
+  }
+};

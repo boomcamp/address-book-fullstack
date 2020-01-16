@@ -1,4 +1,4 @@
-import React, {  useState, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
@@ -64,7 +64,7 @@ export default function Login() {
   return (
     <Fragment>
       <div className="login-container" style={styles.loginContainer}>
-        <h3>Login</h3>
+        <p>Login</p>
         <div className="input-fields">
           <ValidatorForm
             className={classes.root}
@@ -85,7 +85,7 @@ export default function Login() {
               onChange={loginUserName}
             />
             <TextValidator
-              error={(errstate.status === 400 ? true : false)}
+              error={errstate.status === 400 ? true : false}
               id="outlined-password-input"
               name="password"
               value={state.password}
@@ -103,12 +103,21 @@ export default function Login() {
             ) : (
               ""
             )}
-            <Button type="submit">Submit</Button>
+            {/* <Button type="submit">Submit</Button> */}
+
+            <button style={styles.submitBtn} type="submit">
+              Submit
+            </button>
+            
           </ValidatorForm>
         </div>
 
-        <Link style={styles.siguplink} to="/signup">
-          signup
+        <Link
+          style={{ color: "grey", textDecoration: "none", fontSize: "0.8em" }}
+          to="/signup"
+        >
+          Need an account?{" "}
+          <span style={styles.signuplink}>click to sign-up</span>
         </Link>
       </div>
     </Fragment>
@@ -131,10 +140,12 @@ const styles = {
     alignItems: "center",
     flexDirection: "column",
     width: "400px",
-    border: "1px solid grey",
+    border: "1px solid #e8e8e8",
     height: "400px",
     margin: "0 auto",
-    marginTop: "20%"
+    marginTop: "20%",
+    boxShadow: "rgb(214, 214, 214) 1px 1px 5px 0px",
+    borderRadius: "9px"
   },
   inputfields: {
     display: "flex",
@@ -142,9 +153,20 @@ const styles = {
     alignItems: "center",
     flexDirection: "column"
   },
-  siguplink: {
+  signuplink: {
     cursor: "pointer",
-    color: "grey",
+    color: "#2196f3",
     textDecoration: "underline"
+  },
+  submitBtn: {
+    width: "186px",
+    height: "32px",
+    background: "#2196F3",
+    color: "white",
+    border: "none",
+    marginTop: "25px",
+    marginBottom: "20px",
+    borderRadius: "4px",
+    cursor: "pointer"
   }
 };

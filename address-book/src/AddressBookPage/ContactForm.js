@@ -40,7 +40,7 @@ export default function ContactForm(highprops) {
   });
 
   useEffect(() => {
-    if (highprops.contactData===null) {
+    if (highprops.contactData === null) {
       setState({
         first_name: "",
         last_name: "",
@@ -56,7 +56,6 @@ export default function ContactForm(highprops) {
       setgrpState(prevState => {
         return { ...prevState, selectedGroupName: "" };
       });
-
     }
 
     if (highprops.contactData) {
@@ -66,16 +65,21 @@ export default function ContactForm(highprops) {
         return { ...datatransfer };
       });
 
-      setGroup();
+      console.log(highprops.contactData.id);
+
+      setGroup(highprops.contactData.id);
     }
     getGroup();
   }, [highprops.contactData]);
 
-  const setGroup = () => {
+  const setGroup = id => {
     // here
+
+    console.log("settting group", id);
+
     axios({
       method: "get",
-      url: `http://localhost:5000/api/contacts/groups/reference/retrieve/${highprops.contactData.id}`,
+      url: `http://localhost:5000/api/contacts/groups/reference/retrieve/${id}`,
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
@@ -229,7 +233,7 @@ export default function ContactForm(highprops) {
   }
 
   const saveData = () => {
-    if (highprops.contactData===null) {
+    if (highprops.contactData === null) {
       AddData(state);
     } else {
       EditData(state, highprops.contactData);
@@ -337,8 +341,14 @@ export default function ContactForm(highprops) {
                 id="outlined-required"
                 name="home_phone"
                 value={state.home_phone}
-                validators={["required"]}
-                errorMessages={["this field is required"]}
+                validators={[
+                  "required",
+                  "matchRegexp:^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$"
+                ]}
+                errorMessages={[
+                  "this field is required",
+                  "Input is invalid, must be a number"
+                ]}
                 label="Home Phone"
                 variant="outlined"
                 onChange={stateUpdate}
@@ -348,8 +358,14 @@ export default function ContactForm(highprops) {
                 id="outlined-required"
                 name="mobile_phone"
                 value={state.mobile_phone}
-                validators={["required"]}
-                errorMessages={["this field is required"]}
+                validators={[
+                  "required",
+                  "matchRegexp:^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$"
+                ]}
+                errorMessages={[
+                  "this field is required",
+                  "Input is invalid, must be a number"
+                ]}
                 label="Mobile Phone"
                 variant="outlined"
                 onChange={stateUpdate}
@@ -359,8 +375,14 @@ export default function ContactForm(highprops) {
                 id="outlined-required"
                 name="work_phone"
                 value={state.work_phone}
-                validators={["required"]}
-                errorMessages={["this field is required"]}
+                validators={[
+                  "required",
+                  "matchRegexp:^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$"
+                ]}
+                errorMessages={[
+                  "this field is required",
+                  "Input is invalid, must be a number"
+                ]}
                 label="Work Phone"
                 variant="outlined"
                 onChange={stateUpdate}
@@ -375,8 +397,11 @@ export default function ContactForm(highprops) {
                 id="outlined-required"
                 name="email"
                 value={state.email}
-                validators={["required"]}
-                errorMessages={["this field is required"]}
+                validators={["required", "isEmail"]}
+                errorMessages={[
+                  "this field is required",
+                  "Email format is invalid"
+                ]}
                 label="Email"
                 variant="outlined"
                 onChange={stateUpdate}
@@ -408,8 +433,11 @@ export default function ContactForm(highprops) {
                 id="outlined-required"
                 name="postal_code"
                 value={state.postal_code}
-                validators={["required"]}
-                errorMessages={["this field is required"]}
+                validators={["required", "matchRegexp:^[0-9]+$"]}
+                errorMessages={[
+                  "this field is required",
+                  "Input format is invalid"
+                ]}
                 label="Postal Code"
                 variant="outlined"
                 onChange={stateUpdate}
@@ -447,8 +475,17 @@ export default function ContactForm(highprops) {
                 />
               )}
             />
-            <Button type="submit">Save</Button>
-            <Button onClick={() => cancel()}>Cancel</Button>
+
+            {/* <Button type="submit">Save</Button>
+            <Button onClick={() => cancel()}>Cancel</Button> */}
+
+            <button style={styles.submitBtn} type="submit">
+              Save
+            </button>
+
+            <button style={styles.cancelBtn} onClick={() => cancel()}>
+              Cancel
+            </button>
           </ValidatorForm>
         </div>
       </div>
@@ -500,5 +537,25 @@ const styles = {
     flexWrap: "wrap",
     width: "100%",
     maxWidth: "900px"
+  },
+  submitBtn: {
+    width: "186px",
+    height: "40px",
+    background: "#2196F3",
+    color: "white",
+    border: "none",
+    marginTop: "25px",
+    marginBottom: "10px",
+    borderRadius: "4px",
+    cursor: "pointer"
+  },
+  cancelBtn: {
+    width: "186px",
+    height: "40px",
+    background: "rgb(202, 202, 202)",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer"
   }
 };

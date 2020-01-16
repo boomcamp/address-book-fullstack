@@ -5,6 +5,7 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Signup() {
   const classes = useStyles();
@@ -83,7 +84,7 @@ export default function Signup() {
   return (
     <Fragment>
       <div className="login-container" style={styles.loginContainer}>
-        <h3>Sign Up</h3>
+        <p>Sign Up</p>
         <div className="input-fields">
           <ValidatorForm
             className={classes.root}
@@ -128,7 +129,22 @@ export default function Signup() {
               type="password"
             />
 
-            <Button type="submit">Register</Button>
+            <button style={styles.submitBtn} type="submit">
+              Register
+            </button>
+
+            <Link
+              style={{
+                color: "grey",
+                textDecoration: "none",
+                fontSize: "0.8em",
+                textAlign: 'center',
+                // marginBottom: '40px'
+              }}
+              to="/"
+            >
+              <span>Back to Login</span>
+            </Link>
           </ValidatorForm>
         </div>
       </div>
@@ -152,10 +168,13 @@ const styles = {
     alignItems: "center",
     flexDirection: "column",
     width: "400px",
-    border: "1px solid grey",
+    border: "1px solid #e8e8e8",
     height: "400px",
     margin: "0 auto",
-    marginTop: "20%"
+    marginTop: "20%",
+    boxShadow: "rgb(214, 214, 214) 1px 1px 5px 0px",
+    borderRadius: "9px",
+    padding:"15px 0"
   },
   inputfields: {
     display: "flex",
@@ -165,7 +184,19 @@ const styles = {
   },
   siguplink: {
     cursor: "pointer",
-    color: "grey",
-    textDecoration: "underline"
+    color: "#2196f3",
+    textDecoration: "underline",
+    margin:"0 auto"
+  },
+  submitBtn: {
+    width: "186px",
+    height: "32px",
+    background: "#2196F3",
+    color: "white",
+    border: "none",
+    marginTop: "25px",
+    marginBottom: "20px",
+    borderRadius: "4px",
+    cursor: "pointer"
   }
 };
