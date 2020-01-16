@@ -15,6 +15,10 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Divider } from "@material-ui/core";
 import { AddGroup } from "./AddGroup";
+import { url } from "../../url";
+import { toast } from "react-toastify";
+import { getUserData } from "../customHooks/getUserData";
+import Axios from "axios";
 
 const AddButton = styled.div`
   border: 1px solid #5f6dbd;
@@ -42,16 +46,42 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const NestedList = props => {
-  const { user, userData, handleFilterByGroup, group } = props.data;
+  const {
+    user,
+    userData,
+    handleFilterByGroup,
+    group,
+    setUserData
+  } = props.data;
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [dialog, setDialog] = useState(false);
-  const [groupDetails, setGroupDetails] = useEffect({});
+  const [groupDetails, setGroupDetails] = useState({});
   const handleClick = () => {
     setOpen(!open);
   };
 
-  const handleAddGroup = e => {};
+  const handleAddGroup = async e => {
+    e.preventDefault();
+    try {
+      const response = await Axios.post(
+        `${url}/groups`,
+        { ...groupDetails, dateCreated: Date.now(), userId: user.id },
+        {
+          headers: { Authorization: `Bearer ${user.token}` }
+        }
+      );
+      toast.info(response.data.message, {
+        position: toast.POSITION.TOP_CENTER
+      });
+      setDialog(false);
+      getUserData(user).then(user => {
+        setUserData(user);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <React.Fragment>
       <List

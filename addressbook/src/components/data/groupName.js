@@ -15,6 +15,9 @@ export const GroupName = props => {
       };
       getData();
     }
+    if (props.groupId === null) {
+      setGroupName("");
+    }
   }, [props, groupName]);
   return <span>{groupName}</span>;
 };
