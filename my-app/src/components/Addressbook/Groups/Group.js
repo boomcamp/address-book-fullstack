@@ -68,7 +68,7 @@ export default function Group() {
 											method: 'post',
 											url: '/api/groups/create',
 											data: {
-												userId: localStorage.getItem('id'),
+												userid: localStorage.getItem('id'),
 												group_name,
 												date_created: today
 											},

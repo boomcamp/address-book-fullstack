@@ -1,151 +1,88 @@
-import React, { useState } from 'react';
+import React from 'react';
 import MaterialTable from 'material-table';
-
-import DateToday from '../../DateToday';
 import ContactData from './ContactData';
-import CreateContact from './CreateContact';
-import UpdateContact from './UpdateContact';
-import DeleteContact from './DeleteContact';
-import Validate from './ValidateContact';
-
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 
+import CreateContact from './CreateContact';
+import ViewAndEditContact from './ViewAndEditContact';
+import RemoveContact from './RemoveContact';
+
 export default function Contacts() {
-	const today = DateToday();
 	const { state, setState } = ContactData();
-	const [error, setError] = useState(false);
-	const [notif, setNotif] = useState('');
+	const [createModal, setCreateModal] = React.useState(false);
+	const [viewModal, setViewModal] = React.useState(false);
+	const [deleteModal, setDeleteModal] = React.useState(false);
+	const [data, setData] = React.useState({});
+	const [notif, setNotif] = React.useState(false);
 
-	//Notificaton
-	const [open, setOpen] = useState(false);
 	const handleClose = () => {
-		setOpen(false);
+		setNotif(false);
 	};
-
 	return (
 		<React.Fragment>
 			<MaterialTable
+				// style={{ paddingLeft: '20px', paddingRight: '20px' }}
 				title="Contacts"
 				columns={state.columns}
 				data={state.data}
 				options={{
-					filtering: true,
-					actionsColumnIndex: -1
+					// filtering: true,
+					actionsColumnIndex: -1,
+					selection: true,
+					actionsCellStyle: {
+						width: 1,
+						maxWidth: 1
+					}
 				}}
-				editable={{
-					onRowAdd: newData =>
-						new Promise((resolve, reject) => {
-							setTimeout(() => {
-								const {
-									firstname,
-									lastname,
-									home_phone,
-									mobile_phone,
-									work_phone,
-									email,
-									city,
-									state_or_province,
-									postal_code,
-									country
-								} = newData;
-
-								if (Object.keys(Validate(newData)).length === 0) {
-									resolve();
-									setState(prevState => {
-										const data = [...prevState.data];
-										data.push({
-											firstname,
-											lastname,
-											home_phone,
-											mobile_phone,
-											work_phone,
-											email,
-											city,
-											state_or_province,
-											postal_code,
-											country,
-											date_created: today
-										});
-										CreateContact(newData);
-
-										setNotif('Successfully created');
-										setError(false);
-										setOpen(true);
-										return { ...prevState, data };
-									});
-								} else {
-									if (Validate(newData)) {
-										if (Validate(newData).email) {
-											setNotif('Required field and invalid email');
-										} else {
-											setNotif('Please fill up the required field');
-										}
-									}
-									setError(true);
-									setOpen(true);
-									reject();
-								}
-							}, 600);
-						}),
-					onRowUpdate: (newData, oldData) =>
-						new Promise((resolve, reject) => {
-							setTimeout(() => {
-								if (Object.keys(Validate(newData)).length === 0) {
-									resolve();
-									if (oldData) {
-										setState(prevState => {
-											const data = [...prevState.data];
-											data[data.indexOf(oldData)] = newData;
-
-											UpdateContact(newData, oldData);
-
-											setNotif('Successfully updated');
-											setError(false);
-											setOpen(true);
-											return { ...prevState, data };
-										});
-									}
-								} else {
-									if (Validate(newData)) {
-										if (Validate(newData).email) {
-											setNotif('Required field and invalid email');
-										} else {
-											setNotif('Please fill up the required field');
-										}
-									}
-									setError(true);
-									setOpen(true);
-									reject();
-								}
-							}, 600);
-						}),
-					onRowDelete: oldData =>
-						new Promise(resolve => {
-							setTimeout(() => {
-								resolve();
-								setState(prevState => {
-									const data = [...prevState.data];
-									data.splice(data.indexOf(oldData), 1);
-									DeleteContact(oldData);
-
-									setNotif('Successfully removed');
-									setError(false);
-									setOpen(true);
-									return { ...prevState, data };
-								});
-							}, 600);
-						})
+				actions={[
+					{
+						icon: 'add',
+						tooltip: 'Add User',
+						isFreeAction: true,
+						onClick: event => setCreateModal(true)
+					},
+					{
+						tooltip: 'Remove All Selected Users',
+						icon: 'delete',
+						onClick: (evt, data) => {
+							console.log('You want to delete ' + data.length + ' rows');
+							setData(data);
+							setDeleteModal(true);
+						}
+					}
+				]}
+				onRowClick={(event, rowData, togglePanel) => {
+					setData(rowData);
+					setViewModal(true);
 				}}
 			/>
+			<CreateContact
+				createModal={createModal}
+				setState={setState}
+				setNotif={setNotif}
+			/>
+			<ViewAndEditContact
+				data={data}
+				setData={setData}
+				modal={viewModal}
+				setModal={setViewModal}
+				setNotif={setNotif}
+			/>
+			<RemoveContact
+				data={data}
+				modal={deleteModal}
+				setModal={setDeleteModal}
+				setNotif={setNotif}
+			/>
 			<Snackbar
-				open={open}
+				open={notif}
 				autoHideDuration={2000}
 				onClose={handleClose}
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
 			>
-				<Alert onClose={handleClose} severity={error ? 'error' : 'success'}>
-					{notif}
+				<Alert onClose={handleClose} severity={'success'}>
+					Successfully created!
 				</Alert>
 			</Snackbar>
 		</React.Fragment>

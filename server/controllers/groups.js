@@ -1,8 +1,8 @@
 const createGroup = (req, res) => {
 	const db = req.app.get('db');
-	const { userId, group_name, date_created } = req.body;
+	const { userid, group_name, date_created } = req.body;
 	db.groups
-		.insert({ userId, group_name, date_created })
+		.insert({ userid, group_name, date_created })
 		.then(group => res.status(201).json(group))
 		.catch(err => {
 			console.error(err);
@@ -12,15 +12,9 @@ const createGroup = (req, res) => {
 const viewGroup = (req, res) => {
 	const db = req.app.get('db');
 
-	db.groups
-		.find({
-			userId: req.params.id
-		})
-		.then(group => res.status(200).json(group))
-		.catch(err => {
-			console.error(err);
-			res.status(500).end();
-		});
+	db.query(
+		`SELECT * FROM groups WHERE userid = '${req.params.id}' ORDER BY group_name ASC`
+	).then(p => res.status(200).json(p));
 };
 const updateGroup = (req, res) => {
 	const db = req.app.get('db');

@@ -2,11 +2,11 @@ import React from 'react';
 import MaterialTable from 'material-table';
 
 export default function ContactPerGroup(props) {
-	const [state, setState] = React.useState({
+	const [state] = React.useState({
 		columns: [
 			{ title: 'First Name', field: 'firstname' },
 			{ title: 'Last Name', field: 'lastname' },
-			{ title: 'Mobile Phone', field: 'mobile_phone' }
+			{ title: 'Mobile Phone', field: 'mobile_phone', filtering: false }
 		],
 		data: [
 			{
@@ -24,7 +24,8 @@ export default function ContactPerGroup(props) {
 			columns={state.columns}
 			data={state.data}
 			options={{
-				search: true
+				search: false,
+				filtering: false
 			}}
 			actions={[
 				{

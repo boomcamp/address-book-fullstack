@@ -26,7 +26,7 @@ export default function HomePage(props) {
 	const classes = useStyles();
 	const theme = useTheme();
 
-	const [page, setPage] = useState('group');
+	const [page, setPage] = useState('contact');
 	const [mobileOpen, setMobileOpen] = useState(false);
 
 	useEffect(() => {

@@ -10,44 +10,16 @@ export default function ContactData() {
 				field: 'firstname',
 				filtering: true
 			},
-			{ title: 'Last Name*', field: 'lastname', filtering: true },
 			{
-				title: 'Home Phone',
-				field: 'home_phone',
-				type: 'numeric',
-				filtering: false
+				title: 'Last Name*',
+				field: 'lastname',
+				filtering: true
 			},
+
 			{
-				title: 'Mobile Phone',
+				title: 'Mobile Phone (+63)',
 				field: 'mobile_phone',
-				type: 'numeric',
-				filtering: false
-			},
-			{
-				title: 'Work Phone',
-				field: 'work_phone',
-				type: 'numeric',
-				filtering: false
-			},
-			{ title: 'Email', field: 'email', filtering: false },
-			{ title: 'City*', field: 'city', filtering: false },
-			{
-				title: 'State/Province*',
-				field: 'state_or_province',
-				filtering: false
-			},
-			{
-				title: 'Zip code*',
-				field: 'postal_code',
-				type: 'numeric',
-				filtering: false
-			},
-			{ title: 'Country*', field: 'country', filtering: false },
-			{
-				title: 'Date Created',
-				field: 'date_created',
-				editable: 'never',
-				filtering: false
+				type: 'numeric'
 			}
 		],
 		data: []

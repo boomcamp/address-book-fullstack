@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Validate from './ValidateContact';
-import DateToday from '../../DateToday';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -11,87 +10,67 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@material-ui/core/Typography';
 
-export default function CreateContact(props) {
-	const today = DateToday();
-	const [values, setValues] = useState({
-		userId: localStorage.getItem('id'),
-		firstname: '',
-		lastname: '',
-		home_phone: '',
-		mobile_phone: '',
-		work_phone: '',
-		email: '',
-		city: '',
-		state_or_province: '',
-		postal_code: '',
-		country: '',
-		date_created: today
-	});
+export default function ViewAndEditContact(props) {
+	const { data, setData, modal, setModal } = props;
+	const [edit, setEdit] = useState(true);
 	const [errors, setErrors] = useState({});
 
 	const handleChange = e => {
 		const { name, value } = e.target;
-		setValues({ ...values, [name]: value });
+		setData({ ...data, [name]: value });
 	};
 	const handleClose = () => {
-		window.location.reload(true);
+		setModal(false);
+	};
+	const handleEdit = () => {
+		setEdit(!edit);
 	};
 	const handleSubmit = () => {
-		setErrors(Validate(values));
-		if (Object.keys(Validate(values)).length === 0) {
-			props.setState(prevState => {
-				const data = [...prevState.data];
-				data.push(values);
-				return { ...prevState, data };
-			});
+		setErrors(Validate(data));
+		if (Object.keys(Validate(data)).length === 0) {
 			axios({
-				method: 'post',
-				url: '/api/contacts/create',
-				data: values,
+				method: 'patch',
+				url: `/api/contacts/update/${data.id}`,
+				data: data,
 				headers: {
 					Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
 				}
 			})
 				.then(res => {
-					setValues({
-						userId: localStorage.getItem('id'),
-						firstname: '',
-						lastname: '',
-						home_phone: '',
-						mobile_phone: '',
-						work_phone: '',
-						email: '',
-						city: '',
-						state_or_province: '',
-						postal_code: '',
-						country: '',
-						date_created: today
-					});
-
 					props.setNotif(true);
+					setEdit(!edit);
+					setTimeout(() => {
+						window.location.reload(true);
+					}, 1000);
 				})
-				.catch(err => {
-					console.log(err);
-				});
+				.catch(err => console.log(err));
 		}
 	};
-
 	return (
 		<form noValidate>
 			<Dialog
-				disableBackdropClick
-				disableEscapeKeyDown
-				open={props.createModal}
+				open={modal}
 				maxWidth={'sm'}
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
 			>
-				<DialogTitle id="form-dialog-title">Add Contacts</DialogTitle>
+				<MuiDialogTitle disableTypography>
+					<Typography variant="h6">View</Typography>
+					<IconButton aria-label="close" onClick={handleClose}>
+						<CloseIcon />
+					</IconButton>
+				</MuiDialogTitle>
 				<DialogContent>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
 							<TextField
+								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="firstname"
@@ -99,7 +78,8 @@ export default function CreateContact(props) {
 								label="First Name"
 								type="firstname"
 								fullWidth
-								value={values.firstname}
+								disabled={edit}
+								value={data.firstname}
 								onChange={handleChange}
 								error={errors.firstname ? true : false}
 								helperText={errors.firstname && errors.firstname}
@@ -107,6 +87,7 @@ export default function CreateContact(props) {
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
+								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="lastname"
@@ -114,7 +95,8 @@ export default function CreateContact(props) {
 								label="Last Name"
 								type="lastname"
 								fullWidth
-								value={values.lastname}
+								disabled={edit}
+								value={data.lastname}
 								onChange={handleChange}
 								error={errors.lastname ? true : false}
 								helperText={errors.lastname && errors.lastname}
@@ -122,6 +104,7 @@ export default function CreateContact(props) {
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
+								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="home_phone"
@@ -129,7 +112,8 @@ export default function CreateContact(props) {
 								label="Home Phone"
 								fullWidth
 								type="number"
-								value={values.home_phone}
+								disabled={edit}
+								value={data.home_phone}
 								onChange={handleChange}
 								error={errors.home_phone ? true : false}
 								helperText={errors.home_phone && errors.home_phone}
@@ -142,6 +126,7 @@ export default function CreateContact(props) {
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
+								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="mobile_phone"
@@ -149,7 +134,8 @@ export default function CreateContact(props) {
 								label="Mobile Phone"
 								fullWidth
 								type="number"
-								value={values.mobile_phone}
+								disabled={edit}
+								value={data.mobile_phone}
 								onChange={handleChange}
 								error={errors.mobile_phone ? true : false}
 								helperText={errors.mobile_phone && errors.mobile_phone}
@@ -162,6 +148,7 @@ export default function CreateContact(props) {
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
+								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="work_phone"
@@ -170,7 +157,8 @@ export default function CreateContact(props) {
 								fullWidth
 								type="number"
 								maxLength="2"
-								value={values.work_phone}
+								disabled={edit}
+								value={data.work_phone}
 								onChange={handleChange}
 								error={errors.work_phone ? true : false}
 								helperText={errors.work_phone && errors.work_phone}
@@ -183,6 +171,7 @@ export default function CreateContact(props) {
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
+								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="email"
@@ -190,7 +179,8 @@ export default function CreateContact(props) {
 								label="Email Address"
 								type="email"
 								fullWidth
-								value={values.email}
+								disabled={edit}
+								value={data.email}
 								onChange={handleChange}
 								error={errors.email ? true : false}
 								helperText={errors.email && errors.email}
@@ -198,6 +188,7 @@ export default function CreateContact(props) {
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
+								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="city"
@@ -205,7 +196,8 @@ export default function CreateContact(props) {
 								label="City"
 								type="city"
 								fullWidth
-								value={values.city}
+								disabled={edit}
+								value={data.city}
 								onChange={handleChange}
 								error={errors.city ? true : false}
 								helperText={errors.city && errors.city}
@@ -213,6 +205,7 @@ export default function CreateContact(props) {
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
+								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="state_or_province"
@@ -220,7 +213,8 @@ export default function CreateContact(props) {
 								label="State/Province"
 								type="state_or_province"
 								fullWidth
-								value={values.state_or_province}
+								disabled={edit}
+								value={data.state_or_province}
 								onChange={handleChange}
 								error={errors.state_or_province ? true : false}
 								helperText={
@@ -230,6 +224,7 @@ export default function CreateContact(props) {
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
+								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="postal_code"
@@ -237,7 +232,8 @@ export default function CreateContact(props) {
 								label="Postal Code"
 								type="number"
 								fullWidth
-								value={values.postal_code}
+								disabled={edit}
+								value={data.postal_code}
 								onChange={handleChange}
 								error={errors.postal_code ? true : false}
 								helperText={errors.postal_code && errors.postal_code}
@@ -245,6 +241,7 @@ export default function CreateContact(props) {
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
+								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="country"
@@ -252,7 +249,8 @@ export default function CreateContact(props) {
 								label="Country"
 								type="country"
 								fullWidth
-								value={values.country}
+								disabled={edit}
+								value={data.country}
 								onChange={handleChange}
 								error={errors.country ? true : false}
 								helperText={errors.country && errors.country}
@@ -260,15 +258,42 @@ export default function CreateContact(props) {
 						</Grid>
 					</Grid>
 				</DialogContent>
+
 				<DialogActions>
-					<Button onClick={handleClose} color="primary">
-						Cancel
-					</Button>
-					<Button color="primary" onClick={handleSubmit}>
-						Create
-					</Button>
+					{!edit ? (
+						<React.Fragment>
+							<Button color="primary" onClick={handleSubmit}>
+								Save
+							</Button>
+							<Button color="primary" onClick={handleEdit}>
+								Cancel
+							</Button>
+						</React.Fragment>
+					) : (
+						<React.Fragment>
+							<Button color="primary" onClick={handleEdit}>
+								Update
+							</Button>
+							<Button onClick={handleClose} color="primary">
+								Close
+							</Button>
+						</React.Fragment>
+					)}
 				</DialogActions>
 			</Dialog>
 		</form>
 	);
 }
+
+const styles = theme => ({
+	root: {
+		margin: 0,
+		padding: theme.spacing(2)
+	},
+	closeButton: {
+		position: 'absolute',
+		right: theme.spacing(1),
+		top: theme.spacing(1),
+		color: theme.palette.grey[500]
+	}
+});
