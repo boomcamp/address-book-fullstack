@@ -24,9 +24,23 @@ class Users extends React.Component {
       }
     });
     this.state = {
+      width: 0,
+      height: 0,
       columns: [
         { title: "First Name", field: "first_name" },
         { title: "Last Name", field: "last_name" },
+        {
+          title: "Home Phone",
+          field: "home_phone"
+        },
+        {
+          title: "Mobile Phone",
+          field: "mobile_phone"
+        },
+        {
+          title: "Work Phone",
+          field: "work_phone"
+        },
         {
           title: "  ",
           render: rowData => (
@@ -57,6 +71,16 @@ class Users extends React.Component {
     };
   }
 
+  updateDimensions = () => {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  };
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
   render() {
     const {
       createContactHandler,
@@ -79,6 +103,82 @@ class Users extends React.Component {
       groups
     } = this.props;
 
+    const tableColumns =
+      this.state.width < 770
+        ? [
+            { title: "First Name", field: "first_name" },
+            { title: "Last Name", field: "last_name" },
+            {
+              title: "  ",
+              render: rowData => (
+                <React.Fragment>
+                  <Tooltip TransitionComponent={Zoom} title="Edit Contact">
+                    <IconButton
+                      onClick={() =>
+                        this.props.handleModalOpen(rowData, "edit")
+                      }
+                      aria-label="edit"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip TransitionComponent={Zoom} title="Delete Contact">
+                    <IconButton
+                      onClick={() =>
+                        this.props.handleModalOpen([rowData], "delete")
+                      }
+                      aria-label="delete"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </React.Fragment>
+              )
+            }
+          ]
+        : [
+            { title: "First Name", field: "first_name" },
+            { title: "Last Name", field: "last_name" },
+            {
+              title: "Home Phone",
+              field: "home_phone"
+            },
+            {
+              title: "Mobile Phone",
+              field: "mobile_phone"
+            },
+            {
+              title: "Work Phone",
+              field: "work_phone"
+            },
+            {
+              title: "  ",
+              render: rowData => (
+                <React.Fragment>
+                  <Tooltip TransitionComponent={Zoom} title="Edit Contact">
+                    <IconButton
+                      onClick={() =>
+                        this.props.handleModalOpen(rowData, "edit")
+                      }
+                      aria-label="edit"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip TransitionComponent={Zoom} title="Delete Contact">
+                    <IconButton
+                      onClick={() =>
+                        this.props.handleModalOpen([rowData], "delete")
+                      }
+                      aria-label="delete"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </React.Fragment>
+              )
+            }
+          ];
     const allContacts = this.props.contact
       ? this.props.contact.allContacts
       : [];
@@ -135,7 +235,7 @@ class Users extends React.Component {
                 )}
               </Div>
             }
-            columns={this.state.columns}
+            columns={tableColumns}
             data={allContacts}
             options={{
               pageSizeOptions: [10, 15, 20],
