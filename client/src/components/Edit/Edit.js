@@ -28,7 +28,7 @@ export default class Edit extends React.Component {
     const { rowInfo } = this.props;
     return (
       <div>
-        <Dialog open={this.props.ClickOpen} onClose={this.props.ClickClose}>
+        <Dialog open={this.props.clickOpen} onClose={this.props.clickClose}>
           <DialogTitle
             id="alert-dialog-title"
             style={{
@@ -185,7 +185,7 @@ export default class Edit extends React.Component {
             </form>
           </MDBCol>
           <DialogActions>
-            <Button onClick={this.props.ClickClose} color="primary">
+            <Button onClick={this.props.clickClose} color="primary">
               Close
             </Button>
           </DialogActions>

@@ -6,7 +6,11 @@ import {
   MDBNavbarToggler,
   MDBCollapse,
   MDBNavItem,
-  MDBNavLink
+  MDBNavLink,
+  MDBDropdown,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
+  MDBDropdownItem
 } from "mdbreact";
 import MaterialTable from "material-table";
 import styled from "styled-components";
@@ -17,20 +21,22 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 import Modal from "../Modal/Modal";
 import Edit from "../Edit/Edit";
 
 const Div = styled.div`
   margin-top: 100px;
+  width: 100%;
 `;
 
 export default class Users extends React.Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
-      collapse: false,
-      modal14: false,
       columns: [
         { title: "First Name", field: "fname" },
         { title: "Last Name", field: "lname" },
@@ -49,14 +55,14 @@ export default class Users extends React.Component {
             <React.Fragment>
               <Tooltip TransitionComponent={Zoom} title="Edit Contact">
                 <Button>
-                  <EditIcon onClick={() => this.ClickOpen(rowData)} />
+                  <EditIcon onClick={() => this.clickOpen(rowData)} />
                 </Button>
               </Tooltip>
 
               <Tooltip title="Delete Contact">
                 <Button>
                   <DeleteIcon
-                    onClick={() => this.props.DeleteHandler(rowData)}
+                    onClick={() => this.props.deleteHandler(rowData)}
                   />
                 </Button>
               </Tooltip>
@@ -66,23 +72,15 @@ export default class Users extends React.Component {
       ],
       data: [],
       toggleModal: false,
-      ClickModal: false,
-      rowInfo: []
+      clickModal: false,
+      rowInfo: {},
+      isOpen: false,
+      isUpdating: false
     };
-    this.onClick = this.onClick.bind(this);
   }
 
-  onClick() {
-    this.setState({
-      collapse: !this.state.collapse
-    });
-  }
-
-  handleToggle = nr => () => {
-    let modalNumber = "modal" + nr;
-    this.setState({
-      [modalNumber]: !this.state[modalNumber]
-    });
+  toggleCollapse = () => {
+    this.setState({ isOpen: !this.state.isOpen });
   };
 
   handleClickOpen = () => {
@@ -93,80 +91,106 @@ export default class Users extends React.Component {
     this.setState({ toggleModal: false });
   };
 
-  ClickOpen = rowInfo => {
-    this.setState({ ClickModal: true, rowData: rowInfo });
+  clickOpen = rowInfo => {
+    this.setState({ clickModal: true, rowData: rowInfo });
   };
 
-  ClickClose = () => {
-    this.setState({ ClickModal: false });
+  clickClose = () => {
+    this.setState({ clickModal: false });
   };
 
   componentDidMount = () => {
+    this._isMounted = true;
+    this.setState({
+      isUpdating: true
+    });
+    this.loadPage();
+  };
+
+  componentDidUpdate = () => {
+    if (this.state.isUpdating) {
+      this.loadPage();
+    }
+  };
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
+  };
+
+  loadPage = () => {
     axios
       .get(
-        `http://localhost:5009/api/contacts/${localStorage.getItem("userId")}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
-        }
+        `http://localhost:5009/api/contacts/${localStorage.getItem("userId")}`
       )
       .then(results => {
-        this.setState({ data: results.data });
+        if (this._isMounted) {
+          this.setState({ data: results.data });
+        }
       });
+  };
+
+  editHandler = event => {
+    event.preventDefault();
+    const Obj = {
+      userId: localStorage.getItem("userId"),
+      fname: this.state.fname,
+      lname: this.state.lname,
+      home_phone: this.state.homePhone,
+      work_phone: this.state.workPhone,
+      mobile_phone: this.state.mobilePhone,
+      email: this.state.email,
+      city: this.state.city,
+      state_or_province: this.state.state_or_province,
+      postal_code: this.state.postalCode,
+      country: this.state.country
+    };
+    const url = `http://localhost:5009/api/contacts/${this.state.rowData.id}/edit`;
+
+    axios
+      .patch(url, Obj, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user")}`
+        }
+      })
+      .then(res => {
+        toast.info("Successfully Edited!!");
+        this.clickClose();
+      })
+      .catch(err => toast.error(err.response.data.error));
   };
 
   editOnchange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  editHandler = event => {
-    event.preventDefault();
-    const url = `http://localhost:5009/api/contacts/${this.state.rowData.id}/edit`;
-
-    let x = this.state.rowData.id;
-    delete this.state.rowData.id;
-    console.log(this.state.rowData);
-    axios
-      .patch(url, x, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("user")}`
-        }
-      })
-      .then(res => {
-        console.log(res);
-        this.setState({
-          redirect: false
-        });
-        alert("Successfully Edited!!");
-      })
-      .catch(err => alert(err.response.data.error));
-  };
-
   render() {
-    const bgBlue = { backgroundColor: "#4285f4" };
     return (
       <div>
+        <ToastContainer />
         <header>
-          <MDBNavbar style={bgBlue} dark expand="md" scrolling fixed="top">
-            <MDBNavbarBrand href="/">
-              <strong>Address Book</strong>
+          <MDBNavbar color="primary-color-dark" dark expand="md">
+            <MDBNavbarBrand>
+              <strong className="white-text">Address Book</strong>
             </MDBNavbarBrand>
-            <MDBNavbarToggler onClick={this.onClick} />
-            <MDBCollapse isOpen={this.state.collapse} navbar>
+            <MDBNavbarToggler onClick={this.toggleCollapse} />
+            <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
               <MDBNavbarNav left>
                 <MDBNavItem active>
-                  <MDBNavLink to="#">Home</MDBNavLink>
+                  <MDBNavLink to="/">Home</MDBNavLink>
                 </MDBNavItem>
               </MDBNavbarNav>
               <MDBNavbarNav right>
                 <MDBNavItem>
-                  <Tooltip title="Log Out">
-                    <AccountBoxIcon
-                      className="handleLogout"
-                      onClick={this.props.handleLogout}
-                      cursor="pointer"
-                      fontSize="large"
-                    ></AccountBoxIcon>
-                  </Tooltip>
+                  <MDBDropdown>
+                    <MDBDropdownToggle nav caret>
+                      <AccountBoxIcon></AccountBoxIcon>
+                    </MDBDropdownToggle>
+                    <MDBDropdownMenu className="dropdown-default" right>
+                      <MDBDropdownItem onClick={this.props.handleLogout}>
+                        Log Out
+                      </MDBDropdownItem>
+                    </MDBDropdownMenu>
+                  </MDBDropdown>
                 </MDBNavItem>
               </MDBNavbarNav>
             </MDBCollapse>
@@ -185,8 +209,7 @@ export default class Users extends React.Component {
                 }
               ]}
               options={{
-                actionsColumnIndex: -1,
-                selection: true
+                actionsColumnIndex: -1
               }}
             />
           </Div>
@@ -194,11 +217,11 @@ export default class Users extends React.Component {
             handleClickOpen={this.state.toggleModal}
             handleClose={this.handleClose}
             myChangeHandler={this.props.myChangeHandler}
-            ContactHandler={this.props.ContactHandler}
+            contactHandler={this.props.contactHandler}
           />
           <Edit
-            ClickOpen={this.state.ClickModal}
-            ClickClose={this.ClickClose}
+            clickOpen={this.state.clickModal}
+            clickClose={this.clickClose}
             myChangeHandler={this.props.myChangeHandler}
             rowInfo={this.state.rowData}
             editHandler={this.editHandler}

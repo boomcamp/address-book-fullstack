@@ -36,7 +36,7 @@ export default class Modal extends React.Component {
             {"Add Contact"}
           </DialogTitle>
           <MDBCol>
-            <form onSubmit={this.props.ContactHandler}>
+            <form onSubmit={this.props.contactHandler}>
               <DialogContent
                 style={{
                   display: "flex",

@@ -2,20 +2,33 @@ import React from "react";
 import axios from "axios";
 import "./App.css";
 import { HashRouter } from "react-router-dom";
-
 import Routes from "./components/Routes/Routes";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 export default class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      data: [],
-      toggleModal: false
+      data: []
     };
+  }
+
+  componentDidMount() {
+    this.setState({ token: localStorage.getItem("user") });
   }
 
   myChangeHandler = event => {
     this.setState({ [event.target.name]: event.target.value });
+  };
+
+  redirectHandler = () => {
+    this.setState({ redirect: false });
+  };
+
+  handleLogout = () => {
+    localStorage.clear();
+    this.setState({ token: null });
   };
 
   mySubmitHandler = event => {
@@ -33,12 +46,12 @@ export default class App extends React.Component {
         this.setState({
           token: localStorage.getItem("user")
         });
-        alert(`Welcome ${res.data.username}!`);
+        toast.success(`Welcome ${res.data.username}!`);
       })
-      .catch(err => alert(err.response.data.error));
+      .catch(err => toast.error(err.response.data.error));
   };
 
-  RegisterHandler = event => {
+  registerHandler = event => {
     event.preventDefault();
     const Obj = {
       username: this.state.username,
@@ -59,12 +72,12 @@ export default class App extends React.Component {
         this.setState({
           redirect: true
         });
-        alert("Success!!");
+        toast.success("Success!!");
       })
-      .catch(err => alert(err.response.data.error));
+      .catch(err => toast.error(err.response.data.error));
   };
 
-  ContactHandler = event => {
+  contactHandler = event => {
     event.preventDefault();
     const Obj = {
       userId: localStorage.getItem("userId"),
@@ -87,15 +100,12 @@ export default class App extends React.Component {
         }
       })
       .then(() => {
-        this.setState({
-          redirect: false
-        });
         alert("Success!!");
       })
       .catch(err => alert(err.response.data.error));
   };
 
-  DeleteHandler = rowData => {
+  deleteHandler = rowData => {
     axios
       .delete(`http://localhost:5009/api/contacts/${rowData.id}/delete`, {
         headers: {
@@ -103,41 +113,30 @@ export default class App extends React.Component {
         }
       })
       .then(() => {
-        alert("Successfully Deleted");
+        toast.info("Successfully Deleted");
       })
-      .catch(err => alert(err.response.data.error));
-  };
-
-  redirectHandler = () => {
-    this.setState({ redirect: false });
-  };
-
-  componentDidMount() {
-    this.setState({ token: localStorage.getItem("user") });
-  }
-
-  handleLogout = () => {
-    localStorage.clear();
-    this.setState({ token: null, username: "null", password: "null" });
+      .catch(err => toast.error(err.response.data.error));
   };
 
   render() {
     return (
-      <HashRouter>
-        <Routes
-          myChangeHandler={this.myChangeHandler}
-          mySubmitHandler={this.mySubmitHandler}
-          RegisterHandler={this.RegisterHandler}
-          redirectHandler={this.redirectHandler}
-          ContactHandler={this.ContactHandler}
-          DeleteHandler={this.DeleteHandler}
-          handleLogout={this.handleLogout}
-          handleClose={this.handleClose}
-          redirect={this.state.redirect}
-          token={this.state.token}
-          error={this.state.error}
-        />
-      </HashRouter>
+      <React.Fragment>
+        <HashRouter>
+          <Routes
+            myChangeHandler={this.myChangeHandler}
+            mySubmitHandler={this.mySubmitHandler}
+            registerHandler={this.registerHandler}
+            redirectHandler={this.redirectHandler}
+            contactHandler={this.contactHandler}
+            deleteHandler={this.deleteHandler}
+            handleLogout={this.handleLogout}
+            redirect={this.state.redirect}
+            token={this.state.token}
+            error={this.state.error}
+          />
+        </HashRouter>
+        <ToastContainer />
+      </React.Fragment>
     );
   }
 }

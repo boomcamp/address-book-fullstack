@@ -2,6 +2,7 @@ const express = require("express");
 const massive = require("massive");
 const cors = require("cors");
 const users = require("../controllers/users");
+const contacts = require("../controllers/contacts");
 
 massive({
   host: "localhost",
@@ -29,16 +30,15 @@ massive({
         res.status(401).end();
       }
     };
-
+    //User endpoints
     app.post("/api/register", users.register);
     app.get("/api/users", users.list);
-
     app.post("/api/login", users.login);
-
-    app.post("/api/contacts/add", users.addContact);
-    app.get("/api/contacts/:id", users.contacts);
-    app.patch("/api/contacts/:id/edit", users.editContact);
-    app.delete("/api/contacts/:id/delete", users.deleteContact);
+    //Contact endpoints
+    app.post("/api/contacts/add", contacts.addContact);
+    app.get("/api/contacts/:id", contacts.contacts);
+    app.patch("/api/contacts/:id/edit", contacts.editContact);
+    app.delete("/api/contacts/:id/delete", contacts.deleteContact);
 
     const PORT = 5009;
     app.listen(PORT, () => {

@@ -9,14 +9,14 @@ export default class Routes extends React.Component {
   render() {
     const {
       mySubmitHandler,
-      RegisterHandler,
+      registerHandler,
       handleLogout,
       token,
       redirect,
       redirectHandler,
       myChangeHandler,
-      ContactHandler,
-      DeleteHandler
+      contactHandler,
+      deleteHandler
     } = this.props;
     return (
       <Switch>
@@ -32,9 +32,9 @@ export default class Routes extends React.Component {
             ) : (
               <Users
                 handleLogout={handleLogout}
-                ContactHandler={ContactHandler}
+                contactHandler={contactHandler}
                 myChangeHandler={myChangeHandler}
-                DeleteHandler={DeleteHandler}
+                deleteHandler={deleteHandler}
               />
             )
           }
@@ -47,7 +47,7 @@ export default class Routes extends React.Component {
             ) : (
               <Registration
                 myChangeHandler={myChangeHandler}
-                RegisterHandler={RegisterHandler}
+                registerHandler={registerHandler}
                 redirectHandler={redirectHandler}
               />
             )
