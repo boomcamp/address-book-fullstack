@@ -26,7 +26,7 @@ massive({
 
     // contacts endpoints
     app.post("/api/contact/save", contacts.save);
-    app.get("/api/contacts", contacts.getAll);
+    app.post("/api/contacts", contacts.getAll);
     app.delete("/api/contact/delete/:id", contacts.delete);
     app.put("/api/contact/update/:id", contacts.update);
 

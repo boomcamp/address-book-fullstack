@@ -38,8 +38,11 @@ export default function ContactsTable(highprops) {
         return { ...state, data: highprops.tableData };
       });
     } else {
+
+      console.log(sessionStorage.getItem("userid"))
+
       axios({
-        method: "get",
+        method: "post",
         url: "http://localhost:5000/api/contacts",
         data: { userid: sessionStorage.getItem("userid") },
         headers: { Authorization: sessionStorage.getItem("token") }
