@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,6 +11,7 @@ import { useTheme } from "@material-ui/core/styles";
 import editIcon from "../assets/images/draw.png";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import swal from "sweetalert";
 
 const useStyles = makeStyles(theme => ({
 	edit: {
@@ -65,8 +67,86 @@ export default function ResponsiveDialog(props) {
 		city,
 		state_or_province,
 		postal_code,
-		country
+		country,
+		contactId
 	} = props;
+
+	const [required, setRequired] = useState(false);
+	const [editFirstname, setFirstName] = useState("");
+	const [editLastname, setLastName] = useState("");
+	const [edit_home_phone, setHomePhone] = useState("");
+	const [edit_mobile_phone, setMobilePhone] = useState("");
+	const [edit_work_phone, setWorkPhone] = useState("");
+	const [editEmail, setEmail] = useState("");
+	const [editCity, setCity] = useState("city");
+	const [edit_state_or_province, setStateOrProvince] = useState("");
+	const [edit_postal_code, setPostalCode] = useState("");
+	const [editCountry, setCountry] = useState("");
+
+	const handleChange = e => {
+		setFirstName(e.target.value);
+		setRequired(false);
+	};
+
+	const pass = editFirstname => {
+		if (editFirstname) {
+			axios
+				.patch(`http://localhost:3006/contacts/${contactId}`, {
+					editFirstname,
+					editLastname,
+					edit_home_phone,
+					edit_mobile_phone,
+					edit_work_phone,
+					editEmail,
+					editCity,
+					edit_state_or_province,
+					edit_postal_code,
+					editCountry
+				})
+				.then(() => {
+					setOpen(false);
+					swal({
+						icon: "success",
+						title: "Edit Successful"
+					}).then(() => {
+						window.location = "/home";
+					});
+				});
+		}
+	};
+
+	useEffect(() => {
+		setFirstName(firstname);
+		setLastName(lastname);
+		setHomePhone(home_phone);
+		setMobilePhone(mobile_phone);
+		setWorkPhone(work_phone);
+		setEmail(email);
+		setCity(city);
+		setStateOrProvince(state_or_province);
+		setPostalCode(postal_code);
+		setCountry(country);
+	}, [
+		firstname,
+		setFirstName,
+		lastname,
+		setLastName,
+		home_phone,
+		setHomePhone,
+		mobile_phone,
+		setMobilePhone,
+		work_phone,
+		setWorkPhone,
+		email,
+		city,
+		setCity,
+		state_or_province,
+		setStateOrProvince,
+		postal_code,
+		setPostalCode,
+		country,
+		setCountry
+	]);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -98,13 +178,16 @@ export default function ResponsiveDialog(props) {
 					<Grid container spacing={3}>
 						<Grid item xs={12} sm={6}>
 							<TextField
+								error={required}
+								helperText={required ? "This field is required!" : false}
 								required
 								id="firstName"
 								name="firstName"
 								label="First name"
 								fullWidth
 								autoComplete="fname"
-								value={firstname}
+								value={editFirstname}
+								onChange={handleChange}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -114,7 +197,10 @@ export default function ResponsiveDialog(props) {
 								label="Last name"
 								fullWidth
 								autoComplete="lname"
-								value={lastname}
+								value={editLastname}
+								onChange={e => {
+									setLastName(e.target.value);
+								}}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -124,7 +210,10 @@ export default function ResponsiveDialog(props) {
 								label="Home Phone#"
 								fullWidth
 								autoComplete="hphone"
-								value={home_phone}
+								value={edit_home_phone}
+								onChange={e => {
+									setHomePhone(e.target.value);
+								}}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -134,7 +223,10 @@ export default function ResponsiveDialog(props) {
 								label="Mobile Phone#"
 								fullWidth
 								autoComplete="mphone"
-								value={mobile_phone}
+								value={edit_mobile_phone}
+								onChange={e => {
+									setMobilePhone(e.target.value);
+								}}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -144,7 +236,10 @@ export default function ResponsiveDialog(props) {
 								label="Work Phone#"
 								fullWidth
 								autoComplete="wphone"
-								value={work_phone}
+								value={edit_work_phone}
+								onChange={e => {
+									setWorkPhone(e.target.value);
+								}}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -154,7 +249,10 @@ export default function ResponsiveDialog(props) {
 								label="Email Address"
 								fullWidth
 								autoComplete="email"
-								value={email}
+								value={editEmail}
+								onChange={e => {
+									setEmail(e.target.value);
+								}}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -163,8 +261,10 @@ export default function ResponsiveDialog(props) {
 								name="city"
 								label="City"
 								fullWidth
-								autoComplete="city"
-								value={city}
+								value={editCity}
+								onChange={e => {
+									setCity(e.target.value);
+								}}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -173,7 +273,10 @@ export default function ResponsiveDialog(props) {
 								name="state"
 								label="State/Province"
 								fullWidth
-								value={state_or_province}
+								value={edit_state_or_province}
+								onChange={e => {
+									setStateOrProvince(e.target.value);
+								}}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -183,7 +286,10 @@ export default function ResponsiveDialog(props) {
 								label="Zip / Postal code"
 								fullWidth
 								autoComplete="postal-code"
-								value={postal_code}
+								value={edit_postal_code}
+								onChange={e => {
+									setPostalCode(e.target.value);
+								}}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -193,7 +299,10 @@ export default function ResponsiveDialog(props) {
 								label="Country"
 								fullWidth
 								autoComplete="country"
-								value={country}
+								value={editCountry}
+								onChange={e => {
+									setCountry(e.target.value);
+								}}
 							/>
 						</Grid>
 					</Grid>
@@ -210,7 +319,7 @@ export default function ResponsiveDialog(props) {
 					</Button>
 					<Button
 						style={{ color: "white" }}
-						// onClick={() => pass(firstname)}
+						onClick={() => pass(editFirstname)}
 						autoFocus
 					>
 						Save Changes

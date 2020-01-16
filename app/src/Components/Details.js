@@ -4,7 +4,6 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Icon from "../assets/images/cont.png";
-import editIcon from "../assets/images/draw.png";
 import close from "../assets/images/cross.png";
 
 import EditContact from "./EditContact";
@@ -125,7 +124,8 @@ export default function Details(props) {
 		city,
 		state_or_province,
 		postal_code,
-		country
+		country,
+		contactId
 	} = props;
 
 	return (
@@ -195,6 +195,7 @@ export default function Details(props) {
 								state_or_province={state_or_province}
 								postal_code={postal_code}
 								country={country}
+								contactId={contactId}
 							/>
 							<div className={classes.edit} onClick={handleCloseDetails}>
 								<img src={close} alt="close" className={classes.editIcon} />

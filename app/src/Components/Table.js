@@ -12,6 +12,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import view from "../assets/images/eye.png";
 import trash from "../assets/images/delete.png";
 import addToGroup from "../assets/images/add-group.png";
+import { useHistory } from "react-router-dom";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const useStyles = makeStyles({
 	table: {
@@ -41,12 +44,39 @@ export default function SimpleTable(props) {
 	const classes = useStyles();
 	const [state, setState] = useState([]);
 	const { handleViewDetails } = props;
+	let history = useHistory();
+
+	const handleDeleteContact = contactId => {
+		confirmAlert({
+			title: "Are you sure?",
+			message: "You want to delete?",
+			buttons: [
+				{
+					label: "Yes",
+					onClick: () => {
+						axios({
+							method: "delete",
+							url: `http://localhost:3006/contacts/${contactId}`
+						}).then(() => {
+							window.location = "/home";
+						});
+					}
+				},
+				{
+					label: "No",
+					onClick: () => {
+						history.push("/home");
+					}
+				}
+			]
+		});
+	};
 
 	useEffect(() => {
 		axios.get(`http://localhost:3006/contacts/${props.id}`).then(res => {
 			setState(res.data);
 		});
-	}, [setState]);
+	}, [setState, props.id]);
 
 	return (
 		<TableContainer component={Paper}>
@@ -94,7 +124,12 @@ export default function SimpleTable(props) {
 									/>
 								</Tooltip>
 								<Tooltip title="Delete">
-									<img src={trash} className={classes.view} alt="delete" />
+									<img
+										src={trash}
+										className={classes.view}
+										alt="delete"
+										onClick={() => handleDeleteContact(row.id)}
+									/>
 								</Tooltip>
 							</TableCell>
 						</TableRow>

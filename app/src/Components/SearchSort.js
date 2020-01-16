@@ -13,9 +13,8 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+
+import Group from "./Group";
 
 import sort from "../assets/images/swap.png";
 const useStyles = makeStyles(theme => ({
@@ -65,51 +64,10 @@ const useStyles = makeStyles(theme => ({
 				width: 250
 			}
 		}
-	},
-	paper1: {
-		background: "white",
-		width: "100%",
-		height: "40vh",
-		marginTop: "1vh",
-		border: "2px solid #7c7cca",
-		"@media (max-width: 767px)": {
-			marginTop: "5vh"
-		}
-	},
-	paper2: {
-		background: "white",
-		width: "100%",
-		height: "24.5vh",
-		marginTop: "1vh",
-		border: "2px solid #7c7cca",
-		"@media (max-width: 767px)": {
-			marginTop: "1vh",
-			display: "none"
-		}
-	},
-	addGroup: {
-		paddingLeft: "2vw",
-		paddingTop: "5vh",
-		fontSize: "20px",
-		fontWeight: "bold",
-		"@media (max-width: 767px)": {
-			paddingLeft: "30px",
-			fontSize: "16px"
-		}
-	},
-	groupField: {
-		marginTop: "20px",
-		width: "80%"
-	},
-	addButton: {
-		marginTop: "15px",
-		"@media (max-width: 767px)": {
-			fontSize: "12px"
-		}
 	}
 }));
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar(props) {
 	const [open, setOpen] = React.useState(false);
 
 	const handleClick = () => {
@@ -166,25 +124,7 @@ export default function ButtonAppBar() {
 					</List>
 				</Collapse>
 			</Paper>
-			<Paper className={classes.paper1}>
-				<Typography align="left" className={classes.addGroup}>
-					Add Group
-				</Typography>
-				<TextField
-					id="outlined-basic"
-					label="Group name"
-					variant="outlined"
-					className={classes.groupField}
-				/>
-				<Button
-					variant="contained"
-					color="primary"
-					className={classes.addButton}
-				>
-					Add Group
-				</Button>
-			</Paper>
-			<Paper className={classes.paper2}></Paper>
+			<Group />
 		</Container>
 	);
 }

@@ -28,3 +28,21 @@ code {
 		background-size: auto;
 	}
 }
+
+.react-confirm-alert-body {
+	background: linear-gradient(
+		to bottom right,
+		#7c7cca 8%,
+		#89bafa 69%
+	) !important;
+	color: white !important;
+}
+
+.react-confirm-alert-body h1 {
+	color: white !important;
+}
+
+.react-confirm-alert-body button {
+	background-color: #7c7cca !important;
+	color: white !important;
+}

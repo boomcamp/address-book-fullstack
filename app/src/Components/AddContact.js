@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
@@ -10,7 +10,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-
+import swal from "sweetalert";
 import AddIcon from "@material-ui/icons/Add";
 import Tooltip from "@material-ui/core/Tooltip";
 
@@ -72,7 +72,12 @@ export default function ResponsiveDialog(props) {
 				})
 				.then(res => {
 					setOpenModal(false);
-					window.location = "/home";
+					swal({
+						icon: "success",
+						title: "Successful Added New Contact"
+					}).then(() => {
+						window.location = "/home";
+					});
 				});
 		} else {
 			setRequired(true);

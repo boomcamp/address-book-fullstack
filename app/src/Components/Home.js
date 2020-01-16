@@ -87,7 +87,8 @@ const useStyles = makeStyles(theme => ({
 		width: "94%",
 		"@media (max-width: 767px)": {
 			fontSize: "18px",
-			width: "90%"
+			width: "90%",
+			marginTop: "0"
 		}
 	},
 	add: {
@@ -97,7 +98,8 @@ const useStyles = makeStyles(theme => ({
 		marginBottom: "3px",
 		color: "white",
 		"@media (max-width: 767px)": {
-			width: "10%"
+			width: "10%",
+			marginTop: "0"
 		}
 	}
 }));
@@ -105,7 +107,7 @@ const useStyles = makeStyles(theme => ({
 export default function ButtonAppBar() {
 	const classes = useStyles();
 
-	const [openModal, setOpenModal] = React.useState(false);
+	const [setOpenModal] = React.useState(false);
 	const [vDetails, setVDetails] = React.useState(false);
 
 	const [firstname, setFirstName] = useState("");
@@ -118,6 +120,8 @@ export default function ButtonAppBar() {
 	const [state_or_province, setStateOrProvince] = useState("");
 	const [postal_code, setPostalCode] = useState("");
 	const [country, setCountry] = useState("");
+
+	const [contactId, setContactId] = useState("");
 
 	const handleClose = () => {
 		setOpenModal(false);
@@ -155,7 +159,6 @@ export default function ButtonAppBar() {
 			<Details
 				firstname={firstname}
 				lastname={lastname}
-				firstname={firstname}
 				home_phone={home_phone}
 				mobile_phone={mobile_phone}
 				work_phone={work_phone}
@@ -165,6 +168,7 @@ export default function ButtonAppBar() {
 				postal_code={postal_code}
 				country={country}
 				handleCloseDetails={handleCloseDetails}
+				contactId={contactId}
 			/>
 		);
 	}
@@ -172,6 +176,7 @@ export default function ButtonAppBar() {
 	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
 
 	const handleViewDetails = e => {
+		setContactId(e.target.alt);
 		axios({
 			method: "get",
 			url: `http://localhost:3006/contacts/${tokenDecoded.userId}/${e.target.alt}`
@@ -229,7 +234,7 @@ export default function ButtonAppBar() {
 				<Container maxWidth="xl">
 					<Grid container>
 						<Grid item sm={3} xs={12}>
-							<SearchSort />
+							<SearchSort userInfo={userInfo} />
 						</Grid>
 						<Grid item sm={9} xs={12}>
 							<div style={{ display: "flex" }}>
