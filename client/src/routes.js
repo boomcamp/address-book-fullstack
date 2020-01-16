@@ -17,19 +17,26 @@ export default class Routes extends React.Component {
       changeHandler,
       createContactHandler,
       isLoading,
-      handleEditOpen,
-      handleAddClose,
-      handleAddOpen,
+      handleModalClose,
+      handleModalOpen,
       isModal,
       currentData,
       editContactHandler,
       deleteContactHandler,
+      editGroupHandler,
+      deleteGroupHandler,
+      editGroup,
+      deleteGroup,
       deleteContact,
       contact,
       groups,
       addToGroup,
       addToGroupHandler,
-      fetchContact
+      fetchContact,
+      selectHandler,
+      addAGroup,
+      addAGroupHandler,
+      groupData
     } = this.props;
     return (
       <Switch>
@@ -41,10 +48,10 @@ export default class Routes extends React.Component {
                 handleLogout={handleLogout}
                 createContactHandler={createContactHandler}
                 changeHandler={changeHandler}
+                selectHandler={selectHandler}
                 isLoading={isLoading}
-                handleAddClose={handleAddClose}
-                handleEditOpen={handleEditOpen}
-                handleAddOpen={handleAddOpen}
+                handleModalClose={handleModalClose}
+                handleModalOpen={handleModalOpen}
                 isModal={isModal}
                 currentData={currentData}
                 editContactHandler={editContactHandler}
@@ -52,8 +59,15 @@ export default class Routes extends React.Component {
                 deleteContact={deleteContact}
                 contact={contact}
                 groups={groups}
+                groupData={groupData}
+                addAGroup={addAGroup}
+                addAGroupHandler={addAGroupHandler}
                 addToGroup={addToGroup}
                 addToGroupHandler={addToGroupHandler}
+                editGroup={editGroup}
+                editGroupHandler={editGroupHandler}
+                deleteGroup={deleteGroup}
+                deleteGroupHandler={deleteGroupHandler}
                 fetchContact={fetchContact}
               />
             ) : (

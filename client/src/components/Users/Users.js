@@ -4,8 +4,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import MaterialTable from "material-table";
 import { Tooltip } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 import Modal from "../Modal/Modal";
 import Zoom from "@material-ui/core/Zoom";
+import styled from "styled-components";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 
 class Users extends React.Component {
@@ -31,7 +33,7 @@ class Users extends React.Component {
             <React.Fragment>
               <Tooltip TransitionComponent={Zoom} title="Edit Contact">
                 <IconButton
-                  onClick={() => this.props.handleEditOpen(rowData, "edit")}
+                  onClick={() => this.props.handleModalOpen(rowData, "edit")}
                   aria-label="edit"
                 >
                   <EditIcon />
@@ -39,7 +41,9 @@ class Users extends React.Component {
               </Tooltip>
               <Tooltip TransitionComponent={Zoom} title="Delete Contact">
                 <IconButton
-                  onClick={() => this.props.handleEditOpen([rowData], "delete")}
+                  onClick={() =>
+                    this.props.handleModalOpen([rowData], "delete")
+                  }
                   aria-label="delete"
                 >
                   <DeleteIcon />
@@ -57,9 +61,8 @@ class Users extends React.Component {
     const {
       createContactHandler,
       changeHandler,
-      handleEditOpen,
-      handleAddOpen,
-      handleAddClose,
+      selectHandler,
+      handleModalClose,
       isModal,
       currentData,
       editContactHandler,
@@ -67,6 +70,12 @@ class Users extends React.Component {
       deleteContact,
       addToGroup,
       addToGroupHandler,
+      addAGroup,
+      addAGroupHandler,
+      editGroup,
+      editGroupHandler,
+      deleteGroup,
+      deleteGroupHandler,
       groups
     } = this.props;
 
@@ -74,11 +83,58 @@ class Users extends React.Component {
       ? this.props.contact.allContacts
       : [];
 
+    const title = this.props.groupData
+      ? this.props.groupData.group_name
+      : "All Contacts";
+
+    const Div = styled.div`
+      display: "flex";
+      justify-content: "center";
+      align-content: "center";
+      flex-wrap: "wrap";
+    `;
     return (
       <div>
         <MuiThemeProvider theme={this.theme}>
           <MaterialTable
-            title="All Contacts"
+            title={
+              <Div>
+                {this.props.groupData ? (
+                  <Typography variant="h5">
+                    {title}
+                    <Tooltip TransitionComponent={Zoom} title="Edit Group">
+                      <IconButton
+                        aria-label="edit"
+                        onClick={() =>
+                          this.props.handleModalOpen(
+                            this.props.groupData,
+                            "editGroup"
+                          )
+                        }
+                        style={{ paddingLeft: "20px" }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip TransitionComponent={Zoom} title="Delete Group">
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() =>
+                          this.props.handleModalOpen(
+                            this.props.groupData,
+                            "deleteGroup"
+                          )
+                        }
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Typography>
+                ) : (
+                  <Typography variant="h5">{title}</Typography>
+                )}
+              </Div>
+            }
             columns={this.state.columns}
             data={allContacts}
             options={{
@@ -93,19 +149,20 @@ class Users extends React.Component {
                 icon: "add",
                 tooltip: "Add Contact",
                 isFreeAction: true,
-                onClick: handleAddOpen
+                onClick: (evt, data) =>
+                  this.props.handleModalOpen(data, "addContact")
               },
               {
                 icon: "group",
                 tooltip: "Add To Group",
                 onClick: (evt, data) =>
-                  this.props.handleEditOpen(data, "addGroup")
+                  this.props.handleModalOpen(data, "addGroup")
               },
               {
                 tooltip: "Remove All Selected Users",
                 icon: "delete",
                 onClick: (evt, data) =>
-                  this.props.handleEditOpen(data, "delete")
+                  this.props.handleModalOpen(data, "delete")
               }
             ]}
           />
@@ -117,10 +174,15 @@ class Users extends React.Component {
           editContactHandler={editContactHandler}
           deleteContactHandler={deleteContactHandler}
           addToGroupHandler={addToGroupHandler}
+          addAGroup={addAGroup}
+          editGroup={editGroup}
+          editGroupHandler={editGroupHandler}
+          deleteGroup={deleteGroup}
+          deleteGroupHandler={deleteGroupHandler}
+          addAGroupHandler={addAGroupHandler}
           changeHandler={changeHandler}
-          handleAddClose={handleAddClose}
-          handleEditOpen={handleEditOpen}
-          handleAddOpen={handleAddOpen}
+          selectHandler={selectHandler}
+          handleModalClose={handleModalClose}
           deleteContact={deleteContact}
           addToGroup={addToGroup}
           groups={groups}

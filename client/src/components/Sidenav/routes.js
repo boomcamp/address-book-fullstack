@@ -10,10 +10,10 @@ export default class Routes extends React.Component {
       handleLogout,
       createContactHandler,
       changeHandler,
+      selectHandler,
       isLoading,
-      handleEditOpen,
-      handleAddOpen,
-      handleAddClose,
+      handleModalOpen,
+      handleModalClose,
       isModal,
       currentData,
       editContactHandler,
@@ -22,7 +22,14 @@ export default class Routes extends React.Component {
       contact,
       addToGroup,
       addToGroupHandler,
-      groups
+      addAGroup,
+      addAGroupHandler,
+      editGroup,
+      editGroupHandler,
+      deleteGroup,
+      deleteGroupHandler,
+      groups,
+      groupData
     } = this.props;
     return (
       <Switch>
@@ -34,10 +41,10 @@ export default class Routes extends React.Component {
               accessToken={accessToken}
               createContactHandler={createContactHandler}
               changeHandler={changeHandler}
+              selectHandler={selectHandler}
               isLoading={isLoading}
-              handleAddClose={handleAddClose}
-              handleEditOpen={handleEditOpen}
-              handleAddOpen={handleAddOpen}
+              handleModalClose={handleModalClose}
+              handleModalOpen={handleModalOpen}
               isModal={isModal}
               currentData={currentData}
               editContactHandler={editContactHandler}
@@ -46,7 +53,14 @@ export default class Routes extends React.Component {
               contact={contact}
               addToGroup={addToGroup}
               addToGroupHandler={addToGroupHandler}
+              addAGroup={addAGroup}
+              addAGroupHandler={addAGroupHandler}
+              editGroup={editGroup}
+              editGroupHandler={editGroupHandler}
+              deleteGroup={deleteGroup}
+              deleteGroupHandler={deleteGroupHandler}
               groups={groups}
+              groupData={groupData}
             />
           )}
           path="/"

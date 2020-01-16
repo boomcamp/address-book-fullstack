@@ -6,29 +6,24 @@ import Routes from "./routes";
 import "./App.css";
 import "../node_modules/react-toastify/dist/ReactToastify.css";
 
-const initialState = {
-  isLoading: false,
-  isModal: false
-};
-
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
       isLoading: false,
-      isModal: false,
-      deleteContact: false
+      isModal: false
     };
   }
 
   componentDidMount = () => {
     this.setState({
-      accessToken: localStorage.getItem("user")
+      accessToken: localStorage.getItem("user"),
+      isLoading: true
     });
   };
 
-  componentDidUpdate = prevState => {
-    if (prevState.contacts === this.state.contacts || this.state.isLoading) {
+  componentDidUpdate = () => {
+    if (this.state.isLoading) {
       this.fetchContact(1, "all");
       axios
         .get(
@@ -38,13 +33,14 @@ export default class App extends Component {
         )
         .then(response => {
           this.setState({
-            groups: response.data.allGroups
+            groups: response.data.allGroups,
+            isLoading: false
           });
         });
     }
   };
 
-  fetchContact = (id, val) => {
+  fetchContact = (data, val) => {
     return val === "all"
       ? axios
           .get(
@@ -58,10 +54,11 @@ export default class App extends Component {
             });
           })
       : axios
-          .get(`http://localhost:4001/groups/${id}/contacts`)
+          .get(`http://localhost:4001/groups/${data.id}/contacts`)
           .then(response => {
             this.setState({
-              contacts: response.data
+              contacts: response.data,
+              groupData: data
             });
           });
   };
@@ -120,12 +117,10 @@ export default class App extends Component {
               accessToken: localStorage.getItem("user")
             });
             this.setState({
-              isLoading: true
+              isLoading: true,
+              isModal: false
             });
             toast(`Hello There! ${this.state.username}`);
-            this.setState({
-              isLoading: false
-            });
           })
           .catch(errors => {
             try {
@@ -136,12 +131,10 @@ export default class App extends Component {
           })
       : toast.error("Fill Out All Fields");
   };
+
   editContactHandler = (event, rowData) => {
     event.preventDefault();
     event.target.className += " was-validated";
-    this.setState({
-      isLoading: true
-    });
     const Obj = {
       user_id: localStorage.getItem("userId"),
       first_name: this.state.fname,
@@ -160,7 +153,10 @@ export default class App extends Component {
         headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
       })
       .then(() => {
-        this.setState(initialState);
+        this.setState({
+          isLoading: true,
+          isModal: false
+        });
         toast.success(`Contact has been Successfully Edited`);
       })
       .catch(errors => {
@@ -174,7 +170,6 @@ export default class App extends Component {
 
   deleteContactHandler = (event, rowData) => {
     event.preventDefault();
-    this.setState({ isLoading: true });
     rowData.map(e =>
       axios
         .delete(`http://localhost:4001/contacts/${e.id}/delete`, {
@@ -183,7 +178,10 @@ export default class App extends Component {
           }
         })
         .then(() => {
-          this.setState(initialState);
+          this.setState({
+            isLoading: true,
+            isModal: false
+          });
           toast.success(`Contact has been Successfully Deleted`);
         })
         .catch(errors => {
@@ -196,14 +194,116 @@ export default class App extends Component {
     );
   };
 
+  editGroupHandler = (event, data) => {
+    event.preventDefault();
+    const Obj = {
+      group_name: this.state.groupName
+    };
+    axios
+      .patch(`http://localhost:4001/groups/${data.id}/edit`, Obj, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
+      })
+      .then(() => {
+        this.setState({
+          isLoading: true,
+          isModal: false
+        });
+        toast.success(`Group has been Successfully Edited`);
+      })
+      .catch(errors => {
+        try {
+          toast.error(errors.response.data.error);
+        } catch {
+          console.log(errors);
+        }
+      });
+  };
+
+  deleteGroupHandler = (event, data) => {
+    event.preventDefault();
+    axios
+      .delete(`http://localhost:4001/groups/${data.id}/delete`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user")}`
+        }
+      })
+      .then(() => {
+        this.setState({
+          isLoading: true,
+          isModal: false,
+          groupData: null
+        });
+        toast.success(`Group has been Successfully Deleted`);
+      })
+      .catch(errors => {
+        try {
+          toast.error(errors.response.data.error);
+        } catch {
+          console.log(errors);
+        }
+      });
+  };
+
+  addAGroupHandler = event => {
+    event.preventDefault();
+    event.target.className += " was-validated";
+    const Obj = {
+      user_id: localStorage.getItem("userId"),
+      group_name: this.state.groupName
+    };
+    axios
+      .post("http://localhost:4001/groups/create", Obj, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
+      })
+      .then(() => {
+        this.setState({
+          isLoading: true,
+          isModal: false
+        });
+        toast.success(`Group has been Successfully Added`);
+      })
+      .catch(errors => {
+        try {
+          toast.error(errors.response.data.error);
+        } catch {
+          console.log(errors);
+        }
+      });
+  };
+
   addToGroupHandler = (event, rowData) => {
     event.preventDefault();
+    rowData.map(e =>
+      axios
+        .patch(
+          `http://localhost:4001/groups/${e.id}/add`,
+          {
+            group_id: this.state.selectedGroup
+          },
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
+          }
+        )
+        .then(() => {
+          this.setState({
+            isLoading: true,
+            isModal: false
+          });
+          toast.success(`Contact has been Successfully Edited`);
+        })
+        .catch(errors => {
+          try {
+            toast.error(errors.response.data.error);
+          } catch {
+            console.log(errors);
+          }
+        })
+    );
   };
 
   createContactHandler = event => {
     event.preventDefault();
     event.target.className += " was-validated";
-    this.setState({ isLoading: true });
     const Obj = {
       user_id: localStorage.getItem("userId"),
       first_name: this.state.fname,
@@ -222,7 +322,10 @@ export default class App extends Component {
         headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
       })
       .then(() => {
-        this.setState(initialState);
+        this.setState({
+          isLoading: true,
+          isModal: false
+        });
         toast.success(`Contact has been Successfully Added`);
       })
       .catch(errors => {
@@ -236,18 +339,87 @@ export default class App extends Component {
 
   changeHandler = event => {
     this.setState({ [event.target.name]: event.target.value });
+    console.log([event.target.name], event.target.value);
+  };
+  selectHandler = event => {
+    return event
+      ? this.setState({ selectedGroup: event.value })
+      : this.setState({ selectedGroup: null });
   };
 
-  handleEditOpen = (val, option) => {
-    option === "addGroup"
+  handleModalOpen = (val, option) => {
+    option === "deleteGroup"
       ? this.setState({
+          deleteGroup: true,
+          editGroup: false,
+          addAGroup: false,
+          addToGroup: false,
+          addContact: false,
+          deleteContact: false,
+          currentData: val,
+          isModal: true
+        })
+      : option === "editGroup"
+      ? this.setState({
+          editGroup: true,
+          deleteGroup: false,
+          addAGroup: false,
+          addToGroup: false,
+          addContact: false,
+          deleteContact: false,
+          groupName: val.group_name,
+          currentData: val,
+          isModal: true
+        })
+      : option === "addAGroup"
+      ? this.setState({
+          currentData: null,
+          deleteGroup: false,
+          editGroup: false,
+          addAGroup: true,
+          addToGroup: false,
+          addContact: false,
+          deleteContact: false,
+          isModal: true
+        })
+      : option === "addContact"
+      ? this.setState({
+          addContact: true,
+          addAGroup: false,
+          currentData: null,
+          deleteGroup: false,
+          editGroup: false,
+          addToGroup: false,
+          deleteContact: false,
+          isModal: true
+        })
+      : option === "addGroup"
+      ? this.setState({
+          addAGroup: false,
+          editGroup: false,
+          deleteGroup: false,
+          deleteContact: false,
+          addContact: false,
           addToGroup: true,
           isModal: true,
           currentData: val
         })
       : option === "delete"
-      ? this.setState({ deleteContact: true, isModal: true, currentData: val })
+      ? this.setState({
+          editGroup: false,
+          addToGroup: false,
+          deleteGroup: false,
+          addContact: false,
+          deleteContact: true,
+          isModal: true,
+          currentData: val
+        })
       : this.setState({
+          editGroup: false,
+          addContact: false,
+          addToGroup: false,
+          deleteGroup: false,
+          addAGroup: false,
           deleteContact: false,
           isModal: true,
           currentData: val,
@@ -264,11 +436,7 @@ export default class App extends Component {
         });
   };
 
-  handleAddOpen = () => {
-    this.setState({ currentData: null, deleteContact: false, isModal: true });
-  };
-
-  handleAddClose = () => {
+  handleModalClose = () => {
     this.setState({ isModal: false });
   };
 
@@ -278,27 +446,32 @@ export default class App extends Component {
         <ToastContainer />
         <Routes
           accessToken={this.state.accessToken}
-          handleOnChange={this.handleOnChange}
           handleLogin={this.handleLogin}
           handleSignUp={this.handleSignUp}
           handleLogout={this.handleLogout}
           regSuccess={this.state.regSuccess}
-          handleReg={this.handleReg}
           submitHandler={this.submitHandler}
           changeHandler={this.changeHandler}
+          selectHandler={this.selectHandler}
           createContactHandler={this.createContactHandler}
-          handleEditOpen={this.handleEditOpen}
-          handleAddOpen={this.handleAddOpen}
-          handleAddClose={this.handleAddClose}
+          handleModalOpen={this.handleModalOpen}
+          handleModalClose={this.handleModalClose}
           editContactHandler={this.editContactHandler}
           deleteContactHandler={this.deleteContactHandler}
+          editGroupHandler={this.editGroupHandler}
+          deleteGroupHandler={this.deleteGroupHandler}
+          editGroup={this.state.editGroup}
+          deleteGroup={this.state.deleteGroup}
           isModal={this.state.isModal}
           deleteContact={this.state.deleteContact}
+          addAGroup={this.state.addAGroup}
+          addAGroupHandler={this.addAGroupHandler}
           addToGroup={this.state.addToGroup}
           addToGroupHandler={this.addToGroupHandler}
           currentData={this.state.currentData}
           contact={this.state.contacts}
           groups={this.state.groups}
+          groupData={this.state.groupData}
           fetchContact={this.fetchContact}
         />
       </HashRouter>

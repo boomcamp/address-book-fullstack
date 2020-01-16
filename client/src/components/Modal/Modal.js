@@ -7,35 +7,28 @@ import { MDBCol, MDBRow } from "mdbreact";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "react-select";
 
-const colourOptions = [
-  { value: "ocean", label: "Ocean", color: "#00B8D9", isFixed: true },
-  { value: "blue", label: "Blue", color: "#0052CC", isDisabled: true },
-  { value: "purple", label: "Purple", color: "#5243AA" },
-  { value: "red", label: "Red", color: "#FF5630", isFixed: true },
-  { value: "orange", label: "Orange", color: "#FF8B00" },
-  { value: "yellow", label: "Yellow", color: "#FFC400" },
-  { value: "green", label: "Green", color: "#36B37E" },
-  { value: "forest", label: "Forest", color: "#00875A" },
-  { value: "slate", label: "Slate", color: "#253858" },
-  { value: "silver", label: "Silver", color: "#666666" }
-];
-
 export default class Modal extends React.Component {
   render() {
     const {
-      handleAddClose,
+      handleModalClose,
       isModal,
       createContactHandler,
       editContactHandler,
       changeHandler,
+      selectHandler,
       currentData,
       deleteContactHandler,
       deleteContact,
       addToGroup,
       addToGroupHandler,
+      addAGroup,
+      addAGroupHandler,
+      editGroup,
+      editGroupHandler,
+      deleteGroup,
+      deleteGroupHandler,
       groups
     } = this.props;
-    console.log(groups);
 
     const options = groups
       ? Object.keys(groups).map(x => {
@@ -48,10 +41,129 @@ export default class Modal extends React.Component {
 
     return (
       <div>
-        {addToGroup ? (
+        {deleteGroup ? (
           <Dialog
             open={isModal}
-            onClose={handleAddClose}
+            onClose={handleModalClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Delete Group"}</DialogTitle>
+            <form
+              className="needs-validation"
+              onSubmit={e => deleteGroupHandler(e, currentData)}
+              noValidate
+            >
+              <DialogContent></DialogContent>
+              <DialogActions>
+                <Button onClick={handleModalClose} color="primary">
+                  Cancel
+                </Button>
+                <Button type="submit" color="primary" autoFocus>
+                  Agree
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+        ) : editGroup ? (
+          <Dialog
+            open={isModal}
+            onClose={handleModalClose}
+            fullWidth={true}
+            maxWidth="sm"
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Edit Group"}</DialogTitle>{" "}
+            <form
+              className="needs-validation"
+              onSubmit={e => editGroupHandler(e, currentData)}
+              noValidate
+            >
+              <DialogContent>
+                <MDBRow>
+                  <MDBCol md="12" className="mb-3">
+                    <label htmlFor="groupName" className="grey-text">
+                      Group Name
+                    </label>
+                    <input
+                      defaultValue={currentData.group_name}
+                      name="groupName"
+                      onChange={changeHandler}
+                      type="text"
+                      id="groupName"
+                      className="form-control"
+                      placeholder="Group Name"
+                      required
+                    />
+                    <div className="invalid-feedback">
+                      Please provide a valid group name.
+                    </div>
+                    <div className="valid-feedback">Looks good!</div>
+                  </MDBCol>
+                </MDBRow>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleModalClose} color="primary">
+                  Cancel
+                </Button>
+                <Button type="submit" color="primary" autoFocus>
+                  Edit
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+        ) : addAGroup ? (
+          <Dialog
+            open={isModal}
+            onClose={handleModalClose}
+            fullWidth={true}
+            maxWidth="sm"
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Add a Group"}</DialogTitle>{" "}
+            <form
+              className="needs-validation"
+              onSubmit={addAGroupHandler}
+              noValidate
+            >
+              <DialogContent>
+                <MDBRow>
+                  <MDBCol md="12" className="mb-3">
+                    <label htmlFor="groupName" className="grey-text">
+                      Group Name
+                    </label>
+                    <input
+                      name="groupName"
+                      onChange={changeHandler}
+                      type="text"
+                      id="groupName"
+                      className="form-control"
+                      placeholder="Group Name"
+                      required
+                    />
+                    <div className="invalid-feedback">
+                      Please provide a valid group name.
+                    </div>
+                    <div className="valid-feedback">Looks good!</div>
+                  </MDBCol>
+                </MDBRow>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleModalClose} color="primary">
+                  Cancel
+                </Button>
+                <Button type="submit" color="primary" autoFocus>
+                  Agree
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+        ) : addToGroup ? (
+          <Dialog
+            open={isModal}
+            onClose={handleModalClose}
             fullWidth={true}
             maxWidth="sm"
             aria-labelledby="alert-dialog-title"
@@ -63,24 +175,34 @@ export default class Modal extends React.Component {
               onSubmit={e => addToGroupHandler(e, currentData)}
               noValidate
             >
-              <DialogContent
-                style={{ paddingTop: "60px", paddingBottom: "150px" }}
-              >
-                <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  defaultValue={options[0]}
-                  isDisabled={false}
-                  isLoading={false}
-                  isClearable={true}
-                  isRtl={false}
-                  isSearchable={true}
-                  name="color"
-                  options={options}
-                />
+              <DialogContent>
+                <MDBRow>
+                  <MDBCol md="12" className="mb-3">
+                    <label htmlFor="fname" className="grey-text">
+                      Select a Group
+                    </label>
+                    <Select
+                      menuPortalTarget={document.body}
+                      styles={{
+                        menuPortal: base => ({ ...base, zIndex: 9999 })
+                      }}
+                      className="basic-single"
+                      name="groupSelect"
+                      onChange={selectHandler}
+                      classNamePrefix="select"
+                      defaultValue={"Choose a Group"}
+                      isDisabled={false}
+                      isLoading={false}
+                      isClearable={true}
+                      isRtl={false}
+                      isSearchable={true}
+                      options={options}
+                    />
+                  </MDBCol>
+                </MDBRow>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleAddClose} color="primary">
+                <Button onClick={handleModalClose} color="primary">
                   Cancel
                 </Button>
                 <Button type="submit" color="primary" autoFocus>
@@ -92,7 +214,7 @@ export default class Modal extends React.Component {
         ) : deleteContact ? (
           <Dialog
             open={isModal}
-            onClose={handleAddClose}
+            onClose={handleModalClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
@@ -106,7 +228,7 @@ export default class Modal extends React.Component {
             >
               <DialogContent></DialogContent>
               <DialogActions>
-                <Button onClick={handleAddClose} color="primary">
+                <Button onClick={handleModalClose} color="primary">
                   Cancel
                 </Button>
                 <Button type="submit" color="primary" autoFocus>
@@ -120,7 +242,7 @@ export default class Modal extends React.Component {
             fullWidth={true}
             maxWidth="lg"
             open={isModal}
-            onClose={handleAddClose}
+            onClose={handleModalClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
@@ -333,7 +455,7 @@ export default class Modal extends React.Component {
                 </div>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleAddClose} color="primary">
+                <Button onClick={handleModalClose} color="primary">
                   Cancel
                 </Button>
                 <Button type="submit" color="primary" autoFocus>
@@ -347,7 +469,7 @@ export default class Modal extends React.Component {
             fullWidth={true}
             maxWidth="lg"
             open={isModal}
-            onClose={handleAddClose}
+            onClose={handleModalClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
@@ -550,7 +672,7 @@ export default class Modal extends React.Component {
                 </div>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleAddClose} color="primary">
+                <Button onClick={handleModalClose} color="primary">
                   Cancel
                 </Button>
                 <Button type="submit" color="primary" autoFocus>

@@ -67,21 +67,28 @@ function ResponsiveDrawer(props) {
   const { container } = props;
   const {
     changeHandler,
+    selectHandler,
     createContactHandler,
     editContactHandler,
     handleLogout,
     isLoading,
-    handleEditOpen,
-    handleAddOpen,
-    handleAddClose,
+    handleModalOpen,
+    handleModalClose,
     isModal,
     currentData,
     deleteContactHandler,
     deleteContact,
     groups,
+    groupData,
     contact,
     addToGroup,
-    addToGroupHandler
+    addToGroupHandler,
+    addAGroup,
+    addAGroupHandler,
+    editGroup,
+    editGroupHandler,
+    deleteGroup,
+    deleteGroupHandler
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -100,14 +107,14 @@ function ResponsiveDrawer(props) {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar} />
+      <div className={classes.toolbar}></div>
       <Divider />
       <div style={{ padding: "10px" }}>
         <MDBBtn
           color="info"
           outline
           style={{ borderRadius: "20px" }}
-          onClick={handleAddOpen}
+          onClick={() => handleModalOpen([], "addContact")}
         >
           <MDBIcon icon="plus" className="mr-1" /> Create Contact
         </MDBBtn>
@@ -142,7 +149,10 @@ function ResponsiveDrawer(props) {
                 alignContent: "center"
               }}
             >
-              <Button variant="outlined">
+              <Button
+                variant="outlined"
+                onClick={() => handleModalOpen([], "addAGroup")}
+              >
                 <AddIcon />
                 Add a Group
               </Button>
@@ -153,7 +163,7 @@ function ResponsiveDrawer(props) {
                     button
                     key={e.id}
                     className={classes.nested}
-                    onClick={() => props.fetchContact(e.id, "group")}
+                    onClick={() => props.fetchContact(e, "group")}
                   >
                     <ListItemIcon>
                       <StarBorder />
@@ -263,17 +273,24 @@ function ResponsiveDrawer(props) {
           editContactHandler={editContactHandler}
           deleteContactHandler={deleteContactHandler}
           changeHandler={changeHandler}
+          selectHandler={selectHandler}
           isLoading={isLoading}
-          handleAddClose={handleAddClose}
-          handleEditOpen={handleEditOpen}
-          handleAddOpen={handleAddOpen}
+          handleModalClose={handleModalClose}
+          handleModalOpen={handleModalOpen}
           isModal={isModal}
           currentData={currentData}
           deleteContact={deleteContact}
           contact={contact}
           addToGroup={addToGroup}
           addToGroupHandler={addToGroupHandler}
+          addAGroup={addAGroup}
+          addAGroupHandler={addAGroupHandler}
+          editGroup={editGroup}
+          editGroupHandler={editGroupHandler}
+          deleteGroup={deleteGroup}
+          deleteGroupHandler={deleteGroupHandler}
           groups={groups}
+          groupData={groupData}
         />
       </main>
     </div>
