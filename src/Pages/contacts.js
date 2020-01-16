@@ -6,6 +6,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
 import Delete from "@material-ui/icons/Delete";
 import Axios from "axios";
@@ -42,7 +43,6 @@ export default function Contacts({ match, history }) {
   const classes = useStyles();
   const [stat, setStat] = useState(false);
   const [rows, setRows] = useState([]);
-  const [sort, setSort] = useState("");
   const [filter, setFilter] = useState([]);
   const auth = ls.get("auth");
   const [open, setOpen] = useState(false);
@@ -57,14 +57,6 @@ export default function Contacts({ match, history }) {
     }
   };
   const handleOpen = () => setOpen(true);
-
-  // const sortTable = e => {
-  //   setSort(e.target.value);
-  //   Axios.get(
-  //     `http://localhost:3001/contacts/list/${match.params.id}?sort=${e.target.value}`,
-  //     headers
-  //   );
-  // };
 
   if (!auth) {
     history.push("/");
@@ -96,8 +88,33 @@ export default function Contacts({ match, history }) {
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell>Firstname</StyledTableCell>
-              <StyledTableCell align="center">Lastname</StyledTableCell>
+              <Tooltip title="Sort by Name">
+                <StyledTableCell
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    Axios.get(
+                      `http://localhost:3001/contacts/list/${match.params.id}?sort=first_name`,
+                      headers
+                    ).then(res => setRows(res.data));
+                  }}
+                >
+                  Firstname
+                </StyledTableCell>
+              </Tooltip>
+              <Tooltip title="Sort by Lastname">
+                <StyledTableCell
+                  align="center"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    Axios.get(
+                      `http://localhost:3001/contacts/list/${match.params.id}?sort=last_name`,
+                      headers
+                    ).then(res => setRows(res.data));
+                  }}
+                >
+                  Lastname
+                </StyledTableCell>
+              </Tooltip>
               <StyledTableCell align="center">Phone Number</StyledTableCell>
               <StyledTableCell align="center">Action</StyledTableCell>
             </TableRow>

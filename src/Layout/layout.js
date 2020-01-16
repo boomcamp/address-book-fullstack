@@ -80,6 +80,12 @@ export default function Layout(props) {
 
   const handleOpen = () => {
     setOpen(true);
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
+
+  const handleProfileMenuOpen = event => {
+    setAnchorEl(event.currentTarget);
   };
 
   const handleMobileMenuClose = () => {
@@ -105,8 +111,8 @@ export default function Layout(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleOpen}>Add Contact</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Add Group</MenuItem>
     </Menu>
   );
 
@@ -121,8 +127,8 @@ export default function Layout(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem type="button" onClick={handleOpen}>
-        <IconButton color="inherit">
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton aria-label="add" aria-haspopup="true" color="inherit">
           <AddCircleIcon />
         </IconButton>
         <p>Add</p>
@@ -168,8 +174,12 @@ export default function Layout(props) {
               <Tooltip title="Add" aria-label="addcontact">
                 <AddCircleIcon
                   className={classes.icon}
-                  type="button"
-                  onClick={handleOpen}
+                  edge="end"
+                  aria-label="add"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
                 />
               </Tooltip>
               <Link to="/">

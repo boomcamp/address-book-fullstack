@@ -56,7 +56,7 @@ export default function AddContactModal({
     postal_code: ""
   });
 
-  const [err, showErr] = useState({
+  const [error, setError] = useState({
     first_name: {
       required: false
     },
@@ -70,15 +70,15 @@ export default function AddContactModal({
 
   const requiredData = e => {
     if (e.target.value.length === 0) {
-      showErr({
-        ...err,
+      setError({
+        ...error,
         [`${e.target.name}`]: {
           required: true
         }
       });
     } else {
-      showErr({
-        ...err,
+      setError({
+        ...error,
         [`${e.target.name}`]: {
           required: false
         }
@@ -94,8 +94,14 @@ export default function AddContactModal({
     requiredData(e);
   }
 
-  const handleClose = () => {
+  const handleClose = e => {
     setOpen(false);
+    setError({
+      ...error,
+      [`${e.target.name}`]: {
+        required: false
+      }
+    });
   };
 
   const addContact = e => {
@@ -161,9 +167,9 @@ export default function AddContactModal({
                       onBlur={e => requiredData(e)}
                       value={contact.first_name}
                       onChange={handleInput}
-                      error={err.first_name.required}
+                      error={error.first_name.required}
                       helperText={
-                        !err.first_name.required ? "" : "Required to fill out"
+                        !error.first_name.required ? "" : "Required to fill out"
                       }
                     />
                   </Grid>
@@ -180,9 +186,9 @@ export default function AddContactModal({
                       onBlur={e => requiredData(e)}
                       value={contact.last_name}
                       onChange={handleInput}
-                      error={err.last_name.required}
+                      error={error.last_name.required}
                       helperText={
-                        !err.last_name.required ? "" : "Required to fill out"
+                        !error.last_name.required ? "" : "Required to fill out"
                       }
                     />
                   </Grid>
@@ -201,9 +207,11 @@ export default function AddContactModal({
                       onBlur={e => requiredData(e)}
                       value={contact.mobile_phone}
                       onChange={handleInput}
-                      error={err.mobile_phone.required}
+                      error={error.mobile_phone.required}
                       helperText={
-                        !err.mobile_phone.required ? "" : "Required to fill out"
+                        !error.mobile_phone.required
+                          ? ""
+                          : "Required to fill out"
                       }
                     />
                   </Grid>
