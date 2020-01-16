@@ -110,7 +110,7 @@ export const Contacts = props => {
   const action1 = [
     {
       icon: "add",
-      tooltip: "add",
+      tooltip: "Add new Contact",
       isFreeAction: true,
       onClick: () => {
         setAction("add");
@@ -130,7 +130,7 @@ export const Contacts = props => {
   const action2 = [
     {
       icon: "add",
-      tooltip: "add",
+      tooltip: "Add new Contact",
       isFreeAction: true,
       onClick: () => {
         setAction("add");
