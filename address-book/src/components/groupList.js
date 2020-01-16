@@ -17,8 +17,12 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import GroupIcon from "@material-ui/icons/Group";
 import { height } from "@material-ui/system";
 import axios from "axios";
-import Button from '@material-ui/core/Button';
-import NewGroups from "./modal/newGroups"
+import Button from "@material-ui/core/Button";
+import NewGroups from "./modal/newGroups";
+import EditIcon from "@material-ui/icons/Edit";
+import Tooltip from "@material-ui/core/Tooltip";
+import AddToGroup from "./modal/AddToGroup";
+import { Dialog } from "@material-ui/core";
 export default class GroupList extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +30,8 @@ export default class GroupList extends Component {
     this.state = {
       selection: "",
       dense: false,
-      list: []
+      list: [],
+      openModal: false
     };
   }
 
@@ -39,12 +44,20 @@ export default class GroupList extends Component {
       this.setState({
         list: res.data
       });
-      console.log(this.state.list);
     });
   };
-  handleClickButton=()=>{
 
+  handleOpenModal = () => {
+    this.setState({ openModal: true });
+  };
+
+  handleCloseModal = () => {
+    console.log('hi bry')
+    this.setState({ openModal: !this.state.openModal});
+    console.log(this.state.openModal)
   }
+  
+
   render() {
     return (
       <React.Fragment>
@@ -70,15 +83,31 @@ export default class GroupList extends Component {
                       <GroupIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <Button style={{
-                color:"#fff"
-              }}>
+
+                  <Button
+                    style={{
+                      color: "#fff"
+                    }}
+                    onClick={() => this.handleOpenModal()}
+                  >
                     <ListItemText primary={group.group_name} />
+                    <AddToGroup
+                      openModal={this.state.openModal}
+                      handleCloseModal={this.handleCloseModal}
+                    />
                   </Button>
 
                   <ListItemSecondaryAction>
                     <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
+                      <Tooltip title="Edit Group">
+                        <EditIcon />
+                      </Tooltip>
+                    </IconButton>
+
+                    <IconButton edge="end" aria-label="delete">
+                      <Tooltip title="Delete Group">
+                        <DeleteIcon />
+                      </Tooltip>
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
@@ -86,8 +115,6 @@ export default class GroupList extends Component {
             ))}
           </div>
         </div>
-
-        <NewGroups handleSelect={this.handleSelect()} />
       </React.Fragment>
     );
   }

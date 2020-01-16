@@ -17,27 +17,24 @@ export default class New extends Component {
       openModal: false
     };
   }
+
   handleCloseModal = () => {
-    
     this.setState({
       open: false,
-      openModal:false
-      
+      openModal: false
     });
   };
-  handleOpenModal = (e) => {
-    if(e ==1 ){
+  handleOpenModal = e => {
+    if (e == 1) {
       this.setState({
         openModal: true
-      })
+      });
+    } else {
+      this.setState({
+        open: true
+      });
     }
-    else{
-    this.setState({
-      open: true,
-    });
-  }
   };
-  
 
   render() {
     const { classes } = this.props;
@@ -53,7 +50,7 @@ export default class New extends Component {
           <Box>
             <Tooltip title="Add New Contact">
               <IconButton
-              onClick={()=>this.handleOpenModal(1)}
+                onClick={() => this.handleOpenModal(1)}
                 // onClick={() =>
                 //   this.setState({
                 //     open: true
@@ -71,16 +68,13 @@ export default class New extends Component {
             </Tooltip>
             <Contacts
               handleCloseModal={this.handleCloseModal}
-              
               openModal={this.state.openModal}
             />
           </Box>
 
           <Box>
             <Tooltip title="Add New Group">
-              <IconButton
-                onClick={() =>this.handleOpenModal(2)}
-              >
+              <IconButton onClick={() => this.handleOpenModal(2)}>
                 <div
                   style={{
                     padding: "20px"
@@ -92,7 +86,6 @@ export default class New extends Component {
             </Tooltip>
             <Groups
               handleCloseModal={this.handleCloseModal}
-              
               open={this.state.open}
             />
           </Box>

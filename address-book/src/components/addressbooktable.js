@@ -17,8 +17,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import EditContacts from "./modal/editContacts";
-import Box from "@material-ui/core/Box";
 import Tooltip from "@material-ui/core/Tooltip";
+import GroupIcon from "@material-ui/icons/Group";
+
 const styles = {
   main: {
     ["@media (max-width:640px)"]: {
@@ -38,7 +39,7 @@ class Addressbooktable extends Component {
       saveDisabled: true,
       editButton: "flex",
       saveButton: "none",
-
+      openAdd: false,
       fname: "",
       lname: "",
       mobilephone: "",
@@ -53,9 +54,10 @@ class Addressbooktable extends Component {
       openModal: false,
       data: [],
       open: false,
+      list:[],
       columns: [
         {
-          title: "FirstName",
+          title: "FullName",
           field: "first_name",
 
           render: rowData => (
@@ -67,23 +69,7 @@ class Addressbooktable extends Component {
                 cursor: "pointer"
               }}
             >
-              {rowData.first_name}
-            </span>
-          )
-        },
-        {
-          title: "LastName",
-          field: "last_name",
-
-          render: rowData => (
-            <span
-              style={{
-                textDecoration: "none",
-                color: "black",
-                cursor: "pointer"
-              }}
-            >
-              {rowData.last_name}
+              {rowData.first_name} {rowData.last_name}
             </span>
           )
         },
@@ -136,13 +122,11 @@ class Addressbooktable extends Component {
                   homephone={this.state.homephone}
                   workphone={this.state.workphone}
                   country={this.state.country}
-
                   disabled={this.state.disabled}
                   buttonChange={this.state.buttonChange}
                   saveDisabled={this.state.saveDisabled}
                   editButton={this.state.editButton}
                   saveButton={this.state.saveButton}
-
                   handleCancel={this.handleCancel}
                   handleEdit={this.handleEdit}
                 />
@@ -152,7 +136,9 @@ class Addressbooktable extends Component {
                 style={{
                   textDecoration: "none",
                   color: "black",
-                  cursor: "pointer"
+                  cursor: "pointer",
+
+                  marginRight: 20
                 }}
               >
                 <Tooltip title="Delete Contact">
@@ -161,38 +147,39 @@ class Addressbooktable extends Component {
                   />
                 </Tooltip>
               </span>
+
             </div>
           )
         }
       ]
     };
   }
-  handleEdit=()=>{
+  handleEdit = () => {
     this.setState({
       disabled: false,
       saveDisabled: false,
       editButton: "none",
       saveButton: "flex"
-    })
-  }
+    });
+  };
   handleCancel = () => {
-    this.handleCloseModal()
-       this.setState({
-         fname: "",
-         lname: "",
-         homephone: "",
-         mobilephone: "",
-         workphone: "",
-         email: "",
-         city: "",
-         stateOrProvince: "",
-         postalcode: "",
-         country: "",
-         disabled: true,
-         editButton: true,
-         saveButton: "none"
-       });
-     };
+    this.handleCloseModal();
+    this.setState({
+      fname: "",
+      lname: "",
+      homephone: "",
+      mobilephone: "",
+      workphone: "",
+      email: "",
+      city: "",
+      stateOrProvince: "",
+      postalcode: "",
+      country: "",
+      disabled: true,
+      editButton: true,
+      saveButton: "none"
+    });
+  };
   handleOpenModal = item => {
     const idEdit = item.item.rowData.contactid;
     localStorage.setItem("idEdit", item.item.rowData.contactid);
@@ -207,22 +194,23 @@ class Addressbooktable extends Component {
         homephone: res.data.home_phone,
         workphone: res.data.work_phone,
         email: res.data.email,
-        postal: res.data.postal_code,
+        postal: res.data.postal_code
       });
-    
+
       // console.log(this.state.mobilephone)
-      
     });
     this.setState({
       openModal: true,
       disabled: true
     });
   };
+
   handleCloseModal = () => {
     localStorage.removeItem("idEdit");
     this.setState({
-      openModal: false,
+      openModal: false
     });
+console.log("table")
   };
 
   componentDidMount() {
@@ -280,7 +268,6 @@ class Addressbooktable extends Component {
       [fieldError]: value ? false : true
     });
     // console.log(fieldname);
-
   };
   render() {
     // console.log(this.state.data);

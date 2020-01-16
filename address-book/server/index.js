@@ -3,7 +3,7 @@ const massive = require("massive");
 const cors = require("cors");
 const users = require("./controllers/users");
 const contacts = require("./controllers/contacts");
-const groups =require("./controllers/groups")
+const groups = require("./controllers/groups");
 massive({
   host: "localhost",
   port: 5433,
@@ -23,14 +23,16 @@ massive({
     app.post("/login", users.login);
     ///contacts
     app.post("/createcontact", contacts.createContact);
-    app.get('/addressbook/view/:id', contacts.getById);
-    app.get('/addressbook/:id', contacts.contactList);
-    app.delete('/addressbook/deleteContact/:id', contacts.deleteContact);
-    app.patch('/addressbook/update/:id', contacts.updateContact)
-   
+    app.get("/addressbook/view/:id", contacts.getById);
+    app.get("/addressbook/:id", contacts.contactList);
+    app.delete("/addressbook/deleteContact/:id", contacts.deleteContact);
+    app.patch("/addressbook/update/:id", contacts.updateContact);
+
     ///groups
     app.post("/createGroup", groups.createGroup);
-    app.get('/getGroups/:id', groups.getGroups);
+    app.get("/getGroups/:id", groups.getGroups);
+    app.patch("/addressbook/addtogroup/:userid/:id", groups.addToGroup);
+    app.patch("/editgroup/:userid/:id", groups.updateGroupById);
 
     const PORT = 5000;
     app.listen(PORT, () => {

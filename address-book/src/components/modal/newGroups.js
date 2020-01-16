@@ -43,10 +43,10 @@ export default class NewGroups extends Component {
         groupName: ""
       })
     })
-    
+    window.location.reload();
     this.props.handleCloseModal()
   
-    console.log(this.state.groupName)
+   
   }
 
   render() {
