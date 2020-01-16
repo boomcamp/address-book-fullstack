@@ -1,7 +1,16 @@
 import React, { Component } from "react";
-import { Form, Icon, Input, Button, Modal, Select, message } from "antd";
+import {
+  Form,
+  Icon,
+  Input,
+  Button,
+  Modal,
+  Select,
+  message,
+  Col,
+  Row
+} from "antd";
 import axios from "axios";
-import ContactTable from "./contactTable";
 
 class addcontact extends Component {
   constructor() {
@@ -44,6 +53,7 @@ class addcontact extends Component {
         console.log("Received values of form: ", values);
       }
     });
+
     this.setState({ loading: true });
     setTimeout(() => {
       this.setState({ loading: false, visible: false });
@@ -98,9 +108,9 @@ class addcontact extends Component {
     return (
       <div>
         <div>
-          <h1 type="primary" onClick={this.showModal}>
+          <Button type="link" onClick={this.showModal}>
             <Icon type="user-add" /> Add Contact
-          </h1>
+          </Button>
           <Modal
             visible={visible}
             title="Add Contact"
@@ -122,75 +132,100 @@ class addcontact extends Component {
             ]}
           >
             <Form className="login-form">
-              <Form.Item>
-                {getFieldDecorator("first_name", {
-                  rules: [{ required: true, message: "Firstname is required" }]
-                })(
-                  <Input
-                    prefix={
-                      <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                    }
-                    required={true}
-                    placeholder="Firstname"
-                    onChange={this.handleInput("first_name")}
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
-                {getFieldDecorator("last_name", {
-                  rules: [{ required: true, message: "Lastname is required" }]
-                })(
-                  <Input
-                    prefix={
-                      <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                    }
-                    placeholder="Lastname"
-                    onChange={this.handleInput("last_name")}
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
-                {getFieldDecorator("Home", {
-                  rules: [
-                    {
-                      required: true,
-                      message: "Please input your Home number!"
-                    }
-                  ]
-                })(
-                  <Input
-                    addonBefore={prefixSelector}
-                    style={{ width: "100%" }}
-                    prefix={
-                      <Icon type="phone" style={{ color: "rgba(0,0,0,.25)" }} />
-                    }
-                    placeholder="Home phone"
-                    onChange={this.handleInput("home_phone")}
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
-                {getFieldDecorator("phone", {
-                  rules: [
-                    {
-                      required: true,
-                      message: "Please input your mobile number!"
-                    }
-                  ]
-                })(
-                  <Input
-                    addonBefore={prefixSelector}
-                    prefix={
-                      <Icon
-                        type="mobile"
-                        style={{ color: "rgba(0,0,0,.25)" }}
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item>
+                    {getFieldDecorator("first_name", {
+                      rules: [
+                        { required: true, message: "Firstname is required" }
+                      ]
+                    })(
+                      <Input
+                        prefix={
+                          <Icon
+                            type="user"
+                            style={{ color: "rgba(0,0,0,.25)" }}
+                          />
+                        }
+                        required={true}
+                        placeholder="Firstname"
+                        onChange={this.handleInput("first_name")}
                       />
-                    }
-                    placeholder="Mobile phone"
-                    onChange={this.handleInput("mobile_phone")}
-                  />
-                )}
-              </Form.Item>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item>
+                    {getFieldDecorator("last_name", {
+                      rules: [
+                        { required: true, message: "Lastname is required" }
+                      ]
+                    })(
+                      <Input
+                        prefix={
+                          <Icon
+                            type="user"
+                            style={{ color: "rgba(0,0,0,.25)" }}
+                          />
+                        }
+                        placeholder="Lastname"
+                        onChange={this.handleInput("last_name")}
+                      />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item>
+                    {getFieldDecorator("Home", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "Please input your Home number!"
+                        }
+                      ]
+                    })(
+                      <Input
+                        addonBefore={prefixSelector}
+                        style={{ width: "100%" }}
+                        prefix={
+                          <Icon
+                            type="phone"
+                            style={{ color: "rgba(0,0,0,.25)" }}
+                          />
+                        }
+                        placeholder="Home phone"
+                        onChange={this.handleInput("home_phone")}
+                      />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item>
+                    {getFieldDecorator("phone", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "Please input your mobile number!"
+                        }
+                      ]
+                    })(
+                      <Input
+                        addonBefore={prefixSelector}
+                        prefix={
+                          <Icon
+                            type="mobile"
+                            style={{ color: "rgba(0,0,0,.25)" }}
+                          />
+                        }
+                        placeholder="Mobile phone"
+                        onChange={this.handleInput("mobile_phone")}
+                      />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
               <Form.Item>
                 {getFieldDecorator("work", {
                   rules: [
@@ -291,7 +326,6 @@ class addcontact extends Component {
             </Form>
           </Modal>
         </div>
-        <ContactTable data={this.state.data} />
       </div>
     );
   }

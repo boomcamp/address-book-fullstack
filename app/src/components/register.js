@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Icon, Input, Button, Card, message } from "antd";
+import { Form, Icon, Input, Button, Card, message, Col, Row } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Image from "./img/logos.jpg";
@@ -48,7 +48,7 @@ class register extends Component {
     });
   };
 
-  handleSubmit = (e, key) => {
+  handleSubmit = e => {
     axios({
       method: "post",
       url: "/users/register",
@@ -63,7 +63,7 @@ class register extends Component {
       console.log(response);
       localStorage.setItem("id", response.data.id);
       localStorage.setItem("username", response.data.first_name);
-      message.success({ content: "Successfully Register", key, duration: 2 });
+      message.success({ content: "Successfully Register", duration: 2 });
       this.props.history.replace("/user");
     });
   };
@@ -78,35 +78,51 @@ class register extends Component {
             <Form style={form} layout="vertical">
               <img src={Image} alt="" />
               <h1>Sign up </h1>
-              <Form.Item>
-                {getFieldDecorator("first_name", {
-                  rules: [{ required: true, message: "Firstname is required" }]
-                })(
-                  <Input
-                    prefix={
-                      <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                    }
-                    required={true}
-                    placeholder="Firstname"
-                    name="first_name"
-                    onChange={e => this.handleChange(e.target)}
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
-                {getFieldDecorator("last_name", {
-                  rules: [{ required: true, message: "Lastname is required" }]
-                })(
-                  <Input
-                    prefix={
-                      <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                    }
-                    placeholder="Lastname"
-                    name="last_name"
-                    onChange={e => this.handleChange(e.target)}
-                  />
-                )}
-              </Form.Item>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item>
+                    {getFieldDecorator("first_name", {
+                      rules: [
+                        { required: true, message: "Firstname is required" }
+                      ]
+                    })(
+                      <Input
+                        prefix={
+                          <Icon
+                            type="user"
+                            style={{ color: "rgba(0,0,0,.25)" }}
+                          />
+                        }
+                        required={true}
+                        placeholder="Firstname"
+                        name="first_name"
+                        onChange={e => this.handleChange(e.target)}
+                      />
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item>
+                    {getFieldDecorator("last_name", {
+                      rules: [
+                        { required: true, message: "Lastname is required" }
+                      ]
+                    })(
+                      <Input
+                        prefix={
+                          <Icon
+                            type="user"
+                            style={{ color: "rgba(0,0,0,.25)" }}
+                          />
+                        }
+                        placeholder="Lastname"
+                        name="last_name"
+                        onChange={e => this.handleChange(e.target)}
+                      />
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
               <Form.Item>
                 {getFieldDecorator("email", {
                   rules: [

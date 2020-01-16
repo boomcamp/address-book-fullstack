@@ -41,7 +41,7 @@ massive({
     app.get("/contact/list/:id", contact.contactlist);
     app.delete("/delete/:id", contact.deletecontact);
     app.patch("/update/:id", contact.updatecontact);
-
+    app.get("/seacrh", contact.search);
     const port = 5000;
 
     app.listen(port, () => {

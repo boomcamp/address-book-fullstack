@@ -39,7 +39,6 @@ class login extends Component {
   }
 
   componentDidMount(props) {
-    console.log(this.props);
     if (localStorage.getItem("token")) {
       this.props.history.push("/user");
     }
@@ -69,6 +68,11 @@ class login extends Component {
 
       .catch(err => {
         console.log("invalid username and password");
+        message.error({
+          content: "Invalid username and password",
+          key,
+          duration: 2
+        });
       });
   };
 

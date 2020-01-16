@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table, Icon, Tabs } from "antd";
+import { Table, Icon, Tabs, message, Modal } from "antd";
 import axios from "axios";
 import Edit from "./editContact";
 
@@ -17,7 +17,7 @@ export default class addressTable extends Component {
       method: "get",
       url: `/contact/list/${localStorage.getItem("id")}`
     }).then(res => {
-      res.data.map(data => {
+      res.data.forEach(data => {
         arr.push({
           first_name: data.first_name,
           last_name: data.last_name,
@@ -31,7 +31,6 @@ export default class addressTable extends Component {
           key: data.id,
           country: data.country
         });
-        // console.log(data);
       });
       this.setState({
         data: arr
@@ -51,7 +50,7 @@ export default class addressTable extends Component {
       method: "get",
       url: `/contact/list/${localStorage.getItem("id")}`
     }).then(res => {
-      res.data.map(data => {
+      res.data.forEach(data => {
         arr.push({
           first_name: data.first_name,
           last_name: data.last_name,
@@ -72,16 +71,27 @@ export default class addressTable extends Component {
     });
   };
   handleDelete = id => {
-    axios({
-      method: "delete",
-      url: `/delete/${id}`
-    }).then(res => {
-      console.log("deleted");
+    const { confirm } = Modal;
+    confirm({
+      title: "Do you want to delete these contact?",
+      okType: "danger",
+
+      onOk() {
+        axios({
+          method: "delete",
+          url: `/delete/${id}`
+        }).then(res => {
+          setTimeout(() => {
+            message.success({ content: "Successfully Deleted", duration: 2 });
+          }, 1000);
+          console.log("deleted");
+        });
+      },
+      onCancel() {}
     });
   };
 
   handleOk = e => {
-    // localStorage.setItem(JSON.stringify(e));
     this.setState({
       openModal: true,
       contact: e
@@ -92,52 +102,54 @@ export default class addressTable extends Component {
       openModal: false
     });
   };
+  handleColumn = e => {
+    this.setState({
+      openModal: true
+    });
+    console.log(e);
+  };
+
   render() {
     const { TabPane } = Tabs;
     const { Column } = Table;
-    // this.props.data ? this.loadAgain() : console.log("Null");
-    // console.log(this.props.data);
     return (
       <div>
         <Tabs defaultActiveKey="1" onChange={this.callback}>
           <TabPane tab="Address Book" key="1">
-            <Table dataSource={this.state.data} key="table">
+            <Table dataSource={this.state.data} onClick={e => this.handleOk()}>
               <Column
                 title="First Name"
                 dataIndex="first_name"
                 key="first_name"
               />
-
               <Column title="Last Name" dataIndex="last_name" key="last_name" />
               <Column title="City" dataIndex="city" key="city" />
               <Column
-                title="state_or_province"
+                title="State or Province"
                 dataIndex="state_or_province"
                 key="state_or_province"
               />
-
               {/* <Column
                 title="Home phone"
                 dataIndex="home_phone"
                 key="home_phone"
-              />
+              />{" "} */}
               <Column
                 title="Mobile phone"
                 dataIndex="mobile_phone"
                 key="mobile_phone"
               />
-              <Column
+              {/* <Column
                 title="Work phone"
                 dataIndex="work_phone"
                 key="work_phone"
-              /> */}
+              />
               <Column
                 title="Postal Code"
                 dataIndex="postal_code"
                 key="postal_code"
-              />
-
-              <Column title="Country" dataIndex="country" key="country" />
+              /> */}
+              {/* <Column title="Country" dataIndex="country" key="country" /> */}
               <Column
                 title="Edit"
                 key="edit"
@@ -170,9 +182,14 @@ export default class addressTable extends Component {
                   </span>
                 )}
               />
+              <Column
+                title="Action"
+                key="view"
+                render={(record, text) => <span>efef</span>}
+              />
             </Table>
           </TabPane>
-          <TabPane tab="" key="2"></TabPane>
+          {/* <TabPane tab="dg" key="2"></TabPane> */}
         </Tabs>
       </div>
     );
