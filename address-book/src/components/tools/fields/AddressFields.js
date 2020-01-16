@@ -13,8 +13,8 @@ export default function AddressFields({cityFn, stateProvinceFn, postalCodeFn, co
                 onChange={cityFn}
                 name="city"
                 value={city}
-                validators={['required']}
-                errorMessages={['This Field is Required']}
+                validators={['required', 'matchRegexp:^[A-Za-z ]+$']}
+                errorMessages={['This Field is Required', 'Numbers and special characters are not Valid']}
                 InputProps={{
                     startAdornment: (
                     <InputAdornment position="start">
@@ -30,8 +30,8 @@ export default function AddressFields({cityFn, stateProvinceFn, postalCodeFn, co
                 onChange={stateProvinceFn}
                 name="stateProvince"
                 value={stateProvince}
-                validators={['required']}
-                errorMessages={['This Field is Required']}
+                validators={['required', 'matchRegexp:^[A-Za-z ]+$']}
+                errorMessages={['This Field is Required', 'Numbers and special characters are not Valid']}
                 InputProps={{
                     startAdornment: (
                     <InputAdornment position="start">
@@ -64,8 +64,8 @@ export default function AddressFields({cityFn, stateProvinceFn, postalCodeFn, co
                 onChange={countryFn}
                 name="country"
                 value={country}
-                validators={['required']}
-                errorMessages={['This Field is Required']}
+                validators={['required', 'matchRegexp:^[A-Za-z ]+$']}
+                errorMessages={['This Field is Required', 'Numbers and special characters are not Valid']}
                 InputProps={{
                     startAdornment: (
                     <InputAdornment position="start">

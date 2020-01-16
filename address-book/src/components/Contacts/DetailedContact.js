@@ -23,7 +23,7 @@ const style = {
         justifyContent:`space-around`, 
         alignItems:`top`
     },
-    box: {margin:`40px`, alignItems:`center`, textAlign:`center`},
+    box: {margin:`0 0 40px 0`, alignItems:`center`, textAlign:`center`},
     address: {
         textAlign:`center`, 
         fontWeight:`normal`,
@@ -53,7 +53,7 @@ export default function DetailedContact({row}) {
         fetchGroupContact(`/api/groups?userId=` + sessionStorage.getItem('userId'))
         .then(res => {
             res.map(x => {
-                if(row.groupId == x.id)
+                if(row.groupId === x.id)
                     setUser(prevState => {return {...prevState, groupName: x.groupName}})
             })
         })
@@ -66,8 +66,8 @@ export default function DetailedContact({row}) {
         <React.Fragment>
             <h1 style={style.header}>Contact Details</h1>
             <div style={style.container}>
-                <div style={{margin:`0 30px`}}>
-                    <img src={dp} alt="profile_picture" width="200" height="200" style={{borderRadius:`50%`}}/> 
+                <img src={dp} alt="profile_picture" width="200" height="200" style={{borderRadius:`50%`}}/> 
+                <div style={{margin:`0 30px`, width:`80%`}}>
                     <h1 style={style.user}>{user.firstName} {user.lastName}</h1>
                     <h5 style={style.address}>
                         🏠 : {user.city}, {user.stateProvince} {user.postalCode} {user.country} 

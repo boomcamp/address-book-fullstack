@@ -73,17 +73,23 @@ module.exports = {
                     })
                 })
             }
-            
-            db.group_contact
-            .destroy({ id: req.params.id })
-            .then(group => {
-                db.group_contact.find().then(group => { res.status(200).json(group) })
-            })
         })
         .catch(err => {
             console.log(err);
             res.status(500).end();
         })
+
+        setTimeout(() => {
+            db.group_contact
+            .destroy({ id: req.params.id })
+            .then(group => {
+                db.group_contact.find().then(group => { res.status(200).json(group) })
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).end();
+            })
+        }, 600)
     },
 
     updateGroup: (req, res) => {
@@ -99,6 +105,5 @@ module.exports = {
             console.log(err)
             res.status(500).end();
         })
-    }
-
+    },
 }

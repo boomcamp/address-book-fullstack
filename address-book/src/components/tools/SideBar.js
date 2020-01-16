@@ -13,7 +13,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 // ICONS
 import ContactsIcon from '@material-ui/icons/Contacts';
-import DashboardIcon from '@material-ui/icons/Dashboard';
+// import DashboardIcon from '@material-ui/icons/Dashboard';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import GroupIcon from '@material-ui/icons/Group';
@@ -27,6 +27,8 @@ const useStyles = makeStyles(theme => ({
     },
     drawerPaper: {
         width: drawerWidth,
+        backgroundColor: `rgba(186, 196, 200, 0.65)`,
+        // color: `white`
     },
     drawerHeader: {
         display: 'flex',

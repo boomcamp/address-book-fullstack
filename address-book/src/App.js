@@ -7,7 +7,7 @@ import './App.css';
 import Login from './components/registerLogin/Login'
 import Signup from './components/registerLogin/Signup'
 import Dashboard from './components/Dashboard'
-import Group from './components/Group'
+import Group from './components/Group/Group'
 import MyAccount from './components/MyAccount'
 
 function App() {

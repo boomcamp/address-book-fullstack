@@ -13,8 +13,8 @@ export default function NameFields({firstnameFn, lastnameFn, firstname, lastname
                 onChange={firstnameFn}
                 name="firstname"
                 value={firstname}
-                validators={['required']}
-                errorMessages={['This Field is Required']}
+                validators={['required', 'matchRegexp:^[A-Za-z ]+$']}
+                errorMessages={['This Field is Required', 'Numbers and special characters are not Valid']}
                 InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -32,8 +32,8 @@ export default function NameFields({firstnameFn, lastnameFn, firstname, lastname
                 onChange={lastnameFn}
                 name="lastname"
                 value={lastname}
-                validators={['required']}
-                errorMessages={['This Field is Required']}
+                validators={['required', 'matchRegexp:^[A-Za-z ]+$']}
+                errorMessages={['This Field is Required', 'Numbers and special characters are not Valid']}
                 InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">

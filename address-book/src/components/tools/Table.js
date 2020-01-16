@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import MaterialTable, {MTableToolbar} from 'material-table';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { withSnackbar } from 'notistack';
 
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
+// import fetchGroupContact from '../tools/fetchGroupContact'
 import PopUpModal from './PopUpModal'
 import CreateContactForm from '../Contacts/CreateContactForm'
-import UpdateContactForm from '../Contacts/UpdateContactForm'
 import DetailedContact from '../Contacts/DetailedContact'
+import CreateGroup from '../Group/CreateGroup'
 import UpdateGroup from '../tools/fields/UpdateGroup'
 
     const btnStyleDelete = {
@@ -39,18 +41,30 @@ import UpdateGroup from '../tools/fields/UpdateGroup'
         width: `130px`
     }
 
-function Table({ groupObj, updateGroupListFn, state, setStateFn, createFn, updateFn, enqueueSnackbar}) {
+function Table({ groupObj, updateTableFn, updateGroupListFn, state, createFn, setStateFn,  enqueueSnackbar}) {
     const [open, setOpen] = useState({
         create: false,
-        update: {
-            openModal: false,
-            row: {}
-        },
         detailedContact: {
             openModal: false,
             row: {}
         },
-        group: false
+        group: false,
+        createGroup: {
+            openModal: false,
+            row:[]
+        }
+    });
+
+    const theme = createMuiTheme({
+        palette: {
+          primary: {
+            main: '#4B6573',
+          },
+          secondary: {
+            main: '#334854',
+          },
+        },
+  
     });
 
     const createRow = (newData) => {
@@ -64,50 +78,36 @@ function Table({ groupObj, updateGroupListFn, state, setStateFn, createFn, updat
                 enqueueSnackbar('Successfully Created', { variant: 'success', autoHideDuration: 1000, })
             if(groupObj)
                 enqueueSnackbar('Successfully Added to Group', { variant: 'success', autoHideDuration: 1000, })
+            
+            updateTableFn()
         })
     }
 
-    const updateRow = (oldData, newData) => {
-        new Promise(resolve => {
-            setTimeout(() => {
-                resolve();
-                if (oldData) {
-                    updateFn(oldData, newData)
-                }
-            }, 600);
-        }).then(res => {
-            enqueueSnackbar('Successfully Updated', { variant: 'success', autoHideDuration: 1000, })
+    const deleteContacts = (data) => {
+        data.map(x => {
+            if (!groupObj) {
+                axios
+                    .delete('/api/contacts/' + x.id, {
+                        headers: {
+                            Authorization: 'Bearer ' + sessionStorage.getItem('token')
+                        }
+                    })
+                    .then(res => { setStateFn(x) })
+                    .catch(err => { console.log(err) })
+            }
+
+            if (groupObj) {
+                axios
+                    .put('/api/groups/' + x.id, {
+                        headers: {
+                            Authorization: 'Bearer ' + sessionStorage.getItem('token')
+                        }
+                    })
+                    .then(res => {  setStateFn(x) })
+                    .catch(err => { console.log(err) })
+            }
         })
-    }
-
-    const deleteRow = (oldData) => {
-        if(!groupObj){
-            axios
-            .delete('/api/contacts/' + oldData.id, {
-                headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token')
-                }
-            })
-            .then(res => {
-                // console.log(res)
-                enqueueSnackbar('Successfully Deleted', { variant: 'success', autoHideDuration: 1000, })
-            })
-            .catch(err => { console.log(err) })
-        }
-
-        if(groupObj){
-            axios
-            .put('/api/groups/' + oldData.id, {
-                headers: {
-                    Authorization: 'Bearer ' + sessionStorage.getItem('token')
-                }
-            })
-            .then(res => {
-                // console.log(res)
-                enqueueSnackbar('Successfully Removed from the group', { variant: 'success', autoHideDuration: 1500, })
-            })
-            .catch(err => { console.log(err) })
-        }
+        enqueueSnackbar('Successfully Removed from the group', { variant: 'success', autoHideDuration: 1500, })
     }
 
     const deleteGroup = (id) => {
@@ -135,13 +135,6 @@ function Table({ groupObj, updateGroupListFn, state, setStateFn, createFn, updat
             </PopUpModal>
 
             <PopUpModal
-                open={open.update.openModal}
-                closeFn={() => setOpen({ ...open, update: { openModal: false } })}
-            >
-                <UpdateContactForm updateRowFn={updateRow} row={open.update.row} closeFn={() => setOpen({ ...open, update: { openModal: false } })} />
-            </PopUpModal>
-
-            <PopUpModal
                 open={open.detailedContact.openModal}
                 closeFn={() => setOpen({ ...open, detailedContact: { openModal: false } })}
             >
@@ -155,69 +148,102 @@ function Table({ groupObj, updateGroupListFn, state, setStateFn, createFn, updat
                 <UpdateGroup updateGroupListFn={updateGroupListFn} groupObj={groupObj} closeFn={() => setOpen({ ...open, group: false })}/>
             </PopUpModal>
 
+            <PopUpModal
+                open={open.createGroup.openModal}
+                closeFn={() => setOpen({ ...open, createGroup: false })}
+            >
+                <CreateGroup row={open.createGroup.row} closeFn={() => setOpen({ ...open, createGroup: {openModal: false}}) } />
+            </PopUpModal>
 
-            <MaterialTable
-                title=""
-                columns={state.columns}
-                data={state.data}
-                editable={{
-                    onRowDelete: oldData =>
-                        new Promise(resolve => {
-                            setTimeout(() => {
-                                resolve();
-                                setStateFn(oldData);
-                            }, 600);
-                        }).then(deleteRow(oldData)),
-                }}
-                actions={[
-                    {
-                        icon: 'add',
-                        tooltip: 'Create New Contact',
-                        isFreeAction: true,
-                        onClick: () => setOpen({ ...open, create: true })
 
-                    },
-                    {
-                        icon: 'edit',
-                        tooltip: 'Edit Contact',
-                        onClick: (event, rowData) => setOpen({ ...open, update: { openModal: true, row: rowData } })
-                    },
-                ]}
-                onRowClick={(event, rowData, togglePanel) => setOpen({ ...open, detailedContact: { openModal: true, row: rowData } }) }
-                options={{
-                    pageSize: 10,
-                    actionsColumnIndex: -1,
-                    headerStyle: {
-                        fontWeight: `bold`,
-                        textTransform: `uppercase`
-                    },
-                }}
-                components={{
-                    Toolbar: props => (
-                        <div>
-                            <MTableToolbar {...props} />
-                            <div style={{ padding: '0px 10px', display:`flex`}}>
-                                {/* <button style={btnStyle} onClick={() => setOpen({ ...open, group: true })}><GroupAddIcon /> &nbsp;Create Group</button> */}
-                                {(groupObj) ? (
-                                    <>
-                                        <button style={btnStyleEdit} onClick={() => setOpen({ ...open, group: true })}><EditIcon /> &nbsp;Edit Group</button>
-                                        <button 
-                                            style={btnStyleDelete} 
-                                            onClick={() => { 
-                                                if(window.confirm('Are you sure to delete this group?')){
-                                                    deleteGroup(groupObj.id)      
-                                                }
-                                            }}><DeleteIcon /> 
-                                            &nbsp;Delete Group
-                                        </button>
-                                    </>
-                                ) : null}
+            <MuiThemeProvider theme={theme}>
+                <MaterialTable
+                    title=""
+                    columns={state.columns}
+                    data={state.data}
+                    editable={{
+                        // onRowDelete: oldData =>
+                        // new Promise(resolve => {
+                            //     setTimeout(() => {
+                            //         resolve();
+                            //         setStateFn(oldData);
+                            //     }, 600);
+                            // }).then(deleteRow(oldData)),
+                    }}
+                    actions={[
+                        {
+                            icon: 'add',
+                            tooltip: 'Create New Contact',
+                            isFreeAction: true,
+                            onClick: () => setOpen({ ...open, create: true })
+
+                        },
+                        // {
+                        //     icon: 'edit',
+                        //     tooltip: 'Edit Contact',
+                        //     onClick: (event, rowData) => setOpen({ ...open, update: { openModal: true, row: rowData } })
+                        // },
+                        {
+                            icon: 'group',
+                            tooltip: 'Add to Group',
+                            onClick: (event, rowData) => setOpen({...open, createGroup: {openModal: true, row: rowData}})
+                        },
+                        {
+                            icon: 'delete',
+                            tooltip: 'Delete Contact',
+                            onClick: (event, rowData) => {
+                                if (window.confirm((!groupObj) ? 'Are you sure to delete this Contact/s?' : 'Are you sure you want to remove this from the Group?')) {
+                                    new Promise(resolve => {
+                                        setTimeout(() => {
+                                            resolve();
+                                            deleteContacts(rowData)
+                                        }, 600);
+                                    })
+                                }
+                            }
+                        },
+                
+
+                    ]}
+                    onRowClick={(e, rowData, togglePanel) => {                  
+                        setOpen({ ...open, detailedContact: { openModal: true, row: rowData } })
+                    } }
+                    options={{
+                        selection: true,
+                        pageSize: 10,
+                        actionsColumnIndex: -1,
+                        headerStyle: {
+                            fontWeight: `bold`,
+                            textTransform: `uppercase`
+                        },
+                    }}
+                    components={{
+                        Toolbar: props => (
+                            <div>
+                                <MTableToolbar {...props} />
+                                <div style={{ padding: '0px 10px', display:`flex`}}>
+                                    {/* <button style={btnStyle} onClick={() => setOpen({ ...open, group: true })}><GroupAddIcon /> &nbsp;Create Group</button> */}
+                                    {(groupObj) ? (
+                                        <>
+                                            <button style={btnStyleEdit} onClick={() => setOpen({ ...open, group: true })}><EditIcon /> &nbsp;Edit Group</button>
+                                            <button 
+                                                style={btnStyleDelete} 
+                                                onClick={() => { 
+                                                    if(window.confirm('Are you sure to delete this group?')){
+                                                        deleteGroup(groupObj.id)      
+                                                    }
+                                                }}><DeleteIcon /> 
+                                                &nbsp;Delete Group
+                                            </button>
+                                        </>
+                                    ) : null}
+                                </div>
                             </div>
-                        </div>
-                    ),
-                }}
-                // isLoading={true}
-            />
+                        ),
+                    }}
+                    // isLoading={true}
+                />
+            </MuiThemeProvider>
         </React.Fragment>
     )
 }

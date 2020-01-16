@@ -59,7 +59,7 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
         fetchGroupContact(`/api/groups?userId=` + sessionStorage.getItem('userId'))
         .then(res => {
             res.map(x => {
-                if(row.groupId == x.id)
+                if(row.groupId === x.id)
                     setUser(prevState => {return {...prevState, groupName: x.groupName}})
             })
         })
@@ -71,7 +71,7 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
     const handleSubmit = () => {
         axios({
             method: 'put',
-            url: `/api/contacts/${+ row.id}?userId=${row.userId}`,
+            url: `/api/contacts/${row.id}?userId=${row.userId}`,
             data: {
                 "firstName": user.firstname,
                 "lastName": user.lastname,
@@ -104,6 +104,7 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
         <React.Fragment>
             <h1 style={{textAlign:`center`}}>Update Contact</h1 >
             <ValidatorForm
+                onClick={(e) => e.stopPropagation()}
                 style={formStyle}
                 onSubmit={handleSubmit}
                 onError={errors => console.log(errors)}>

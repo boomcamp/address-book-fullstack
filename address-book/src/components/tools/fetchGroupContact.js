@@ -1,6 +1,6 @@
 function get(path) {
     return fetch(path, {
-        methos: 'get',
+        method: 'get',
         headers: {
             Authorization: 'Bearer ' + sessionStorage.getItem('token')
         }

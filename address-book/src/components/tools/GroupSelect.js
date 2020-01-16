@@ -56,8 +56,8 @@ export function GroupCreate({group, groupNameFn, children}){
                 onChange={(e) => groupNameFn(e)}
                 name="groupName"
                 value={group}
-                validators={['required']}
-                errorMessages={['This Field is Required']}
+                // validators={['required']}
+                // errorMessages={['This Field is Required']}
                 InputProps={{
                     startAdornment: (
                     <InputAdornment position="start">
