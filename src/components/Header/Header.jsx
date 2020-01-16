@@ -59,8 +59,8 @@ export default function MenuAppBar() {
 
   const greetFn = (name) => {
     let hour = new Date;
-    console.log(name)
-    //return (hour.getHours() >= 0 || hour.getHours() <= 11) ? `Good Morning ${name}` : (hour.getHours() >= 12 || hour.getHours() <= 17) && `Good Afternoon ${name}`
+    let name = name.substring(0,1).toUpperCase();
+    return (hour.getHours() >= 0 || hour.getHours() <= 11) ? `Good Morning ${name}` : (hour.getHours() >= 12 || hour.getHours() <= 17) ? `Good Afternoon ${name}` : `Good Evening ${name}`;
   }
 
   const clearStateFn = () => {
