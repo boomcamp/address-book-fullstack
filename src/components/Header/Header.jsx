@@ -8,6 +8,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle'; 
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Logout from './Logout';
+import { useHistory } from "react-router-dom";
 
 import axios from 'axios';
 
@@ -55,51 +57,66 @@ export default function MenuAppBar() {
     }
   }
 
+  const greetFn = (name) => {
+    let hour = new Date;
+    console.log(name)
+    //return (hour.getHours() >= 0 || hour.getHours() <= 11) ? `Good Morning ${name}` : (hour.getHours() >= 12 || hour.getHours() <= 17) && `Good Afternoon ${name}`
+  }
+
   const clearStateFn = () => {
     setDetails({});
   }
 
+  const history = useHistory();
+
   useEffect(() => {
+    (localStorage.getItem('token') && localStorage.getItem('sessionid')) ? history.push("/dashboard") : history.push("/")
     userDetailsFn();
     // eslint-disable-next-line
-  }, [])
+  }, [history])
 
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" className={classes.greeting}>
-          { (details.user_firstName) && `Hello ${details.user_firstName}!`}
-        </Typography>
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleMenu}
-            color="inherit"
-          >
-            <AccountCircle />
+        { (localStorage.getItem('sessionid') && localStorage.getItem('token')) &&
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <MenuIcon />
           </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={open}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-          </Menu>
+        }
+        <Typography variant="h6" className={classes.greeting}>
+          { greetFn((details.user_firstName) && details.user_firstName) }
+        </Typography>
+        { (localStorage.getItem('sessionid') && localStorage.getItem('token')) && 
+          <div>
+            <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <Logout clearState={clearStateFn}/>
+              </Menu>
+          </div>
+        }
       </Toolbar>
     </AppBar>
   );

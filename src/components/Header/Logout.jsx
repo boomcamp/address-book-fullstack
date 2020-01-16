@@ -1,17 +1,16 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import MenuItem from '@material-ui/core/MenuItem';
+//import { makeStyles } from "@material-ui/core/styles";
 
 function Logout(props) {
-  const useStyles = makeStyles(theme => ({
-    logoutBtn: {
-      color: "#f19208"
-    }
-  }));
+  // const useStyles = makeStyles(theme => ({
+  //   logoutBtn: {
+  //     color: "#f19208"
+  //   }
+  // }));
 
-  const classes = useStyles();
+  // const classes = useStyles();
   const history = useHistory();
 
   const LogoutFn = () => {
@@ -25,9 +24,7 @@ function Logout(props) {
     <React.Fragment>
       { 
        (localStorage.getItem('sessionid') && localStorage.getItem('token')) &&  
-        <Button className={classes.logoutBtn} color="inherit" onClick={LogoutFn}>
-          Logout
-        </Button>
+        <MenuItem color="inherit" onClick={LogoutFn}>Logout</MenuItem>
       }
     </React.Fragment>
   );

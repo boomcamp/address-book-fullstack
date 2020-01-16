@@ -26,7 +26,7 @@ function AddContact(props) {
       color: "#fff",
       margin: "1% 0 0 0",
       "&:hover": {
-        background: "#f9ac39",
+        background: "#cf7c04",
         color: "#fff"
       }
     },
