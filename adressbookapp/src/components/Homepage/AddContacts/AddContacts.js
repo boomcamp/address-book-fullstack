@@ -124,6 +124,9 @@ class AddContacts extends Component {
             });
             this.props.getAll();
           }, 1000);
+          this.setState({
+            visible: false
+          });
         });
   };
 

@@ -62,7 +62,6 @@ class ViewContacts extends Component {
                   placeholder="firstname"
                   name="firstname"
                   disabled={this.props.disabled}
-                  setfieldsvalue={contact.firstname}
                   onChange={e => this.props.onUpdate(e)}
                 />
               )}
@@ -78,7 +77,6 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="lastname"
                   name="lastname"
-                  setfieldsvalue={contact.lastname}
                   disabled={this.props.disabled}
                   onChange={e => this.props.onUpdate(e)}
                 />
@@ -95,7 +93,6 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="home_phone"
                   name="home_phone"
-                  setfieldsvalue={contact.home_phone}
                   disabled={this.props.disabled}
                   onChange={e => this.props.onUpdate(e)}
                 />
@@ -114,7 +111,6 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="mobile_phone"
                   name="mobile_phone"
-                  setfieldsvalue={contact.mobile_phone}
                   disabled={this.props.disabled}
                   onChange={e => this.props.onUpdate(e)}
                 />
@@ -131,7 +127,6 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="work_phone"
                   name="work_phone"
-                  setfieldsvalue={contact.work_phone}
                   disabled={this.props.disabled}
                   onChange={e => this.props.onUpdate(e)}
                 />
@@ -148,7 +143,6 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="email"
                   name="email"
-                  setfieldsvalue={contact.email}
                   disabled={this.props.disabled}
                   onChange={e => this.props.onUpdate(e)}
                 />
@@ -168,7 +162,6 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="city"
                   name="city"
-                  setfieldsvalue={contact.city}
                   disabled={this.props.disabled}
                   onChange={e => this.props.onUpdate(e)}
                 />
@@ -187,7 +180,6 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="state or province"
                   name="state or province"
-                  setfieldsvalue={contact.state_or_province}
                   disabled={this.props.disabled}
                   onChange={e => this.props.onUpdate(e)}
                 />
@@ -206,7 +198,6 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="postal_code"
                   name="postal_code"
-                  setfieldsvalue={contact.postal_code}
                   disabled={this.props.disabled}
                   onChange={e => this.props.onUpdate(e)}
                 />
@@ -223,7 +214,6 @@ class ViewContacts extends Component {
                   type="text"
                   placeholder="country"
                   name="country"
-                  setfieldsvalue={contact.country}
                   disabled={this.props.disabled}
                   onChange={e => this.props.onUpdate(e)}
                 />

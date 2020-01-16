@@ -15,7 +15,9 @@ export default class Homepage extends Component {
     super(props);
 
     this.state = {
+      searchinput: "",
       contacts: [],
+      search: [],
       info: [],
       visible: false,
       disabled: true,
@@ -126,19 +128,12 @@ export default class Homepage extends Component {
     localStorage.clear();
   }
   handleSearch = e => {
-    // this.setState({
-    //   contacts: e
-    // });
-    const id = localStorage.getItem("id");
-    axios.get(`http://localhost:4000/api/contacts/${id}`).then(res => {
-      var searchData = res.data.filter(data => {
-        const names = data.firstname;
-        console.log(names);
-        // return names.toLowerCase().match(e.toLowerCase());
-        // this.setState({
-        //   contacts: res.data
-        // });
-      });
+    this.setState({ searchinput: e.target.value });
+    const search = this.state.contacts.filter(data =>
+      new RegExp(`${e.target.value}`, "i").test(data.firstname + data.lastname)
+    );
+    this.setState({
+      search: search
     });
   };
   render() {
@@ -194,6 +189,7 @@ export default class Homepage extends Component {
                 >
                   <AddContacts
                     // contacts={this.state.contacts}
+                    visible={this.state.visible}
                     getAll={this.getAll}
                     contacts={this.state.contacts}
                     handleSearch={this.handleSearch}
@@ -204,6 +200,8 @@ export default class Homepage extends Component {
                     getAll={this.getAll}
                     deleteHandler={this.deleteHandler}
                     viewHandler={this.viewHandler}
+                    search={this.state.search}
+                    searchinput={this.state.searchinput}
                   />
                   <ViewContacts
                     visible={this.state.visible}
