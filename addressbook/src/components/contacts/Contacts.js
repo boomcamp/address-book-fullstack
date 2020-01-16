@@ -9,6 +9,19 @@ import { toast } from "react-toastify";
 import "../../App.css";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 
+const fetch = async (user, group, userData, setUserData) => {
+  const response = await Axios.get(`${url}/groups/${group}/list`, {
+    headers: { Authorization: `Bearer ${user.token}` }
+  });
+
+  setUserData({ ...userData, addressBook: response.data.contactList });
+};
+const getGroupName = async (group, user, setGroupName) => {
+  const response = await Axios.get(`${url}/groups/${group}`, {
+    headers: { Authorization: `Bearer ${user.token}` }
+  });
+  setGroupName(response.data[0].groupName);
+};
 export const Contacts = props => {
   const {
     userData,
@@ -17,7 +30,8 @@ export const Contacts = props => {
     handleOnChange,
     setContact,
     contact,
-    group
+    group,
+    setGroup
   } = props.data;
   const theme = createMuiTheme({
     palette: {
@@ -41,6 +55,7 @@ export const Contacts = props => {
   const [data, setData] = useState([]);
   const [groupDialog, setGroupDialog] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
+  const [groupName, setGroupName] = useState("Contacts");
 
   const addContact = async e => {
     e.preventDefault();
@@ -55,11 +70,13 @@ export const Contacts = props => {
       toast.info(response.data.message, {
         position: toast.POSITION.TOP_CENTER
       });
-      getUserData(user).then(user => {
-        setUserData(user);
-      });
       setDialog(false);
       setContact({});
+
+      if (!group) {
+        return getUserData(user).then(user => setUserData(user));
+      }
+      fetch(user, group, userData, setUserData);
     } catch (err) {
       console.error(err);
     }
@@ -75,11 +92,13 @@ export const Contacts = props => {
       toast.info(response.data.message, {
         position: toast.POSITION.TOP_CENTER
       });
-      getUserData(user).then(user => {
-        setUserData(user);
-      });
       setDialog(false);
       setContact({});
+
+      if (!group) {
+        return getUserData(user).then(user => setUserData(user));
+      }
+      fetch(user, group, userData, setUserData);
     } catch (err) {
       console.error(err);
     }
@@ -163,13 +182,21 @@ export const Contacts = props => {
       }
     }
   ];
+  React.useEffect(() => {
+    if (group) {
+      getGroupName(group, user, setGroupName);
+    }
+    if (group === null) {
+      setGroupName("Contacts");
+    }
+  }, [group]);
   return (
     <div>
       <MuiThemeProvider theme={theme}>
         <MaterialTable
           style={{ width: "100%" }}
           fullWidth
-          title="Contacts"
+          title={groupName}
           columns={windowWidth >= 600 ? columnData(user) : columnDataMobile}
           data={userData ? userData.addressBook : []}
           options={{

@@ -55,7 +55,7 @@ function App() {
   const handleFilterByGroup = async id => {
     if (!id) {
       setGroup(null);
-      getUserData(user).then(user => setUserData(user));
+      return getUserData(user).then(user => setUserData(user));
     }
     const response = await Axios.get(`${url}/groups/${id}/list`, {
       headers: { Authorization: `Bearer ${user.token}` }
