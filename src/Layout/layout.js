@@ -17,6 +17,7 @@ import Menu from "@material-ui/core/Menu";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AddContactModal from "../Modal/addContact";
 import Search from "./search";
+import AddGroupModal from "../Modal/addGroup";
 
 function Copyright() {
   return (
@@ -74,12 +75,18 @@ export default function Layout(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState({ contact: false, group: false });
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleOpen = () => {
-    setOpen(true);
+    setOpen({ ...open, contact: true });
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
+
+  const handleOpenGroup = () => {
+    setOpen({ ...open, group: true });
     setAnchorEl(null);
     handleMobileMenuClose();
   };
@@ -112,7 +119,7 @@ export default function Layout(props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleOpen}>Add Contact</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Add Group</MenuItem>
+      <MenuItem onClick={handleOpenGroup}>Add Group</MenuItem>
     </Menu>
   );
 
@@ -219,12 +226,18 @@ export default function Layout(props) {
         <Copyright />
       </footer>
       <AddContactModal
-        open={open}
+        open={open.contact}
         setOpen={setOpen}
         headers={props.headers}
         match={props.match}
         setRows={props.setRows}
         rows={props.rows}
+      />
+      <AddGroupModal
+        open={open.group}
+        setOpen={setOpen}
+        match={props.match}
+        headers={props.headers}
       />
     </>
   );

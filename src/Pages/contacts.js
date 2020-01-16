@@ -90,6 +90,7 @@ export default function Contacts({ match, history }) {
             <TableRow>
               <Tooltip title="Sort by Name">
                 <StyledTableCell
+                  align="center"
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     Axios.get(
@@ -122,15 +123,18 @@ export default function Contacts({ match, history }) {
           <TableBody>
             {rows.map((row, i) => (
               <StyledTableRow key={i}>
-                <StyledTableCell
-                  style={{ cursor: "pointer" }}
+                <Tooltip
+                  title="Edit"
+                  arrow
                   onClick={() => {
                     handleOpen();
                     setGetContact(row);
                   }}
                 >
-                  {row.first_name}
-                </StyledTableCell>
+                  <StyledTableCell align="center" style={{ cursor: "pointer" }}>
+                    {row.first_name}
+                  </StyledTableCell>
+                </Tooltip>
                 <StyledTableCell align="center">
                   {row.last_name}
                 </StyledTableCell>

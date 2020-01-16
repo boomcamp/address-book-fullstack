@@ -95,7 +95,7 @@ export default function AddContactModal({
   }
 
   const handleClose = e => {
-    setOpen(false);
+    setOpen({ ...open, contact: false });
     setError({
       ...error,
       [`${e.target.name}`]: {
@@ -117,7 +117,7 @@ export default function AddContactModal({
       )
       .then(res => {
         alert("Contact Added");
-        setOpen(false);
+        setOpen({ ...open, contact: false });
         setRows([...rows, res.data]);
       })
       .catch(error => {
@@ -144,7 +144,7 @@ export default function AddContactModal({
         }}
       >
         <Fade in={open}>
-          <Container component="main" maxWidth="md">
+          <Container style={{ outline: "none" }} component="main" maxWidth="md">
             <CssBaseline />
             <div className={classes.paper}>
               <Typography component="h1" variant="h5">

@@ -33,11 +33,11 @@ module.exports = {
             country
           })
           .then(contact => res.status(200).json(contact))
-          .catch(err => {
+          .catch(() => {
             res.status(500).end();
           });
       })
-      .catch(err => {
+      .catch(() => {
         res.status(500).end();
       });
   },

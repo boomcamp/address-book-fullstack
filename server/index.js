@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const users = require("./controllers/users");
 const contacts = require("./controllers/contacts");
+const group = require("./controllers/group");
 const auth = require("./controllers/auth");
 
 massive({
@@ -29,6 +30,9 @@ massive({
   app.get("/contacts/list/:id", contacts.list);
   app.patch("/contacts/edit/:id", contacts.update);
   app.delete("/contacts/delete/:id", contacts.delete);
+
+  app.post("/group/create", group.create);
+  app.get("/group/list", group.list);
   const port = 3001;
 
   app.listen(port, () => {

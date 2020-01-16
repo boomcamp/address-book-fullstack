@@ -86,7 +86,7 @@ export default function EditContactModal({
         }}
       >
         <Fade in={open}>
-          <Container component="main" maxWidth="md">
+          <Container style={{ outline: "none" }} component="main" maxWidth="md">
             <CssBaseline />
             <div className={classes.paper}>
               <Typography component="h1" variant="h5">

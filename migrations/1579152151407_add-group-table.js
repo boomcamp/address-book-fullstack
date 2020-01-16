@@ -3,14 +3,14 @@
 exports.shorthands = undefined;
 
 exports.up = pgm => {
-  pgm.createTable("group", {
+  pgm.createTable("groups", {
     id: { type: "serial", primaryKey: true },
-    contactId: {
+    userId: {
       type: "integer",
       notNull: true,
-      refrences: '"contacts"'
+      refrences: '"users"'
     },
-    bookName: {
+    groupName: {
       type: "text",
       notNull: true
     }
