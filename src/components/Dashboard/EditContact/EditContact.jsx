@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Fab from "@material-ui/core/Fab";
+import { Fab, Tooltip } from "@material-ui/core";
 import { Dialog, DialogContent, DialogActions, TextField, DialogTitle } from "@material-ui/core";
 import {Button, ButtonGroup} from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -97,15 +97,19 @@ function EditContact({data, fetchContactsFn}) {
   return (
     <React.Fragment>
       <Hidden only={['xs', 'sm']} >
-        <Fab size="medium" onClick={handleClickOpen} className={classes.edit} aria-label="edit">
-          <Edit />
-        </Fab>
+        <Tooltip title="Edit Contact" placement="bottom" arrow>
+          <Fab size="medium" onClick={handleClickOpen} className={classes.edit} aria-label="edit">
+            <Edit />
+          </Fab>
+        </Tooltip>
       </Hidden>
       <Hidden only={['xl', 'lg', 'md']}>
         <ButtonGroup size="small" variant="text">
-          <Button onClick={handleClickOpen} style={{color: '#f19208'}}>
-            <Edit />
-          </Button>
+          <Tooltip title="Edit Contact" placement="bottom" arrow>
+            <Button onClick={handleClickOpen} style={{color: '#f19208'}}>
+              <Edit />
+            </Button>
+          </Tooltip>
         </ButtonGroup>
       </Hidden>
       <Dialog fullScreen={fullScreen} open={open} onClose={handleClose} aria-labelledby="Add-Contact-Dialog" maxWidth='md' fullWidth>

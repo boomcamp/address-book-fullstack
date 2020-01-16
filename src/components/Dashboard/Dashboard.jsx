@@ -12,6 +12,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Grid from "@material-ui/core/Grid";
+import { Chip, Avatar } from '@material-ui/core';
 
 import ViewContact from './ViewContact/ViewContact';
 import EditContact from './EditContact/EditContact';
@@ -23,7 +24,6 @@ function Dashboard() {
     { id: "Phone Number", label: "Phone Number", minWidth: 30 },
     {
       id: "Actions",
-      label: "Actions",
       minWidth: 30,
       align: "right",
       format: value => value.toLocaleString()
@@ -83,6 +83,10 @@ function Dashboard() {
     // eslint-disable-next-line
   }, [])
 
+  const firstNameLetter = (name) => {
+    return name.substring(0,1).toUpperCase();
+  }
+
   return (
     <React.Fragment>
       <Header />
@@ -114,7 +118,7 @@ function Dashboard() {
                           return (
                             <TableRow hover tabIndex={-1} key={row.abID}>
                               <TableCell>
-                                {row.ab_firstName+" "+row.ab_lastName}
+                                <Chip variant="outlined" color="primary" avatar={<Avatar>{firstNameLetter(row.ab_firstName)}</Avatar>} label={row.ab_firstName+" "+row.ab_lastName}/>
                               </TableCell>
                               <TableCell>
                                 {row.ab_mobile_phone ? row.ab_mobile_phone : 'N/A'}

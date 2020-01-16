@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 import { makeStyles } from "@material-ui/core/styles";
-import Fab from '@material-ui/core/Fab';
+import { Fab, Tooltip } from "@material-ui/core";
 import { DeleteOutline } from '@material-ui/icons';
 import { Button, Hidden, ButtonGroup } from '@material-ui/core';
 import { Dialog, DialogContent, DialogActions, DialogTitle } from "@material-ui/core";
@@ -71,13 +71,17 @@ function DeleteContact({ fetchContactsFn, contactID, contactName }) {
   return (
     <React.Fragment>
       <Hidden only={['xs', 'sm']} >
-        <Fab size="medium" onClick={handleClickOpen} color="secondary" className={classes.delete} aria-label="delete">
-          <DeleteOutline />
-        </Fab>
+        <Tooltip title="Delete Contact" placement="bottom" arrow>
+          <Fab size="medium" onClick={handleClickOpen} color="secondary" className={classes.delete} aria-label="delete">
+            <DeleteOutline />
+          </Fab>
+        </Tooltip>
       </Hidden>
       <Hidden only={['xl', 'lg', 'md']}>
         <ButtonGroup size="small" variant="text">
-          <Button onClick={handleClickOpen} color="secondary"><DeleteOutline /></Button>
+          <Tooltip title="Delete Contact" placement="bottom" arrow>
+            <Button onClick={handleClickOpen} color="secondary"><DeleteOutline /></Button>
+          </Tooltip>
         </ButtonGroup>
       </Hidden>
       <Dialog

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Fab from "@material-ui/core/Fab";
+import { Fab, Tooltip } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { Dialog, DialogContent, DialogActions, TextField, DialogTitle } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
@@ -128,14 +128,15 @@ function AddContact(props) {
         draggable
         pauseOnHover
       />
-      <Fab
-        onClick={handleClickOpen}
-        title="Add Contact"
-        className={classes.addBtn}
-        aria-label="add"
-      >
-        <Add />
-      </Fab>
+      <Tooltip title="Add Contact" placement="left" arrow>
+        <Fab
+          onClick={handleClickOpen}
+          className={classes.addBtn}
+          aria-label="add"
+        >
+          <Add />
+        </Fab>
+      </Tooltip>
       <Dialog fullScreen={fullScreen} open={open} onClose={handleClose} aria-labelledby="Add-Contact-Dialog" maxWidth='md' fullWidth>
       <form onSubmit={addContactFn} className={classes.form}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
