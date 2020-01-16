@@ -8,6 +8,7 @@ import { TextField } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid/Grid";
 import { DialogContentText } from "@material-ui/core";
 import styled from "styled-components";
+import Select from "react-select";
 
 const Box = styled.div`
   display: flex;
@@ -207,13 +208,33 @@ export const DeleteDialog = props => {
   );
 };
 export const Group = props => {
-  const { groupDialog, setGroupDialog, handleMovetoGroup } = props;
+  const {
+    groupDialog,
+    setGroupDialog,
+    handleMovetoGroup,
+    options,
+    setSelectedGroup
+  } = props;
+
   return (
     <Dialog open={groupDialog} onClose={() => setGroupDialog(false)}>
       <form onSubmit={e => handleMovetoGroup(e)}>
         <DialogTitle>Add/Move to Group</DialogTitle>
         <DialogContent>
           <DialogContentText>Select a group</DialogContentText>
+
+          <Select
+            onChange={data => setSelectedGroup(data)}
+            menuPortalTarget={document.body}
+            styles={{
+              menuPortal: base => ({ ...base, zIndex: 9999 })
+            }}
+            name="group"
+            type="group"
+            isClearable={true}
+            isSearchable={true}
+            options={options}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setGroupDialog(false)} color="primary">

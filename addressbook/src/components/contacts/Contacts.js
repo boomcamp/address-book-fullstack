@@ -30,8 +30,7 @@ export const Contacts = props => {
     handleOnChange,
     setContact,
     contact,
-    group,
-    setGroup
+    group
   } = props.data;
   const theme = createMuiTheme({
     palette: {
@@ -43,7 +42,14 @@ export const Contacts = props => {
       }
     }
   });
-  const [windowWidth, setWindowWidth] = useState(() => {
+  const options = userData
+    ? userData.groups
+      ? userData.groups.map(x => {
+          return { value: x.id, label: x.groupName };
+        })
+      : []
+    : [];
+  const [windowWidth] = useState(() => {
     return window.innerWidth;
   });
   const [dialog, setDialog] = useState(false);
@@ -56,6 +62,7 @@ export const Contacts = props => {
   const [groupDialog, setGroupDialog] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
   const [groupName, setGroupName] = useState("Contacts");
+  const [selectedGroup, setSelectedGroup] = useState();
 
   const addContact = async e => {
     e.preventDefault();
@@ -104,27 +111,48 @@ export const Contacts = props => {
     }
   };
   const handleDelete = e => {
+    e.preventDefault();
     if (confirm.text !== "CONFIRM") {
       return setConfirm({ ...confirm, status: true });
     }
+
     data.map(async x => {
       await Axios.delete(`${url}/contacts/${x.id}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
-      getUserData(user).then(user => {
-        setUserData(user);
-      });
+
+      if (!group) {
+        return getUserData(user).then(user => setUserData(user));
+      }
+      fetch(user, group, userData, setUserData);
     });
 
     toast.info(`Succefully deleted items!`, {
       position: toast.POSITION.TOP_CENTER
     });
-    setConfirm({ ...confirm, status: false });
+    setConfirm({ ...confirm, status: false, text: "" });
     setDeleteDialog(false);
-    setConfirm("");
   };
   const handleMovetoGroup = async e => {
-    console.log(data);
+    e.preventDefault();
+
+    data.map(async x => {
+      await Axios.patch(
+        `${url}/contacts/${x.id}`,
+        { ...contact, groupId: selectedGroup.value },
+        {
+          headers: { Authorization: `Bearer ${user.token}` }
+        }
+      );
+      if (!group) {
+        return getUserData(user).then(user => setUserData(user));
+      }
+      fetch(user, group, userData, setUserData);
+    });
+    toast.info(`Succefully moved to ${selectedGroup.label}!`, {
+      position: toast.POSITION.TOP_CENTER
+    });
+    setGroupDialog(false);
   };
   const action1 = [
     {
@@ -189,7 +217,7 @@ export const Contacts = props => {
     if (group === null) {
       setGroupName("Contacts");
     }
-  }, [group]);
+  }, [group, user]);
   return (
     <div>
       <MuiThemeProvider theme={theme}>
@@ -246,6 +274,8 @@ export const Contacts = props => {
         groupDialog={groupDialog}
         setGroupDialog={setGroupDialog}
         handleMovetoGroup={handleMovetoGroup}
+        options={options}
+        setSelectedGroup={setSelectedGroup}
       />
     </div>
   );
