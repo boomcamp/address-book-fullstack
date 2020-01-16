@@ -87,23 +87,13 @@ function updateContact(req, res) {
 function deleteContact(req, res) {
   const db = req.app.get("db");
   const { contactid } = req.params;
-
-  // db.contacts.destroy({ id: contactid }).catch(err => {
-  //   console.error(err);
-  //   res.status(500).end();
-  // });
-
   db.contacts
     .destroy({ id: contactid })
-    .then(res.status(200))
+    .then(contacts => res.status(200).json(contacts))
     .catch(err => {
       console.error(err);
       res.status(500).end();
     });
-  // db.groupmembers.destroy({ contactId: req.params.id }).catch(err => {
-  //   console.error(err);
-  //   res.status(500).end();
-  // });
 }
 
 function getContactByContactId(req, res) {

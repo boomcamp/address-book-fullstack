@@ -6,31 +6,19 @@ import { Container, Button } from "@material-ui/core";
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 import AddContact from "../AddContact/addContact";
-import { makeStyles } from "@material-ui/core/styles";
 import ContactDetails from "../ContactDetails/contactDetails";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 import GroupAddOutlinedIcon from "@material-ui/icons/GroupAddOutlined";
 import { Tooltip } from "@material-ui/core";
 import jwt from "jsonwebtoken";
-
-const useStyles = makeStyles({
-  card: {
-    minWidth: 275
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
-  },
-  pos: {
-    marginBottom: 12
-  }
-});
+import AddGroup from "../Group/AddGroup";
+import AddMember from "../Group/AddMember";
 
 export default function AddressBook() {
-  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [openMember, setOpenMember] = React.useState(false);
+  const [memberData, setMemberData] = React.useState(false);
   const [openView, setOpenView] = React.useState(false);
   const [firstname, setFirstName] = React.useState("");
   const [lastname, setLastName] = React.useState("");
@@ -58,9 +46,15 @@ export default function AddressBook() {
     setOpen(true);
   };
 
+  const handleOpenMember = rowData => {
+    setMemberData(rowData);
+    setOpenMember(true);
+  };
+
   const handleClose = () => {
     setOpen(false);
     setOpenView(false);
+    setOpenMember(false);
   };
 
   const handleViewDetails = id => {
@@ -81,6 +75,41 @@ export default function AddressBook() {
       setPostal_code(data.postal_code);
       setCountry(data.country);
       setOpenView(true);
+    });
+  };
+
+  const handleDelete = rowData => {
+    Swal.fire({
+      title: `Are you sure you want to delete ${rowData.firstname} from your contacts?`,
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then(result => {
+      if (result.value) {
+        axios({
+          method: "delete",
+          url: `http://localhost:3004/contacts/${rowData.id}`
+        })
+          .then(response => {
+            Swal.fire({
+              title: "Contact Deleted  Successfully",
+              icon: "success"
+            }).then(() => {
+              window.location = "/addressbook";
+            });
+          })
+          .catch(err => {
+            console.log(err);
+            Swal.fire({
+              icon: "error",
+              title: "Failed to Delete Contact",
+              text: err
+            });
+          });
+      }
     });
   };
 
@@ -128,13 +157,15 @@ export default function AddressBook() {
               </Button>
             </Tooltip>
             <Tooltip title="Delete">
-              <Button>
+              <Button onClick={() => handleDelete(rowData)}>
                 <DeleteOutlineOutlinedIcon />
               </Button>
             </Tooltip>
             <Tooltip title="Add to group">
               <Button>
-                <GroupAddOutlinedIcon />
+                <GroupAddOutlinedIcon
+                  onClick={() => handleOpenMember(rowData)}
+                />
               </Button>
             </Tooltip>
           </React.Fragment>
@@ -189,9 +220,19 @@ export default function AddressBook() {
                 postal_codeView={postal_code}
                 countryView={country}
               />
+              <AddMember
+                memberData={memberData}
+                openMember={openMember}
+                handleClose={handleClose}
+              />
               <Grid item xs={12} sm={12} lg={12} md={12}>
                 <MaterialTable
                   title="Contact List"
+                  style={{
+                    minHeight: "450px",
+                    maxHeight: "450px",
+                    overflowY: "scroll"
+                  }}
                   columns={state.columns}
                   data={state.data}
                   actions={[
@@ -202,7 +243,13 @@ export default function AddressBook() {
                       onClick: () => handleOpen()
                     }
                   ]}
+                  options={{ paging: false }}
                 />
+              </Grid>
+            </Container>
+            <Container>
+              <Grid item lg={12} style={{ display: "flex", width: "100%" }}>
+                <AddGroup />
               </Grid>
             </Container>
           </Grid>

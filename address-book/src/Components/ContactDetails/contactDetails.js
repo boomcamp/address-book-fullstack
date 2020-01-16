@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -12,7 +12,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import jwt from "jsonwebtoken";
 
 const styles = theme => ({
   root: {
@@ -296,7 +295,6 @@ export default function ContactDetails({
           size="small"
           variant="contained"
           color="primary"
-          disabled
           disabled={openEdit ? false : true}
           onClick={handleEditSave}
         >

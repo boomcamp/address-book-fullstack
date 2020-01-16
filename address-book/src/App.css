@@ -9,3 +9,7 @@
 .MuiTableRow-root .MuiTableCell-root:last-of-type {
   text-align: center;
 }
+
+.MuiTableRow-root .MuiTableCell-root {
+  padding: 14px;
+}

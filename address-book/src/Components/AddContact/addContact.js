@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -70,7 +70,7 @@ export default function AddContact({ open, handleClose }) {
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
   const [errorMsgFirstname, setErrorMsgFirstname] = useState("");
 
-  const handleSave = props => {
+  const handleSave = () => {
     if (firstname !== "") {
       setErrorMsgFirstname("");
       axios
@@ -191,7 +191,6 @@ export default function AddContact({ open, handleClose }) {
                 name="city"
                 label="City"
                 fullWidth
-                autoComplete="billing address-level2"
                 onChange={e => setCity(e.target.value)}
               />
             </Grid>
@@ -210,7 +209,6 @@ export default function AddContact({ open, handleClose }) {
                 name="zip"
                 label="Zip / Postal code"
                 fullWidth
-                autoComplete="billing postal-code"
                 onChange={e => setPostalCode(e.target.value)}
               />
             </Grid>
@@ -220,7 +218,6 @@ export default function AddContact({ open, handleClose }) {
                 name="country"
                 label="Country"
                 fullWidth
-                autoComplete="billing country"
                 onChange={e => setCountry(e.target.value)}
               />
             </Grid>

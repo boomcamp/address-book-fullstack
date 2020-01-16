@@ -48,12 +48,18 @@ massive({
   //contacts
   app.post("/contacts/:userid", contacts.create);
   app.patch("/contacts/:contactid", contacts.updateContact);
-  app.delete("/deletecontacts/:contactid", contacts.deleteContact);
+  app.delete("/contacts/:contactid", contacts.deleteContact);
   app.get("/contacts/:userid/:contactid", contacts.getContactByContactId);
   app.get("/contacts/:userid", contacts.getContactByUser);
   app.post("/addressbook-add", addressBook.add);
 
-  app.post("/groupcontacts/, groups.create");
+  app.post("/groupcontacts/", groups.create);
+  app.get("/groupcontacts/:userid", groups.getGroups);
+
+  app.delete("/groupcontacts/:groupid", groups.deleteGroup);
+  app.patch("/groupcontacts/:groupid", groups.updateGroupContact);
+
+  app.post("/groupmembers/:groupid", groups.addMember);
 
   const PORT = 3004;
   app.listen(PORT, () => {
