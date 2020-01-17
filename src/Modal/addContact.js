@@ -111,7 +111,7 @@ export default function AddContactModal({
       .post(
         `http://localhost:3001/contacts/create`,
         {
-          userId: match.params.id,
+          userid: match.params.id,
           ...contact
         },
         headers

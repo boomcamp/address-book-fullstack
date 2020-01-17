@@ -8,7 +8,7 @@ exports.up = pgm => {
       type: "serial",
       primaryKey: true
     },
-    bookId: {
+    bookid: {
       type: "integer",
       notNull: true,
       references: '"book"'

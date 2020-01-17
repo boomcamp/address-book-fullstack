@@ -2,7 +2,7 @@ module.exports = {
   create: (req, res) => {
     const db = req.app.get("db");
     const {
-      userId,
+      userid,
       first_name,
       last_name,
       home_phone,
@@ -16,11 +16,11 @@ module.exports = {
     } = req.body;
 
     db.book
-      .findOne({ userId })
+      .findOne({ userid })
       .then(data => {
         return db.contacts
           .insert({
-            bookId: data.id,
+            bookid: data.id,
             first_name,
             last_name,
             home_phone,
@@ -44,11 +44,11 @@ module.exports = {
   list: (req, res) => {
     const db = req.app.get("db");
     const { sort } = req.query;
-    db.book.findOne({ userId: req.params.id }).then(data => {
+    db.book.findOne({ userid: req.params.id }).then(data => {
       if (sort) {
         db.contacts
           .find(
-            { bookId: data.id },
+            { bookid: data.id },
             {
               order: [{ field: sort, direction: "asc" }]
             }
@@ -62,7 +62,7 @@ module.exports = {
           });
       } else {
         db.contacts
-          .find({ bookId: data.id })
+          .find({ bookid: data.id })
           .then(contact => {
             res.status(200).json(contact);
           })
@@ -123,7 +123,7 @@ module.exports = {
   getByGroup: (req, res) => {
     const db = req.app.get("db");
     db.grouplist
-      .find({ groupId: req.params.id })
+      .find({ groupid: req.params.id })
       .then(data => {
         console.log(data);
       })

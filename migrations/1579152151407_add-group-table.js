@@ -5,12 +5,12 @@ exports.shorthands = undefined;
 exports.up = pgm => {
   pgm.createTable("groups", {
     id: { type: "serial", primaryKey: true },
-    userId: {
+    userid: {
       type: "integer",
       notNull: true,
       refrences: '"users"'
     },
-    groupName: {
+    groupname: {
       type: "text",
       notNull: true
     }

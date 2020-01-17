@@ -4,12 +4,12 @@ exports.shorthands = undefined;
 
 exports.up = pgm => {
   pgm.createTable("grouplist", {
-    groupId: {
+    groupid: {
       type: "integer",
       notNull: true,
       references: '"groups"'
     },
-    contactId: {
+    contactid: {
       type: "integer",
       notNull: true,
       refrences: '"contacts"'

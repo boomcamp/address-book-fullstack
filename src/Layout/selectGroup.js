@@ -37,7 +37,7 @@ export default function GroupedContact({ headers, match }) {
           </MenuItem>
           {groups.map((group, i) => (
             <MenuItem value={i} key={i}>
-              {group.groupName}
+              {group.groupname}
             </MenuItem>
           ))}
         </Select>

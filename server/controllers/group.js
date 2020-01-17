@@ -1,17 +1,17 @@
 module.exports = {
   create: (req, res) => {
     const db = req.app.get("db");
-    const { userId, groupName } = req.body;
+    const { userid, groupname } = req.body;
     db.groups
-      .findOne({ groupName })
+      .findOne({ groupname })
       .then(data => {
         if (data) {
           throw new Error("Existing group name");
         }
         return db.groups
           .insert({
-            userId,
-            groupName
+            userid,
+            groupname
           })
           .then(group => res.status(200).json(group))
           .catch(() => res.status(500).end);
@@ -28,7 +28,7 @@ module.exports = {
   list: (req, res) => {
     const db = req.app.get("db");
     db.groups
-      .find({ userId: req.params.id })
+      .find({ userid: req.params.id })
       .then(group => res.status(200).json({ groups: group }))
       .catch(err => {
         console.error(err);
@@ -37,14 +37,14 @@ module.exports = {
   },
   add: (req, res) => {
     const db = req.app.get("db");
-    const { groupId } = req.body;
+    const { groupid } = req.body;
     db.contacts
       .findOne({ id: req.params.id })
       .then(data => {
         return db.grouplist
           .insert({
-            groupId,
-            contactId: data.id
+            groupid,
+            contactid: data.id
           })
           .then(grouplist => res.status(200).json(grouplist))
           .catch(() => res.status(500).end());

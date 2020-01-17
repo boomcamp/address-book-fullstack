@@ -32,9 +32,9 @@ module.exports = {
             );
           })
           .then(email => {
-            const token = jwt.sign({ userId: email.id }, secret);
+            const token = jwt.sign({ userid: email.id }, secret);
             res.status(200).json({ ...email, token });
-            db.book.insert({ userId: email.id });
+            db.book.insert({ userid: email.id });
           });
       })
       .catch(err => {
@@ -69,7 +69,7 @@ module.exports = {
             throw new Error("Incorrect password");
           }
 
-          const token = jwt.sign({ userId: user.id }, secret);
+          const token = jwt.sign({ userid: user.id }, secret);
           delete user.password;
           res.status(200).json({ ...user, token });
         });

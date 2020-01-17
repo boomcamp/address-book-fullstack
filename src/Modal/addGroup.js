@@ -53,8 +53,8 @@ export default function AddGroupModal({ open, setOpen, headers, match }) {
       .post(
         `http://localhost:3001/group/create`,
         {
-          userId: match.params.id,
-          groupName: group
+          userid: match.params.id,
+          groupname: group
         },
         headers
       )
@@ -117,8 +117,8 @@ export default function AddGroupModal({ open, setOpen, headers, match }) {
                     fullWidth
                     id="group"
                     label="Group Name"
-                    name="groupName"
-                    autoComplete="groupName"
+                    name="groupname"
+                    autoComplete="groupname"
                     value={group}
                     onChange={handleInput}
                   />
