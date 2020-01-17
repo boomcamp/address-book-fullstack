@@ -48,7 +48,6 @@ export default function Profile({ handleClose, handleClickOpen, menuOpen, menuCl
             })
                 .then(res => {
                     setUsers(res.data.results);
-                    console.log(res);
                 })
                 .catch(e => console.log(e))
         } else {
@@ -108,9 +107,9 @@ export default function Profile({ handleClose, handleClickOpen, menuOpen, menuCl
 
                     <div className={classes.height}>
                         <Grid container spacing={3} direction='row' alignItems="center" style={{ marginTop: 20 }}>
-                            {users.map(i => (
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <Card key={i.contact_id} elevation={3}>
+                            <Grid item xs={12} sm={6} md={4} lg={3}>
+                                {users.map(i => (
+                                    <Card key={i.contact_id} elevation={5}>
                                         <CardActionArea>
                                             <CardContent>
                                                 <Typography gutterBottom variant="h5" component="h2">
@@ -146,8 +145,8 @@ export default function Profile({ handleClose, handleClickOpen, menuOpen, menuCl
                                             />
                                         </CardActions>
                                     </Card>
-                                </Grid>
-                            ))}
+                                ))}
+                            </Grid>
                         </Grid>
                     </div>
                 </Container>
