@@ -75,16 +75,17 @@ class addcontact extends Component {
         userid: localStorage.getItem("id")
       }
     }).then(response => {
-      this.setState({
+      this.props.load(response.data);
+      this.props.form.setFieldsValue({
         first_name: "",
         last_name: "",
-        home_phone: "",
-        mobile_phone: "",
-        work_phone: "",
+        Home: "",
+        phone: "",
+        work: "",
         email: "",
         city: "",
-        state_or_province: "",
-        postal_code: "",
+        state: "",
+        postal: "",
         country: ""
       });
       setTimeout(() => {

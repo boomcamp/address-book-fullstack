@@ -1,14 +1,16 @@
 import React, { Component } from "react";
-import { Table, Icon, Tabs, message, Modal } from "antd";
+import { Table, Icon, Tabs, message, Modal, Input, Layout, Select } from "antd";
 import axios from "axios";
 import Edit from "./editContact";
+import Search from "./search";
 
 export default class addressTable extends Component {
   constructor() {
     super();
     this.state = {
       data: [],
-      openModal: false
+      openModal: false,
+      searching: false
     };
   }
   componentDidMount = () => {
@@ -38,10 +40,12 @@ export default class addressTable extends Component {
     });
   };
 
-  componentDidUpdate() {
-    setTimeout(() => {
-      this.loadAgain();
-    }, 4000);
+  componentDidUpdate(nextProps) {
+    if (nextProps !== this.props) {
+      setTimeout(() => {
+        this.loadAgain();
+      }, 4000);
+    }
   }
 
   loadAgain = () => {
@@ -66,7 +70,8 @@ export default class addressTable extends Component {
         });
       });
       this.setState({
-        data: arr
+        data: arr,
+        length: arr.length
       });
     });
   };
@@ -109,21 +114,47 @@ export default class addressTable extends Component {
     console.log(e);
   };
 
+  search = e => {
+    this.setState({
+      data: e
+    });
+    // e.length == this.state.length
+    //   ? this.setState({ searching: false })
+    //   : this.setState({ searching: true });
+  };
+
   render() {
     const { TabPane } = Tabs;
     const { Column } = Table;
+    const { Content } = Layout;
     return (
       <div>
         <Tabs defaultActiveKey="1" onChange={this.callback}>
           <TabPane tab="Address Book" key="1">
+            <Content
+              style={{
+                display: "flex",
+                padding: "10px",
+
+                justifyContent: "flex-end"
+              }}
+            >
+              <Search user={this.search} />
+            </Content>
             <Table dataSource={this.state.data} onClick={e => this.handleOk()}>
               <Column
                 title="First Name"
                 dataIndex="first_name"
                 key="first_name"
               />
-              <Column title="Last Name" dataIndex="last_name" key="last_name" />
-              <Column title="City" dataIndex="city" key="city" />
+              <Column
+                title="Last Name"
+                dataIndex="last_name"
+                key="last_name"
+                sorter={(a, b) => a.last_name.length - b.last_name.length}
+                sortDirections={["descend", "ascend"]}
+              />
+              {/* <Column title="City" dataIndex="city" key="city" /> */}
               <Column
                 title="State or Province"
                 dataIndex="state_or_province"
@@ -138,6 +169,8 @@ export default class addressTable extends Component {
                 title="Mobile phone"
                 dataIndex="mobile_phone"
                 key="mobile_phone"
+                defaultSortOrder="ascend"
+                sorter={(a, b) => a.mobile_phone - b.mobile_phone}
               />
               {/* <Column
                 title="Work phone"
@@ -181,11 +214,6 @@ export default class addressTable extends Component {
                     />
                   </span>
                 )}
-              />
-              <Column
-                title="Action"
-                key="view"
-                render={(record, text) => <span>efef</span>}
               />
             </Table>
           </TabPane>

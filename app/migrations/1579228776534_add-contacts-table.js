@@ -1,7 +1,7 @@
 exports.shorthands = undefined;
 
 exports.up = pgm => {
-  pgm.createTable("address-book", {
+  pgm.createTable("contacts", {
     id: {
       type: "serial",
       primaryKey: true
@@ -14,11 +14,19 @@ exports.up = pgm => {
       type: "text",
       notNull: true
     },
-    email: {
-      type: "text",
+    home_phone: {
+      type: "integer",
       notNull: true
     },
-    address: {
+    mobile_phone: {
+      type: "integer",
+      notNull: true
+    },
+    work_phone: {
+      type: "integer",
+      notNull: true
+    },
+    email: {
       type: "text",
       notNull: true
     },
@@ -26,12 +34,12 @@ exports.up = pgm => {
       type: "text",
       notNull: true
     },
-    postal_code: {
-      type: "integer",
-      notNull: true
-    },
     state_or_province: {
       type: "text",
+      notNull: true
+    },
+    postal_code: {
+      type: "integer",
       notNull: true
     },
     country: {

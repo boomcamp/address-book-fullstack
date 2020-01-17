@@ -4,11 +4,12 @@ const users = require("../controllers/users.js");
 const jwt = require("jsonwebtoken");
 const secret = require("../secret.js");
 const contact = require("../controllers/contact");
+const group = require("../controllers/group");
 
 massive({
   host: "localhost",
   port: 5432,
-  database: "addressbook",
+  database: "fullstackaddressbookdb",
   user: "postgres",
   password: "node5db"
 })
@@ -41,7 +42,10 @@ massive({
     app.get("/contact/list/:id", contact.contactlist);
     app.delete("/delete/:id", contact.deletecontact);
     app.patch("/update/:id", contact.updatecontact);
-    app.get("/seacrh", contact.search);
+    app.get("/contact/search/:id", contact.search);
+
+    app.post("/create/group/:id", group.addgroup);
+    app.get("/group/list", group.grouplist);
     const port = 5000;
 
     app.listen(port, () => {

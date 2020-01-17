@@ -15,7 +15,7 @@ function addcontact(req, res) {
     userid
   } = req.body;
 
-  db.contact
+  db.contacts
     .insert({
       first_name,
       last_name,
@@ -39,7 +39,7 @@ function addcontact(req, res) {
 function viewcontact(req, res) {
   const db = req.app.get("db");
 
-  db.contact
+  db.contacts
     .find({
       userId: req.params.id
     })
@@ -54,7 +54,7 @@ function deletecontact(req, res) {
   const { id } = req.params;
 
   if (id) {
-    db.contact
+    db.contacts
       .destroy({ id })
       .then(list => {
         res.status(201).json(list);
@@ -86,7 +86,7 @@ function updatecontact(req, res) {
   } = req.body;
 
   if (id) {
-    db.contact
+    db.contacts
       .update(
         { id: id },
         {
@@ -117,7 +117,7 @@ function updatecontact(req, res) {
 function contactlist(req, res) {
   const db = req.app.get("db");
 
-  db.contact
+  db.contacts
     .find({ userid: req.params.id })
     .then(user => res.status(200).json(user))
     .catch(error => {
@@ -125,16 +125,17 @@ function contactlist(req, res) {
       res.status(500).end();
     });
 }
+
 function search(req, res) {
   const db = req.app.get("db");
-  const { first_name, last_name } = req.body;
-
-  db.contact
-    .find({ first_name, last_name })
-    .then(search => res.status(200).json(search))
+  console.log(req.query.val);
+  db.query(
+    `select * from contacts where( userid=${req.params.id}) AND (first_name ilike '%${req.query.val}%' OR last_name ilike '%${req.query.val}%') `
+  )
+    .then(user => res.status(200).json(user))
     .catch(error => {
       console.error(error);
-      res.status(500).end;
+      res.status(500).end();
     });
 }
 
