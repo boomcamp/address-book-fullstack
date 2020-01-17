@@ -16,15 +16,21 @@ export default class App extends Component {
   }
 
   componentDidMount = () => {
-    this.setState({
-      accessToken: localStorage.getItem("user"),
-      isLoading: true
-    });
+    if (localStorage.getItem("userId")) {
+      this.setState({
+        accessToken: localStorage.getItem("user"),
+        isLoading: true
+      });
+    } else {
+      this.setState({ accessToken: localStorage.getItem("user") });
+    }
   };
 
   componentDidUpdate = () => {
     if (this.state.isLoading) {
-      this.fetchContact(1, "all");
+      this.state.groupData
+        ? this.fetchContact(this.state.groupData, "allContactsByGroup")
+        : this.fetchContact(1, "all");
       axios
         .get(
           `http://localhost:4001/addressbook/${localStorage.getItem(
@@ -41,7 +47,20 @@ export default class App extends Component {
   };
 
   fetchContact = (data, val) => {
-    return val === "all"
+    return val === "allContacts"
+      ? axios
+          .get(
+            `http://localhost:4001/addressbook/${localStorage.getItem(
+              "userId"
+            )}/all`
+          )
+          .then(response => {
+            this.setState({
+              contacts: response.data,
+              groupData: null
+            });
+          })
+      : val === "all"
       ? axios
           .get(
             `http://localhost:4001/addressbook/${localStorage.getItem(
@@ -306,6 +325,7 @@ export default class App extends Component {
     event.target.className += " was-validated";
     const Obj = {
       user_id: localStorage.getItem("userId"),
+      group_id: this.state.groupData.id,
       first_name: this.state.fname,
       last_name: this.state.lname,
       email: this.state.email,
@@ -341,6 +361,7 @@ export default class App extends Component {
     this.setState({ [event.target.name]: event.target.value });
     console.log([event.target.name], event.target.value);
   };
+
   selectHandler = event => {
     return event
       ? this.setState({ selectedGroup: event.value })

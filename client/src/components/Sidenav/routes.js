@@ -28,6 +28,7 @@ export default class Routes extends React.Component {
       editGroupHandler,
       deleteGroup,
       deleteGroupHandler,
+      searchHandler,
       groups,
       groupData
     } = this.props;
@@ -59,6 +60,7 @@ export default class Routes extends React.Component {
               editGroupHandler={editGroupHandler}
               deleteGroup={deleteGroup}
               deleteGroupHandler={deleteGroupHandler}
+              searchHandler={searchHandler}
               groups={groups}
               groupData={groupData}
             />

@@ -6,8 +6,17 @@ import MaterialTable from "material-table";
 import { Tooltip } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Modal from "../Modal/Modal";
+import Avatar from "@material-ui/core/Avatar";
 import Zoom from "@material-ui/core/Zoom";
 import styled from "styled-components";
+import {
+  MDBDropdown,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
+  MDBDropdownItem
+} from "mdbreact";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Box from "@material-ui/core/Box";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 
 class Users extends React.Component {
@@ -24,52 +33,14 @@ class Users extends React.Component {
       }
     });
     this.state = {
-      width: 0,
-      height: 0,
-      columns: [
-        { title: "First Name", field: "first_name" },
-        { title: "Last Name", field: "last_name" },
-        {
-          title: "Home Phone",
-          field: "home_phone"
-        },
-        {
-          title: "Mobile Phone",
-          field: "mobile_phone"
-        },
-        {
-          title: "Work Phone",
-          field: "work_phone"
-        },
-        {
-          title: "  ",
-          render: rowData => (
-            <React.Fragment>
-              <Tooltip TransitionComponent={Zoom} title="Edit Contact">
-                <IconButton
-                  onClick={() => this.props.handleModalOpen(rowData, "edit")}
-                  aria-label="edit"
-                >
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip TransitionComponent={Zoom} title="Delete Contact">
-                <IconButton
-                  onClick={() =>
-                    this.props.handleModalOpen([rowData], "delete")
-                  }
-                  aria-label="delete"
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </React.Fragment>
-          )
-        }
-      ],
+      toggle: false,
+      width: window.innerWidth,
       data: []
     };
   }
+  handleClick = () => {
+    this.setState({ toggle: !this.state.toggle });
+  };
 
   updateDimensions = () => {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
@@ -106,39 +77,80 @@ class Users extends React.Component {
     const tableColumns =
       this.state.width < 770
         ? [
-            { title: "First Name", field: "first_name" },
-            { title: "Last Name", field: "last_name" },
+            {
+              title: "Name",
+              field: "first_name",
+              render: rowData => (
+                <React.Fragment>
+                  <Box
+                    display="flex"
+                    justifyContent="flex-start"
+                    alignContent="flex-start"
+                  >
+                    <div>
+                      <Avatar />
+                    </div>
+                    <div style={{ paddingTop: "10px", paddingLeft: "10px" }}>
+                      {" "}
+                      {" " + rowData.first_name + " " + rowData.last_name}
+                    </div>
+                  </Box>
+                </React.Fragment>
+              )
+            },
             {
               title: "  ",
               render: rowData => (
                 <React.Fragment>
-                  <Tooltip TransitionComponent={Zoom} title="Edit Contact">
-                    <IconButton
-                      onClick={() =>
-                        this.props.handleModalOpen(rowData, "edit")
-                      }
-                      aria-label="edit"
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip TransitionComponent={Zoom} title="Delete Contact">
-                    <IconButton
-                      onClick={() =>
-                        this.props.handleModalOpen([rowData], "delete")
-                      }
-                      aria-label="delete"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
+                  <MDBDropdown>
+                    <MDBDropdownToggle nav style={{ color: "black" }}>
+                      <Tooltip title="Show items">
+                        <MoreVertIcon />
+                      </Tooltip>
+                    </MDBDropdownToggle>
+                    <MDBDropdownMenu className="dropdown-default">
+                      <MDBDropdownItem
+                        onClick={() =>
+                          this.props.handleModalOpen(rowData, "edit")
+                        }
+                      >
+                        Edit
+                      </MDBDropdownItem>
+                      <MDBDropdownItem
+                        onClick={() =>
+                          this.props.handleModalOpen([rowData], "delete")
+                        }
+                      >
+                        Delete
+                      </MDBDropdownItem>
+                    </MDBDropdownMenu>
+                  </MDBDropdown>
                 </React.Fragment>
               )
             }
           ]
         : [
-            { title: "First Name", field: "first_name" },
-            { title: "Last Name", field: "last_name" },
+            {
+              title: "Name",
+              field: "first_name",
+              render: rowData => (
+                <React.Fragment>
+                  <Box
+                    display="flex"
+                    justifyContent="flex-start"
+                    alignContent="flex-start"
+                  >
+                    <div>
+                      <Avatar />
+                    </div>
+                    <div style={{ paddingTop: "10px", paddingLeft: "10px" }}>
+                      {" "}
+                      {" " + rowData.first_name + " " + rowData.last_name}
+                    </div>
+                  </Box>
+                </React.Fragment>
+              )
+            },
             {
               title: "Home Phone",
               field: "home_phone"
@@ -187,14 +199,43 @@ class Users extends React.Component {
       ? this.props.groupData.group_name
       : "All Contacts";
 
-    const Div = styled.div`
-      display: "flex";
-      justify-content: "center";
-      align-content: "center";
-      flex-wrap: "wrap";
+    const Div = styled.div``;
+    const Filter = styled.div`
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      width: 100%;
+      height: 60px;
     `;
+    const Search = styled.div`
+      width: 40%;
+    `;
+    const Options = styled.div``;
+
     return (
       <div>
+        <Filter>
+          <Search>
+            <input
+              name="search"
+              onChange={changeHandler}
+              type="text"
+              placeholder="Search"
+              className="form-control"
+            />
+          </Search>
+          <Options>
+            <select
+              name="sort"
+              onChange={changeHandler}
+              className="browser-default custom-select"
+            >
+              <option>Choose your option</option>
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </Options>
+        </Filter>
         <MuiThemeProvider theme={this.theme}>
           <MaterialTable
             title={
@@ -242,7 +283,7 @@ class Users extends React.Component {
               pageSize: 10,
               actionsColumnIndex: -1,
               selection: true,
-              grouping: true
+              search: false
             }}
             actions={[
               {

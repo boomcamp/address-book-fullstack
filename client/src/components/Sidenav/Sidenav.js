@@ -114,7 +114,7 @@ function ResponsiveDrawer(props) {
           color="info"
           outline
           style={{ borderRadius: "20px" }}
-          onClick={() => handleModalOpen([], "addContact")}
+          onClick={() => handleModalOpen(groupData, "addContact")}
         >
           <MDBIcon icon="plus" className="mr-1" /> Create Contact
         </MDBBtn>
@@ -124,7 +124,7 @@ function ResponsiveDrawer(props) {
         <ListItem
           button
           key={"All Contacts"}
-          onClick={() => props.fetchContact(1, "all")}
+          onClick={() => props.fetchContact(1, "allContacts")}
         >
           <ListItemIcon>
             <PersonIcon />
