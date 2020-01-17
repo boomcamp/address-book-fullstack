@@ -65,7 +65,10 @@ export default function Alert({
   willEdit,
   values,
   setValues,
-  tokenDecoded
+  tokenDecoded,
+  ids,
+  setIds,
+  groupList
 }) {
   const classes = useStyles();
   const [errorMsgFirstName, setErrorMsgFirstName] = useState("");
@@ -79,7 +82,7 @@ export default function Alert({
             : "Contact Added Successfully",
           icon: "success"
         }).then(() => {
-          window.location = "/addressbook";
+          // window.location = "/addressbook";
         });
       })
       .catch(e => {
@@ -91,35 +94,65 @@ export default function Alert({
       });
   };
   const handleSave = () => {
-    var dataObject = {
-      firstname: values.firstname,
-      lastname: values.lastname,
-      home_phone: values.home_phone,
-      work_phone: values.work_phone,
-      mobile_phone: values.mobile_phone,
-      city: values.city,
-      email: values.email,
-      state_or_province: values.state_or_province,
-      postal_code: values.postal_code,
-      country: values.country
-    };
-    if (values.firstname !== "") {
+    if (values.firstname !== "" && typeof values.firstname !== "undefined") {
+      var dataObject = {
+        firstname: values.firstname,
+        lastname: values.lastname,
+        home_phone: values.home_phone,
+        work_phone: values.work_phone,
+        mobile_phone: values.mobile_phone,
+        city: values.city,
+        email: values.email,
+        state_or_province: values.state_or_province,
+        postal_code: values.postal_code,
+        country: values.country
+      };
       setErrorMsgFirstName("");
-      willEdit
-        ? axiosThen(
-            axios.patch(
-              `http://localhost:3004/contacts/${values.id}`,
-              dataObject
-            ),
-            true
+      if (willEdit) {
+        axiosThen(
+          axios.patch(
+            `http://localhost:3004/contacts/${values.id}`,
+            dataObject
+          ),
+          true
+        );
+      } else {
+        axios
+          .post(
+            `http://localhost:3004/contacts/${tokenDecoded.userId}`,
+            dataObject
           )
-        : axiosThen(
-            axios.post(
-              `http://localhost:3004/contacts/${tokenDecoded.userId}`,
-              dataObject
-            ),
-            false
-          );
+          .then(response => {
+            ids.forEach(data => {
+              axios
+                .post(`http://localhost:3004/groupmember`, {
+                  groupid: data.id,
+                  contactid: response.data.id
+                })
+                .catch(err => {
+                  Swal.fire({
+                    title: "Failed to Add Contact to a Group",
+                    icon: "error",
+                    text: err
+                  });
+                });
+            });
+            Swal.fire({
+              title: "Contact Added Successfully",
+              icon: "success"
+            }).then(() => {
+              window.location = "/addressbook";
+            });
+            handleClose();
+          })
+          .catch(e => {
+            Swal.fire({
+              icon: "error",
+              title: "Failed to Add Contact",
+              text: e
+            });
+          });
+      }
     } else {
       setErrorMsgFirstName("This field is required!");
       Swal.fire({
@@ -142,7 +175,7 @@ export default function Alert({
         <form>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
-              <AddToGroupList />
+              <AddToGroupList setIds={setIds} ids={ids} groupList={groupList} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -285,7 +318,7 @@ export default function Alert({
           variant="contained"
           size="small"
           className={teal}
-          onClick={handleSave}
+          onClick={() => handleSave()}
         >
           Save Contact
         </Button>

@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function GroupCard() {
+export default function GroupCard({ willEdit, groupList }) {
   const classes = useStyles();
   const [openGroupModal, setOpenGroupModal] = useState(false);
   const [editGroup, setEditGroup] = useState(false);
@@ -65,7 +65,7 @@ export default function GroupCard() {
     setEditGroup(false);
     setOpenGroupModal(false);
   };
-  const [groupList, setGroupList] = useState([]);
+  const [groupLs, setGroupLs] = useState([]);
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
   const [groupName, setGroupName] = useState("");
   const [groupId, setGroupId] = useState(0);
@@ -77,7 +77,7 @@ export default function GroupCard() {
         url: `http://localhost:3004/group/${tokenDecoded.userId}`
       })
         .then(res => {
-          setGroupList(res.data);
+          setGroupLs(res.data);
         })
         .catch(err => console.log(err));
     }
@@ -134,6 +134,7 @@ export default function GroupCard() {
         setGroupName={setGroupName}
         groupId={groupId}
         chooseIcon={classes.chooseIcon}
+        willEdit={willEdit}
       />
       <Card className={classes.card}>
         <CardMedia
@@ -152,10 +153,10 @@ export default function GroupCard() {
             }
             className={classes.root}
           >
-            {groupList
-              ? groupList.map(data => {
+            {groupLs
+              ? groupLs.map((data, key) => {
                   return (
-                    <ListItem button>
+                    <ListItem key={key} button>
                       <ListItemIcon>
                         <WorkIcon />
                       </ListItemIcon>

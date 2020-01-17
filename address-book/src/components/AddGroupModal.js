@@ -26,7 +26,8 @@ export default function AddGroupModal({
   groupName,
   setGroupName,
   groupId,
-  chooseIcon
+  chooseIcon,
+  willEdit
 }) {
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
   const [errorMsgGroupName, setErrorMsgGroupName] = useState("");

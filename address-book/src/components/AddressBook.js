@@ -28,6 +28,8 @@ export default function AddressBook() {
   const [open, setOpen] = React.useState(false);
   const [willEdit, setWillEdit] = useState(false);
   const [willOpenViewer, setWillOpenViewer] = useState(false);
+  const [ids, setIds] = useState([]);
+  const [groupList, setGroupList] = useState([]);
   const handleClickOpen = () => {
     setOpen(true);
     setWillOpenViewer(false);
@@ -35,6 +37,7 @@ export default function AddressBook() {
   const handleClose = () => {
     setOpen(false);
     setWillEdit(false);
+    setIds([]);
   };
   const [values, setValues] = useState({});
   const classes = useStyles();
@@ -48,6 +51,9 @@ export default function AddressBook() {
         values={values}
         setValues={setValues}
         tokenDecoded={tokenDecoded}
+        ids={ids}
+        setIds={setIds}
+        groupList={groupList}
       />
       <Container
         maxWidth="lg"
@@ -59,7 +65,7 @@ export default function AddressBook() {
           className={classes.table}
           style={{ width: willOpenViewer ? "65%" : "100%" }}
         >
-          <GroupCard tokenDecoded={tokenDecoded} />
+          <GroupCard tokenDecoded={tokenDecoded} willEdit={willEdit} />
           <AddressBookTable
             tokenDecoded={tokenDecoded}
             handleClickOpen={handleClickOpen}
@@ -69,6 +75,8 @@ export default function AddressBook() {
             buttonGroup={classes.buttonGroup}
             setWillEdit={setWillEdit}
             setWillOpenViewer={setWillOpenViewer}
+            setIds={setIds}
+            setGroupList={setGroupList}
           />
         </div>
       </Container>
@@ -80,7 +88,7 @@ const useStyles = makeStyles(theme => ({
   rooot: {
     // padding: "0 7.5%!important",
     left: "50%",
-    top: "55%",
+    top: "50%",
     position: "absolute",
     msTransform: "translate(-50%, -50%)",
     webkitTransform: "translate(-50%, -50%)",
@@ -103,7 +111,8 @@ const useStyles = makeStyles(theme => ({
     background: "transparent",
     borderRadius: "8px",
     boxShadow: "none",
-    height: "100%!important"
+    height: "100%!important",
+    marginTop: "1%!important"
   },
   "@media (max-width: 992px)": {
     table: {

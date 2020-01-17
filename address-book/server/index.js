@@ -6,6 +6,7 @@ const cors = require("cors");
 const users = require("./controllers/users");
 const contacts = require("./controllers/contacts");
 const group = require("./controllers/group");
+const groupMember = require("./controllers/groupMember");
 
 massive({
   host: "localhost",
@@ -48,6 +49,10 @@ massive({
   app.post("/group/:userid", group.addGroup);
   app.patch("/group/:groupid", group.updateGroupName);
   app.delete("/group/:groupid", group.deleteGroup);
+
+  app.post("/groupmember", groupMember.addGroupMember);
+  app.get("/groupmember", groupMember.getAllGroupMember);
+  app.get("/groupmember/:contactid", groupMember.getContactGroups);
   const PORT = 3004;
   app.listen(PORT, () => {
     console.log(`Server is Listening on port ${PORT}`);

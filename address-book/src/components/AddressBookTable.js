@@ -13,7 +13,9 @@ export default function AddressBookTable({
   setValues,
   buttonGroup,
   setWillEdit,
-  setWillOpenViewer
+  setWillOpenViewer,
+  setIds,
+  setGroupList
 }) {
   const [state, setState] = useState({
     columns: [],
@@ -30,7 +32,13 @@ export default function AddressBookTable({
         setWillOpenViewer(true);
         setValues(res.data[0]);
       })
-      .catch(err => console.log(err));
+      .catch(e => {
+        Swal.fire({
+          icon: "error",
+          title: "Failed to Retrieve Contact",
+          text: e
+        });
+      });
   };
   const handleClickEdit = id => {
     setWillEdit(true);
@@ -39,10 +47,29 @@ export default function AddressBookTable({
       url: `http://localhost:3004/contacts/${tokenDecoded.userId}/${id}`
     })
       .then(res => {
+        axios.get(`http://localhost:3004/groupmember/${id}`).then(res => {
+          setIds(res.data);
+        });
+        axios
+          .get(`http://localhost:3004/group/${tokenDecoded.userId}`)
+          .then(res => {
+            setGroupList(res.data);
+          });
+        // setIds([
+        //   // { id: 5, userid: 1, groupname: "Helloooo" },
+        //   { id: 4, userid: 1, groupname: "Lancerrrrr" },
+        //   { id: 41, userid: 1, groupname: "Hello" }
+        // ]);
         setValues(res.data[0]);
         handleClickOpen();
       })
-      .catch(err => console.log(err));
+      .catch(e => {
+        Swal.fire({
+          icon: "error",
+          title: "Failed to Retrieve Contact",
+          text: e
+        });
+      });
   };
   const handleClickDelete = rowData => {
     setWillEdit(true);
