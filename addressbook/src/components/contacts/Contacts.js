@@ -7,13 +7,9 @@ import { url } from "../../url";
 import { getUserData } from "../customHooks/getUserData";
 import { toast } from "react-toastify";
 import "../../App.css";
-import {
-  MuiThemeProvider,
-  createMuiTheme,
-  TextField,
-  Select,
-  MenuItem
-} from "@material-ui/core";
+import { MuiThemeProvider, createMuiTheme, TextField } from "@material-ui/core";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import { useWindowSize } from "../customHooks/useWindowSize";
 import { ContactDetails } from "./ContactDetails";
 import styled from "styled-components";
@@ -72,6 +68,7 @@ export const Contacts = props => {
   const [groupName, setGroupName] = useState("Contacts");
   const [selectedGroup, setSelectedGroup] = useState();
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
 
   const addContact = async e => {
     e.preventDefault();
@@ -190,16 +187,28 @@ export const Contacts = props => {
   return (
     <div>
       <Div>
-        <Select value="">
-          <MenuItem>Select one</MenuItem>
-        </Select>
-        <TextField
-          label="Search"
-          onChange={e => {
-            setSearch(e.target.value);
-            console.log(e.target.value);
-          }}
-        />
+        <div style={{ width: "300px", display: "flex" }}>
+          <TextField
+            fullWidth
+            label="Search"
+            onChange={e => {
+              setSearch(e.target.value);
+              console.log(e.target.value);
+            }}
+          />
+          <Select
+            value={sort}
+            onChange={e => setSort(e.target.value)}
+            label="sort"
+            fullWidth
+          >
+            <MenuItem value="">
+              <em>Select one</em>
+            </MenuItem>
+            <MenuItem value={"asc"}>Ascending</MenuItem>
+            <MenuItem value={"desc"}>Descending</MenuItem>
+          </Select>
+        </div>
       </Div>
       <MuiThemeProvider theme={theme}>
         <MaterialTable
@@ -261,7 +270,6 @@ export const Contacts = props => {
           ]}
         />
       </MuiThemeProvider>
-
       {action === "add" ? (
         <DialogCont
           title={"Add new Contact"}

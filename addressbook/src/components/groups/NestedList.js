@@ -53,6 +53,7 @@ export const NestedList = props => {
     group,
     setUserData
   } = props.data;
+  const groups = userData ? (userData.groups ? userData.groups : []) : [];
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [dialog, setDialog] = useState(false);
@@ -114,30 +115,22 @@ export const NestedList = props => {
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {userData ? (
-              userData.groups ? (
-                <React.Fragment>
-                  {userData.groups.map(x => (
-                    <ListItem
-                      button
-                      className={classes.nested}
-                      key={x.id}
-                      onClick={() => handleFilterByGroup(x.id)}
-                      style={group === x.id ? active : {}}
-                    >
-                      <ListItemIcon>
-                        <Group style={icons} />
-                      </ListItemIcon>
-                      <ListItemText primary={x.groupName} />
-                    </ListItem>
-                  ))}
-                </React.Fragment>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
+            <React.Fragment>
+              {groups.map(x => (
+                <ListItem
+                  button
+                  className={classes.nested}
+                  key={x.id}
+                  onClick={() => handleFilterByGroup(x.id)}
+                  style={group === x.id ? active : {}}
+                >
+                  <ListItemIcon>
+                    <Group style={icons} />
+                  </ListItemIcon>
+                  <ListItemText primary={x.groupName} />
+                </ListItem>
+              ))}
+            </React.Fragment>
             <ListItem
               button
               className={classes.nested}

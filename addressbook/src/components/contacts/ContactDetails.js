@@ -93,7 +93,11 @@ export const ContactDetails = props => {
         <Row>
           <Label>Group:</Label>
           <Span>
-            <GroupName groupId={rowData.groupId} user={user} />
+            {rowData.workPhone ? (
+              <GroupName groupId={rowData.groupId} user={user} />
+            ) : (
+              "Not assigned"
+            )}
           </Span>
         </Row>
       </Div>

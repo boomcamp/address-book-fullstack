@@ -28,6 +28,7 @@ module.exports = {
     const { contacts, groups } = req.app.get("db");
     const { sort, name } = req.query;
     const { id } = req.params;
+
     contacts
       .find({ userId: id })
       .then(contacts =>

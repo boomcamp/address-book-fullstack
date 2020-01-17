@@ -73,7 +73,7 @@ export const action2 = (
     onClick: () => handleDeleteGroup()
   },
   {
-    tooltip: "Remove selected Users",
+    tooltip: "Move seleted to Group ...",
     icon: "group",
     onClick: (e, data) => {
       setData(data);
@@ -81,7 +81,7 @@ export const action2 = (
     }
   },
   {
-    tooltip: "Move seleted to Group ...",
+    tooltip: "Remove selected Users",
     icon: "delete",
     onClick: (e, data) => {
       setData(data);
