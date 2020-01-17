@@ -15,4 +15,10 @@
 .home{
   height: 100%;
 }
-
+.home-container{
+  background:white;  align-items: center;
+  margin-top:20px;
+  display: flex;
+  justify-content: center;
+  flex-direction:column
+}

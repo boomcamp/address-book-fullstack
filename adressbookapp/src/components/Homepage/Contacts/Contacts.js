@@ -36,6 +36,14 @@ export default class Contacts extends Component {
                         onClick={() => this.props.viewHandler(a)}
                       />
                     </Tooltip>,
+                    <Tooltip title="add to group" placement="bottom">
+                      <Icon
+                        type="usergroup-add"
+                        key="view"
+                        style={{ fontSize: "22px", color: "#08c" }}
+                        onClick={() => this.props.viewGroups(a)}
+                      />
+                    </Tooltip>,
                     <Tooltip title="delete" placement="bottom">
                       <Icon
                         type="delete"

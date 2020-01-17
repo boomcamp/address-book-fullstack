@@ -32,8 +32,8 @@ class ViewContacts extends Component {
 
   render() {
     // console.log(this.props.info.contactid);
-    const id = this.props.info.contactid;
-    const contact = this.props.info;
+    const id = this.props.info;
+    // const contact = this.props.info;
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
@@ -179,7 +179,7 @@ class ViewContacts extends Component {
                   }
                   type="text"
                   placeholder="state or province"
-                  name="state or province"
+                  name="state_or_province"
                   disabled={this.props.disabled}
                   onChange={e => this.props.onUpdate(e)}
                 />

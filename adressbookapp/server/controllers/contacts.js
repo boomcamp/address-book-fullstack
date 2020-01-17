@@ -45,16 +45,7 @@ function contact(req, res) {
       res.status(500).end();
     });
 }
-// function getContactById(req, res) {
-//   const db = req.app.get("db");
-//   db.contacts
-//     .findOne(req.params.id)
-//     .then(contact => res.status(200).json(contact))
-//     .catch(err => {
-//       console.error(err);
-//       res.status(500).end();
-//     });
-// }
+
 function getContactById(req, res) {
   const db = req.app.get("db");
   const usersId = req.params.id;

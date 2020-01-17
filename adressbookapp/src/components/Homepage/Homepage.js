@@ -2,24 +2,37 @@ import React, { Component } from "react";
 import { Layout, Icon, message, Tabs, Modal, Popconfirm } from "antd";
 import "./homepage.css";
 import Contacts from "./Contacts/Contacts";
+import {
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarNav,
+  MDBNavItem,
+  MDBNavbarToggler,
+  MDBCollapse,
+  MDBDropdown
+} from "mdbreact";
 
 import AddContacts from "./AddContacts/AddContacts";
 import axios from "axios";
 import ViewContacts from "./ViewContacts/ViewContacts";
+import AddGroups from "./AddGroups/AddGroups";
+import AddtoGroup from "./AddtoGroups/AddtoGroup";
 
 const { confirm } = Modal;
-const { Header, Content } = Layout;
+const { Content } = Layout;
 const TabPane = Tabs.TabPane;
 export default class Homepage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      isOpen: false,
       searchinput: "",
       contacts: [],
       search: [],
       info: [],
       visible: false,
+      visiblee: false,
       disabled: true,
       firstname: "",
       lastname: "",
@@ -45,8 +58,14 @@ export default class Homepage extends Component {
     }
   }
   cancel(e) {}
+  toggleCollapse = () => {
+    this.setState({ isOpen: !this.state.isOpen });
+  };
   onCancel = () => {
     this.setState({ visible: false, disabled: true, edit: "edit" });
+  };
+  onClickCancel = () => {
+    this.setState({ visiblee: false });
   };
   getAll = () => {
     const id = localStorage.getItem("id");
@@ -86,12 +105,22 @@ export default class Homepage extends Component {
 
   updateHandler = e => {
     this.setState({
-      disabled: false
+      disabled: false,
+      firstname: e.firstname,
+      lastname: e.lastname,
+      home_phone: e.home_phone,
+      work_phone: e.work_phone,
+      mobile_phone: e.mobile_phone,
+      email: e.email,
+      city: e.city,
+      state_or_province: e.state_or_province,
+      postal_code: e.postal_code,
+      country: e.country
     });
   };
 
   onSave = e => {
-    const id = e;
+    const id = e.contactid;
     axios
       .patch(`http://localhost:4000/api/contacts/${id}`, {
         firstname: this.state.firstname,
@@ -106,6 +135,7 @@ export default class Homepage extends Component {
         country: this.state.country
       })
       .then(res => {
+        // console.log(res);
         this.getAll();
         message.success("Updated successfully");
         this.setState({
@@ -119,6 +149,12 @@ export default class Homepage extends Component {
     this.setState({
       visible: true,
       info: e
+    });
+  };
+  viewGroups = e => {
+    // console.log(e);
+    this.setState({
+      visiblee: true
     });
   };
 
@@ -140,41 +176,48 @@ export default class Homepage extends Component {
     return (
       <div>
         <Layout>
-          <Header
-            className="header"
-            style={{
-              background: "#004d40",
-              paddingLeft: 50,
-              paddingRight: 50,
-              width: "100%"
-            }}
-          >
-            <div className="logo" style={{ color: "white" }}>
-              <img
-                alt=""
-                src={require("./phone.png")}
-                style={{ height: "40px" }}
-              />
-              &nbsp; Adress Book App
-            </div>
-            <div
-              style={{
-                color: "white",
-                float: "right",
-                cursor: "pointer",
-                fontSize: "15px"
-              }}
-            >
-              <Icon type="logout" />{" "}
-              <Popconfirm
-                title="Are you sure want to logout?"
-                onConfirm={this.logout}
-                onCancel={this.cancel}
-              >
-                Logout
-              </Popconfirm>
-            </div>
-          </Header>
+          <MDBNavbar dark expand="md" style={{ backgroundColor: "#004d40" }}>
+            <MDBNavbarBrand>
+              <strong className="white-text">
+                <div className="logo" style={{ color: "white" }}>
+                  <img
+                    alt=""
+                    src={require("./phone.png")}
+                    style={{ height: "40px" }}
+                  />
+                  &nbsp; Adress Book App
+                </div>
+              </strong>
+            </MDBNavbarBrand>
+            <MDBNavbarToggler onClick={this.toggleCollapse} />
+            <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
+              <MDBNavbarNav right>
+                <MDBNavItem>
+                  <MDBDropdown style={{ color: "white" }}>
+                    <div
+                      style={{
+                        color: "white",
+                        float: "right",
+                        cursor: "pointer",
+                        fontSize: "15px"
+                      }}
+                    >
+                      <Icon type="logout" />{" "}
+                      <Popconfirm
+                        title="Are you sure want to logout?"
+                        onConfirm={this.logout}
+                        onCancel={this.cancel}
+                        style={{ width: "100px;" }}
+                      >
+                        Logout
+                      </Popconfirm>
+                    </div>
+                  </MDBDropdown>
+                </MDBNavItem>
+              </MDBNavbarNav>
+            </MDBCollapse>
+          </MDBNavbar>
+
           <Content>
             <Layout style={{ padding: "24px 30px", background: "#fff" }}>
               <Tabs defaultActiveKey="1" style={{ height: "auto" }}>
@@ -202,6 +245,7 @@ export default class Homepage extends Component {
                     viewHandler={this.viewHandler}
                     search={this.state.search}
                     searchinput={this.state.searchinput}
+                    viewGroups={this.viewGroups}
                   />
                   <ViewContacts
                     visible={this.state.visible}
@@ -214,6 +258,10 @@ export default class Homepage extends Component {
                     onUpdate={this.onUpdate}
                     onSave={this.onSave}
                   />
+                  <AddtoGroup
+                    visible={this.state.visiblee}
+                    onClickCancel={this.onClickCancel}
+                  />
                 </TabPane>
                 <TabPane
                   tab={
@@ -224,14 +272,11 @@ export default class Homepage extends Component {
                   }
                   key="2"
                 >
-                  Tab 2
+                  <AddGroups getAll={this.getAll} />
                 </TabPane>
               </Tabs>
             </Layout>
           </Content>
-          {/* <Footer style={{ textAlign: "center" }}>
-            Address Book App ©2020
-          </Footer> */}
         </Layout>
       </div>
     );

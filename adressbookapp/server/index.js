@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const secret = require("../secret.js");
 const users = require("./controllers/users.js");
 const contacts = require("./controllers/contacts.js");
+const groups = require("./controllers/groups.js");
 const cors = require("cors");
 massive({
   host: "localhost",
@@ -28,6 +29,13 @@ massive({
     app.delete("/api/contacts/:id", contacts.deleteContactById);
     app.patch("/api/contacts/:id", contacts.updateContactById);
     // app.get("/api/users/:id", users.getById);
+
+    //groups
+    app.post("/api/groups", groups.group);
+    app.get("/api/groups/:id", groups.getGroupById);
+    app.post("/api/addtogroups/", groups.addtoGroup);
+    // app.patch("/api/groups/:id", groups.updateGroupById);
+    //protected-data
     app.get("/api/protected/data", (req, res) => {
       if (!req.headers.authorization) {
         return res.status(401).end();
