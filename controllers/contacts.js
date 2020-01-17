@@ -3,7 +3,7 @@ module.exports = {
     const db = req.app.get("db");
 
     db.contacts
-      .find({ userId: req.params.id })
+      .find({ user_id: req.params.id })
       .then(contacts => res.status(200).json(contacts))
       .catch(err => {
         console.error(err);

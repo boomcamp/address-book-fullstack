@@ -28,7 +28,7 @@ export default class Edit extends React.Component {
     const { rowInfo } = this.props;
     return (
       <div>
-        <Dialog open={this.props.clickOpen} onClose={this.props.clickClose}>
+        <Dialog open={this.props.clickOpen} onClose={this.props.handleClose}>
           <DialogTitle
             id="alert-dialog-title"
             style={{
@@ -54,7 +54,7 @@ export default class Edit extends React.Component {
                       defaultValue={rowInfo ? rowInfo.fname : ""}
                       label="First Name"
                       fullWidth
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler}
                       required
                     />
                   </Input>
@@ -67,7 +67,7 @@ export default class Edit extends React.Component {
                       name="lname"
                       defaultValue={rowInfo ? rowInfo.lname : ""}
                       fullWidth
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler}
                       required
                     />
                   </Input>
@@ -80,7 +80,7 @@ export default class Edit extends React.Component {
                       id="home_phone"
                       name="homePhone"
                       defaultValue={rowInfo ? rowInfo.home_phone : ""}
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler}
                       required
                       fullWidth
                     />
@@ -92,7 +92,7 @@ export default class Edit extends React.Component {
                       id="mobile_phone"
                       name="mobilePhone"
                       defaultValue={rowInfo ? rowInfo.mobile_phone : ""}
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler}
                       required
                       fullWidth
                     />
@@ -106,7 +106,7 @@ export default class Edit extends React.Component {
                       id="work_phone"
                       name="workPhone"
                       defaultValue={rowInfo ? rowInfo.work_phone : ""}
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler}
                       required
                       fullWidth
                     />
@@ -118,7 +118,7 @@ export default class Edit extends React.Component {
                       id="email"
                       name="email"
                       defaultValue={rowInfo ? rowInfo.email : ""}
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler}
                       required
                       fullWidth
                     />
@@ -132,7 +132,7 @@ export default class Edit extends React.Component {
                       id="city"
                       name="city"
                       defaultValue={rowInfo ? rowInfo.city : ""}
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler}
                       required
                       fullWidth
                     />
@@ -144,7 +144,7 @@ export default class Edit extends React.Component {
                       id="state_or_province"
                       name="state_or_province"
                       defaultValue={rowInfo ? rowInfo.state_or_province : ""}
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler}
                       required
                       fullWidth
                     />
@@ -158,7 +158,7 @@ export default class Edit extends React.Component {
                       id="postal_code"
                       name="postalCode"
                       defaultValue={rowInfo ? rowInfo.postal_code : ""}
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler}
                       required
                       fullWidth
                     />
@@ -170,7 +170,7 @@ export default class Edit extends React.Component {
                       id="country"
                       name="country"
                       defaultValue={rowInfo ? rowInfo.country : ""}
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler}
                       required
                       fullWidth
                     />
@@ -185,7 +185,7 @@ export default class Edit extends React.Component {
             </form>
           </MDBCol>
           <DialogActions>
-            <Button onClick={this.props.clickClose} color="primary">
+            <Button onClick={this.props.handleClose} color="primary">
               Close
             </Button>
           </DialogActions>

@@ -3,6 +3,7 @@ const massive = require("massive");
 const cors = require("cors");
 const users = require("../controllers/users");
 const contacts = require("../controllers/contacts");
+const groups = require("../controllers/groups");
 
 massive({
   host: "localhost",
@@ -39,7 +40,11 @@ massive({
     app.get("/api/contacts/:id", contacts.contacts);
     app.patch("/api/contacts/:id/edit", contacts.editContact);
     app.delete("/api/contacts/:id/delete", contacts.deleteContact);
-
+    //Group endpoints
+    app.post("/api/groups/add", groups.addGroups);
+    app.get("/api/groups", groups.listGroups);
+    app.delete("/api/groups/:id/delete", groups.deleteGroup);
+    app.patch("/api/groups/:id/edit", groups.editGroup);
     const PORT = 5009;
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);

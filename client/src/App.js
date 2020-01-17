@@ -18,19 +18,6 @@ export default class App extends React.Component {
     this.setState({ token: localStorage.getItem("user") });
   }
 
-  myChangeHandler = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  redirectHandler = () => {
-    this.setState({ redirect: false });
-  };
-
-  handleLogout = () => {
-    localStorage.clear();
-    this.setState({ token: null });
-  };
-
   mySubmitHandler = event => {
     event.preventDefault();
     const Obj = {
@@ -42,7 +29,7 @@ export default class App extends React.Component {
       .post(url, Obj)
       .then(res => {
         localStorage.setItem("user", res.data.token);
-        localStorage.setItem("userId", res.data.id);
+        localStorage.setItem("user_id", res.data.id);
         this.setState({
           token: localStorage.getItem("user")
         });
@@ -77,34 +64,6 @@ export default class App extends React.Component {
       .catch(err => toast.error(err.response.data.error));
   };
 
-  contactHandler = event => {
-    event.preventDefault();
-    const Obj = {
-      userId: localStorage.getItem("userId"),
-      fname: this.state.fname,
-      lname: this.state.lname,
-      home_phone: this.state.homePhone,
-      work_phone: this.state.workPhone,
-      mobile_phone: this.state.mobilePhone,
-      email: this.state.email,
-      city: this.state.city,
-      state_or_province: this.state.state_or_province,
-      postal_code: this.state.postalCode,
-      country: this.state.country
-    };
-    const url = "http://localhost:5009/api/contacts/add";
-    axios
-      .post(url, Obj, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("user")}`
-        }
-      })
-      .then(() => {
-        alert("Success!!");
-      })
-      .catch(err => alert(err.response.data.error));
-  };
-
   deleteHandler = rowData => {
     axios
       .delete(`http://localhost:5009/api/contacts/${rowData.id}/delete`, {
@@ -118,19 +77,32 @@ export default class App extends React.Component {
       .catch(err => toast.error(err.response.data.error));
   };
 
+  addToGroup = groupData => {
+    console.log(groupData);
+  };
+
+  redirectHandler = () => {
+    this.setState({ redirect: false });
+  };
+
+  handleLogout = () => {
+    localStorage.clear();
+    this.setState({ token: null });
+  };
+
   render() {
     return (
       <React.Fragment>
         <HashRouter>
           <Routes
-            myChangeHandler={this.myChangeHandler}
             mySubmitHandler={this.mySubmitHandler}
             registerHandler={this.registerHandler}
             redirectHandler={this.redirectHandler}
-            contactHandler={this.contactHandler}
+            addGroupHandler={this.addGroupHandler}
             deleteHandler={this.deleteHandler}
             handleLogout={this.handleLogout}
             redirect={this.state.redirect}
+            addToGroup={this.addToGroup}
             token={this.state.token}
             error={this.state.error}
           />

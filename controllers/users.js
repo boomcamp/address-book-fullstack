@@ -36,7 +36,7 @@ module.exports = {
             );
           })
           .then(user => {
-            const token = jwt.sign({ userId: user.id }, secret);
+            const token = jwt.sign({ user_id: user.id }, secret);
             res.status(201).json({ ...user, token });
           });
       })
@@ -80,7 +80,7 @@ module.exports = {
             throw new Error("Incorrect username/password");
           }
 
-          const token = jwt.sign({ userId: user.id }, secret);
+          const token = jwt.sign({ user_id: user.id }, secret);
           delete user.password;
           res.status(200).json({ ...user, token });
         });
