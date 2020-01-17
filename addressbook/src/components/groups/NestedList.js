@@ -67,7 +67,7 @@ export const NestedList = props => {
     try {
       const response = await Axios.post(
         `${url}/groups`,
-        { ...groupDetails, dateCreated: Date.now(), userId: user.id },
+        { ...groupDetails, date_created: Date.now(), user_id: user.id },
         {
           headers: { Authorization: `Bearer ${user.token}` }
         }

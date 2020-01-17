@@ -36,7 +36,9 @@ export const Contacts = props => {
     setContact,
     contact,
     group,
-    setGroup
+    setGroup,
+    sort,
+    setSort
   } = props.data;
   const theme = createMuiTheme({
     palette: {
@@ -68,14 +70,13 @@ export const Contacts = props => {
   const [groupName, setGroupName] = useState("Contacts");
   const [selectedGroup, setSelectedGroup] = useState();
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("");
 
   const addContact = async e => {
     e.preventDefault();
     try {
       const response = await Axios.post(
         `${url}/contacts`,
-        { ...contact, groupId: group },
+        { ...contact, group_id: group },
         {
           headers: { Authorization: `Bearer ${user.token}` }
         }
@@ -87,7 +88,7 @@ export const Contacts = props => {
       setContact({});
 
       if (!group) {
-        return getUserData(user).then(user => setUserData(user));
+        return getUserData(user, sort).then(user => setUserData(user));
       }
       fetch(user, group, userData, setUserData);
     } catch (err) {
@@ -109,7 +110,7 @@ export const Contacts = props => {
       setContact({});
 
       if (!group) {
-        return getUserData(user).then(user => setUserData(user));
+        return getUserData(user, sort).then(user => setUserData(user));
       }
       fetch(user, group, userData, setUserData);
     } catch (err) {
@@ -128,7 +129,7 @@ export const Contacts = props => {
       });
 
       if (!group) {
-        return getUserData(user).then(user => setUserData(user));
+        return getUserData(user, sort).then(user => setUserData(user));
       }
       fetch(user, group, userData, setUserData);
     });
@@ -141,17 +142,16 @@ export const Contacts = props => {
   };
   const handleMovetoGroup = async e => {
     e.preventDefault();
-
     data.map(async x => {
       await Axios.patch(
         `${url}/contacts/${x.id}`,
-        { ...contact, groupId: selectedGroup.value },
+        { ...contact, group_id: selectedGroup.value },
         {
           headers: { Authorization: `Bearer ${user.token}` }
         }
       );
       if (!group) {
-        return getUserData(user).then(user => setUserData(user));
+        return getUserData(user, sort).then(user => setUserData(user));
       }
       fetch(user, group, userData, setUserData);
     });
@@ -170,7 +170,7 @@ export const Contacts = props => {
       });
       setGroup(null);
       setGroupName("Contacts");
-      getUserData(user).then(user => setUserData(user));
+      getUserData(user, sort).then(user => setUserData(user));
     } catch (err) {
       console.error(err);
     }
@@ -187,24 +187,22 @@ export const Contacts = props => {
   return (
     <div>
       <Div>
-        <div style={{ width: "300px", display: "flex" }}>
+        <div style={{ width: "350px", display: "flex" }}>
           <TextField
             fullWidth
             label="Search"
             onChange={e => {
               setSearch(e.target.value);
-              console.log(e.target.value);
             }}
           />
           <Select
             value={sort}
-            onChange={e => setSort(e.target.value)}
+            onChange={e => {
+              setSort(e.target.value);
+              getUserData(user, e.target.value).then(user => setUserData(user));
+            }}
             label="sort"
-            fullWidth
           >
-            <MenuItem value="">
-              <em>Select one</em>
-            </MenuItem>
             <MenuItem value={"asc"}>Ascending</MenuItem>
             <MenuItem value={"desc"}>Descending</MenuItem>
           </Select>
@@ -218,7 +216,18 @@ export const Contacts = props => {
           columns={
             windowWidth >= 600 ? columnData(user) : columnDataMobile(user)
           }
-          data={userData ? userData.addressBook : []}
+          data={
+            userData
+              ? userData.addressBook
+                ? userData.addressBook.filter(x => {
+                    const regex = new RegExp(search, "gi");
+                    if (x.first_name.match(regex) || x.last_name.match(regex)) {
+                      return x;
+                    }
+                  })
+                : []
+              : []
+          }
           options={{
             pageSizeOptions: [10, 15, 20],
             pageSize: 10,
@@ -277,6 +286,7 @@ export const Contacts = props => {
           setDialog={setDialog}
           passedFn={addContact}
           handleOnChange={handleOnChange}
+          data={props.data}
         />
       ) : action === "edit" ? (
         <DialogCont
@@ -286,6 +296,7 @@ export const Contacts = props => {
           passedFn={editContact}
           rowData={contact}
           handleOnChange={handleOnChange}
+          data={props.data}
         />
       ) : (
         ""
@@ -301,7 +312,7 @@ export const Contacts = props => {
         groupDialog={groupDialog}
         setGroupDialog={setGroupDialog}
         handleMovetoGroup={handleMovetoGroup}
-        options={options}
+        options={[{ value: "null", label: "Remove Group" }, ...options]}
         setSelectedGroup={setSelectedGroup}
       />
     </div>
@@ -310,5 +321,5 @@ export const Contacts = props => {
 const Div = styled.div`
   display: flex;
   flex-direction: row-reverse;
-  padding: 10px;
+  padding: 0 10px 15px 10px;
 `;

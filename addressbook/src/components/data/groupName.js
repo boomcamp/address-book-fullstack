@@ -6,16 +6,16 @@ export const GroupName = props => {
   const { user } = props;
   const [groupName, setGroupName] = useState("");
   useEffect(() => {
-    if (props.groupId) {
+    if (props.group_id) {
       const getData = async () => {
-        const response = await Axios.get(`${url}/groups/${props.groupId}`, {
+        const response = await Axios.get(`${url}/groups/${props.group_id}`, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         setGroupName(response.data[0].groupName);
       };
       getData();
     }
-    if (props.groupId === null) {
+    if (props.group_id === null) {
       setGroupName("");
     }
   }, [props, groupName, user]);

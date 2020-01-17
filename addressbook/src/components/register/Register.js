@@ -50,9 +50,9 @@ export const Register = props => {
             <TextField
               style={{ margin: "3px 6px 3px 0" }}
               onChange={e => handleOnChange("register", e.target)}
-              name="firstName"
+              name="first_name"
               variant="outlined"
-              type="firstName"
+              type="first_name"
               label="First Name"
               fullWidth
               required
@@ -60,9 +60,9 @@ export const Register = props => {
             <TextField
               style={{ margin: "3px 0 3px 0" }}
               onChange={e => handleOnChange("register", e.target)}
-              name="lastName"
+              name="last_name"
               variant="outlined"
-              type="lastName"
+              type="last_name"
               label="Last Name"
               fullWidth
               required

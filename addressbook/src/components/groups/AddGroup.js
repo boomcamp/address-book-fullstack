@@ -15,8 +15,8 @@ export const AddGroup = props => {
         <DialogContent>
           <TextField
             onChange={e => setGroupDetails({ [e.target.name]: e.target.value })}
-            name="groupName"
-            type="groupName"
+            name="group_name"
+            type="group_name"
             label="Group Name"
             variant="outlined"
             fullWidth

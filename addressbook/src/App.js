@@ -21,10 +21,14 @@ function App() {
   const [userData, setUserData] = useState({});
   const [contact, setContact] = useState({});
   const [group, setGroup] = useState(null);
+  const [sort, setSort] = useState("asc");
+  const [buttons, setButtons] = useState({
+    addEditContactBtn: false
+  });
 
   useEffect(() => {
     if (user) {
-      getUserData(user).then(user => setUserData(user));
+      getUserData(user, sort).then(user => setUserData(user));
     }
   }, [user]);
 
@@ -84,6 +88,10 @@ function App() {
         handleFilterByGroup={handleFilterByGroup}
         group={group}
         setGroup={setGroup}
+        sort={sort}
+        setSort={setSort}
+        buttons={buttons}
+        setButtons={setButtons}
       />
     </HashRouter>
   );

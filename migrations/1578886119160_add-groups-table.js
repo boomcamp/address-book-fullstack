@@ -8,16 +8,16 @@ exports.up = pgm => {
       type: "serial",
       primaryKey: true
     },
-    groupName: {
+    group_name: {
       type: "text",
       notNull: true
     },
-    userId: {
+    user_id: {
       type: "integer",
       notNull: true,
       references: '"users"'
     },
-    dateCreated: {
+    date_created: {
       type: "text",
       notNull: true
     }

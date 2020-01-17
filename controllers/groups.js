@@ -3,9 +3,9 @@ module.exports = {
     const { contacts } = req.app.get("db");
 
     const { id } = req.params;
-    contacts.find({ groupId: id }).then(contacts => {
+    contacts.find({ group_id: id }).then(contacts => {
       res.status(200).send({
-        groupId: id,
+        group_id: id,
         contactList: contacts
       });
     });
@@ -22,9 +22,9 @@ module.exports = {
 
     const { id } = req.params;
     groups.destroy({ id: id }).then(() => {
-      contacts.find({ groupId: id }).then(list => {
+      contacts.find({ group_id: id }).then(list => {
         list.map(contact =>
-          contacts.update({ id: contact.id }, { groupId: null })
+          contacts.update({ id: contact.id }, { group_id: null })
         );
       });
       res.status(200).send({ message: "successfully deleted" });

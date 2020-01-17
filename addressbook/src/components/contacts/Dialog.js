@@ -22,6 +22,7 @@ const Item = styled.div`
   width: 100%;
 `;
 export const DialogCont = props => {
+  const { buttons } = props.data;
   const { title, dialog, setDialog, rowData, passedFn, handleOnChange } = props;
   return (
     <Dialog open={dialog} maxWidth={"lg"} onClose={() => setDialog(false)}>
@@ -33,9 +34,9 @@ export const DialogCont = props => {
               <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
-                  defaultValue={rowData ? rowData.firstName : ""}
-                  name="firstName"
-                  type="firstName"
+                  defaultValue={rowData ? rowData.first_name : ""}
+                  name="first_name"
+                  type="first_name"
                   label="First Name"
                   fullWidth
                   required
@@ -45,9 +46,9 @@ export const DialogCont = props => {
               <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
-                  defaultValue={rowData ? rowData.lastName : ""}
-                  name="lastName"
-                  type="firstName"
+                  defaultValue={rowData ? rowData.last_name : ""}
+                  name="last_name"
+                  type="last_name"
                   label="Last Name"
                   fullWidth
                   required
@@ -59,9 +60,9 @@ export const DialogCont = props => {
               <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
-                  defaultValue={rowData ? rowData.homePhone : ""}
-                  name="homePhone"
-                  type="homePhone"
+                  defaultValue={rowData ? rowData.home_phone : ""}
+                  name="home_phone"
+                  type="home_phone"
                   label="Home Phone"
                   fullWidth
                   variant="outlined"
@@ -70,9 +71,9 @@ export const DialogCont = props => {
               <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
-                  defaultValue={rowData ? rowData.mobilePhone : ""}
-                  name="mobilePhone"
-                  type="mobilePhone"
+                  defaultValue={rowData ? rowData.mobile_phone : ""}
+                  name="mobile_phone"
+                  type="mobile_phone"
                   label="Mobile Phone"
                   fullWidth
                   required
@@ -82,9 +83,9 @@ export const DialogCont = props => {
               <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
-                  defaultValue={rowData ? rowData.workPhone : ""}
-                  name="workPhone"
-                  type="workPhone"
+                  defaultValue={rowData ? rowData.work_phone : ""}
+                  name="work_phone"
+                  type="work_phone"
                   label="Work Phone"
                   fullWidth
                   variant="outlined"
@@ -121,9 +122,9 @@ export const DialogCont = props => {
               <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
-                  defaultValue={rowData ? rowData.state : ""}
-                  name="state"
-                  type="state"
+                  defaultValue={rowData ? rowData.state_or_province : ""}
+                  name="state_or_province"
+                  type="state_or_province"
                   label="State or Province"
                   fullWidth
                   required
@@ -133,9 +134,9 @@ export const DialogCont = props => {
               <Item>
                 <TextField
                   onChange={e => handleOnChange(title, e.target)}
-                  defaultValue={rowData ? rowData.postalCode : ""}
-                  name="postalCode"
-                  type="postalCode"
+                  defaultValue={rowData ? rowData.postal_code : ""}
+                  name="postal_code"
+                  type="postal_code"
                   label="Postal Code"
                   fullWidth
                   required
@@ -163,7 +164,12 @@ export const DialogCont = props => {
           <Button onClick={() => setDialog(false)} color="primary">
             Close
           </Button>
-          <Button type="submit" color="primary" autoFocus>
+          <Button
+            type="submit"
+            color="primary"
+            autoFocus
+            disabled={buttons ? buttons.addEditContactBtn : []}
+          >
             Submit
           </Button>
         </DialogActions>

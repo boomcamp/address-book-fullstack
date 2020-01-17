@@ -56,19 +56,19 @@ export const ContactDetails = props => {
       <Div>
         <Row>
           <Label>Name:</Label>
-          <Span>{rowData.firstName + " " + rowData.lastName}</Span>
+          <Span>{rowData.first_name + " " + rowData.last_name}</Span>
         </Row>
         <Row>
           <Label>Home Phone:</Label>
-          <Span>{rowData.homePhone ? rowData.homePhone : "N/A"}</Span>
+          <Span>{rowData.homme_phone ? rowData.homme_phone : "N/A"}</Span>
         </Row>
         <Row>
           <Label>Mobile Phone:</Label>
-          <Span>{rowData.mobilePhone}</Span>
+          <Span>{rowData.mobile_phone}</Span>
         </Row>
         <Row>
           <Label>Work Phone:</Label>
-          <Span>{rowData.workPhone ? rowData.workPhone : "N/A"}</Span>
+          <Span>{rowData.work_phone ? rowData.work_phone : "N/A"}</Span>
         </Row>
         <Row>
           <Label>Email Address:</Label>
@@ -80,11 +80,11 @@ export const ContactDetails = props => {
         </Row>
         <Row>
           <Label>State or Province:</Label>
-          <Span>{rowData.state}</Span>
+          <Span>{rowData.state_or_province}</Span>
         </Row>
         <Row>
           <Label>Postal Code:</Label>
-          <Span>{rowData.postalCode}</Span>
+          <Span>{rowData.postal_code}</Span>
         </Row>
         <Row>
           <Label>Country:</Label>
@@ -93,8 +93,8 @@ export const ContactDetails = props => {
         <Row>
           <Label>Group:</Label>
           <Span>
-            {rowData.workPhone ? (
-              <GroupName groupId={rowData.groupId} user={user} />
+            {rowData.groupId ? (
+              <GroupName group_id={rowData.group_id} user={user} />
             ) : (
               "Not assigned"
             )}

@@ -9,11 +9,13 @@ const Span = styled.span`
 export const columnData = user => [
   {
     title: "Name",
-    render: rowData => <Span>{rowData.firstName + " " + rowData.lastName}</Span>
+    render: rowData => (
+      <Span>{rowData.first_name + " " + rowData.last_name}</Span>
+    )
   },
   {
     title: "Mobile Phone",
-    field: "mobilePhone"
+    field: "mobile_phone"
   },
   {
     title: "Email Address",
@@ -21,19 +23,21 @@ export const columnData = user => [
   },
   {
     title: "Group",
-    field: "groupId",
-    render: rowData => <GroupName groupId={rowData.groupId} user={user} />
+    field: "group_id",
+    render: rowData => <GroupName group_id={rowData.group_id} user={user} />
   }
 ];
 export const columnDataMobile = user => [
   {
     title: "Name",
-    render: rowData => <Span>{rowData.firstName + " " + rowData.lastName}</Span>
+    render: rowData => (
+      <Span>{rowData.first_name + " " + rowData.last_name}</Span>
+    )
   },
   {
     title: "Group",
-    field: "groupId",
-    render: rowData => <GroupName groupId={rowData.groupId} user={user} />
+    field: "group_id",
+    render: rowData => <GroupName group_id={rowData.group_id} user={user} />
   }
 ];
 export const action2 = (
@@ -56,7 +60,7 @@ export const action2 = (
     onClick: () => {
       setAction("add");
       setDialog(true);
-      setContact({ ...contact, userId: user.id });
+      setContact({ ...contact, user_id: user.id });
     }
   },
   {
@@ -106,7 +110,7 @@ export const action1 = (
     onClick: () => {
       setAction("add");
       setDialog(true);
-      setContact({ ...contact, userId: user.id });
+      setContact({ ...contact, user_id: user.id });
     }
   },
   {

@@ -1,9 +1,13 @@
 import { url } from "../../url";
 import Axios from "axios";
 
-export const getUserData = async user => {
+export const getUserData = async (user, sort) => {
   try {
-    const response = await Axios.get(`${url}/user/${user.id}/addressbook`, {
+    let request = `${url}/user/${user.id}/addressbook`;
+    if (sort) {
+      request += `?sort=${sort}`;
+    }
+    const response = await Axios.get(request, {
       headers: { Authorization: `Bearer ${user.token}` }
     });
     return response.data;
