@@ -1,0 +1,14 @@
+/* .searchBarMain{
+    display: flex;
+    justify-content: flex-end;
+}
+.searchBar{
+    width: 200px;
+    border:none;
+    border-bottom: 2px solid black;
+} */
+.example-input .ant-input {
+    width: 200px;
+    margin: 0 8px 8px 0;
+    height: auto;
+  }

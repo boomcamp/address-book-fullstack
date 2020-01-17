@@ -85,7 +85,7 @@ handleSearch =(e)=>{
           </div>
 
           <div className="pop">
-            <Card />
+            <Card getCont={this.getCont}/>
             <Popconfirm
               placement="leftTop"
               title="Are you Sure to logout?"

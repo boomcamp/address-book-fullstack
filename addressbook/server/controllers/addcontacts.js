@@ -59,6 +59,7 @@ module.exports = {
     const db = req.app.get("db");
     const id = req.body.id;
     const {
+     
       lastname,
       firstname,
       home_phone,
@@ -74,6 +75,7 @@ module.exports = {
     console.log(id);
     db.contact_info
       .update(req.params.id,{
+       
         lastname:lastname,
         firstname:firstname,
         home_phone:home_phone,

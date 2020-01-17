@@ -11,6 +11,7 @@ class AddBookCard extends Component {
     super(props);
 
     this.state = {
+      visible:false,
       lastname: "",
       firstname: "",
       home_phone: "",
@@ -72,7 +73,21 @@ class AddBookCard extends Component {
         console.log(res); 
         console.log(this.state.userId)
         message.success("Added Successfully!");
-        setTimeout(window.location.reload.bind(window.location), 250);
+        this.setState({
+          lastname: "",
+          firstname: "",
+          home_phone: "",
+          mobile_phone: "",
+          work_phone: "",
+          email: "",
+          city: "",
+          stae_or_province: "",
+          postal_code: "",
+          country: "",
+          visible:false
+        })
+        this.props.getCont()
+        setTimeout(window.location.reload.bind(window.location), 3000);
       });
     } else {
       message.warning("Please Fill Out the Form");
@@ -104,9 +119,7 @@ class AddBookCard extends Component {
       visible: false
     });
   };
-  confirm = () => {
-    message.info("Clicked on Yes.");
-  };
+ 
   showDrawer = () => {
     this.setState({
       visible: true
@@ -206,6 +219,7 @@ class AddBookCard extends Component {
                     <Input
                       prefix={
                         <Icon
+                     
                           type="user"
                           style={{ color: "rgba(0,0,0,.25)" }}
                         />
