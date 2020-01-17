@@ -62,7 +62,8 @@ export default class NewContacts extends Component {
     });
   };
 
-  handleCreateContact = () => {
+  handleCreateContact = (e) => {
+    e.preventDefault()
     const id = localStorage.getItem("id");
     axios
       .post(`/createcontact`, {

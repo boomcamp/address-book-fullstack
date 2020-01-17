@@ -21,8 +21,15 @@ import Button from "@material-ui/core/Button";
 import NewGroups from "./modal/newGroups";
 import EditIcon from "@material-ui/icons/Edit";
 import Tooltip from "@material-ui/core/Tooltip";
-import AddToGroup from "./modal/AddToGroup";
-import { Dialog } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  TextField,
+  DialogContent
+} from "@material-ui/core";
+
 export default class GroupList extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +38,10 @@ export default class GroupList extends Component {
       selection: "",
       dense: false,
       list: [],
-      openModal: false
+      openModal: false,
+      contacts: [],
+      selectValue: [],
+      idArray: []
     };
   }
 
@@ -47,18 +57,66 @@ export default class GroupList extends Component {
     });
   };
 
-  handleOpenModal = () => {
-    this.setState({ openModal: true });
+  handleGetContacts = () => {
+    const id = localStorage.getItem("id");
+    axios.get(`/addressbook/${id}`).then(res => {
+      this.setState({
+        contacts: res.data
+      });
+    });
+  };
+
+  handleOpenModal = (id) => {
+    console.log(id)
+    this.handleGetContacts();
+    this.setState({ openModal: true, currentGroupId: id });
   };
 
   handleCloseModal = () => {
-    console.log('hi bry')
-    this.setState({ openModal: !this.state.openModal});
-    console.log(this.state.openModal)
-  }
-  
+    this.setState({ openModal: false });
+  };
+
+  handleAddToGroups = e => {
+    console.log(e.target.value);
+  };
+  setValue = e => {
+    // console.log(e);
+
+    this.setState({
+      selectValue: e
+    });
+    e.map(row => {
+      // console.log(row.id);
+      this.state.idArray.push(e)
+    });
+  };
+
+
+  handleAdd = () => {
+
+    // console.log('sadasd')
+    if(this.state.idArray.length <= 0){
+      console.log('No selected')
+    }
+    else{
+    this.state.idArray.forEach(x => {
+        x.forEach(element => {
+          const idLocal = localStorage.getItem  ("id")
+          axios.patch(`/addressbook/addtogroup/${idLocal}/${element.id}`,{
+            groupid: this.state.currentGroupId
+          }).then(res => {
+          
+          }); 
+        });
+        
+      });
+  };
+  this.handleCloseModal()
+}
 
   render() {
+    // console.log(this.state.currentGroupId)
+    // console.log(this.state.idArray);
     return (
       <React.Fragment>
         <div
@@ -88,13 +146,9 @@ export default class GroupList extends Component {
                     style={{
                       color: "#fff"
                     }}
-                    onClick={() => this.handleOpenModal()}
+                    onClick={() => this.handleOpenModal(group.id)}
                   >
                     <ListItemText primary={group.group_name} />
-                    <AddToGroup
-                      openModal={this.state.openModal}
-                      handleCloseModal={this.handleCloseModal}
-                    />
                   </Button>
 
                   <ListItemSecondaryAction>
@@ -115,6 +169,48 @@ export default class GroupList extends Component {
             ))}
           </div>
         </div>
+
+        <Dialog
+          fullWidth
+          maxWidth="sm"
+          open={this.state.openModal}
+          onClose={this.handleCloseModal}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Add To Group</DialogTitle>
+          <DialogContent>
+            <Autocomplete
+              onChange={(option, value) => this.setValue(value)}
+              multiple
+              id="size-small-outlined-multi"
+              size="small"
+              value={this.selectValue}
+              options={this.state.contacts}
+              getOptionLabel={option => (option ? option.first_name : null)}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="--Select--"
+                  fullWidth
+                />
+              )}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              type="submit"
+              color="primary"
+              onClick={e => this.handleAdd(e)}
+            >
+              Add
+            </Button>
+
+            <Button onClick={() => this.handleCloseModal()} color="primary">
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
       </React.Fragment>
     );
   }

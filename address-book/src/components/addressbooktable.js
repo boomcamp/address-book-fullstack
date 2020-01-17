@@ -344,7 +344,7 @@ console.log("table")
                 >
                   <MaterialTable
                     options={{
-                      // search: false,
+                      search: false,
                       paging: false,
                       headerStyle: {
                         backgroundColor: "#01579b",
