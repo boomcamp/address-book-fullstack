@@ -20,8 +20,8 @@ export default function Group() {
 	};
 	const [state, setState] = useState({
 		columns: [
-			{ title: 'Group Name', field: 'group_name' },
-			{ title: 'Date Created', field: 'date_created', editable: 'never' }
+			{ title: 'Group Name', field: 'group_name' }
+			// { title: 'Date Created', field: 'date_created', editable: 'never' }
 		],
 		data: []
 	});
@@ -51,7 +51,9 @@ export default function Group() {
 				}}
 				options={{
 					search: true,
-					actionsColumnIndex: -1
+					actionsColumnIndex: -1,
+					isFreeAction: true,
+					detailPanelType: 'single'
 				}}
 				onRowClick={(event, rowData, togglePanel) => togglePanel()}
 				editable={{

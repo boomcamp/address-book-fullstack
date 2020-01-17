@@ -2,19 +2,62 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Validate from './ValidateContact';
 
-import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import EditIcon from '@material-ui/icons/Edit';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
+const styles = theme => ({
+	root: {
+		margin: 0,
+		padding: theme.spacing(2)
+	},
+	closeButton: {
+		position: 'absolute',
+		right: theme.spacing(1),
+		top: theme.spacing(1),
+		color: theme.palette.grey[500]
+	}
+});
+
+const DialogTitle = withStyles(styles)(props => {
+	const { children, classes, onClose, ...other } = props;
+	return (
+		<MuiDialogTitle disableTypography className={classes.root} {...other}>
+			<Typography variant="h6">{children}</Typography>
+			{onClose ? (
+				<IconButton
+					aria-label="close"
+					className={classes.closeButton}
+					onClick={onClose}
+				>
+					<CloseIcon />
+				</IconButton>
+			) : null}
+		</MuiDialogTitle>
+	);
+});
+
+const DialogContent = withStyles(theme => ({
+	root: {
+		padding: theme.spacing(2)
+	}
+}))(MuiDialogContent);
+
+const DialogActions = withStyles(theme => ({
+	root: {
+		margin: 0,
+		padding: theme.spacing(1)
+	}
+}))(MuiDialogActions);
 
 export default function ViewAndEditContact(props) {
 	const { data, setData, modal, setModal } = props;
@@ -52,25 +95,21 @@ export default function ViewAndEditContact(props) {
 				.catch(err => console.log(err));
 		}
 	};
+
 	return (
 		<form noValidate>
 			<Dialog
-				open={modal}
-				maxWidth={'sm'}
 				onClose={handleClose}
-				aria-labelledby="form-dialog-title"
+				aria-labelledby="customized-dialog-title"
+				open={modal}
 			>
-				<MuiDialogTitle disableTypography>
-					<Typography variant="h6">View</Typography>
-					<IconButton aria-label="close" onClick={handleClose}>
-						<CloseIcon />
-					</IconButton>
-				</MuiDialogTitle>
-				<DialogContent>
+				<DialogTitle id="customized-dialog-title" onClose={handleClose}>
+					{`${data.firstname} ${data.lastname} details`}
+				</DialogTitle>
+				<DialogContent dividers>
 					<Grid container spacing={2}>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
-								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="firstname"
@@ -78,16 +117,18 @@ export default function ViewAndEditContact(props) {
 								label="First Name"
 								type="firstname"
 								fullWidth
-								disabled={edit}
+								InputProps={{
+									readOnly: edit,
+									disableUnderline: edit
+								}}
 								value={data.firstname}
 								onChange={handleChange}
 								error={errors.firstname ? true : false}
 								helperText={errors.firstname && errors.firstname}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
-								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="lastname"
@@ -95,16 +136,18 @@ export default function ViewAndEditContact(props) {
 								label="Last Name"
 								type="lastname"
 								fullWidth
-								disabled={edit}
+								InputProps={{
+									readOnly: edit,
+									disableUnderline: edit
+								}}
 								value={data.lastname}
 								onChange={handleChange}
 								error={errors.lastname ? true : false}
 								helperText={errors.lastname && errors.lastname}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={4}>
 							<TextField
-								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="home_phone"
@@ -112,21 +155,21 @@ export default function ViewAndEditContact(props) {
 								label="Home Phone"
 								fullWidth
 								type="number"
-								disabled={edit}
 								value={data.home_phone}
 								onChange={handleChange}
 								error={errors.home_phone ? true : false}
 								helperText={errors.home_phone && errors.home_phone}
 								InputProps={{
+									readOnly: edit,
+									disableUnderline: edit,
 									startAdornment: (
 										<InputAdornment position="start">+63</InputAdornment>
 									)
 								}}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={4}>
 							<TextField
-								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="mobile_phone"
@@ -134,21 +177,21 @@ export default function ViewAndEditContact(props) {
 								label="Mobile Phone"
 								fullWidth
 								type="number"
-								disabled={edit}
 								value={data.mobile_phone}
 								onChange={handleChange}
 								error={errors.mobile_phone ? true : false}
 								helperText={errors.mobile_phone && errors.mobile_phone}
 								InputProps={{
+									readOnly: edit,
+									disableUnderline: edit,
 									startAdornment: (
 										<InputAdornment position="start">+63</InputAdornment>
 									)
 								}}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={4}>
 							<TextField
-								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="work_phone"
@@ -157,12 +200,13 @@ export default function ViewAndEditContact(props) {
 								fullWidth
 								type="number"
 								maxLength="2"
-								disabled={edit}
 								value={data.work_phone}
 								onChange={handleChange}
 								error={errors.work_phone ? true : false}
 								helperText={errors.work_phone && errors.work_phone}
 								InputProps={{
+									readOnly: edit,
+									disableUnderline: edit,
 									startAdornment: (
 										<InputAdornment position="start">+63</InputAdornment>
 									)
@@ -171,7 +215,6 @@ export default function ViewAndEditContact(props) {
 						</Grid>
 						<Grid item xs={12}>
 							<TextField
-								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="email"
@@ -179,16 +222,18 @@ export default function ViewAndEditContact(props) {
 								label="Email Address"
 								type="email"
 								fullWidth
-								disabled={edit}
+								InputProps={{
+									readOnly: edit,
+									disableUnderline: edit
+								}}
 								value={data.email}
 								onChange={handleChange}
 								error={errors.email ? true : false}
 								helperText={errors.email && errors.email}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
-								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="city"
@@ -196,16 +241,18 @@ export default function ViewAndEditContact(props) {
 								label="City"
 								type="city"
 								fullWidth
-								disabled={edit}
+								InputProps={{
+									readOnly: edit,
+									disableUnderline: edit
+								}}
 								value={data.city}
 								onChange={handleChange}
 								error={errors.city ? true : false}
 								helperText={errors.city && errors.city}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
-								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="state_or_province"
@@ -213,7 +260,10 @@ export default function ViewAndEditContact(props) {
 								label="State/Province"
 								type="state_or_province"
 								fullWidth
-								disabled={edit}
+								InputProps={{
+									readOnly: edit,
+									disableUnderline: edit
+								}}
 								value={data.state_or_province}
 								onChange={handleChange}
 								error={errors.state_or_province ? true : false}
@@ -222,9 +272,8 @@ export default function ViewAndEditContact(props) {
 								}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
-								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="postal_code"
@@ -232,16 +281,18 @@ export default function ViewAndEditContact(props) {
 								label="Postal Code"
 								type="number"
 								fullWidth
-								disabled={edit}
+								InputProps={{
+									readOnly: edit,
+									disableUnderline: edit
+								}}
 								value={data.postal_code}
 								onChange={handleChange}
 								error={errors.postal_code ? true : false}
 								helperText={errors.postal_code && errors.postal_code}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
-								variant="outlined"
 								autoFocus
 								margin="dense"
 								name="country"
@@ -249,7 +300,10 @@ export default function ViewAndEditContact(props) {
 								label="Country"
 								type="country"
 								fullWidth
-								disabled={edit}
+								InputProps={{
+									readOnly: edit,
+									disableUnderline: edit
+								}}
 								value={data.country}
 								onChange={handleChange}
 								error={errors.country ? true : false}
@@ -258,7 +312,6 @@ export default function ViewAndEditContact(props) {
 						</Grid>
 					</Grid>
 				</DialogContent>
-
 				<DialogActions>
 					{!edit ? (
 						<React.Fragment>
@@ -284,16 +337,3 @@ export default function ViewAndEditContact(props) {
 		</form>
 	);
 }
-
-const styles = theme => ({
-	root: {
-		margin: 0,
-		padding: theme.spacing(2)
-	},
-	closeButton: {
-		position: 'absolute',
-		right: theme.spacing(1),
-		top: theme.spacing(1),
-		color: theme.palette.grey[500]
-	}
-});

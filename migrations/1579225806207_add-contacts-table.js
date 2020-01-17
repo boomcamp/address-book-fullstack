@@ -6,7 +6,7 @@ exports.up = pgm => {
 			type: 'serial',
 			primaryKey: true
 		},
-		userId: {
+		userid: {
 			type: 'text',
 			notNull: true
 		},
@@ -39,7 +39,7 @@ exports.up = pgm => {
 			notNull: true
 		},
 		postal_code: {
-			type: 'integer',
+			type: 'text',
 			notNull: true
 		},
 		country: {

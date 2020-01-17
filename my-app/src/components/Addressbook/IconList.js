@@ -18,7 +18,11 @@ export default function IconList(props) {
 
 	return (
 		<List component="nav" aria-label="main mailbox folders">
-			<ListItem button>
+			<ListItem
+				button
+				// selected={selectedIndex === 'user'}
+				// onClick={() => handleListItemClick('user')}
+			>
 				<ListItemIcon>
 					<AccountCircleIcon />
 				</ListItemIcon>

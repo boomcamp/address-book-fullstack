@@ -21,6 +21,7 @@ massive({
 	app.post('/api/users/create', users.create);
 	app.post('/api/users/login', users.login);
 	app.get('/api/users', auth, users.userlist);
+	app.get('/api/users/:id', auth, users.details);
 
 	//Contacts
 	app.post('/api/contacts/create', auth, contacts.create);

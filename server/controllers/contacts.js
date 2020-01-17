@@ -1,7 +1,7 @@
 const create = (req, res) => {
 	const db = req.app.get('db');
 	const {
-		userId,
+		userid,
 		firstname,
 		lastname,
 		home_phone,
@@ -17,7 +17,7 @@ const create = (req, res) => {
 
 	db.contacts
 		.insert({
-			userId,
+			userid,
 			firstname,
 			lastname,
 			home_phone,
@@ -40,15 +40,9 @@ const create = (req, res) => {
 const view = (req, res) => {
 	const db = req.app.get('db');
 
-	db.contacts
-		.find({
-			userId: req.params.id
-		})
-		.then(contact => res.status(200).json(contact))
-		.catch(err => {
-			console.error(err);
-			res.status(500).end();
-		});
+	db.query(
+		`SELECT * FROM contacts WHERE userid = '${req.params.id}' ORDER BY lastname ASC`
+	).then(p => res.status(200).json(p));
 };
 
 function updateContact(req, res) {
@@ -63,8 +57,7 @@ function updateContact(req, res) {
 		city,
 		state_or_province,
 		postal_code,
-		country,
-		date_created
+		country
 	} = req.body;
 
 	db.contacts

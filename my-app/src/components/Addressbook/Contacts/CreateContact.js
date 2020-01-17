@@ -15,7 +15,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 export default function CreateContact(props) {
 	const today = DateToday();
 	const [values, setValues] = useState({
-		userId: localStorage.getItem('id'),
+		userid: localStorage.getItem('id'),
 		firstname: '',
 		lastname: '',
 		home_phone: '',
@@ -55,7 +55,7 @@ export default function CreateContact(props) {
 			})
 				.then(res => {
 					setValues({
-						userId: localStorage.getItem('id'),
+						userid: localStorage.getItem('id'),
 						firstname: '',
 						lastname: '',
 						home_phone: '',
@@ -90,13 +90,13 @@ export default function CreateContact(props) {
 				<DialogTitle id="form-dialog-title">Add Contacts</DialogTitle>
 				<DialogContent>
 					<Grid container spacing={2}>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
 								autoFocus
 								margin="dense"
 								name="firstname"
 								id="firstname"
-								label="First Name"
+								label="First Name*"
 								type="firstname"
 								fullWidth
 								value={values.firstname}
@@ -105,13 +105,13 @@ export default function CreateContact(props) {
 								helperText={errors.firstname && errors.firstname}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
 								autoFocus
 								margin="dense"
 								name="lastname"
 								id="lastname"
-								label="Last Name"
+								label="Last Name*"
 								type="lastname"
 								fullWidth
 								value={values.lastname}
@@ -120,7 +120,7 @@ export default function CreateContact(props) {
 								helperText={errors.lastname && errors.lastname}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={4}>
 							<TextField
 								autoFocus
 								margin="dense"
@@ -140,7 +140,7 @@ export default function CreateContact(props) {
 								}}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={4}>
 							<TextField
 								autoFocus
 								margin="dense"
@@ -160,7 +160,7 @@ export default function CreateContact(props) {
 								}}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={4}>
 							<TextField
 								autoFocus
 								margin="dense"
@@ -196,7 +196,7 @@ export default function CreateContact(props) {
 								helperText={errors.email && errors.email}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
 								autoFocus
 								margin="dense"
@@ -211,7 +211,7 @@ export default function CreateContact(props) {
 								helperText={errors.city && errors.city}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
 								autoFocus
 								margin="dense"
@@ -228,7 +228,7 @@ export default function CreateContact(props) {
 								}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
 								autoFocus
 								margin="dense"
@@ -243,7 +243,7 @@ export default function CreateContact(props) {
 								helperText={errors.postal_code && errors.postal_code}
 							/>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sm={6}>
 							<TextField
 								autoFocus
 								margin="dense"

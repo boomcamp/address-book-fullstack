@@ -49,8 +49,14 @@ export default function Signup(props) {
 				}
 			})
 				.then(res => {
-					localStorage.setItem('notif', 'Succesfully Registered');
-					props.history.push('/signin');
+					localStorage.setItem('token', JSON.stringify(res.data.token));
+					localStorage.setItem('id', res.data.id);
+					localStorage.setItem('name', res.data.firstname);
+					localStorage.setItem(
+						'notif',
+						JSON.stringify('Succesfully Logged In.')
+					);
+					props.history.push('/users');
 				})
 				.catch(err => {
 					console.log(err);

@@ -5,7 +5,9 @@ import Link from './IconList';
 import Contact from './Contacts/Contact';
 import Group from './Groups/Group';
 import Logout from './Logout';
+import Users from './Users/Users';
 
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,7 +18,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
 

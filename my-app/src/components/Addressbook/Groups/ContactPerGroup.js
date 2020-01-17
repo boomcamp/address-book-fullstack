@@ -4,18 +4,13 @@ import MaterialTable from 'material-table';
 export default function ContactPerGroup(props) {
 	const [state] = React.useState({
 		columns: [
-			{ title: 'First Name', field: 'firstname' },
-			{ title: 'Last Name', field: 'lastname' },
-			{ title: 'Mobile Phone', field: 'mobile_phone', filtering: false }
+			{ title: 'Name', field: 'name' },
+			{ title: 'Number', field: 'mobile_phone', filtering: false }
 		],
 		data: [
-			{
-				firstname: 'Joven',
-				lastname: 'Bandagosa',
-				mobile_phone: '09878765453'
-			},
-			{ firstname: 'Delfin', lastname: 'Danas', mobile_phone: '09878765453' },
-			{ firstname: 'Jaymard', lastname: 'Menor', mobile_phone: '09878765453' }
+			{ name: 'Joven Bandagosa', mobile_phone: '09878765453' },
+			{ name: 'Delfin Danas', mobile_phone: '09878765453' },
+			{ name: 'Jaymard Menor', mobile_phone: '09878765453' }
 		]
 	});
 	return (
@@ -25,7 +20,8 @@ export default function ContactPerGroup(props) {
 			data={state.data}
 			options={{
 				search: false,
-				filtering: false
+				filtering: false,
+				selection: true
 			}}
 			actions={[
 				{
@@ -33,6 +29,14 @@ export default function ContactPerGroup(props) {
 					tooltip: 'Add Contacts',
 					isFreeAction: true,
 					onClick: event => alert('You want to add a new row')
+				},
+				,
+				{
+					tooltip: 'Remove All Selected Users',
+					icon: 'delete',
+					onClick: (evt, data) => {
+						alert('You want to delete ' + data.length + ' rows');
+					}
 				}
 			]}
 		/>

@@ -6,13 +6,13 @@ export default function ContactData() {
 	const [state, setState] = useState({
 		columns: [
 			{
-				title: 'First Name*',
-				field: 'firstname',
+				title: 'Last Name',
+				field: 'lastname',
 				filtering: true
 			},
 			{
-				title: 'Last Name*',
-				field: 'lastname',
+				title: 'First Name',
+				field: 'firstname',
 				filtering: true
 			},
 
