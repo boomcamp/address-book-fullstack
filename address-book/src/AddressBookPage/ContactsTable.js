@@ -42,9 +42,8 @@ export default function ContactsTable(highprops) {
       console.log(sessionStorage.getItem("userid"))
 
       axios({
-        method: "post",
-        url: "http://localhost:5000/api/contacts",
-        data: { userid: sessionStorage.getItem("userid") },
+        method: "get",
+        url: `http://localhost:5000/api/contacts/${sessionStorage.getItem("userid")}`,
         headers: { Authorization: sessionStorage.getItem("token") }
       })
         // .get("http://localhost:5000/api/contacts", {
@@ -66,7 +65,7 @@ export default function ContactsTable(highprops) {
               mobile_phone: contact.mobile_phone,
               work_phone: contact.work_phone,
               email: contact.email,
-              city: contact.email,
+              city: contact.city,
               state_or_province: contact.state_or_province,
               postal_code: contact.postal_code,
               country: contact.country
@@ -131,7 +130,7 @@ export default function ContactsTable(highprops) {
           mobile_phone: newdata.mobile_phone,
           work_phone: newdata.work_phone,
           email: newdata.email,
-          city: newdata.email,
+          city: newdata.city,
           state_or_province: newdata.state_or_province,
           postal_code: newdata.postal_code,
           country: newdata.country

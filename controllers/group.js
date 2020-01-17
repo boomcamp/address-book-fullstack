@@ -65,7 +65,7 @@ module.exports = {
     const { group_name, contactid } = req.body;
 
     db.query(
-      `SELECT groups_track.id FROM groups_track INNER JOIN groups ON groups.id = groups_track.groupid WHERE groups.group_name = '${group_name}' AND contactid = ${contactid};`
+      `SELECT groups_track.id FROM groups_track INNER JOIN groups ON groups.id = groups_track.groupid WHERE groups.group_name = '${group_name}' AND contactid = ${contactid}`
     )
       .then(data => {
         db.groups_track
@@ -98,6 +98,7 @@ module.exports = {
 
     // group name is already available
     if (group_name === "") {
+
       db.query(
         `SELECT groups_track.id FROM groups_track INNER JOIN groups ON groups.id = groups_track.groupid WHERE groups.group_name = '${past_group}' AND contactid = ${contactid};`
       )
@@ -121,16 +122,44 @@ module.exports = {
           console.log("same group", data);
 
           if (data) {
-            db.groups_track
-              .save({
-                groupid: data.id,
-                contactid,
-                contact_added_date
-              })
-              .then(post => {
-                res.status(201).json(post);
+            db.query(
+              `SELECT groups_track.id 
+              FROM groups_track 
+              INNER JOIN groups 
+              ON groups_track.groupid = groups.id 
+              WHERE groups_track.contactid = ${contactid} 
+              AND groups.group_name = '${group_name}'`
+            )
+              .then(check_data => {
+
+
+                if (check_data.length > 0) {
+
+                  console.log("not adding to groups track ",check_data.length);
+
+                  res.status(201).json(check_data);
+                } else {
+                  console.log("adding to groups track ",check_data.length);
+
+
+                  db.groups_track
+                    .save({
+                      groupid: data.id,
+                      contactid,
+                      contact_added_date
+                    })
+                    .then(post => {
+                      res.status(201).json(post);
+                    })
+                    .catch(err => {
+                      console.log(err)
+                      res.status(500).end();
+                    });
+                }
               })
               .catch(err => {
+                console.log(err)
+
                 res.status(500).end();
               });
           } else {
@@ -194,7 +223,7 @@ module.exports = {
     //   });
 
     db.query(
-      `SELECT group_name FROM groups INNER JOIN groups_track ON groups.id = groups_track.groupid WHERE contactid = ${req.params.id}`
+      `SELECT groups.id,groups.group_name FROM groups INNER JOIN groups_track ON groups.id = groups_track.groupid WHERE contactid = ${req.params.id}`
     )
       .then(data => {
         console.log("groups", data);
@@ -217,6 +246,7 @@ module.exports = {
       .catch(err => {
         res.status(500).end();
       });
+    ``;
   },
   getGroupsContacts: (req, res) => {
     const db = req.app.get("db");

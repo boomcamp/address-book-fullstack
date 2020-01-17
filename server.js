@@ -26,13 +26,13 @@ massive({
 
     // contacts endpoints
     app.post("/api/contact/save", contacts.save);
-    app.post("/api/contacts", contacts.getAll);
+    app.get("/api/contacts/:userid", contacts.getAll);
     app.delete("/api/contact/delete/:id", contacts.delete);
     app.put("/api/contact/update/:id", contacts.update);
 
     // groups endpoints
     app.post("/api/contacts/group/add", groups.add);
-    app.get("/api/contacts/groups", groups.getAll);
+    app.get("/api/contacts/get/groups", groups.getAll);
     app.post("/api/contacts/groups/reference", groups.addReference);
 
     app.get("/api/contacts/groups/reference/retrieve/:id", groups.retieve);

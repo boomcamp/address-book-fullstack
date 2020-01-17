@@ -61,7 +61,7 @@ export default function GroupContacts(highprops) {
     // here
     axios({
       method: "get",
-      url: `http://localhost:5000/api/contacts`,
+      url: `http://localhost:5000/api/contacts/${sessionStorage.getItem("userid")}`,
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
@@ -75,7 +75,7 @@ export default function GroupContacts(highprops) {
 
   return (
     <div className="group-context-container">
-      <p style={{margin:'20px'}}>Active Contact Groups</p>
+      <p style={{ margin: "20px" }}>Active Contact Groups</p>
       {state
         ? state.map(data => {
             return (

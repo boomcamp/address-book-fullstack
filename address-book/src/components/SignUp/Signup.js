@@ -38,18 +38,24 @@ export default function Signup() {
   });
 
   const inUserName = e => {
+    e.persist();
+    
     setState(prevState => {
       return { ...prevState, username: e.target.value };
     });
   };
 
   const inPassword = e => {
+    e.persist();
+
     setState(prevState => {
       return { ...prevState, password: e.target.value };
     });
   };
 
   const PassVerify = e => {
+    e.persist();
+
     setState(prevState => {
       return { ...prevState, repassword: e.target.value };
     });
@@ -138,7 +144,7 @@ export default function Signup() {
                 color: "grey",
                 textDecoration: "none",
                 fontSize: "0.8em",
-                textAlign: 'center',
+                textAlign: "center"
                 // marginBottom: '40px'
               }}
               to="/"
@@ -171,10 +177,10 @@ const styles = {
     border: "1px solid #e8e8e8",
     height: "400px",
     margin: "0 auto",
-    marginTop: "20%",
+    marginTop: "190px",
     boxShadow: "rgb(214, 214, 214) 1px 1px 5px 0px",
     borderRadius: "9px",
-    padding:"15px 0"
+    padding: "15px 0"
   },
   inputfields: {
     display: "flex",
@@ -186,7 +192,7 @@ const styles = {
     cursor: "pointer",
     color: "#2196f3",
     textDecoration: "underline",
-    margin:"0 auto"
+    margin: "0 auto"
   },
   submitBtn: {
     width: "186px",

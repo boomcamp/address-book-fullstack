@@ -143,7 +143,7 @@ const styles = {
     border: "1px solid #e8e8e8",
     height: "400px",
     margin: "0 auto",
-    marginTop: "20%",
+    marginTop: "190px",
     boxShadow: "rgb(214, 214, 214) 1px 1px 5px 0px",
     borderRadius: "9px"
   },

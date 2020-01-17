@@ -223,7 +223,7 @@ export default function ContactForm(highprops) {
         mobile_phone: data.mobile_phone,
         work_phone: data.work_phone,
         email: data.email,
-        city: data.email,
+        city: data.city,
         state_or_province: data.state_or_province,
         postal_code: data.postal_code,
         country: data.country
@@ -272,10 +272,11 @@ export default function ContactForm(highprops) {
   const getGroup = () => {
     axios({
       method: "get",
-      url: "http://localhost:5000/api/contacts/groups",
+      url: "http://localhost:5000/api/contacts/get/groups",
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
+
         console.log(grpState);
 
         let groupContainer = [];
@@ -314,6 +315,7 @@ export default function ContactForm(highprops) {
             onError={errors => console.log(errors)}
             style={styles.inputfields}
             onSubmit={saveData}
+            autoComplete
           >
             <div className="name-group-container" style={styles.groupContainer}>
               <TextValidator

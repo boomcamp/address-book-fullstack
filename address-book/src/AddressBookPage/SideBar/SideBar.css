@@ -13,7 +13,7 @@
 .tabs-container {
   background: #004c8b;
   padding: 0px 10px;
-  width: 100px;
+  width: 200px;
   font-size: 0.8em;
   display: flex;
   justify-content: center;
@@ -46,12 +46,13 @@
   width: 100%;
 } */
 
-/* .form-contact-container {
+.form-contact-container {
+  position: absolute;
   width: 100%;
   height: 100vh;
   background: white;
   z-index: 100;
-} */
+}
 
 /* tablets */
 @media only screen and (min-width: 600px) {

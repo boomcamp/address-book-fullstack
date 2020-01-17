@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./SideBar.css";
 import ContactForm from "../ContactForm";
 import GroupContacts from "../GroupContacts/GroupContacts";
@@ -12,10 +12,20 @@ export default function SideBar(highprops) {
   const [dataPass, setDataPass] = useState(null);
   const [dataFromGroups, setdataFromGroups] = useState(false);
 
-  useEffect(() => {
-    console.log(dataPass);
+  const refHook = useRef(false)
 
-    if (highprops.contactData) {
+  useEffect(()=>{
+    console.log(refHook)
+    if(refHook.current){
+      setDataPass(highprops.contactData);
+      // change("open_add");
+
+    } else refHook.current = true;
+  })
+
+  useEffect(() => {
+    console.log('highprops')
+    if (highprops.contactData) {  
       setDataPass(highprops.contactData);
       change("open_add");
     }
@@ -41,7 +51,8 @@ export default function SideBar(highprops) {
   };
 
   const close = () => {
-    console.log("closing");
+    // console.log(dataPass);
+    // setDataPass(1)
     setState(prevState => {
       return { addContact_tab: false, contactGroups_tab: false };
     });
@@ -68,7 +79,7 @@ export default function SideBar(highprops) {
               change("open_groups");
             }}
           >
-            <p> Contact Groups </p>
+            <p> Contact Groups  </p>
           </div>
           <div
             className={
@@ -80,7 +91,7 @@ export default function SideBar(highprops) {
               change("open_add");
             }}
           >
-            <p> Contact Form </p>
+            <p> Contact Form / {dataPass?dataPass.first_name:'Add'} {dataPass?dataPass.last_name:'New'}</p>
           </div>
         </div>
 

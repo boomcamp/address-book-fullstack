@@ -3,8 +3,9 @@ import ContactsTable from "./ContactsTable";
 import Header from "./Header";
 import { Redirect } from "react-router-dom";
 import ContactForm from "./ContactForm";
-import GroupForm from "./GroupForm";
 import SideBar from "./SideBar/SideBar";
+import { refreshMaterializedView } from "node-pg-migrate/dist/operations/viewsMaterialized";
+import GroupForm from "./GroupForm";
 
 export default function MainPage() {
   const [state, setState] = useState(null);
@@ -19,7 +20,7 @@ export default function MainPage() {
   // }, [state]);
 
   const tranferData = data => {
-    // console.log(data)
+    console.log(data);
     setState(data.data);
     // console.log(data.data)
   };
@@ -37,7 +38,6 @@ export default function MainPage() {
   return (
     <>
       {/* <div className="black-overlay" /> */}
-
       <Header title="Address Book" />
       <SideBar
         setTableData={setTableData}
@@ -53,6 +53,7 @@ export default function MainPage() {
         prepareNewData={prepareNewData}
         tableData={tableState}
       />
+      <GroupForm reference_contact={53}/>
     </>
   );
 }
