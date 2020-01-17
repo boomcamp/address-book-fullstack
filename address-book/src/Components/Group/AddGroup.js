@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Card, TextField } from "@material-ui/core";
+import { Grid, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function AddGroup({}) {
+export default function AddGroup() {
   const classes = useStyles();
   const [groupData, setGroupData] = useState([]);
   const [rowData, setRowData] = useState("");
@@ -81,7 +81,7 @@ export default function AddGroup({}) {
       });
     }
     result();
-  }, []);
+  }, [tokenDecoded.userId]);
 
   const handleDeleteGroup = data => {
     console.log(data);
@@ -122,16 +122,20 @@ export default function AddGroup({}) {
   return (
     <Grid container spacing={2} style={{ margin: "0 auto", width: "100%" }}>
       <Grid item sm={12} xs={12} md={12} lg={12}>
-        <Card className={classes.card2} variant="outlined">
+        <Typography variant="h6" component="h2">
+          Group List
+        </Typography>
+        <Card
+          className={classes.card2}
+          variant="outlined"
+          style={{ maxHeight: "270px", overflowY: "scroll" }}
+        >
           <CardContent>
-            <Typography variant="h5" component="h2">
-              Group List
-            </Typography>
             <Grid item xs={12} md={10}>
               <div className={classes.demo}>
-                {groupData.map(data => {
+                {groupData.map((data, key) => {
                   return (
-                    <List>
+                    <List key={key}>
                       <ListItem>
                         <ListItemAvatar key="avatar">
                           <Avatar>
@@ -144,18 +148,16 @@ export default function AddGroup({}) {
                           style={{ margin: "0px" }}
                         >
                           <Tooltip title="Delete Group">
-                            <IconButton>
-                              <DeleteIcon
-                                onClick={() => handleDeleteGroup(data)}
-                              />
+                            <IconButton onClick={() => handleDeleteGroup(data)}>
+                              <DeleteIcon />
                             </IconButton>
                           </Tooltip>
 
                           <Tooltip title="Edit Group">
-                            <IconButton>
-                              <EditIcon
-                                onClick={() => handleClickOpenGroupEdit(data)}
-                              />
+                            <IconButton
+                              onClick={() => handleClickOpenGroupEdit(data)}
+                            >
+                              <EditIcon />
                             </IconButton>
                           </Tooltip>
 
@@ -179,17 +181,20 @@ export default function AddGroup({}) {
                 openGroupEdit={openGroupEdit}
                 handleCloseGroupModal={handleCloseGroupModal}
               />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleClickOpenGroupModal}
-                style={{ marginTop: "2%" }}
-              >
-                Add Group
-              </Button>
             </Grid>
           </CardContent>
         </Card>
+        <Button
+          variant="contained"
+          onClick={handleClickOpenGroupModal}
+          style={{
+            marginTop: "1%",
+            backgroundColor: "#065786d9",
+            color: "white"
+          }}
+        >
+          Add Group
+        </Button>
       </Grid>
     </Grid>
   );

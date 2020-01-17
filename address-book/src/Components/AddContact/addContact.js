@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
@@ -14,6 +14,16 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import jwt from "jsonwebtoken";
 
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import ListItemText from "@material-ui/core/ListItemText";
+import Select from "@material-ui/core/Select";
+import Checkbox from "@material-ui/core/Checkbox";
+import Chip from "@material-ui/core/Chip";
+
 const styles = theme => ({
   root: {
     margin: 0,
@@ -26,6 +36,32 @@ const styles = theme => ({
     color: theme.palette.grey[500]
   }
 });
+const useStyles = makeStyles(theme => ({
+  formControl: {
+    width: "100%"
+  },
+  chips: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  chip: {
+    margin: 2
+  },
+  noLabel: {
+    marginTop: theme.spacing(3)
+  }
+}));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250
+    }
+  }
+};
 
 const DialogTitle = withStyles(styles)(props => {
   const { children, classes, onClose, ...other } = props;
@@ -70,8 +106,28 @@ export default function AddContact({ open, handleClose }) {
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
   const [errorMsgFirstname, setErrorMsgFirstname] = useState("");
 
+  const [groupList, setGroupList] = useState([]);
+  const classes = useStyles();
+  const [groups, setGroups] = useState([]);
+  const handleChange = event => setGroups(event.target.value);
+
+  useEffect(() => {
+    async function result() {
+      await axios({
+        method: "get",
+        url: `http://localhost:3004/groupcontacts/${tokenDecoded.userId}`
+      })
+        .then(res => {
+          setGroupList(res.data);
+        })
+        .catch(err => console.log(err));
+    }
+    result();
+  }, [tokenDecoded.userId]);
+
   const handleSave = () => {
     if (firstname !== "") {
+      // console.log("hello");
       setErrorMsgFirstname("");
       axios
         .post(`http://localhost:3004/contacts/${tokenDecoded.userId}`, {
@@ -86,13 +142,20 @@ export default function AddContact({ open, handleClose }) {
           postal_code: postal_code,
           country: country
         })
-        .then(() => {
-          handleClose();
-          Swal.fire({
-            title: "Contact Added Successfully",
-            icon: "success"
-          }).then(() => {
-            window.location = "/addressbook";
+        .then(res => {
+          groups.map(group => {
+            // console.log(group);
+            axios.post(`http://localhost:3004/groupmembers/`, {
+              contactid: res.data.id,
+              groupid: group
+            });
+            handleClose();
+            Swal.fire({
+              title: "Contact Added Successfully",
+              icon: "success"
+            }).then(() => {
+              window.location = "/addressbook";
+            });
           });
         })
         .catch(e => {
@@ -104,7 +167,6 @@ export default function AddContact({ open, handleClose }) {
         });
     } else {
       setErrorMsgFirstname("This field is required");
-
       Swal.fire({
         title: "Failed to add new contact",
         text: "Firstname Required",
@@ -125,6 +187,30 @@ export default function AddContact({ open, handleClose }) {
       <DialogContent dividers>
         <form>
           <Grid container spacing={2}>
+            <Grid item xs={12} sm={12}>
+              <FormControl className={classes.formControl}>
+                <InputLabel id="demo-mutiple-checkbox-label">
+                  Group List
+                </InputLabel>
+                <Select
+                  labelId="demo-mutiple-checkbox-label"
+                  id="demo-mutiple-checkbox"
+                  multiple
+                  value={groups}
+                  onChange={handleChange}
+                  input={<Input />}
+                  renderValue={selected => selected.join(", ")}
+                  MenuProps={MenuProps}
+                >
+                  {groupList.map((data, key) => (
+                    <MenuItem key={key} value={data.id}>
+                      <Checkbox checked={groups.indexOf(data.groupname) < -1} />
+                      <ListItemText primary={data.groupname} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 error={errorMsgFirstname === "" ? false : true}
@@ -206,7 +292,7 @@ export default function AddContact({ open, handleClose }) {
             <Grid item xs={12} sm={6}>
               <TextField
                 id="postal_code"
-                name="zip"
+                name="postal_code"
                 label="Zip / Postal code"
                 fullWidth
                 onChange={e => setPostalCode(e.target.value)}

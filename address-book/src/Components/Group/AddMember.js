@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -10,7 +9,6 @@ import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import Checkbox from "@material-ui/core/Checkbox";
 import jwt from "jsonwebtoken";
 import Swal from "sweetalert2";
@@ -70,7 +68,7 @@ export default function AddMember({ openMember, handleClose, memberData }) {
       });
     }
     result();
-  }, []);
+  }, [tokenDecoded.userId]);
 
   return (
     <Dialog
@@ -84,9 +82,9 @@ export default function AddMember({ openMember, handleClose, memberData }) {
           <FormLabel component="legend">
             Please choose at least one group:
           </FormLabel>
-          {state.map(data => {
+          {state.map((data, key) => {
             return (
-              <FormGroup>
+              <FormGroup key={key}>
                 <FormControlLabel
                   onChange={() => handleChange(data)}
                   control={<Checkbox value={data.groupname} />}

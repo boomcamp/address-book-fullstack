@@ -29,7 +29,9 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
+    margin: theme.spacing(3, 0, 2),
+    color: "white",
+    backgroundColor: "#065786d9"
   }
 }));
 
@@ -224,7 +226,6 @@ export default function SignUp(props) {
               type="button"
               fullWidth
               variant="contained"
-              color="primary"
               className={classes.submit}
               onClick={validate}
             >

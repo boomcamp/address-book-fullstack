@@ -59,7 +59,8 @@ massive({
   app.delete("/groupcontacts/:groupid", groups.deleteGroup);
   app.patch("/groupcontacts/:groupid", groups.updateGroupContact);
 
-  app.post("/groupmembers/:groupid", groups.addMember);
+  app.post("/groupmembers/", groups.addMember);
+  app.get("/groupmembers/:contactid", groups.getContactGroups);
 
   const PORT = 3004;
   app.listen(PORT, () => {

@@ -31,6 +31,7 @@ export default function AddressBook() {
   const [postal_code, setPostal_code] = React.useState("");
   const [country, setCountry] = React.useState("");
   const [id, setId] = React.useState("");
+  const [groupData, setgroupData] = React.useState([]);
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
 
   if (!localStorage.getItem("Token")) {
@@ -62,6 +63,12 @@ export default function AddressBook() {
       method: "get",
       url: `http://localhost:3004/contacts/${tokenDecoded.userId}/${id}`
     }).then(res => {
+      axios({
+        method: "get",
+        url: `http://localhost:3004/groupmembers/${res.data[0].id}`
+      }).then(res => {
+        setgroupData(res.data);
+      });
       const data = res.data[0];
       setId(data.id);
       setFirstName(data.firstname);
@@ -77,7 +84,6 @@ export default function AddressBook() {
       setOpenView(true);
     });
   };
-
   const handleDelete = rowData => {
     Swal.fire({
       title: `Are you sure you want to delete ${rowData.firstname} from your contacts?`,
@@ -123,7 +129,7 @@ export default function AddressBook() {
       });
     }
     result();
-  }, []);
+  }, [tokenDecoded.userId]);
 
   const [state, setState] = React.useState({
     columns: [
@@ -185,7 +191,7 @@ export default function AddressBook() {
           style={{
             display: "flex",
             margin: "50px auto",
-            paddingTop: "5%"
+            paddingTop: "2%"
           }}
         >
           <Grid container>
@@ -206,6 +212,7 @@ export default function AddressBook() {
                 countryView={country}
               />
               <ContactDetails
+                groupData={groupData}
                 handleClose={handleClose}
                 openView={openView}
                 idView={id}

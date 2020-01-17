@@ -17,16 +17,16 @@ function create(req, res) {
 function addMember(req, res) {
   const db = req.app.get("db");
 
-  const { contactid } = req.body;
-  const { groupid } = req.params;
+  const { contactid, groupid } = req.body;
 
   db.groupmembers
     .insert({
-      id: groupid,
+      groupid,
       contactid
     })
     .then(member => res.status(200).json(member))
     .catch(err => {
+      res.status(500).end();
       console.error(err);
     });
 }
@@ -72,11 +72,26 @@ function updateGroupContact(req, res) {
       res.status(500).end();
     });
 }
+``;
+
+function getContactGroups(req, res) {
+  const db = req.app.get("db");
+  const { contactid } = req.params;
+  db.query(
+    `select groupcontacts.id, userid, groupname from groupmembers INNER JOIN groupcontacts ON groupmembers.groupid = groupcontacts.id where contactid=${contactid};`
+  )
+    .then(group => res.status(201).json(group))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
 
 module.exports = {
   create,
   getGroups,
   deleteGroup,
   updateGroupContact,
-  addMember
+  addMember,
+  getContactGroups
 };

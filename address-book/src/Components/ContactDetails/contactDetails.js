@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -12,6 +12,14 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import ListItemText from "@material-ui/core/ListItemText";
+import Select from "@material-ui/core/Select";
+import Checkbox from "@material-ui/core/Checkbox";
+import jwt from "jsonwebtoken";
 
 const styles = theme => ({
   root: {
@@ -25,6 +33,33 @@ const styles = theme => ({
     color: theme.palette.grey[500]
   }
 });
+
+const useStyles = makeStyles(theme => ({
+  formControl: {
+    width: "100%"
+  },
+  chips: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  chip: {
+    margin: 2
+  },
+  noLabel: {
+    marginTop: theme.spacing(3)
+  }
+}));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250
+    }
+  }
+};
 
 const DialogTitle = withStyles(styles)(props => {
   const { children, classes, onClose, ...other } = props;
@@ -68,7 +103,8 @@ export default function ContactDetails({
   state_or_provinceView,
   postal_codeView,
   countryView,
-  idView
+  idView,
+  groupData
 }) {
   const [lastname, setLastName] = useState("");
   const [firstname, setFirstName] = useState("");
@@ -82,6 +118,26 @@ export default function ContactDetails({
   const [country, setCountry] = useState("");
   const [openEdit, setOpenEdit] = useState(false);
   const [errorMsgFirstName, setErrorMsgFirstName] = useState("");
+
+  const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+  const [groupList, setGroupList] = useState([]);
+  const classes = useStyles();
+  const [groups, setGroups] = useState([]);
+  const [groupNames, setGroupNames] = useState([]);
+  const handleChange = event => setGroups(event.target.value);
+  useEffect(() => {
+    async function result() {
+      await axios({
+        method: "get",
+        url: `http://localhost:3004/groupcontacts/${tokenDecoded.userId}`
+      })
+        .then(res => {
+          setGroupList(res.data);
+        })
+        .catch(err => console.log(err));
+    }
+    result();
+  }, [tokenDecoded.userId]);
 
   const handleEditSave = props => {
     setOpenEdit(true);
@@ -127,6 +183,10 @@ export default function ContactDetails({
   };
 
   const handleEdit = () => {
+    axios.get(`http://localhost:3004/groupmember/${idView}`).then(res => {
+      console.log(res);
+      // setIds(res.data);
+    });
     setOpenEdit(true);
     setFirstName(firstnameView);
     setLastName(lastnameView);
@@ -138,6 +198,12 @@ export default function ContactDetails({
     setStateOrProvince(state_or_provinceView);
     setPostalCode(postal_codeView);
     setCountry(countryView);
+  };
+
+  const groupNamesData = () => {
+    groupData.map(groupname => {
+      setGroupNames(...groupname);
+    });
   };
 
   return (
@@ -152,6 +218,34 @@ export default function ContactDetails({
       <DialogContent dividers>
         <form>
           <Grid container spacing={2}>
+            <Grid item xs={12} sm={12}>
+              <FormControl
+                className={classes.formControl}
+                disabled={openEdit ? false : true}
+              >
+                <InputLabel id="demo-mutiple-checkbox-label">
+                  Group List
+                </InputLabel>
+                <Select
+                  // defaultValue={groupData[0].groupname}
+                  labelId="demo-mutiple-checkbox-label"
+                  id="demo-mutiple-checkbox"
+                  multiple
+                  value={groupNames}
+                  onChange={handleChange}
+                  input={<Input />}
+                  renderValue={selected => selected.join(", ")}
+                  MenuProps={MenuProps}
+                >
+                  {groupList.map((data, key) => (
+                    <MenuItem key={key} value={data.groupname}>
+                      <Checkbox checked={groups.indexOf(data.groupname) > -1} />
+                      <ListItemText primary={data.groupname} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 error={errorMsgFirstName === "" ? false : true}
@@ -286,7 +380,7 @@ export default function ContactDetails({
         <Button
           size="small"
           variant="contained"
-          color="primary"
+          style={{ backgroundColor: "#065786d9", color: "white" }}
           onClick={handleEdit}
         >
           Edit

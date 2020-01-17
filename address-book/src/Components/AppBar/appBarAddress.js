@@ -16,7 +16,8 @@ const useStyles = makeStyles(theme => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between"
-  }
+  },
+  appBar: { backgroundColor: "#065786d9" }
 }));
 
 const logout = () => {
@@ -31,7 +32,7 @@ export default function ButtonAppBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed">
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           <Typography variant="h6" className={classes.title}>
             Address Book
