@@ -358,7 +358,9 @@ export default class App extends Component {
   };
 
   changeHandler = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({
+      [event.target.name]: event.target.value
+    });
     console.log([event.target.name], event.target.value);
   };
 

@@ -6,6 +6,7 @@ import MaterialTable from "material-table";
 import { Tooltip } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Modal from "../Modal/Modal";
+import Filter from "../Filter/Filter";
 import Avatar from "@material-ui/core/Avatar";
 import Zoom from "@material-ui/core/Zoom";
 import styled from "styled-components";
@@ -200,42 +201,10 @@ class Users extends React.Component {
       : "All Contacts";
 
     const Div = styled.div``;
-    const Filter = styled.div`
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      width: 100%;
-      height: 60px;
-    `;
-    const Search = styled.div`
-      width: 40%;
-    `;
-    const Options = styled.div``;
 
     return (
       <div>
-        <Filter>
-          <Search>
-            <input
-              name="search"
-              onChange={changeHandler}
-              type="text"
-              placeholder="Search"
-              className="form-control"
-            />
-          </Search>
-          <Options>
-            <select
-              name="sort"
-              onChange={changeHandler}
-              className="browser-default custom-select"
-            >
-              <option>Choose your option</option>
-              <option value="asc">Ascending</option>
-              <option value="desc">Descending</option>
-            </select>
-          </Options>
-        </Filter>
+        <Filter changeHandler={changeHandler} />
         <MuiThemeProvider theme={this.theme}>
           <MaterialTable
             title={
