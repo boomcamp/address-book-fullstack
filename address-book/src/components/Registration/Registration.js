@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect } from 'react';
 // import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -44,6 +44,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
     const classes = useStyles();
+    const [email, setEmail] = useState([])
     const [values, setValues] = useState({
       fname: '',
       lname: '',
@@ -54,18 +55,42 @@ export default function SignUp() {
       error: false,
     });
 
+    useEffect(() => {
+      axios
+      .get('http://localhost:5001/api/users')
+      .then(res=>{
+        var temp = []
+        // console.log(res.data)
+        res.data.map((x)=>{
+          temp.push({email: x.email})
+          return temp
+        })
+        setEmail(temp)
+      })
+    },[])
+    
     const signthis = () =>{
-        axios
-        .post('http://localhost:5001/api/users', {
-          "fname": values.fname,
-          "lname": values.lname,
-          "email": values.email,
-          "username": values.username,
-          "password": values.pass,
-        }).then(res => {
-          alert('Success!');
-          setValues({...values, success: true});
-        }).catch(err => setValues({...values, error: true}))
+      // email.map(x =>{
+        // if(x.email !== values.email){
+          axios
+          .post('http://localhost:5001/api/users', {
+            "fname": values.fname,
+            "lname": values.lname,
+            "email": values.email,
+            "username": values.username,
+            "password": values.pass,
+          }).then(res => {
+            alert('Success!');
+            setValues({...values, success: true});
+          }).catch(err => setValues({...values, error: true}))
+        // }else{
+        //   return (
+        //     alert('Email has already been taken. Try a different one')
+        //   )
+        //   // setValues({...values, error: true})
+        //   // window.location.reload(true)
+        // }
+      // })
     }
     if(values.success){
       return (<Redirect to='/login'/>)

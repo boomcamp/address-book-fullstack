@@ -21,7 +21,7 @@ module.exports = {
                 });
             })
             .then(user=>{
-                const token = jwt.sign({ userId: user.id }, secret)
+                const token = jwt.sign({ userid: user.id }, secret)
                 res.status(200).json({ ...user, token})
             })
             .catch(err =>{
@@ -49,7 +49,7 @@ module.exports = {
                         throw new Error('Invalid Password')
                     }
 
-                    const token = jwt.sign({ userId: user.id }, secret)
+                    const token = jwt.sign({ userid: user.id }, secret)
                     // delete user.password;
                     res.status(200).json({ ...user, token })
                 })
@@ -88,7 +88,7 @@ module.exports = {
     createContact:(req, res) => {
         const db = req.app.get('db')
         const {
-            userId,
+            userid,
             f_name,
             l_name,
             home_phone,
@@ -102,7 +102,7 @@ module.exports = {
 
         db.contacts
         .save({
-            userId,
+            userid,
             f_name, 
             l_name, 
             home_phone, 
@@ -187,11 +187,11 @@ module.exports = {
     },
     addAddress: (req, res) => {
         const db = req.app.get('db')
-        const { userId, country, region, province, city } = req.body
+        const { userid, country, region, province, city } = req.body
 
         db.address
         .save({
-            userId, country, region, province, city
+            userid, country, region, province, city
         })
         .then(u => res.status(200).json(u))
         .catch(err =>{
@@ -203,10 +203,10 @@ module.exports = {
         const db = req.app.get('db')
 
         db.address
-        .find({ userId: req.params.id })
+        .find({ userid: req.params.id })
         .then(u => res.status(201).json(u))
         .catch(err =>{
-            console.err(err)
+            console.log(err)
             res.status(500).end()
         })
     },
@@ -215,12 +215,22 @@ module.exports = {
         const { country, region, province, city } = req.body
 
         db.address
-        .update({userId: req.params.id},{
+        .update({userid: req.params.id},{
             country, region, province, city
         })
         .then(u => res.status(201).json(u))
         .catch(err =>{
-            console.err(err)
+            console.log(err)
+            res.status(500).end()
+        })
+    },
+    searchText: (req, res) => {
+        const db = req.app.get('db')
+        
+        db.query(`SELECT * FROM contacts WHERE (userid = ${req.params.id}) AND (f_name ilike '%${req.query.value}%' OR l_name ilike '%${req.query.value}%')`)
+        .then(u => res.status(200).json(u))
+        .catch(err =>{
+            console.log(err)
             res.status(500).end()
         })
     }

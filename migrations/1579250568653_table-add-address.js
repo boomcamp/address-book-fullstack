@@ -6,7 +6,7 @@ exports.up = (pgm) => {
             type: 'serial',
             primaryKey: true,
         },
-        userId: {
+        userid: {
             type: 'integer',
             references: 'users',
             notNull: true,

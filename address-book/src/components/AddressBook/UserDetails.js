@@ -18,6 +18,7 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Grid from '@material-ui/core/Grid';
 import HouseIcon from '@material-ui/icons/House';
 import CreateIcon from '@material-ui/icons/Create';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -47,6 +48,9 @@ const useStyles = makeStyles(theme => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    close: {
+        float: 'right'
+    }
 }))
 
 export default function UserDetails(props){
@@ -82,7 +86,7 @@ export default function UserDetails(props){
     const addAddress = () => {
         axios
         .post('http://localhost:5001/api/address', {
-            "userId": localStorage.getItem('id'),
+            "userid": localStorage.getItem('id'),
             "country": values.country,
             "region": values.region,
             "province": values.province,
@@ -103,7 +107,7 @@ export default function UserDetails(props){
     const updateAddress = () => {
         axios
         .patch(`http://localhost:5001/api/address/${localStorage.getItem('id')}`, {
-            "userId": localStorage.getItem('id'),
+            "userid": localStorage.getItem('id'),
             "country": values1.country,
             "region": values1.region,
             "province": values1.province,
@@ -220,10 +224,15 @@ export default function UserDetails(props){
                             </ListItem>
                         )}
                         {(address.empty) ? (
-                        <Dialog onClose={closeAdd} aria-labelledby="simple-dialog-title" open={open}>
+                        <Dialog aria-labelledby="simple-dialog-title" open={open}>
                             <Container component="main" maxWidth="xs">
                                 <CssBaseline />
-                                <DialogTitle id="simple-dialog-title">Address Details</DialogTitle>
+                                <DialogTitle id="simple-dialog-title">
+                                    Address Details
+                                    <Button color="primary" onClick={closeAdd} className={classes.close}>
+                                        <CloseIcon/>
+                                    </Button>
+                                </DialogTitle>
                                     <ValidatorForm
                                         className={classes.form}
                                         onSubmit={addAddress}
@@ -299,10 +308,15 @@ export default function UserDetails(props){
                             </Container>
                         </Dialog>
                         ) : (
-                        <Dialog onClose={closeAdd1} aria-labelledby="simple-dialog-title" open={open1}>
+                        <Dialog aria-labelledby="simple-dialog-title" open={open1}>
                             <Container component="main" maxWidth="xs">
                                 <CssBaseline />
-                                <DialogTitle id="simple-dialog-title">Address Details</DialogTitle>
+                                <DialogTitle id="simple-dialog-title">
+                                    Address Details
+                                    <Button color="primary" onClick={closeAdd1} className={classes.close}>
+                                        <CloseIcon/>
+                                    </Button>
+                                </DialogTitle>
                                     <ValidatorForm
                                         className={classes.form}
                                         onSubmit={updateAddress}
