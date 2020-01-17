@@ -15,9 +15,15 @@ import { TableSortLabel } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { Chip, Avatar, Typography } from '@material-ui/core';
 
+import SearchIcon from '@material-ui/icons/Search';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
 import ViewContact from './ViewContact/ViewContact';
 import EditContact from './EditContact/EditContact';
 import DeleteContact from './DeleteContact/DeleteContact';
+
+import { generator } from '../functions';
 
 function Dashboard() {
 
@@ -26,7 +32,7 @@ function Dashboard() {
       width: "100%"
     },
     container: {
-      maxHeight: 840
+      maxHeight: '70vh',
     },
     table: {
       marginTop: "1%"
@@ -39,9 +45,17 @@ function Dashboard() {
       alignItems: "center",
       border: "none"
     },
+    searchDiv: {
+      margin: '10px 2.5% 0',
+      float: 'right'
+    },
+    searchField: {
+      margin: 'auto'
+    }
   }));
 
   const classes = useStyles();
+  
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -60,6 +74,8 @@ function Dashboard() {
 
   const [ sortDirection, setSortDirection ] = useState('desc');
 
+  const [searchData, setSearchData] = useState([]);
+
   const fetchContactsFn = () => {
     axios({
       method: 'get',
@@ -67,8 +83,14 @@ function Dashboard() {
     })
     .then(response => {
       setcontactList(response.data);
+      setSearchData(response.data);
     })
     .catch(error => console.error(error))
+  }
+
+  const onChangeHandle = e => {
+    const filteredContacts = contactList.filter(el => el.ab_firstName.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 || el.ab_lastName.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 );
+    setSearchData(filteredContacts); 
   }
 
   useEffect(() => {
@@ -84,19 +106,30 @@ function Dashboard() {
 
   const sortByLastnameFn = () => {
     (activeSort) || setActiveSort(true);
-    //( sortDirection === 'desc') ? setSortDirection('desc') : setSortDirection('asc');
-    if( sortDirection === 'desc'){
-      setSortDirection('asc')
-    }else{
-      setSortDirection('desc');
-    }
-    console.log('fired');
+    ( sortDirection === 'desc') ? setSortDirection('asc') : setSortDirection('desc');
   }
 
   return (
     <React.Fragment>
       <Header />
-      <Grid container>
+      <Grid item xs={12} sm={4} md={4} lg={2} xl={2} className={classes.searchDiv}>
+        <Grid container direction="row" justify="flex-end" alignItems="center">
+          <TextField
+            fullWidth
+            className={classes.searchField}
+            placeholder="Search"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            onChange={onChangeHandle}
+          />
+        </Grid>
+      </Grid>
+      <Grid container justify="center">
         <Grid item xs={12} sm={12} md={12} lg={12} xl={11}>
           <Paper className={classes.paper}>
             <Grid item xs={12}>
@@ -118,13 +151,12 @@ function Dashboard() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                      {contactList
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map(row => {
+                      {searchData
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
                           return (
                             <TableRow hover tabIndex={-1} key={row.abID}>
                               <TableCell>
-                                <Chip variant="outlined" color="primary" avatar={<Avatar>{firstNameLetter(row.ab_firstName)}</Avatar>} label={row.ab_lastName+", "+row.ab_firstName}/>
+                                <Chip variant="outlined" color="primary" avatar={<Avatar style={{background: generator()}}>{firstNameLetter(row.ab_firstName)}</Avatar>} label={row.ab_lastName+", "+row.ab_firstName}/>
                               </TableCell>
                               <TableCell>
                                 <Typography variant="overline" display="block" noWrap={false}gutterBottom>
@@ -143,9 +175,10 @@ function Dashboard() {
                     </Table>
                   </TableContainer>
                   <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
+                    style={{justifyContent: 'center', display: 'flex'}}
                     component="div"
-                    count={10}
+                    rowsPerPageOptions={[10, 25, 100]}
+                    count={searchData.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onChangePage={handleChangePage}

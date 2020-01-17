@@ -80,11 +80,12 @@ module.exports = {
               delete updated[0].password;
               res.status(200).send({ ...updated[0], token });
             });
-          // const token = jwt.sign({ userID: user.userID }, secret);
-          // delete user.password;
-          // res.status(200).send({ ...user, token });
         });
-      });
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).end();
+      })
   },
   getUser: (req, res) => {
     const db = req.app.get("db");

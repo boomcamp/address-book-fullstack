@@ -4,7 +4,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle'; 
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -12,11 +11,8 @@ import Logout from './Logout';
 import { useHistory } from "react-router-dom";
 
 import axios from 'axios';
-
+import LeftDrawer from './LeftDrawer/LeftDrawer';
 const useStyles = makeStyles(theme => ({
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
   greeting: {
     flexGrow: 1, 
     fontSize: '1.2rem', 
@@ -58,9 +54,17 @@ export default function MenuAppBar() {
   }
 
   const greetFn = (name) => {
-    let hour = new Date;
-    let name = name.substring(0,1).toUpperCase();
-    return (hour.getHours() >= 0 || hour.getHours() <= 11) ? `Good Morning ${name}` : (hour.getHours() >= 12 || hour.getHours() <= 17) ? `Good Afternoon ${name}` : `Good Evening ${name}`;
+    let hour = new Date().getHours();
+    if(name){
+      if(hour >= 0 && hour <= 11){
+        return `Good Morning ${name}!`;
+      }else if(hour >= 12 && hour <= 17){
+        return `Good Afternoon ${name}!`;
+      }else{
+        return `Good Evening ${name}!`;
+      }
+    }
+    return null;
   }
 
   const clearStateFn = () => {
@@ -70,18 +74,23 @@ export default function MenuAppBar() {
   const history = useHistory();
 
   useEffect(() => {
-    (localStorage.getItem('token') && localStorage.getItem('sessionid')) ? history.push("/dashboard") : history.push("/")
-    userDetailsFn();
-    // eslint-disable-next-line
+    if(history.location.pathname === "/" || history.location.pathname === "/dashboard"){
+      if(localStorage.getItem('token') && localStorage.getItem('sessionid')){
+        history.push("/dashboard");
+        userDetailsFn();
+      }else{
+        history.push("/");
+      }
+    }else if(history.location.pathname === "/register" && localStorage.getItem('sessionid') && localStorage.getItem('token')){
+      history.push("/dashboard")
+    }
   }, [history])
 
   return (
     <AppBar position="static">
       <Toolbar>
         { (localStorage.getItem('sessionid') && localStorage.getItem('token')) &&
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
+          <LeftDrawer name={(details.user_firstName && details.user_lastName) && details.user_firstName+" "+details.user_lastName} />
         }
         <Typography variant="h6" className={classes.greeting}>
           { greetFn((details.user_firstName) && details.user_firstName) }

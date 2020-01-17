@@ -13,6 +13,9 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 
 import Header from "../Header/Header";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function Login() {
   const useStyles = makeStyles(theme => ({
     paper: {
@@ -84,7 +87,18 @@ function Login() {
         history.push('/dashboard');
       })
       .catch(error => {
+        setShowLoading(false);
         console.log(error);
+        
+        localStorage.setItem('error', error)
+          toast.error("No Account Found! Try again", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+          });
       });
   };
 
@@ -92,6 +106,17 @@ function Login() {
     <React.Fragment>
       <Header />
       {onSubmitLoading()}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnVisibilityChange
+        draggable
+        pauseOnHover
+      />
       <Container component="main" maxWidth="sm">
         <div className={classes.paper}>
           <Typography className={classes.caption} component="h1" variant="h5">

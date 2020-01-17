@@ -2,6 +2,7 @@ const express = require('express');
 const massive = require('massive');
 const users = require('./controllers/user');
 const contacts = require('./controllers/contacts');
+const groups = require('./controllers/groups');
 const cors =require('cors')
 
 
@@ -33,9 +34,15 @@ massive({
     //delete contact 
     app.delete('/api/contact/:id', contacts.deleteContact);
     //add group
+    app.post('/api/group/:userID', groups.addGroup);
     //edit group
+    app.patch('/api/group/:id', groups.editGroup);
+    //delete group
+    app.delete('/api/group/:id', groups.deleteGroup);
     //add members to group
-    //delete members group
+    app.post('/api/group/:id', groups.addMembers);
+    //delete member group
+    app.delete('/api/group/:id/:contactID', groups.deleteMember);
 
     const port = 3002;
     app.listen(port, () => {
