@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 } */
+
+html{
+  background-color: #e1e2e1;
+}
+
+*{
+  font-family: 'Rajdhani', sans-serif;
+}

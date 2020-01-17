@@ -7,7 +7,7 @@ import { withSnackbar } from 'notistack';
 import UpdateContactForm from '../Contacts/UpdateContactForm'
 import PopUpModal from './PopUpModal'
 
-function TableActions({ rowData, enqueueSnackbar, updateFn, updateTableFn, setStateFn, updateStateFn, groupObj, fetchGroupFn }) {
+function TableActions({ rowData, enqueueSnackbar, updateTableFn, setStateFn, groupObj }) {
     const [update, setUpdate] = useState({
         openModal: false,
         row: {}
@@ -18,16 +18,9 @@ function TableActions({ rowData, enqueueSnackbar, updateFn, updateTableFn, setSt
         new Promise(resolve => {
             setTimeout(() => {
                 resolve();
-                if (oldData) {
-                    updateFn(oldData, newData)
-                }
+                    updateTableFn()
             }, 600);
         }).then(res => {
-            // updateTableFn()
-            if (groupObj) {
-                updateStateFn()
-                fetchGroupFn()
-            }
             enqueueSnackbar('Successfully Updated', { variant: 'success', autoHideDuration: 1000, })
         })
     }

@@ -7,7 +7,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { ValidatorForm } from 'react-material-ui-form-validator';
 import axios from 'axios';
 
-import GroupSelect, {GroupCreate} from '../tools/GroupSelect'
+import GroupSelect, {GroupCreate} from '../tools/fields/GroupSelect'
 import NameFields from '../tools/fields/NameFields'
 import ContactFields from '../tools/fields/ContactFields'
 import AddressFields from '../tools/fields/AddressFields'
@@ -109,7 +109,8 @@ export default function CreateContactForm({addGroupId, closeFn, createRowFn}) {
                             cityFn = {(e) => setUser({ ...user, city: e.target.value })}
                             stateProvinceFn = {(e) => setUser({ ...user, stateProvince: e.target.value })}
                             postalCodeFn ={(e) => setUser({ ...user, postalCode: e.target.value })}
-                            countryFn = {(e) => setUser({ ...user, country: e.target.value })}
+                            // countryFn = {(e) => setUser({ ...user, country: e.target.value })}
+                            countryFn = {(country) => setUser({ ...user, country: country })}
                             city = {user.city}
                             stateProvince = {user.stateProvince}
                             postalCode ={user.postalCode}
@@ -140,7 +141,7 @@ export default function CreateContactForm({addGroupId, closeFn, createRowFn}) {
                     </GroupSelect>
                 : null }
 
-                <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`, margin:`30px 0`}}>Create Contact</Button>
+                <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`, margin:`30px 0 0 0`}}>Create Contact</Button>
             </ValidatorForm>
         </React.Fragment>
     )

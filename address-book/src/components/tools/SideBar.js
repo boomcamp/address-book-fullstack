@@ -68,15 +68,15 @@ export default function SideBar({handleOpenfn, open}) {
                     </ListItem>
                 </Link>
 
-                <Link to="/group" style={{textDecoration:`none`, color:`black`}}> 
-                    <ListItem button>
+                <Link to="/group" style={{textDecoration:`none`, color:`black`}} > 
+                <ListItem button>
                             <ListItemIcon ><GroupIcon /></ListItemIcon>
                             <ListItemText primary="Group Contacts" />
                     </ListItem>
                 </Link>
 
-                <Link to="/account" style={{textDecoration:`none`, color:`black`}}> 
-                    <ListItem button>
+                <Link to="/account" style={{textDecoration:`none`, color:`black`}} > 
+                <ListItem button>
                             <ListItemIcon ><AccountCircleIcon /></ListItemIcon>
                             <ListItemText primary="My Account" />
                     </ListItem>

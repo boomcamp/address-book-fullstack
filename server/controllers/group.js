@@ -7,32 +7,22 @@ module.exports = {
         const db = req.app.get('db');
         const {userId} = req.query;
 
-        db.group_contact
-        .find({ userid: userId})
-        .then(user => {
-            user.map(x => {
-                if(x.userid == userId){
-                    db.group_contact
-                    .find()
-                    .then(group => {
-                        res.status(200).json(group)
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        res.status(500).end();
-                    })
-                }
-            })
+        db.query(`SELECT * from group_contact WHERE group_contact.userid = ${userId}`)
+        .then(group => {
+            res.status(200).json(group)
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).end();
         })
     },
 
     contactList: (req, res) => {
         const db = req.app.get('db')
-        
-        db.contacts
-        .find({ groupId: req.params.id})
+
+        db.query(`SELECT * FROM group_contact, contacts WHERE contacts.groupid = ${req.params.id} AND group_contact.id = contacts.groupid`)
         .then(group => {
-                res.status(200).json(group)
+            res.status(200).json(group)
         })
         .catch(err => {
             console.log(err)
@@ -44,7 +34,7 @@ module.exports = {
         const db = req.app.get('db');
 
         db.contacts
-        .update( {id: req.params.id}, {groupId: null} )
+        .update( {id: req.params.id}, {groupid: null} )
         .then(contact => {
             res.status(200).json(contact)
         })
@@ -58,12 +48,12 @@ module.exports = {
         const db = req.app.get('db')
 
         db.contacts
-        .find({groupId: req.params.id})
+        .find({groupid: req.params.id})
         .then(contact => {
             if(contact){
                 contact.map(x => {
                     db.contacts
-                    .update({id: x.id}, {groupId: null})
+                    .update({id: x.id}, {groupid: null})
                     .then(contact => { 
                         // res.status(200).json(contact) 
                     })

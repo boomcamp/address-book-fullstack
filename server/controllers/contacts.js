@@ -28,7 +28,7 @@ module.exports = {
                     if(group){
                         db.contacts
                         .save({
-                            userId: req.params.id, groupId: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
+                            userid: req.params.id, groupid: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
                         })
                         .then(contact => res.status(201).json(contact))
                         .catch(err => {
@@ -43,7 +43,7 @@ module.exports = {
                         .then(group => {
                             db.contacts
                             .save({
-                                userId: req.params.id, groupId: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
+                                userid: req.params.id, groupid: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
                             })
                             .then(contact => res.status(201).json(contact))
                             .catch(err => {
@@ -66,7 +66,7 @@ module.exports = {
             else if(!groupAdd && !groupId){
                 db.contacts
                 .save({
-                    userId: req.params.id, groupId: null, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
+                    userid: req.params.id, groupid: null, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
                 })
                 .then(contact => res.status(201).json(contact))
                 .catch(err => {
@@ -78,7 +78,7 @@ module.exports = {
             else if(groupId){
                 db.contacts
                 .save({
-                    userId: req.params.id, groupId: groupId, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
+                    userid: req.params.id, groupid: groupId, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
                 })
                 .then(contact => res.status(201).json(contact))
                 .catch(err => {
@@ -109,7 +109,7 @@ module.exports = {
             .then(user => {
                 if(user){
                     db.contacts
-                    .find({userId: user.id})
+                    .find({userid: user.id})
                     .then(contact => {
                         res.status(200).json(contact)
                     })
@@ -175,7 +175,7 @@ module.exports = {
                     if(group){
                         db.contacts
                         .update(
-                            {id: req.params.id}, {groupId: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
+                            {id: req.params.id}, {groupid: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
                         )
                         .then(contact => {
                             res.status(200).json(contact)
@@ -185,13 +185,14 @@ module.exports = {
                             res.status(500).end();
                         })
                     }
+
                     if(!group){
                         db.group_contact
                         .save({ groupName, userid: userId})
                         .then(group => {
                             db.contacts
                             .update(
-                                {id: req.params.id}, {groupId: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
+                                {id: req.params.id}, {groupid: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
                             )
                             .then(contact => {
                                 res.status(200).json(contact)
@@ -202,13 +203,12 @@ module.exports = {
                             })
                         })
                     }
-
                 })
             }
             else if(!groupName){
                 db.contacts
                 .update(
-                    {id: req.params.id}, {groupId: null, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
+                    {id: req.params.id}, {groupid: null, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
                 )
                 .then(contact => {
                     res.status(200).json(contact)

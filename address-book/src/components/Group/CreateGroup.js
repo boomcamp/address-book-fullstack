@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import GroupSelect, {GroupCreate} from '../tools/GroupSelect'
+import GroupSelect, {GroupCreate} from '../tools/fields/GroupSelect'
 import Button from '@material-ui/core/Button';
+import { withSnackbar } from 'notistack';
 
     const addGroupStyle = {
         // width:`30%`, 
@@ -9,8 +10,7 @@ import Button from '@material-ui/core/Button';
         color: `#4c6571`,
         textAlign:`right`,
     }
-
-export default function CreateGroup({row, closeFn}) {
+function CreateGroup({row, closeFn, enqueueSnackbar}) {
     const [group, setGroup] = useState({
         groupExist: false,
     })
@@ -21,7 +21,7 @@ export default function CreateGroup({row, closeFn}) {
             return (
                 axios({
                     method: 'put',
-                    url: `/api/contacts/${x.id}?userId=${x.userId}`,
+                    url: `/api/contacts/${x.id}?userId=${x.userid}`,
                     data: {
                         "firstName": x.firstName,
                         "lastName": x.lastName,
@@ -34,7 +34,7 @@ export default function CreateGroup({row, closeFn}) {
                         "postalCode": x.postalCode,
                         "country": x.country,
 
-                        "groupName": user.groupName
+                        "groupName": user.groupName,
                     }, 
                     headers: {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token')
@@ -49,6 +49,7 @@ export default function CreateGroup({row, closeFn}) {
                 })
             )
         })
+        enqueueSnackbar('Successfully Added to group', { variant: 'success', autoHideDuration: 1500, })
     }
 
     return (
@@ -68,3 +69,5 @@ export default function CreateGroup({row, closeFn}) {
         </div>
     )
 }
+
+export default withSnackbar(CreateGroup);

@@ -8,12 +8,12 @@ exports.up = pgm => {
             type: 'serial',
             primaryKey: true,
         },
-        userId: {
+        userid: {
             type: 'integer',
             notNull: true,
             references: 'users', 
         },
-        groupId: {
+        groupid: {
             type: 'integer',
             notNull: false,
             references: 'group_contact', 

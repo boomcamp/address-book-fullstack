@@ -8,7 +8,6 @@ import { withSnackbar } from 'notistack';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-// import fetchGroupContact from '../tools/fetchGroupContact'
 import PopUpModal from './PopUpModal'
 import CreateContactForm from '../Contacts/CreateContactForm'
 import DetailedContact from '../Contacts/DetailedContact'
@@ -30,7 +29,7 @@ import UpdateGroup from '../tools/fields/UpdateGroup'
 
     const btnStyleEdit = {
         display: `flex`,
-        alignItems: `center`,
+        alignItems: `center`, 
         border: `none`,
         color: `white`,
         backgroundColor: `#4c6572`,
@@ -38,10 +37,14 @@ import UpdateGroup from '../tools/fields/UpdateGroup'
         borderRadius: `5px`,
         padding: `10px`,
         margin: `5px`,
-        width: `130px`
+        width: `130px`,
+        ":hover": {
+            color:`red`,
+            background: "#efefef"
+        },
     }
 
-function Table({ groupObj, updateTableFn, updateGroupListFn, state, createFn, setStateFn,  enqueueSnackbar}) {
+function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn,  enqueueSnackbar}) {
     const [open, setOpen] = useState({
         create: false,
         detailedContact: {
@@ -71,15 +74,16 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, createFn, se
         new Promise(resolve => {
             setTimeout(() => {
                 resolve();
-                createFn(newData)
+                updateTableFn()
+                // createFn(newData)
             }, 600);
         }).then(res => {
-            if(!groupObj)
+            if(!groupObj){
                 enqueueSnackbar('Successfully Created', { variant: 'success', autoHideDuration: 1000, })
+            }
             if(groupObj)
                 enqueueSnackbar('Successfully Added to Group', { variant: 'success', autoHideDuration: 1000, })
             
-            updateTableFn()
         })
     }
 
@@ -161,15 +165,6 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, createFn, se
                     title=""
                     columns={state.columns}
                     data={state.data}
-                    editable={{
-                        // onRowDelete: oldData =>
-                        // new Promise(resolve => {
-                            //     setTimeout(() => {
-                            //         resolve();
-                            //         setStateFn(oldData);
-                            //     }, 600);
-                            // }).then(deleteRow(oldData)),
-                    }}
                     actions={[
                         {
                             icon: 'add',
@@ -178,11 +173,6 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, createFn, se
                             onClick: () => setOpen({ ...open, create: true })
 
                         },
-                        // {
-                        //     icon: 'edit',
-                        //     tooltip: 'Edit Contact',
-                        //     onClick: (event, rowData) => setOpen({ ...open, update: { openModal: true, row: rowData } })
-                        // },
                         {
                             icon: 'group',
                             tooltip: 'Add to Group',
@@ -206,7 +196,7 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, createFn, se
 
                     ]}
                     onRowClick={(e, rowData, togglePanel) => {                  
-                        setOpen({ ...open, detailedContact: { openModal: true, row: rowData } })
+                        setOpen({ ...open, detailedContact: { openModal: true, row: rowData } });
                     } }
                     options={{
                         selection: true,
@@ -220,9 +210,11 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, createFn, se
                     components={{
                         Toolbar: props => (
                             <div>
-                                <MTableToolbar {...props} />
+                                <MTableToolbar {...props} style={{backgroundColor:`red`}}/>
                                 <div style={{ padding: '0px 10px', display:`flex`}}>
-                                    {/* <button style={btnStyle} onClick={() => setOpen({ ...open, group: true })}><GroupAddIcon /> &nbsp;Create Group</button> */}
+                                    {/* <select>
+                                        <option>-Sort By-</option>
+                                    </select> */}
                                     {(groupObj) ? (
                                         <>
                                             <button style={btnStyleEdit} onClick={() => setOpen({ ...open, group: true })}><EditIcon /> &nbsp;Edit Group</button>

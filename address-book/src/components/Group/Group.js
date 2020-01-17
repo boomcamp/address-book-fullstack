@@ -31,14 +31,7 @@ function TabPanel({ fetchGroupFn, value, index, groupObj, updateGroupListFn, ...
                                 return { ...prevState, data };
                             })
                         }
-                        updateFn={(oldData, newData) =>
-                            setState(prevState => {
-                                const data = [...prevState.data];
-                                data[data.indexOf(oldData)] = newData;
-                                return { ...prevState, data };
-                            })
-                        }
-                        updateStateFn={
+                        updateTableFn={
                             fetchContact
                         }
                         groupObj={groupObj}
@@ -79,13 +72,7 @@ function TabPanel({ fetchGroupFn, value, index, groupObj, updateGroupListFn, ...
                 groupObj={groupObj}
                 updateGroupListFn={updateGroupListFn}
                 state={state}
-                createFn={(newData) =>
-                    setState(prevState => {
-                        const data = [...prevState.data];
-                        data.push(newData);
-                        return { ...prevState, data };
-                    })
-                }
+                updateTableFn={fetchContact}
                 setStateFn={ (oldData) =>
                     setState(prevState => {
                         const data = [...prevState.data];
@@ -120,7 +107,8 @@ export default function Group() {
             .then(res => {
                 // if(!isCancelled)
                 setGroup(res)
-            })
+                // console.log(res)
+            })        
     }
 
     useEffect(() => {
@@ -128,10 +116,10 @@ export default function Group() {
         fetchGroup();
         return () => { /*isCancelled = true*/ };
     }, [])
-    
+
     return (
         <TemplateMainPage>
-            <h1>Group Contacts</h1>
+            {/* <h1>Group Contacts</h1> */}
             <AppBar position="static" style={{ backgroundColor: `#e7e8ea`, color: `black` }}>
                 <Tabs value={value} onChange={(event, newValue) => setValue(newValue)} aria-label="group-contact" >
                     {group.map((x, i) => (

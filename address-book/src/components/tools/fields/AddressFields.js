@@ -2,10 +2,11 @@ import React from 'react'
 import { TextValidator } from 'react-material-ui-form-validator';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
+import CountrySelect from './CountrySelect'
 
 export default function AddressFields({cityFn, stateProvinceFn, postalCodeFn, countryFn, city, stateProvince, postalCode, country}) {
     return (
-        <fieldset>
+        <fieldset style={{width:`50%`}}>
             <legend>Address: </legend>
             <TextValidator
                 style={{ margin: '10px', width:`95%` }}
@@ -58,7 +59,7 @@ export default function AddressFields({cityFn, stateProvinceFn, postalCodeFn, co
                 }}
             ></TextValidator>
 
-            <TextValidator
+            {/* <TextValidator
                 style={{ margin: '10px', width:`95%` }}
                 label="Country"
                 onChange={countryFn}
@@ -73,7 +74,8 @@ export default function AddressFields({cityFn, stateProvinceFn, postalCodeFn, co
                     </InputAdornment>
                     ),
                 }}
-            ></TextValidator>
+            ></TextValidator> */}
+            <CountrySelect country={country} countryFn={countryFn}/>
         </fieldset>
     )
 }

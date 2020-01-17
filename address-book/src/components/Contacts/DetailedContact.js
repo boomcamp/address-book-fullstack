@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import dp from '../../assets/download.jpeg'
+import axios from 'axios'
 
 import fetchGroupContact from '../tools/fetchGroupContact'
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -50,24 +51,29 @@ export default function DetailedContact({row}) {
             country: row.country
         })
 
-        fetchGroupContact(`/api/groups?userId=` + sessionStorage.getItem('userId'))
-        .then(res => {
-            res.map(x => {
-                if(row.groupId === x.id)
-                    setUser(prevState => {return {...prevState, groupName: x.groupName}})
-            })
+        axios({
+            method: 'get',
+            url: '/api/groups/' + row.groupid,
+            headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('token')
+            }
         })
-        .catch(err => console.log(err))
-
+            .then(res => {
+                if(res.data.length !== 0)
+                    setUser(prevState => {return {...prevState, groupName: res.data[0].groupName}})
+                else    
+                    setUser(prevState => {return {...prevState, groupName: ""}})
+            })
+            .catch(err => console.log(err))
+  
         return () => { };
     }, [])
-
     return (
         <React.Fragment>
             <h1 style={style.header}>Contact Details</h1>
             <div style={style.container}>
                 <img src={dp} alt="profile_picture" width="200" height="200" style={{borderRadius:`50%`}}/> 
-                <div style={{margin:`0 30px`, width:`80%`}}>
+                <div style={{margin:`0 50px`, width:`80%`}}>
                     <h1 style={style.user}>{user.firstName} {user.lastName}</h1>
                     <h5 style={style.address}>
                         🏠 : {user.city}, {user.stateProvince} {user.postalCode} {user.country} 
@@ -81,10 +87,10 @@ export default function DetailedContact({row}) {
                 </div>
 
                 <div style={style.box}>
-                     <p><b>Work Phone: </b></p> <WorkIcon/> {user.workPhone} <br/><br/> 
-                     <p><b>Group: </b></p> <GroupIcon/> {(user.groupName) ? user.groupName : <i style={{opacity:`0.5`}}>Not in a group</i>}
+                    <p><b>Work Phone: </b></p> <WorkIcon/> {user.workPhone} <br/><br/> 
+                    <p><b>Group: </b></p> <GroupIcon/> {(user.groupName) ? user.groupName : <i style={{opacity:`0.5`}}>Not in a group</i>}
                 </div>
-            </div>       
+            </div>    
         </React.Fragment>
     )
 }

@@ -15,7 +15,7 @@ export default function AddressBookTable() {
         })
         .then(res => {
             // console.log(res.data)
-            setState(prevState => { return { ...prevState, data: res.data } })
+            setState({ ...state, data: res.data})
         })
         .catch(err => {
             console.log(err)
@@ -33,15 +33,7 @@ export default function AddressBookTable() {
             { title: 'Actions', field:'', cellStyle: {margin:`0`}, headerStyle:{margin:`0`},
                 render: (rowData) => (
                    <TableActions 
-                   rowData={rowData}
-                   updateFn={ (oldData, newData, e) =>{
-                        console.log(e)
-                        setState(prevState => {
-                            const data = [...prevState.data];
-                            data[data.indexOf(oldData)] = newData;
-                            return { ...prevState, data };
-                        })
-                    }}
+                    rowData={rowData}
                     updateTableFn={updateTable}
                     setStateFn={ (oldData) =>
                         setState(prevState => {
@@ -66,13 +58,6 @@ export default function AddressBookTable() {
         <React.Fragment>
             <Table 
                 state={state}
-                createFn={ (newData) =>
-                    setState(prevState => {
-                        const data = [...prevState.data];
-                        data.push(newData);
-                        return { ...prevState, data };
-                    })
-                }
                 setStateFn={ (oldData) =>
                     setState(prevState => {
                         const data = [...prevState.data];

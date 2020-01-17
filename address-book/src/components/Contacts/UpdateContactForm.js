@@ -7,7 +7,7 @@ import fetchGroupContact from '../tools/fetchGroupContact'
 import NameFields from '../tools/fields/NameFields'
 import ContactFields from '../tools/fields/ContactFields'
 import AddressFields from '../tools/fields/AddressFields'
-import GroupSelect, {GroupCreate} from '../tools/GroupSelect';
+import GroupSelect, {GroupCreate} from '../tools/fields/GroupSelect';
 
     const formStyle = {
         display: 'flex',
@@ -56,12 +56,18 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
             country: row.country
         })
 
-        fetchGroupContact(`/api/groups?userId=` + sessionStorage.getItem('userId'))
+        axios({
+            method: 'get',
+            url: '/api/groups/' + row.groupid,
+            headers: {
+                Authorization: 'Bearer ' + sessionStorage.getItem('token')
+            }
+        })
         .then(res => {
-            res.map(x => {
-                if(row.groupId === x.id)
-                    setUser(prevState => {return {...prevState, groupName: x.groupName}})
-            })
+            if(res.data.length !== 0)
+                setUser(prevState => {return {...prevState, groupName: res.data[0].groupName}})
+            else    
+                setUser(prevState => {return {...prevState, groupName: ""}})
         })
         .catch(err => console.log(err))
 
@@ -71,7 +77,7 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
     const handleSubmit = () => {
         axios({
             method: 'put',
-            url: `/api/contacts/${row.id}?userId=${row.userId}`,
+            url: `/api/contacts/${row.id}?userId=${row.userid}`,
             data: {
                 "firstName": user.firstname,
                 "lastName": user.lastname,
@@ -132,7 +138,8 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
                             cityFn = {(e) => setUser({ ...user, city: e.target.value })}
                             stateProvinceFn = {(e) => setUser({ ...user, stateProvince: e.target.value })}
                             postalCodeFn ={(e) => setUser({ ...user, postalCode: e.target.value })}
-                            countryFn = {(e) => setUser({ ...user, country: e.target.value })}
+                            // countryFn = {(e) => setUser({ ...user, country: e.target.value })}
+                            countryFn = {(country) => setUser({ ...user, country: country })}
                             city = {user.city}
                             stateProvince = {user.stateProvince}
                             postalCode ={user.postalCode}
@@ -150,7 +157,7 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
                     </GroupSelect>
                 : null }
 
-                <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`, margin:`30px 0`}}>Update</Button>
+                <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`, margin:`30px 0 0 0`}}>Update</Button>
             </ValidatorForm>
         </React.Fragment>
     )

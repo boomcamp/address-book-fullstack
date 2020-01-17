@@ -9,7 +9,7 @@ import EmailIcon from '@material-ui/icons/Email';
 export default function ContactFields({ homePhone, mobilePhone, workPhone, email, homePhoneFn, mobilePhoneFn, workPhoneFn, emailFn
 }) {
     return (
-        <fieldset>
+        <fieldset style={{width:`50%`}}>
             <legend>Contact Detail:</legend>
             <TextValidator
                 style={{ margin: '10px', width: `95%` }}
