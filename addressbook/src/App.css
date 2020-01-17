@@ -4,6 +4,9 @@ body {
   padding: 0;
   margin: 0;
 }
+.MuiTableRow-root:hover {
+  background: whitesmoke;
+}
 .MuiTableBody-root {
   overflow: auto;
 }
@@ -14,7 +17,4 @@ body {
 
 .MuiTableCell-root {
   font-size: 20px;
-}
-.Mui-disabled {
-  color: lightgray;
 }

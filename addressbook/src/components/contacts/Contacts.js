@@ -7,7 +7,13 @@ import { url } from "../../url";
 import { getUserData } from "../customHooks/getUserData";
 import { toast } from "react-toastify";
 import "../../App.css";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
+import {
+  MuiThemeProvider,
+  createMuiTheme,
+  TextField,
+  Select,
+  MenuItem
+} from "@material-ui/core";
 import { useWindowSize } from "../customHooks/useWindowSize";
 import { ContactDetails } from "./ContactDetails";
 import styled from "styled-components";
@@ -183,6 +189,18 @@ export const Contacts = props => {
   }, [group, user]);
   return (
     <div>
+      <Div>
+        <Select value="">
+          <MenuItem>Select one</MenuItem>
+        </Select>
+        <TextField
+          label="Search"
+          onChange={e => {
+            setSearch(e.target.value);
+            console.log(e.target.value);
+          }}
+        />
+      </Div>
       <MuiThemeProvider theme={theme}>
         <MaterialTable
           style={{ width: "100%" }}
@@ -191,19 +209,7 @@ export const Contacts = props => {
           columns={
             windowWidth >= 600 ? columnData(user) : columnDataMobile(user)
           }
-          data={
-            userData
-              ? userData.addressBook
-                ? userData.addressBook.filter(x => {
-                    const regex = new RegExp(search, "gi");
-                    if (x.firstName.match(regex) || x.lastName.match(regex)) {
-                      return x;
-                    }
-                    return {};
-                  })
-                : []
-              : []
-          }
+          data={userData ? userData.addressBook : []}
           options={{
             pageSizeOptions: [10, 15, 20],
             pageSize: 10,
@@ -293,3 +299,8 @@ export const Contacts = props => {
     </div>
   );
 };
+const Div = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 10px;
+`;
