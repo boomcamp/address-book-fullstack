@@ -30,9 +30,11 @@ massive({
   app.get("/contacts/list/:id", contacts.list);
   app.patch("/contacts/edit/:id", contacts.update);
   app.delete("/contacts/delete/:id", contacts.delete);
+  app.get("/contacts/group/list/:id", contacts.getByGroup);
 
   app.post("/group/create", group.create);
-  app.get("/group/list", group.list);
+  app.get("/group/list/:id", group.list);
+  app.post("/group/add/:id", group.add);
   const port = 3001;
 
   app.listen(port, () => {

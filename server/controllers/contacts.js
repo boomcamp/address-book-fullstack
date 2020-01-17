@@ -119,5 +119,14 @@ module.exports = {
         console.error(err);
         res.status(500).end();
       });
+  },
+  getByGroup: (req, res) => {
+    const db = req.app.get("db");
+    db.grouplist
+      .find({ groupId: req.params.id })
+      .then(data => {
+        console.log(data);
+      })
+      .then(() => res.status(500).end());
   }
 };

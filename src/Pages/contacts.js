@@ -14,6 +14,7 @@ import * as ls from "local-storage";
 import Layout from "../Layout/layout";
 import EditContactModal from "../Modal/editContact";
 import DeleteContactModal from "../Modal/deleteContact";
+import GroupedContact from "../Layout/selectGroup";
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -56,6 +57,7 @@ export default function Contacts({ match, history }) {
       Authorization: `Bearer ${ls.get("auth")}`
     }
   };
+
   const handleOpen = () => setOpen(true);
 
   if (!auth) {
@@ -85,6 +87,7 @@ export default function Contacts({ match, history }) {
       filter={filter}
     >
       <TableContainer component={Paper}>
+        <GroupedContact match={match} headers={headers} />
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
             <TableRow>
@@ -141,14 +144,13 @@ export default function Contacts({ match, history }) {
                 <StyledTableCell align="center">
                   {row.mobile_phone}
                 </StyledTableCell>
-                <StyledTableCell
-                  align="center"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setOpenDelete({ status: true, id: row.id });
-                  }}
-                >
-                  <Delete />
+                <StyledTableCell align="center">
+                  <Delete
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setOpenDelete({ status: true, id: row.id });
+                    }}
+                  />
                 </StyledTableCell>
               </StyledTableRow>
             ))}

@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import GroupIcon from "@material-ui/icons/Group";
 import AddContactModal from "../Modal/addContact";
 import Search from "./search";
 import AddGroupModal from "../Modal/addGroup";
@@ -74,10 +75,12 @@ const LogOut = styled(ExitToAppIcon)`
 export default function Layout(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [open, setOpen] = useState({ contact: false, group: false });
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isProfileMenuOpen = Boolean(profileAnchorEl);
 
   const handleOpen = () => {
     setOpen({ ...open, contact: true });
@@ -90,15 +93,22 @@ export default function Layout(props) {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-
+  //profile
   const handleProfileMenuOpen = event => {
-    setAnchorEl(event.currentTarget);
+    setProfileAnchorEl(event.currentTarget);
   };
-
+  const handleProfileMenuClose = () => {
+    setProfileAnchorEl(null);
+    handleMobileMenuClose();
+  };
+  //mobile
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
-
+  //add
+  const handleMenuOpen = event => {
+    setAnchorEl(event.currentTarget);
+  };
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
@@ -107,7 +117,8 @@ export default function Layout(props) {
   const handleMobileMenuOpen = event => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-  const menuId = "primary-search-account-menu";
+  //ADD
+  const menuId = "add";
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -122,7 +133,7 @@ export default function Layout(props) {
       <MenuItem onClick={handleOpenGroup}>Add Group</MenuItem>
     </Menu>
   );
-
+  //MOBILE
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
@@ -134,7 +145,7 @@ export default function Layout(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem onClick={handleMobileMenuOpen}>
         <IconButton aria-label="add" aria-haspopup="true" color="inherit">
           <AddCircleIcon />
         </IconButton>
@@ -153,6 +164,32 @@ export default function Layout(props) {
       </MenuItem>
     </Menu>
   );
+  //PROFILE
+  const profileId = "profile";
+  const renderProfileMenu = (
+    <Menu
+      anchorEl={profileAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={profileId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isProfileMenuOpen}
+      onClose={handleProfileMenuClose}
+    >
+      <MenuItem>
+        <IconButton aria-label="profile" aria-haspopup="true" color="inherit">
+          <AccountCircleIcon />
+        </IconButton>
+        Profile
+      </MenuItem>
+      <MenuItem>
+        <IconButton aria-label="group" aria-haspopup="true" color="inherit">
+          <GroupIcon />
+        </IconButton>
+        Group
+      </MenuItem>
+    </Menu>
+  );
 
   return (
     <>
@@ -163,10 +200,13 @@ export default function Layout(props) {
               edge="start"
               className={classes.icon}
               color="inherit"
-              title="Welcome to Mobile Legends"
+              title="My Profile"
               aria-label="account"
             >
-              <AccountCircleIcon />
+              <AccountCircleIcon
+                aria-controls={profileId}
+                onClick={handleProfileMenuOpen}
+              />
             </Tooltip>
             <Typography className={classes.title} variant="h6" noWrap>
               Welcome {props.user.firstname} {props.user.lastname}
@@ -185,7 +225,7 @@ export default function Layout(props) {
                   aria-label="add"
                   aria-controls={menuId}
                   aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
+                  onClick={handleMenuOpen}
                   color="inherit"
                 />
               </Tooltip>
@@ -216,6 +256,7 @@ export default function Layout(props) {
         </AppBar>
         {renderMobileMenu}
         {renderMenu}
+        {renderProfileMenu}
       </div>
       <main>
         <Container className={classes.cardGrid} maxWidth="md">

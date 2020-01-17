@@ -28,11 +28,27 @@ module.exports = {
   list: (req, res) => {
     const db = req.app.get("db");
     db.groups
-      .find()
+      .find({ userId: req.params.id })
       .then(group => res.status(200).json({ groups: group }))
       .catch(err => {
         console.error(err);
         res.status(500).end();
       });
+  },
+  add: (req, res) => {
+    const db = req.app.get("db");
+    const { groupId } = req.body;
+    db.contacts
+      .findOne({ id: req.params.id })
+      .then(data => {
+        return db.grouplist
+          .insert({
+            groupId,
+            contactId: data.id
+          })
+          .then(grouplist => res.status(200).json(grouplist))
+          .catch(() => res.status(500).end());
+      })
+      .catch(() => res.status(500).end());
   }
 };

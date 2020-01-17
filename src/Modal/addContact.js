@@ -32,6 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 const CloseButton = styled(Close)`
   float: right;
+  cursor: pointer;
 `;
 
 export default function AddContactModal({
@@ -155,7 +156,6 @@ export default function AddContactModal({
                 <Grid container spacing={1}>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      autoFocus
                       variant="outlined"
                       margin="normal"
                       required
@@ -332,12 +332,13 @@ export default function AddContactModal({
                   </Grid>
                 </Grid>
                 <Button
+                  style={{ cursor: "pointer" }}
                   onClick={e => addContact(e)}
                   variant="contained"
                   color="primary"
                   className={classes.submit}
                 >
-                  Confirm
+                  Add
                 </Button>
               </form>
             </div>

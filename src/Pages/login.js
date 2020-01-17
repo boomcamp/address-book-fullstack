@@ -56,9 +56,12 @@ export default function Login(props) {
         password: user.password
       })
       .then(res => {
-        console.log(res.data);
         ls.set("auth", res.data.token);
-        ls.set("user", { firstname: res.data.fname, lastname: res.data.lname });
+        ls.set("user", {
+          id: res.data.id,
+          firstname: res.data.fname,
+          lastname: res.data.lname
+        });
         props.history.push(`/contacts/${res.data.id}`);
       })
       .catch(error => {
@@ -70,7 +73,7 @@ export default function Login(props) {
       });
   }
   return ls.get("auth") ? (
-    <Redirect to="/contacts" />
+    <Redirect to={`/contacts/${ls.get("user").id}`} />
   ) : (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -93,7 +96,6 @@ export default function Login(props) {
             label="Username"
             name="username"
             autoComplete="username"
-            autoFocus
           />
           <TextField
             variant="outlined"

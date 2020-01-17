@@ -32,6 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 const CloseButton = styled(Close)`
   float: right;
+  cursor: pointer;
 `;
 
 export default function AddGroupModal({ open, setOpen, headers, match }) {
@@ -39,10 +40,7 @@ export default function AddGroupModal({ open, setOpen, headers, match }) {
   const [group, setGroup] = useState("");
 
   function handleInput(e) {
-    setGroup({
-      ...group,
-      groupName: e.target.value
-    });
+    setGroup(e.target.value);
   }
 
   const handleClose = e => {
@@ -125,12 +123,13 @@ export default function AddGroupModal({ open, setOpen, headers, match }) {
                     onChange={handleInput}
                   />
                   <Button
+                    style={{ cursor: "pointer" }}
                     onClick={e => addGroup(e)}
                     variant="contained"
                     color="primary"
                     className={classes.submit}
                   >
-                    Confirm
+                    Add
                   </Button>
                 </Grid>
               </form>

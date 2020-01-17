@@ -78,6 +78,7 @@ export default function DeleteContactModal({
             <Grid container spacing={5}>
               <Grid item xs={3} sm={6}>
                 <Button
+                  style={{ cursor: "pointer" }}
                   color="primary"
                   variant="contained"
                   onClick={deleteContact}
@@ -87,6 +88,7 @@ export default function DeleteContactModal({
               </Grid>
               <Grid item xs={3} sm={6}>
                 <Button
+                  style={{ cursor: "pointer" }}
                   color="secondary"
                   variant="contained"
                   onClick={handleClose}
