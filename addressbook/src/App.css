@@ -15,3 +15,6 @@ body {
 .MuiTableCell-root {
   font-size: 20px;
 }
+.Mui-disabled {
+  color: lightgray;
+}

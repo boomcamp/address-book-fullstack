@@ -10,6 +10,7 @@ import "../../App.css";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 import { useWindowSize } from "../customHooks/useWindowSize";
 import { ContactDetails } from "./ContactDetails";
+import styled from "styled-components";
 
 const fetch = async (user, group, userData, setUserData) => {
   const response = await Axios.get(`${url}/groups/${group}/list`, {
