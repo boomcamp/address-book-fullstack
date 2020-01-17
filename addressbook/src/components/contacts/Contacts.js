@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MaterialTable from "material-table";
-import { columnData, columnDataMobile } from "../data/data";
+import { columnData, columnDataMobile, action2, action1 } from "../data/data";
 import { DialogCont, DeleteDialog, Group } from "./Dialog";
 import Axios from "axios";
 import { url } from "../../url";
@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import "../../App.css";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 import { useWindowSize } from "../customHooks/useWindowSize";
+import { ContactDetails } from "./ContactDetails";
 
 const fetch = async (user, group, userData, setUserData) => {
   const response = await Axios.get(`${url}/groups/${group}/list`, {
@@ -51,7 +52,7 @@ export const Contacts = props => {
         })
       : []
     : [];
-  const [windowWidth, windowHeight] = useWindowSize();
+  const [windowWidth] = useWindowSize();
   const [dialog, setDialog] = useState(false);
   const [action, setAction] = useState("");
   const [confirm, setConfirm] = useState({
@@ -63,6 +64,7 @@ export const Contacts = props => {
   const [multiSelect, setMultiSelect] = useState(false);
   const [groupName, setGroupName] = useState("Contacts");
   const [selectedGroup, setSelectedGroup] = useState();
+  const [search, setSearch] = useState("");
 
   const addContact = async e => {
     e.preventDefault();
@@ -169,72 +171,7 @@ export const Contacts = props => {
       console.error(err);
     }
   };
-  const action1 = [
-    {
-      icon: "add",
-      tooltip: "Add new Contact",
-      isFreeAction: true,
-      onClick: () => {
-        setAction("add");
-        setDialog(true);
-        setContact({ ...contact, userId: user.id });
-      }
-    },
-    {
-      icon: "check",
-      tooltip: "Multi Select",
-      isFreeAction: true,
-      onClick: () => setMultiSelect(true)
-    },
-    {
-      icon: "delete",
-      tooltip: "Delete Group",
-      isFreeAction: true,
-      disabled: group ? false : true,
-      onClick: () => handleDeleteGroup()
-    }
-  ];
-  const action2 = [
-    {
-      icon: "add",
-      tooltip: "Add new Contact",
-      isFreeAction: true,
-      onClick: () => {
-        setAction("add");
-        setDialog(true);
-        setContact({ ...contact, userId: user.id });
-      }
-    },
-    {
-      icon: "clear",
-      tooltip: "Remove Selection",
-      isFreeAction: true,
-      onClick: () => setMultiSelect(false)
-    },
-    {
-      icon: "delete",
-      tooltip: "Delete Group",
-      isFreeAction: true,
-      disabled: group ? false : true,
-      onClick: () => handleDeleteGroup()
-    },
-    {
-      tooltip: "Remove selected Users",
-      icon: "group",
-      onClick: (e, data) => {
-        setData(data);
-        setGroupDialog(true);
-      }
-    },
-    {
-      tooltip: "Move seleted to Group ...",
-      icon: "delete",
-      onClick: (e, data) => {
-        setData(data);
-        setDeleteDialog(true);
-      }
-    }
-  ];
+
   React.useEffect(() => {
     if (group === null) {
       return setGroupName("Contacts");
@@ -253,20 +190,68 @@ export const Contacts = props => {
           columns={
             windowWidth >= 600 ? columnData(user) : columnDataMobile(user)
           }
-          data={userData ? userData.addressBook : []}
+          data={
+            userData
+              ? userData.addressBook
+                ? userData.addressBook.filter(x => {
+                    const regex = new RegExp(search, "gi");
+                    if (x.firstName.match(regex) || x.lastName.match(regex)) {
+                      return x;
+                    }
+                    return {};
+                  })
+                : []
+              : []
+          }
           options={{
             pageSizeOptions: [10, 15, 20],
             pageSize: 10,
             actionsColumnIndex: -1,
             selection: multiSelect,
-            grouping: true
+            search: false,
+            sorting: false
           }}
-          actions={!multiSelect ? action1 : action2}
-          onRowClick={(e, rowData) => {
-            setContact(rowData);
-            setAction("edit");
-            setDialog(true);
-          }}
+          actions={
+            !multiSelect
+              ? action1(
+                  setAction,
+                  setDialog,
+                  setContact,
+                  setMultiSelect,
+                  handleDeleteGroup,
+                  contact,
+                  user,
+                  group
+                )
+              : action2(
+                  setAction,
+                  setDialog,
+                  setContact,
+                  setMultiSelect,
+                  handleDeleteGroup,
+                  setData,
+                  setGroupDialog,
+                  setDeleteDialog,
+                  contact,
+                  user,
+                  group
+                )
+          }
+          detailPanel={[
+            {
+              icon: "account_circle",
+              tooltip: "View Details",
+              render: rowData => (
+                <ContactDetails
+                  rowData={rowData}
+                  setContact={setContact}
+                  setAction={setAction}
+                  setDialog={setDialog}
+                  user={user}
+                />
+              )
+            }
+          ]}
         />
       </MuiThemeProvider>
 

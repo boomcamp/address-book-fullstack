@@ -8,12 +8,8 @@ const Span = styled.span`
 
 export const columnData = user => [
   {
-    title: "First Name",
-    field: "firstName"
-  },
-  {
-    title: "Last Name",
-    field: "lastName"
+    title: "Name",
+    render: rowData => <Span>{rowData.firstName + " " + rowData.lastName}</Span>
   },
   {
     title: "Mobile Phone",
@@ -24,22 +20,6 @@ export const columnData = user => [
     field: "email"
   },
   {
-    title: "City",
-    field: "city"
-  },
-  {
-    title: "State or Province",
-    field: "state"
-  },
-  {
-    title: "Postal Code",
-    field: "postalCode"
-  },
-  {
-    title: "Country",
-    field: "country"
-  },
-  {
     title: "Group",
     field: "groupId",
     render: rowData => <GroupName groupId={rowData.groupId} user={user} />
@@ -48,14 +28,98 @@ export const columnData = user => [
 export const columnDataMobile = user => [
   {
     title: "Name",
-    field: "firstName"
-  },
-  {
-    field: "lastName"
+    render: rowData => <Span>{rowData.firstName + " " + rowData.lastName}</Span>
   },
   {
     title: "Group",
     field: "groupId",
     render: rowData => <GroupName groupId={rowData.groupId} user={user} />
+  }
+];
+export const action2 = (
+  setAction,
+  setDialog,
+  setContact,
+  setMultiSelect,
+  handleDeleteGroup,
+  setData,
+  setGroupDialog,
+  setDeleteDialog,
+  contact,
+  user,
+  group
+) => [
+  {
+    icon: "add",
+    tooltip: "Add new Contact",
+    isFreeAction: true,
+    onClick: () => {
+      setAction("add");
+      setDialog(true);
+      setContact({ ...contact, userId: user.id });
+    }
+  },
+  {
+    icon: "clear",
+    tooltip: "Remove Selection",
+    isFreeAction: true,
+    onClick: () => setMultiSelect(false)
+  },
+  {
+    icon: "delete",
+    tooltip: "Delete Group",
+    isFreeAction: true,
+    disabled: group ? false : true,
+    onClick: () => handleDeleteGroup()
+  },
+  {
+    tooltip: "Remove selected Users",
+    icon: "group",
+    onClick: (e, data) => {
+      setData(data);
+      setGroupDialog(true);
+    }
+  },
+  {
+    tooltip: "Move seleted to Group ...",
+    icon: "delete",
+    onClick: (e, data) => {
+      setData(data);
+      setDeleteDialog(true);
+    }
+  }
+];
+export const action1 = (
+  setAction,
+  setDialog,
+  setContact,
+  setMultiSelect,
+  handleDeleteGroup,
+  contact,
+  user,
+  group
+) => [
+  {
+    icon: "add",
+    tooltip: "Add new Contact",
+    isFreeAction: true,
+    onClick: () => {
+      setAction("add");
+      setDialog(true);
+      setContact({ ...contact, userId: user.id });
+    }
+  },
+  {
+    icon: "check",
+    tooltip: "Multi Select",
+    isFreeAction: true,
+    onClick: () => setMultiSelect(true)
+  },
+  {
+    icon: "delete",
+    tooltip: "Delete Group",
+    isFreeAction: true,
+    disabled: group ? false : true,
+    onClick: () => handleDeleteGroup()
   }
 ];

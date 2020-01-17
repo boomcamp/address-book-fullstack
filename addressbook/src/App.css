@@ -4,9 +4,14 @@ body {
   padding: 0;
   margin: 0;
 }
-.MuiTableRow-root:hover {
-  background: #cacaca;
-}
 .MuiTableBody-root {
   overflow: auto;
+}
+
+.material-icons {
+  color: #3f51b5;
+}
+
+.MuiTableCell-root {
+  font-size: 20px;
 }

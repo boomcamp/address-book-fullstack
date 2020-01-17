@@ -21,7 +21,6 @@ function App() {
   const [userData, setUserData] = useState({});
   const [contact, setContact] = useState({});
   const [group, setGroup] = useState(null);
-  const [groupName, setGroupName] = useState("Contacts");
 
   useEffect(() => {
     if (user) {
