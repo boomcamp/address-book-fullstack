@@ -66,9 +66,10 @@ function updateUser(req, res) {
 
 function deleteUser(req, res) {
     const db = req.app.get('db');
+    const { contact_id } = req.params
 
     db.contact
-        .destroy(req.query)
+        .destroy({ contact_id })
         .then(contact => {
             res.status(200).json(contact)
         })
@@ -80,11 +81,12 @@ function deleteUser(req, res) {
 
 function searchUser(req, res) {
     const db = req.app.get('db');
+    const name = req.params
 
     db.contact
         .search({
-            fields: ['fname', 'lname'],
-            term: req.query.name
+            term: name,
+            fields: ['fname', 'lname']
         })
         .then(contact => res.status(200).json(contact))
         .catch(e => {
@@ -113,16 +115,7 @@ function addUser(req, res) {
         }, {
             deepInsert: true
         })
-        .then(function (contact) {
-            const contact_id = contact.contact_id;
-
-            db.addressbook
-                .insert({
-                    user_id,
-                    contact_id
-                }, {
-                    deepInsert: true
-                })
+        .then(contact => {
             res.status(201).json({ ...contact })
         })
         .catch(e => {

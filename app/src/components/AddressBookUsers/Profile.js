@@ -140,6 +140,7 @@ export default function Profile({ handleClose, handleClickOpen, menuOpen, menuCl
                                                 </IconButton>
                                             </Tooltip>
                                             <Delete
+                                                id={i.contact_id}
                                                 openDelete={openDelete}
                                                 deleteClose={deleteClose}
                                             />

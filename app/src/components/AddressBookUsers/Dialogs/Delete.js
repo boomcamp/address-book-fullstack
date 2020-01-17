@@ -6,7 +6,22 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 
-export default function Delete({ openDelete, deleteClose }) {
+import axios from 'axios';
+
+export default function Delete({ openDelete, deleteClose, id }) {
+
+    const onDelete = () => {
+        axios({
+            method: 'delete',
+            url: `http://localhost:3001/api/contacts/${id}`
+        })
+            .then(users => {
+                window.location.reload();
+            })
+            .catch(e => console.log(e))
+
+    }
+
     return (
         <Dialog
             disableBackdropClick
@@ -23,7 +38,7 @@ export default function Delete({ openDelete, deleteClose }) {
                 <Button onClick={deleteClose} autoFocus color="primary">
                     Cancel
                 </Button>
-                <Button onClick={deleteClose} autoFocus color="primary">
+                <Button onClick={onDelete} autoFocus color="primary">
                     Ok
                 </Button>
             </DialogActions>

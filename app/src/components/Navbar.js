@@ -15,6 +15,8 @@ export default function Navbar() {
     const auth = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+    const [search, setSearch] = React.useState('');
+
 
     const handleMenu = event => {
         setAnchorEl(event.currentTarget);
@@ -27,6 +29,12 @@ export default function Navbar() {
     const logOut = () => {
         localStorage.clear();
         window.location.href = "/"
+    }
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        setSearch({ name: e.target.value })
+        console.log(search)
     }
 
     return (
@@ -42,12 +50,15 @@ export default function Navbar() {
                                 <SearchIcon />
                             </div>
                             <InputBase
+                                id='name'
+                                name='name'
                                 placeholder="Search…"
                                 classes={{
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
                                 }}
                                 inputProps={{ 'aria-label': 'search' }}
+                                onChange={handleSearch}
                             />
                         </div>
                         {auth && (
@@ -132,7 +143,7 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(1, 1, 1, 7),
         transition: theme.transitions.create('width'),
         width: '100%',
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
             width: 120,
             '&:focus': {
                 width: 200,
@@ -145,7 +156,7 @@ const useStyles = makeStyles(theme => ({
     },
     sectionDesktop: {
         display: 'none',
-        [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up('lg')]: {
             display: 'flex',
         },
     },

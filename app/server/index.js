@@ -33,7 +33,7 @@ massive({
         // Edit user
         app.patch('/api/contacts/:contact_id', contact.updateUser);
         // Delete user
-        app.delete('/api/contacts/', contact.deleteUser);
+        app.delete('/api/contacts/:contact_id', contact.deleteUser);
         // Add user
         app.post('/api/contacts/:user_id', contact.addUser);
 

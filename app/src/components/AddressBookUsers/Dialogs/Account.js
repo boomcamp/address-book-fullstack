@@ -45,7 +45,7 @@ export default function Account({ handleClose }) {
             data: data
         })
             .then(e => {
-                window.location.href = "#/addressbook"
+                window.location.reload();
             })
             .catch(e => console.log(e))
     }
