@@ -71,7 +71,7 @@ export default function LoginPage({ handleLogin, prevStep, handleChange }) {
                                 <span>
                                     <Button disabled size="small" color="primary" className={classes.forgot}>
                                         Forgot Password?
-                                </Button>
+                                    </Button>
                                 </span>
                             </Tooltip>
                             <div className={classes.button}>
@@ -81,7 +81,7 @@ export default function LoginPage({ handleLogin, prevStep, handleChange }) {
                                     className={classes.back}
                                     onClick={prevStep}>
                                     Back
-                        </Button>
+                                </Button>
                             </div>
                             <Button
                                 variant="contained"
@@ -90,7 +90,7 @@ export default function LoginPage({ handleLogin, prevStep, handleChange }) {
                                 type="submit"
                             >
                                 OK
-                        </Button>
+                            </Button>
                         </CardContent>
                     </form>
                 </Card>

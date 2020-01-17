@@ -14,22 +14,17 @@ import EditTwoToneIcon from '@material-ui/icons/EditTwoTone';
 import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 
 import axios from 'axios';
-import Account from './Account';
+
+import Delete from './Dialogs/Delete';
+import Edit from './Dialogs/Edit';
+import AddContact from './Dialogs/AddContact';
 
 export default function Profile({ handleClose, handleClickOpen, menuOpen, menuClose, open, anchorEl }) {
     const classes = useStyles();
@@ -46,13 +41,14 @@ export default function Profile({ handleClose, handleClickOpen, menuOpen, menuCl
         if (localStorage.getItem('token')) {
             axios({
                 method: 'get',
-                url: `http://localhost:3001/api/contacts`,
+                url: `http://localhost:3001/api/contacts?page=1&limit=10`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             })
                 .then(res => {
-                    setUsers(res.data)
+                    setUsers(res.data.results);
+                    console.log(res);
                 })
                 .catch(e => console.log(e))
         } else {
@@ -85,19 +81,15 @@ export default function Profile({ handleClose, handleClickOpen, menuOpen, menuCl
                             <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                                 ADD CONTACT
                             </Button>
-                            <Dialog
+                            <AddContact
                                 fullScreen={fullScreen}
                                 open={open}
-                                onClose={handleClose}
-                                aria-labelledby="add-new-contact"
-                            >
-                                <DialogTitle id="add-new-contact">{"New Contact"}</DialogTitle>
-                                <DialogContent>
-                                    <Account handleClose={handleClose} />
-                                </DialogContent>
-                            </Dialog>
+                                handleClose={handleClose}
+                            />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={12} lg={12} className={classes.radio}>
+
+
+                        <Grid item xs={12} sm={6} md={12} lg={12} className={classes.sort}>
                             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={menuOpen} variant="outlined">
                                 Sort
                             </Button>
@@ -113,6 +105,7 @@ export default function Profile({ handleClose, handleClickOpen, menuOpen, menuCl
                             </Menu>
                         </Grid>
                     </Grid>
+
                     <div className={classes.height}>
                         <Grid container spacing={3} direction='row' alignItems="center" style={{ marginTop: 20 }}>
                             {users.map(i => (
@@ -129,60 +122,27 @@ export default function Profile({ handleClose, handleClickOpen, menuOpen, menuCl
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions>
-                                            <Tooltip title="Edit User">
+                                            <Tooltip title="Edit Contact">
                                                 <IconButton aria-label="edit" onClick={editOpen}>
                                                     <EditTwoToneIcon />
                                                 </IconButton>
                                             </Tooltip>
-                                            <Dialog
-                                                fullScreen
-                                                open={openEdit}
-                                                onClose={editClose}
-                                                TransitionComponent={Transition}
-                                            >
-                                                <AppBar className={classes.appBar}>
-                                                    <Toolbar>
-                                                        <IconButton edge="start" color="inherit" onClick={editClose} aria-label="close">
-                                                            <CloseIcon />
-                                                        </IconButton>
-                                                        <Typography variant="h6" className={classes.title}>
-                                                            Edit User
-                                                            </Typography>
-                                                        <Button autoFocus color="inherit" onClick={editClose}>
-                                                            Save
-                                                            </Button>
-                                                    </Toolbar>
-                                                </AppBar>
-                                                <DialogContent>
+                                            <Edit
+                                                openEdit={openEdit}
+                                                editClose={editClose}
+                                                Transition={Transition}
+                                            />
 
-                                                </DialogContent>
-                                            </Dialog>
 
-                                            <Tooltip title="Delete User">
+                                            <Tooltip title="Delete Contact">
                                                 <IconButton aria-label="delete" onClick={deleteOpen}>
                                                     <DeleteTwoToneIcon />
                                                 </IconButton>
                                             </Tooltip>
-                                            <Dialog
-                                                disableBackdropClick
-                                                disableEscapeKeyDown
-                                                open={openDelete}
-                                                onClose={deleteClose}
-                                                aria-labelledby="responsive-dialog-title"
-                                            >
-                                                <DialogTitle id="responsive-dialog-title">{"Are you sure you want to delete?"}</DialogTitle>
-                                                <DialogContent>
-
-                                                </DialogContent>
-                                                <DialogActions>
-                                                    <Button onClick={deleteClose} autoFocus color="primary">
-                                                        Cancel
-                                                    </Button>
-                                                    <Button onClick={deleteClose} autoFocus color="primary">
-                                                        Ok
-                                                    </Button>
-                                                </DialogActions>
-                                            </Dialog>
+                                            <Delete
+                                                openDelete={openDelete}
+                                                deleteClose={deleteClose}
+                                            />
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -210,18 +170,11 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'flex-start'
     },
-    radio: {
+    sort: {
         display: 'flex',
         justifyContent: 'flex-end'
     },
     height: {
         height: 'auto'
     },
-    appBar: {
-        position: 'relative',
-    },
-    title: {
-        marginLeft: theme.spacing(2),
-        flex: 1,
-    }
 }));

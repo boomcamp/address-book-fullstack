@@ -4,18 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Navbar from './Navbar';
 import Profile from './AddressBookUsers/Profile';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        display: "flex",
-        flexDirection: 'column',
-        margin: "auto"
-    },
-    row: {
-        display: 'flex',
-        justifyContent: 'center'
-    }
-}));
-
 export default function AddressBook() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -55,3 +43,15 @@ export default function AddressBook() {
         </React.Fragment>
     );
 }
+
+const useStyles = makeStyles(theme => ({
+    root: {
+        display: "flex",
+        flexDirection: 'column',
+        margin: "auto"
+    },
+    row: {
+        display: 'flex',
+        justifyContent: 'center'
+    }
+}));

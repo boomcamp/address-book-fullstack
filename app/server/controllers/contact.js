@@ -1,11 +1,32 @@
 function getAllData(req, res) {
     const db = req.app.get('db');
+    const page = Number(req.query.page);
+    const limit = Number(req.query.limit);
 
     db.contact
         .find()
         .then(users => {
-            res.status(200).json(users);
-            console.log(users);
+            const startIndex = (page - 1) * limit;
+            const endIndex = page * limit;
+
+            const result = {}
+
+            if (endIndex < users.length) {
+                result.next = {
+                    page: page + 1,
+                    limit: limit
+                }
+            }
+
+            if (startIndex > 0) {
+                result.previous = {
+                    page: page - 1,
+                    limit: limit
+                }
+            }
+
+            result.results = users.slice(startIndex, endIndex);
+            res.status(200).json(result);
         })
         .catch(e => {
             console.error(e);
