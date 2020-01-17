@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -11,10 +11,10 @@ import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import view from "../assets/images/eye.png";
 import trash from "../assets/images/delete.png";
-import addToGroup from "../assets/images/add-group.png";
 import { useHistory } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import AddToGroup from "./AddToGroup";
 
 const useStyles = makeStyles({
 	table: {
@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 		width: "1vw"
 	},
 	view: {
-		width: "20px",
+		width: "25px",
 		cursor: "pointer"
 	},
 	action: {
@@ -42,9 +42,15 @@ const useStyles = makeStyles({
 
 export default function SimpleTable(props) {
 	const classes = useStyles();
-	const [state, setState] = useState([]);
-	const { handleViewDetails } = props;
+	const { handleViewDetails, state } = props;
+
 	let history = useHistory();
+
+	const [setOpen] = useState(false);
+
+	const handleClose = () => {
+		setOpen(false);
+	};
 
 	const handleDeleteContact = contactId => {
 		confirmAlert({
@@ -71,12 +77,6 @@ export default function SimpleTable(props) {
 			]
 		});
 	};
-
-	useEffect(() => {
-		axios.get(`http://localhost:3006/contacts/${props.id}`).then(res => {
-			setState(res.data);
-		});
-	}, [setState, props.id]);
 
 	return (
 		<TableContainer component={Paper}>
@@ -113,16 +113,10 @@ export default function SimpleTable(props) {
 										src={view}
 										className={classes.view}
 										alt={row.id}
-										onClick={handleViewDetails}
+										onClick={() => handleViewDetails(row.id)}
 									/>
 								</Tooltip>
-								<Tooltip title="Add to Group">
-									<img
-										src={addToGroup}
-										className={classes.view}
-										alt="AddToGroup"
-									/>
-								</Tooltip>
+								<AddToGroup handleClose={handleClose} userId={props.id} />
 								<Tooltip title="Delete">
 									<img
 										src={trash}

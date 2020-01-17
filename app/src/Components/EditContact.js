@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 		marginTop: "15px",
 		borderRadius: "50%",
 		padding: "10px",
-		width: "20%",
+		width: "15%",
 		height: "25%",
 		background: "white",
 		display: "flex",
@@ -47,6 +47,20 @@ const useStyles = makeStyles(theme => ({
 		"@media (max-width: 767px)": {
 			width: "20px"
 		}
+	},
+	hover: {
+		"&::-webkit-scrollbar-track": {
+			webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.3)",
+			backgroundColor: "#F5F5F5",
+			borderRadius: "10px"
+		},
+		"&::-webkit-scrollbar": {
+			backgroundColor: "#F5F5F5",
+			width: "10px"
+		},
+		"&::-webkit-scrollbar-thumb": {
+			backgroundColor: "#a5b8eb"
+		}
 	}
 }));
 
@@ -68,7 +82,8 @@ export default function ResponsiveDialog(props) {
 		state_or_province,
 		postal_code,
 		country,
-		contactId
+		contactId,
+		handleShow
 	} = props;
 
 	const [required, setRequired] = useState(false);
@@ -104,12 +119,11 @@ export default function ResponsiveDialog(props) {
 					editCountry
 				})
 				.then(() => {
+					handleShow();
 					setOpen(false);
 					swal({
 						icon: "success",
 						title: "Edit Successful"
-					}).then(() => {
-						window.location = "/home";
 					});
 				});
 		}
@@ -174,7 +188,7 @@ export default function ResponsiveDialog(props) {
 				>
 					<span style={{ color: "white" }}>Edit Contact</span>
 				</DialogTitle>
-				<DialogContent>
+				<DialogContent className={classes.hover}>
 					<Grid container spacing={3}>
 						<Grid item xs={12} sm={6}>
 							<TextField

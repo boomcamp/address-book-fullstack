@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -101,15 +101,20 @@ const useStyles = makeStyles(theme => ({
 			width: "10%",
 			marginTop: "0"
 		}
+	},
+	height: {
+		height: "80vh"
 	}
 }));
 
 export default function ButtonAppBar() {
 	const classes = useStyles();
 
-	const [setOpenModal] = React.useState(false);
-	const [vDetails, setVDetails] = React.useState(false);
+	let userInfo = JSON.parse(localStorage.getItem("user"));
+	let display;
 
+	const [setOpenModal] = useState(false);
+	const [vDetails, setVDetails] = useState(false);
 	const [firstname, setFirstName] = useState("");
 	const [lastname, setLastName] = useState("");
 	const [home_phone, setHomePhone] = useState("");
@@ -122,13 +127,11 @@ export default function ButtonAppBar() {
 	const [country, setCountry] = useState("");
 
 	const [contactId, setContactId] = useState("");
+	const [whenClicked, setWhenClicked] = useState(false);
+	const [order, setOrder] = useState("asc");
+	const [state, setState] = useState([]);
 
-	const handleClose = () => {
-		setOpenModal(false);
-	};
-
-	let userInfo = JSON.parse(localStorage.getItem("user"));
-	let display;
+	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
 
 	if (!localStorage.getItem("Token")) {
 		swal({
@@ -139,8 +142,23 @@ export default function ButtonAppBar() {
 		});
 	}
 
+	const handleClose = () => {
+		setOpenModal(false);
+	};
+
 	const handleCloseDetails = () => {
 		setVDetails(false);
+		setWhenClicked(false);
+	};
+
+	const handleSort = val => {
+		setOrder(val);
+		getData(tokenDecoded, order);
+	};
+
+	const handleSearch = v => {
+		// setSearch(v);
+		getData(tokenDecoded, order, v);
 	};
 
 	const logout = () => {
@@ -152,6 +170,47 @@ export default function ButtonAppBar() {
 			window.location = "/";
 			localStorage.clear();
 		});
+	};
+
+	const handleViewDetails = e => {
+		setContactId(e);
+		axios({
+			method: "get",
+			url: `http://localhost:3006/contacts/${tokenDecoded.userId}/${e}`
+		}).then(res => {
+			const data = res.data[0];
+
+			setFirstName(data.firstname);
+			setLastName(data.lastname);
+			setHomePhone(data.home_phone);
+			setMobilePhone(data.mobile_phone);
+			setWorkPhone(data.work_phone);
+			setEmail(data.email);
+			setCity(data.city);
+			setStateOrProvince(data.state_or_province);
+			setPostalCode(data.postal_code);
+			setCountry(data.country);
+		});
+		setVDetails(true);
+		setWhenClicked(true);
+	};
+
+	const handleShow = () => {
+		handleViewDetails(contactId);
+	};
+
+	useEffect(() => {
+		getData(tokenDecoded, order);
+	}, [tokenDecoded.userId]);
+
+	const getData = (tokenDecoded, order, search = "") => {
+		axios
+			.get(
+				`http://localhost:3006/contacts/${tokenDecoded.userId}?order=${order}&search=${search}`
+			)
+			.then(res => {
+				setState(res.data);
+			});
 	};
 
 	if (vDetails) {
@@ -169,33 +228,10 @@ export default function ButtonAppBar() {
 				country={country}
 				handleCloseDetails={handleCloseDetails}
 				contactId={contactId}
+				handleShow={handleShow}
 			/>
 		);
 	}
-
-	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
-
-	const handleViewDetails = e => {
-		setContactId(e.target.alt);
-		axios({
-			method: "get",
-			url: `http://localhost:3006/contacts/${tokenDecoded.userId}/${e.target.alt}`
-		}).then(res => {
-			const data = res.data[0];
-
-			setFirstName(data.firstname);
-			setLastName(data.lastname);
-			setHomePhone(data.home_phone);
-			setMobilePhone(data.mobile_phone);
-			setWorkPhone(data.work_phone);
-			setEmail(data.email);
-			setCity(data.city);
-			setStateOrProvince(data.state_or_province);
-			setPostalCode(data.postal_code);
-			setCountry(data.country);
-		});
-		setVDetails(true);
-	};
 
 	if (localStorage.getItem("Token")) {
 		return (
@@ -234,7 +270,11 @@ export default function ButtonAppBar() {
 				<Container maxWidth="xl">
 					<Grid container>
 						<Grid item sm={3} xs={12}>
-							<SearchSort userInfo={userInfo} />
+							<SearchSort
+								userInfo={userInfo}
+								handleSort={handleSort}
+								handleSearch={handleSearch}
+							/>
 						</Grid>
 						<Grid item sm={9} xs={12}>
 							<div style={{ display: "flex" }}>
@@ -245,8 +285,15 @@ export default function ButtonAppBar() {
 									<AddContact handleClose={handleClose} id={userInfo.id} />
 								</Typography>
 							</div>
-							<Paper className={classes.div}>
-								<Table id={userInfo.id} handleViewDetails={handleViewDetails} />
+							<Paper
+								className={classes.div}
+								style={whenClicked ? { height: "50vh" } : { height: "80.5vh" }}
+							>
+								<Table
+									id={userInfo.id}
+									handleViewDetails={handleViewDetails}
+									state={state}
+								/>
 							</Paper>
 							{display}
 						</Grid>

@@ -59,9 +59,30 @@ const getList = (req, res) => {
 const getContactsByUser = (req, res) => {
 	const db = req.app.get("db");
 	const { userid } = req.params;
+	const { order, search } = req.query;
 
 	db.contacts
-		.find({ userid: userid })
+		.find(
+			{
+				userid: userid,
+				or: [
+					{
+						"firstname like": `%${search}%`
+					},
+					{
+						"lastname like": `%${search}%`
+					}
+				]
+			},
+			{
+				order: [
+					{
+						field: `lastname`,
+						direction: order
+					}
+				]
+			}
+		)
 		.then(contact => res.status(200).json(contact))
 		.catch(err => {
 			console.error(err);
@@ -72,6 +93,7 @@ const getContactsByUser = (req, res) => {
 const getContactByContactId = (req, res) => {
 	const db = req.app.get("db");
 	const { contactid, userid } = req.params;
+
 	db.contacts
 		.find({ userid: userid, id: contactid })
 		.then(contacts => res.status(200).json(contacts))

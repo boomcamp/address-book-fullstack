@@ -64,14 +64,26 @@ const useStyles = makeStyles(theme => ({
 				width: 250
 			}
 		}
+	},
+	byLN: {
+		fontSize: "12px",
+		color: "#7c7cca",
+		"@media (max-width: 767px)": {
+			display: "none"
+		}
 	}
 }));
 
 export default function ButtonAppBar(props) {
 	const [open, setOpen] = React.useState(false);
+	const { handleSort, handleSearch } = props;
 
 	const handleClick = () => {
 		setOpen(!open);
+	};
+
+	const handleChange = val => {
+		handleSort(val);
 	};
 
 	const classes = useStyles();
@@ -90,6 +102,7 @@ export default function ButtonAppBar(props) {
 							input: classes.inputInput
 						}}
 						inputProps={{ "aria-label": "search" }}
+						onChange={e => handleSearch(e.target.value)}
 					/>
 				</div>
 
@@ -104,18 +117,26 @@ export default function ButtonAppBar(props) {
 							}}
 						/>
 					</ListItemIcon>
-					<ListItemText primary="Sort (by Lastname)" />
+					<ListItemText
+						style={{
+							display: "flex",
+							alignItems: "center"
+						}}
+					>
+						<span>Sort</span>{" "}
+						<span className={classes.byLN}>(by Lastname)</span>
+					</ListItemText>
 					{open ? <ExpandLess /> : <ExpandMore />}
 				</ListItem>
 				<Collapse in={open} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
-						<ListItem button>
+						<ListItem button onClick={() => handleChange("asc")}>
 							<ListItemIcon>
 								<ArrowUpwardIcon />
 							</ListItemIcon>
 							<ListItemText primary="Ascending" />
 						</ListItem>
-						<ListItem button>
+						<ListItem button onClick={() => handleChange("desc")}>
 							<ListItemIcon>
 								<ArrowDownwardIcon />
 							</ListItemIcon>

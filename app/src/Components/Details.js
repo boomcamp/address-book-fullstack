@@ -5,6 +5,10 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Icon from "../assets/images/cont.png";
 import close from "../assets/images/cross.png";
+import ClearIcon from "@material-ui/icons/Clear";
+import Tooltip from "@material-ui/core/Tooltip";
+import Slide from "@material-ui/core/Slide";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 import EditContact from "./EditContact";
 
@@ -64,7 +68,7 @@ const useStyles = makeStyles(theme => ({
 		marginTop: "15px",
 		borderRadius: "50%",
 		padding: "10px",
-		width: "20%",
+		width: "15%",
 		height: "25%",
 		background: "white",
 		display: "flex",
@@ -107,12 +111,35 @@ const useStyles = makeStyles(theme => ({
 	},
 	"@media (max-width: 767px)": {
 		flexDirection: "row"
+	},
+	groupStyle: {
+		marginLeft: "5vw",
+		marginTop: "1vh",
+		width: "80%",
+		height: "13vh",
+		background: "#7e85d2b0",
+		borderRadius: "10px",
+		overflow: "auto"
+	},
+	groupN: {
+		paddingLeft: "10px",
+		paddingTop: "5px",
+		color: "white"
+	},
+	trash: {
+		color: "red",
+		fontSize: "12px",
+		cursor: "pointer",
+		paddingLeft: "3px",
+		"&:hover": {
+			color: "black"
+		}
 	}
 }));
 
 export default function Details(props) {
 	const classes = useStyles();
-	const { handleCloseDetails } = props;
+	const { handleCloseDetails, handleShow } = props;
 
 	const {
 		firstname,
@@ -130,81 +157,105 @@ export default function Details(props) {
 
 	return (
 		<React.Fragment>
-			<Paper className={classes.details}>
-				<Typography className={classes.head}>
-					<span className={classes.flex}>
-						<img src={Icon} className={classes.icon} alt="icon" />
-						<span>Contact Details</span>
-					</span>
-				</Typography>
-				<Grid container>
-					<Grid item xs={12} sm={5}>
-						<Typography className={classes.info}>
-							<b className={classes.pad}>First Name:</b>{" "}
-							<span className={classes.title}>{firstname}</span>
-						</Typography>
-						<Typography className={classes.info}>
-							<b className={classes.pad}>Last Name:</b>{" "}
-							<span className={classes.title}>{lastname}</span>
-						</Typography>
-						<Typography className={classes.info}>
-							<b className={classes.pad}>Home Phone#: </b>{" "}
-							<span className={classes.title}>{home_phone}</span>
-						</Typography>
-						<Typography className={classes.info}>
-							<b className={classes.pad}>Mobile Phone#: </b>{" "}
-							<span className={classes.title}>{mobile_phone}</span>
-						</Typography>
-						<Typography className={classes.info}>
-							<b className={classes.pad}>Work Phone#: </b>{" "}
-							<span className={classes.title}>{work_phone}</span>
-						</Typography>
-					</Grid>
-					<Grid item xs={12} sm={5}>
-						<Typography className={classes.info}>
-							<b className={classes.pad}>Email:</b>{" "}
-							<span style={{ color: "purple" }}>{email}</span>
-						</Typography>
-						<Typography className={classes.info}>
-							<b className={classes.pad}>City:</b>{" "}
-							<span className={classes.title}>{city}</span>
-						</Typography>
-						<Typography className={classes.info}>
-							<b className={classes.pad}>State or Province: </b>{" "}
-							<span className={classes.title}>{state_or_province}</span>
-						</Typography>
-						<Typography className={classes.info}>
-							<b className={classes.pad}>Postal Code: </b>{" "}
-							<span className={classes.title}>{postal_code}</span>
-						</Typography>
-						<Typography className={classes.info}>
-							<b className={classes.pad}>Country: </b>{" "}
-							<span className={classes.title}>{country}</span>
-						</Typography>
-					</Grid>
-					<Grid item xs={12} sm={2} align="center">
-						<div className={classes.closeEdit}>
-							<EditContact
-								firstname={firstname}
-								lastname={lastname}
-								home_phone={home_phone}
-								mobile_phone={mobile_phone}
-								work_phone={work_phone}
-								email={email}
-								city={city}
-								state_or_province={state_or_province}
-								postal_code={postal_code}
-								country={country}
-								contactId={contactId}
-							/>
-							<div className={classes.edit} onClick={handleCloseDetails}>
-								<img src={close} alt="close" className={classes.editIcon} />
-								<span style={{ fontSize: "12px" }}>Close</span>
+			<Slide in direction="up">
+				<Paper className={classes.details}>
+					<Typography className={classes.head}>
+						<span className={classes.flex}>
+							<img src={Icon} className={classes.icon} alt="icon" />
+							<span>Contact Details</span>
+						</span>
+					</Typography>
+					<Grid container>
+						<Grid item xs={12} sm={3}>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>First Name:</b>{" "}
+								<span className={classes.title}>{firstname}</span>
+							</Typography>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>Last Name:</b>{" "}
+								<span className={classes.title}>{lastname}</span>
+							</Typography>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>Home Phone#: </b>{" "}
+								<span className={classes.title}>{home_phone}</span>
+							</Typography>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>Mobile Phone#: </b>{" "}
+								<span className={classes.title}>{mobile_phone}</span>
+							</Typography>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>Work Phone#: </b>{" "}
+								<span className={classes.title}>{work_phone}</span>
+							</Typography>
+						</Grid>
+						<Grid item xs={12} sm={3}>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>Email:</b>{" "}
+								<span style={{ color: "purple" }}>{email}</span>
+							</Typography>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>City:</b>{" "}
+								<span className={classes.title}>{city}</span>
+							</Typography>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>State or Province: </b>{" "}
+								<span className={classes.title}>{state_or_province}</span>
+							</Typography>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>Postal Code: </b>{" "}
+								<span className={classes.title}>{postal_code}</span>
+							</Typography>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>Country: </b>{" "}
+								<span className={classes.title}>{country}</span>
+							</Typography>
+						</Grid>
+						<Grid item xs={12} sm={3}>
+							<Typography className={classes.info}>
+								<b className={classes.pad}>Group/s:</b>{" "}
+							</Typography>
+							<div className={classes.groupStyle}>
+								<Typography align="left" className={classes.groupN}>
+									<FiberManualRecordIcon style={{ fontSize: "10px" }} />{" "}
+									Boomcamp
+									<Tooltip title="Remove Group">
+										<ClearIcon className={classes.trash} />
+									</Tooltip>
+								</Typography>
+								<Typography align="left" className={classes.groupN}>
+									<FiberManualRecordIcon style={{ fontSize: "10px" }} />{" "}
+									Homebase
+									<Tooltip title="Remove Group">
+										<ClearIcon className={classes.trash} />
+									</Tooltip>
+								</Typography>
 							</div>
-						</div>
+						</Grid>
+						<Grid item xs={12} sm={3} align="center">
+							<div className={classes.closeEdit}>
+								<EditContact
+									firstname={firstname}
+									lastname={lastname}
+									home_phone={home_phone}
+									mobile_phone={mobile_phone}
+									work_phone={work_phone}
+									email={email}
+									city={city}
+									state_or_province={state_or_province}
+									postal_code={postal_code}
+									country={country}
+									contactId={contactId}
+									handleShow={handleShow}
+								/>
+								<div className={classes.edit} onClick={handleCloseDetails}>
+									<img src={close} alt="close" className={classes.editIcon} />
+									<span style={{ fontSize: "12px" }}>Close</span>
+								</div>
+							</div>
+						</Grid>
 					</Grid>
-				</Grid>
-			</Paper>
+				</Paper>
+			</Slide>
 		</React.Fragment>
 	);
 }

@@ -104,8 +104,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function ButtonAppBar(props) {
 	const classes = useStyles();
-	const [open, setOpen] = useState(false);
-	const [openEdit, setOpenEdit] = useState(false);
+	const [setOpen] = useState(false);
+	const [setOpenEdit] = useState(false);
 	const [state, setState] = useState([]);
 	const [groupname, setGroupName] = useState("");
 	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
@@ -133,6 +133,15 @@ export default function ButtonAppBar(props) {
 					window.location = "/home";
 				});
 			});
+	};
+
+	const handleShow = () => {
+		axios({
+			method: "get",
+			url: `http://localhost:3006/group-contacts/${tokenDecoded.userId}`
+		}).then(res => {
+			setState(res.data);
+		});
 	};
 
 	const handleDeleteContact = groupid => {
@@ -171,7 +180,7 @@ export default function ButtonAppBar(props) {
 			});
 		}
 		result();
-	}, []);
+	}, [tokenDecoded.userId]);
 
 	return (
 		<React.Fragment>
@@ -206,9 +215,9 @@ export default function ButtonAppBar(props) {
 				>
 					Groups
 				</Typography>
-				{state.map(data => {
+				{state.map((data, i) => {
 					return (
-						<div className={classes.groupFlex}>
+						<div className={classes.groupFlex} key={i}>
 							<div className={classes.groupName}>
 								<Avatar
 									style={{
@@ -231,9 +240,9 @@ export default function ButtonAppBar(props) {
 								</Tooltip>
 								<EditGroup
 									handleCloseEdit={handleCloseEdit}
-									groupname={groupname}
 									id={data.id}
 									groupname={data.groupname}
+									handleShow={handleShow}
 								/>
 								<Tooltip title="Delete Group">
 									<DeleteOutlineTwoToneIcon
