@@ -1,30 +1,54 @@
 import React from 'react';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
+import MenuIcon from '@material-ui/icons/Menu';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import clsx from 'clsx';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+// import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import List from '@material-ui/core/List';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PersonIcon from '@material-ui/icons/Person';
+import Tooltip from '@material-ui/core/Tooltip'
+
+import Contact from './AddressBookUsers/Contact';
 
 export default function Navbar() {
     const classes = useStyles();
     const auth = React.useState(true);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
+    // const [anchorEl, setAnchorEl] = React.useState(null);
+    // const open = Boolean(anchorEl);
     const [search, setSearch] = React.useState('');
+    const theme = useTheme();
+    const [openDrawer, setOpenDrawer] = React.useState(false);
 
-
-    const handleMenu = event => {
-        setAnchorEl(event.currentTarget);
+    const handleDrawerOpen = () => {
+        setOpenDrawer(true);
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleDrawerClose = () => {
+        setOpenDrawer(false);
     };
+
+    // const handleMenu = event => {
+    //     setAnchorEl(event.currentTarget);
+    // };
+
+    // const handleClose = () => {
+    //     setAnchorEl(null);
+    // };
 
     const logOut = () => {
         localStorage.clear();
@@ -37,11 +61,47 @@ export default function Navbar() {
         console.log(search)
     }
 
+    const [open, setOpen] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const menuOpen = event => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const menuClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <div className={classes.root}>
-            <AppBar position="static">
+            <CssBaseline />
+            <AppBar
+                position="fixed"
+                className={clsx(classes.appBar, {
+                    [classes.appBarShift]: openDrawer,
+                })}
+            >
                 <Toolbar>
                     <div className={classes.width}>
+                        <Tooltip title="Menu">
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={handleDrawerOpen}
+                                edge="start"
+                                className={clsx(classes.menuButton, openDrawer && classes.hide)}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        </Tooltip>
                         <Typography variant="h6" className={classes.title}>
                             Address Book
                         </Typography>
@@ -63,16 +123,18 @@ export default function Navbar() {
                         </div>
                         {auth && (
                             <div>
-                                <IconButton
-                                    aria-label="account of current user"
-                                    aria-controls="menu-appbar"
-                                    aria-haspopup="true"
-                                    onClick={handleMenu}
-                                    color="inherit"
-                                >
-                                    <AccountCircle />
-                                </IconButton>
-                                <Menu
+                                <Tooltip title="Sign Out">
+                                    <IconButton
+                                        aria-label="account of current user"
+                                        aria-controls="menu-appbar"
+                                        aria-haspopup="true"
+                                        onClick={logOut}
+                                        color="inherit"
+                                    >
+                                        <ExitToAppIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                {/* <Menu
                                     id="menu-appbar"
                                     anchorEl={anchorEl}
                                     anchorOrigin={{
@@ -86,24 +148,119 @@ export default function Navbar() {
                                     }}
                                     open={open}
                                     onClose={handleClose}
-                                >
-                                    <MenuItem onClick={logOut}>Sign Out</MenuItem>
-                                </Menu>
+                                > */}
+                                {/* <MenuItem onClick={handleClose}>Profile</MenuItem> */}
+                                {/* <MenuItem onClick={logOut}>Sign Out</MenuItem> */}
+                                {/* </Menu> */}
                             </div>
                         )}
                     </div>
                 </Toolbar>
             </AppBar>
-        </div>
+            <Drawer
+                className={classes.drawer}
+                variant="persistent"
+                anchor="left"
+                open={openDrawer}
+                classes={{
+                    paper: classes.drawerPaper,
+                }}
+            >
+                <div className={classes.drawerHeader}>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </IconButton>
+                </div>
+                <Divider />
+                <List>
+                    {['Profile', 'Contacts'].map((text, index) => (
+                        <ListItem button key={text}>
+                            <ListItemIcon>{index % 2 === 0 ? <PersonIcon /> : <MailIcon />}</ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItem>
+                    ))}
+                </List>
+                <Divider />
+            </Drawer>
+            <main
+                className={clsx(classes.content, {
+                    [classes.contentShift]: openDrawer,
+                })}
+            >
+                <div className={classes.drawerHeader} />
+                <div className={classes.row}>
+                    <Contact
+                        handleClickOpen={handleClickOpen}
+                        handleClose={handleClose}
+                        open={open}
+                        anchorEl={anchorEl}
+                        menuOpen={menuOpen}
+                        menuClose={menuClose}
+                    />
+                </div>
+            </main>
+        </div >
     );
 }
 
+const drawerWidth = 240;
+
 const useStyles = makeStyles(theme => ({
-    grow: {
-        flexGrow: 1,
+    root: {
+        display: 'flex',
+    },
+    appBar: {
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerWidth,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
     },
     menuButton: {
         marginRight: theme.spacing(2),
+    },
+    hide: {
+        display: 'none',
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+    drawerPaper: {
+        width: drawerWidth,
+    },
+    drawerHeader: {
+        display: 'flex',
+        alignItems: 'center',
+        padding: theme.spacing(0, 1),
+        ...theme.mixins.toolbar,
+        justifyContent: 'flex-end',
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: -drawerWidth,
+    },
+    contentShift: {
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: 0,
+    },
+    grow: {
+        flexGrow: 1,
     },
     title: {
         flexGrow: 1,
@@ -111,7 +268,8 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('sm')]: {
             display: 'block',
         },
-        alignItems: 'center'
+        alignItems: 'center',
+        margin: 10
     },
     search: {
         position: 'relative',
@@ -138,6 +296,7 @@ const useStyles = makeStyles(theme => ({
     },
     inputRoot: {
         color: 'inherit',
+        marginTop: 7
     },
     inputInput: {
         padding: theme.spacing(1, 1, 1, 7),
@@ -166,12 +325,13 @@ const useStyles = makeStyles(theme => ({
             display: 'none',
         },
     },
-    root: {
-        flexGrow: 1,
-    },
     width: {
         display: "flex",
         width: 1366,
         margin: "auto"
+    },
+    row: {
+        display: 'flex',
+        flexDirection: 'row'
     }
 }));

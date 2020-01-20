@@ -1,32 +1,36 @@
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
-const secret = require('../../secret');
+const secret = require('../../secret')
 
 function newUser(req, res) {
     const db = req.app.get('db');
-
-    const { username, password, email } = req.body;
+    const { email, username, password, firstname, lastname } = req.body;
 
     argon2
         .hash(password)
         .then(hash => {
-            return db.users.insert({
-                username,
-                password: hash,
-                email
-            }, {
-                deepInsert: true
-            })
+            return db.users
+                .insert(
+                    {
+                        email,
+                        username,
+                        password: hash,
+                        firstname,
+                        lastname
+                    },
+                    {
+                        fields: ['user_id', 'username', 'email', 'firstname', 'lastname'],
+                    }
+                );
         })
         .then(user => {
-            const token = jwt.sign({ user_id: user.id }, secret);
-            delete user.password;
+            const token = jwt.sign({ user_id: user.user_id }, secret); // adding token generation
             res.status(201).json({ ...user, token });
         })
-        .catch(e => {
-            console.error(e);
+        .catch(err => {
+            console.error(err);
             res.status(500).end();
-        })
+        });
 }
 
 function login(req, res) {
@@ -66,6 +70,59 @@ function login(req, res) {
         })
 }
 
+function getUsersByID(req, res) {
+    const db = req.app.get('db');
+    const { user_id } = req.params;
+
+    db.users
+        .findOne({ user_id })
+        .then(user => res.status(200).json(user))
+        .catch(err => {
+            console.error(err);
+            res.status(500).end();
+        });
+}
+
+function updateUser(req, res) {
+    const db = req.app.get("db");
+    const {
+        firstname,
+        lastname,
+    } = req.body;
+    const { user_id } = req.params
+
+    db.contacts
+        .update(
+            {
+                user_id
+            },
+            {
+                firstname,
+                lastname,
+            }
+        )
+        .then(update => res.status(201).send(update))
+        .catch(e => {
+            console.err(e);
+            res.status(500).end();
+        });
+}
+
+function deleteUser(req, res) {
+    const db = req.app.get('db');
+    const { user_id } = req.params
+
+    db.contact
+        .destroy({ user_id })
+        .then(() => {
+            res.status(200).send('Contact Deleted')
+        })
+        .catch(e => {
+            console.error(e);
+            res.status(500).end();
+        })
+}
+
 module.exports = {
-    newUser, login
+    newUser, login, getUsersByID, updateUser, deleteUser
 }

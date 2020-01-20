@@ -160,7 +160,7 @@ export default function Account({ handleClose }) {
                         <div className={classes.buttons}>
                             <Button
                                 variant="contained"
-                                color="primary"
+                                color="secondary"
                                 onClick={handleClose}
                             >
                                 CANCEL

@@ -1,6 +1,8 @@
 import React from 'react';
+import axios from 'axios';
+
+// Form
 import { makeStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -12,9 +14,9 @@ import clsx from 'clsx';
 import FormControl from '@material-ui/core/FormControl';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
-
-import axios from 'axios';
-
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import Divider from '@material-ui/core/Divider';
+// import FormHelperText from '@material-ui/core/FormHelperText';
 
 export default function Register({ handleClose }) {
     const classes = useStyles();
@@ -22,14 +24,15 @@ export default function Register({ handleClose }) {
         password: '',
         showPassword: false
     });
-    const [data, setData] = React.useState({
+    const [state, setState] = React.useState({
         email: '',
         username: '',
         password: '',
-        fname: undefined,
-        lname: undefined
-    })
-
+        firstname: '',
+        lastname: ''
+    });
+    // const [confirm, setConfirm] = React.useState('');
+    // const [validate, setValidate] = React.useState(null);
 
     const handleClickShowPassword = () => {
         setValues({ ...values, showPassword: !values.showPassword });
@@ -39,111 +42,191 @@ export default function Register({ handleClose }) {
         event.preventDefault();
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = e => {
         e.preventDefault();
-
-
         axios({
             method: "post",
-            url: `http://localhost:3001/api/register/`,
-            data: data
+            url: 'http://localhost:3001/api/register',
+            data: state
         })
             .then(e => {
                 localStorage.setItem('token', e.data.token);
                 localStorage.setItem('id', e.data.user_id);
                 localStorage.setItem('user', e.data.username);
-                window.localtion.href = "#/";
+                window.location.href = "#/";
             })
             .catch(e => console.log(e))
-    }
+    };
 
-    const handleChange = (e) => {
-        setData({
-            ...data,
+    const handleChange = e => {
+        setState({
+            ...state,
             [e.target.name]: e.target.value
         })
-    }
+    };
+
+    // const passValidation = e => {
+    //     const { password } = state.data
+    //     if (confirm.length > 1 || password.length > 1) {
+    //         setValidate(true)
+    //     }
+    // };
+
+    // const onChangeConfirm = e => {
+    //     setConfirm(e.target.value);
+    // };
 
     return (
-        <div className={classes.root}>
-
-            <div className={classes.content}>
-                <form className={classes.input} autoComplete="off" onSubmit={handleSubmit}>
-                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="email">Email</InputLabel>
-                        <OutlinedInput
-                            required
-                            id="email"
-                            name="email"
-                            type="email"
-                            onChange={handleChange}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <AlternateEmailIcon />
-                                </InputAdornment>
-                            }
-                            labelWidth={50}
-                        />
-                    </FormControl>
-                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="username">Username</InputLabel>
-                        <OutlinedInput
-                            required
-                            id="username"
-                            name="username"
-                            type="username"
-                            onChange={handleChange}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <AccountBoxIcon />
-                                </InputAdornment>
-                            }
-                            labelWidth={80}
-                        />
-                    </FormControl>
-                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="password">Password</InputLabel>
-                        <OutlinedInput
-                            required
-                            id="password"
-                            name="password"
-                            type={values.showPassword ? 'text' : 'password'}
-                            onChange={handleChange}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        edge="end"
-                                    >
-                                        {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                            labelWidth={80}
-                        />
-                    </FormControl>
-                    <Divider />
-                    <div className={clsx(classes.buttons, classes.margin, classes.bottom)}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleClose}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                        >
-                            Register
-                        </Button>
-                    </div>
-                </form>
-            </div>
-        </div >
+        <React.Fragment>
+            <div className={classes.root}>
+                <div item className={classes.content} >
+                    <form className={classes.input} autoComplete="off" onSubmit={handleSubmit}>
+                        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                            <InputLabel htmlFor="email">Email</InputLabel>
+                            <OutlinedInput
+                                required
+                                id="email"
+                                name="email"
+                                type="email"
+                                onChange={handleChange}
+                                defaultValue={state.email}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <AlternateEmailIcon />
+                                    </InputAdornment>
+                                }
+                                labelWidth={50}
+                            />
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                            <InputLabel htmlFor="username">Username</InputLabel>
+                            <OutlinedInput
+                                required
+                                id="username"
+                                name="username"
+                                type="username"
+                                onChange={handleChange}
+                                defaultValue={state.username}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <AccountBoxIcon />
+                                    </InputAdornment>
+                                }
+                                labelWidth={80}
+                            />
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                            <InputLabel htmlFor="password">Password</InputLabel>
+                            <OutlinedInput
+                                required
+                                // color={validate ? 'primary' : 'secondary'}
+                                id="password"
+                                name="password"
+                                type={values.showPassword ? 'text' : 'password'}
+                                onChange={handleChange}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                labelWidth={80}
+                            />
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                            <InputLabel htmlFor="firstname">First Name</InputLabel>
+                            <OutlinedInput
+                                id="firstname"
+                                name="firstname"
+                                type="firstname"
+                                autoFocus
+                                onChange={handleChange}
+                                defaultValue={state.firstname}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <PermIdentityIcon />
+                                    </InputAdornment>
+                                }
+                                labelWidth={85}
+                            />
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                            <InputLabel htmlFor="lastname">Last Name</InputLabel>
+                            <OutlinedInput
+                                id="lastname"
+                                name="lastname"
+                                type="lastname"
+                                onChange={handleChange}
+                                defaultValue={state.lastname}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <PermIdentityIcon />
+                                    </InputAdornment>
+                                }
+                                labelWidth={80}
+                            />
+                        </FormControl>
+                        {/* <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                                <InputLabel htmlFor="confirmpassword">Confirm Password</InputLabel>
+                                <OutlinedInput
+                                    required
+                                    color={validate ? 'primary' : 'secondary'}
+                                    id="confirmpassword"
+                                    name="confirmpassword"
+                                    type={values.showPassword ? 'text' : 'confirmpassword'}
+                                    onChange={e => {
+                                        passValidation(e);
+                                        onChangeConfirm(e);
+                                    }}
+                                    endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={handleClickShowPassword}
+                                                onMouseDown={handleMouseDownPassword}
+                                                edge="end"
+                                            >
+                                                {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    }
+                                    labelWidth={140}
+                                />
+                                <FormHelperText id="confirmpassword">{validate ? null : "Password does not match"}</FormHelperText>
+                            </FormControl> */}
+                        <div className={classes.bottom}>
+                            <Divider />
+                        </div>
+                        <div className={classes.buttons}>
+                            <div className={classes.cancel}>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleClose}
+                                >
+                                    Cancel
+                                    </Button>
+                            </div>
+                            <div className={classes.register}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                >
+                                    Register
+                                    </Button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div >
+        </React.Fragment>
     );
 }
 
@@ -152,12 +235,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        flexWrap: 'wrap',
-        '& > *': {
-            margin: theme.spacing(1),
-            width: theme.spacing(100),
-            height: theme.spacing(45),
-        },
+        flexWrap: 'wrap'
     },
     content: {
         padding: 10,
@@ -174,6 +252,15 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'space-between'
     },
     bottom: {
-        marginBottom: 20
+        marginBottom: 10,
+        marginTop: 20
+    },
+    cancel: {
+        display: 'flex',
+        justifyContent: 'flex-start'
+    },
+    register: {
+        display: 'flex',
+        justifyContent: 'flex-end'
     }
 }));

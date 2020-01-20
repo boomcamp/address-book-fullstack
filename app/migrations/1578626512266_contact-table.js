@@ -44,6 +44,7 @@ exports.up = (pgm) => {
         },
         user_id: {
             type: 'integer',
+            notNull: true,
             references: '"users"'
         }
     });
