@@ -7,6 +7,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 // import Chip from "@material-ui/core/Chip";
 import { Chip } from "@material-ui/core";
+import './groupForm.css'
 
 export default function GroupForm(highprops) {
   const classes = useStyles();
@@ -31,16 +32,25 @@ export default function GroupForm(highprops) {
     ]
   });
 
-  const [chipState, setChipState] = useState();
-  const [initChip, setInitChip] = useState();
+  const [chipState, setChipState] = useState([]);
+  const [initChip, setInitChip] = useState([]);
 
   useEffect(() => {
     getGroup();
 
     if (highprops.reference_contact) {
       setGroup(highprops.reference_contact);
+    } else if (highprops.reference_contact === null) {
+      console.log("new group create");
     }
-  }, [highprops.reference_contact]);
+
+    if (highprops.newContactData) {
+      getNewDataDetails(highprops.newContactData);
+    }
+
+    console.log(highprops.reference_contact);
+    console.log(highprops.newContactData);
+  }, [highprops.reference_contact, highprops.newContactData]);
 
   const grpStateUpdate = (event, value, reason) => {
     setgrpState(prevState => {
@@ -51,8 +61,6 @@ export default function GroupForm(highprops) {
         }
       };
     });
-
-    console.log(grpState);
   };
 
   const setGroup = id => {
@@ -70,7 +78,7 @@ export default function GroupForm(highprops) {
           setChipState(data.data);
           setInitChip(data.data);
 
-          console.log(data.data);
+          console.log(data);
         } catch (err) {
           setgrpState(prevState => {
             return {
@@ -86,9 +94,20 @@ export default function GroupForm(highprops) {
   };
 
   const updateGroups = () => {
-    //removed item
+    if (highprops.reference_contact) {
+      //for removed items
+      checkRemovedGroups();
+      // for added items
+      checkAddedGroups(highprops.reference_contact);
+    } else if (highprops.reference_contact === null) {
+      // checkAddedGroups();
+    }
+  };
+
+  const checkRemovedGroups = () => {
     let chips = [];
     let removed = [];
+
     chipState.map(chip => {
       chips.push(chip.group_name);
     });
@@ -98,8 +117,22 @@ export default function GroupForm(highprops) {
         ? ""
         : removed.push(chip.group_name);
     });
-    console.log(removed);
 
+    console.log("deleting", chipState);
+
+    deleteGroups(removed);
+  };
+
+  const getNewDataDetails = data => {
+    console.log("recieving new data details 1902");
+    console.log(data);
+    checkAddedGroups(data.data.id);
+  };
+
+  const checkAddedGroups = (id = highprops.reference_contact) => {
+    console.log("adding new group to ", id);
+
+    // let chips = [];
     let init = [];
     let added = [];
 
@@ -107,23 +140,23 @@ export default function GroupForm(highprops) {
       init.push(chip.group_name);
     });
 
-    chips.map((chip, index) => {
-      return init.indexOf(chip) > -1 ? "" : added.push(chip);
+    chipState.map((chip, index) => {
+      return init.indexOf(chip) > -1 ? "" : added.push(chip.group_name);
     });
-    deleteGroups(removed);
-    newGroups(added);
 
-    console.log(added);
+    newGroups(added, id);
   };
 
-  const newGroups = added => {
+  const newGroups = (added, id) => {
+    console.log("new groups", added);
+
     added.map(data => {
       axios({
         method: "post",
         url: "http://localhost:5000/api/contacts/groups/reference",
         data: {
           group_name: data,
-          contactid: highprops.reference_contact,
+          contactid: id,
           past_group: grpState.recentGroupState
             ? grpState.recentGroupState.title
             : ""
@@ -189,14 +222,9 @@ export default function GroupForm(highprops) {
 
   const addToGroup = () => {
     let rechip = Object.assign([], chipState);
-
-    // // console.log(rechip)
     rechip.push({ group_name: grpState.selectedGroupName.title });
-
     setChipState(rechip);
     console.log(chipState);
-
-    // setgrpState
   };
 
   const handleDelete = chipToDelete => e => {
@@ -207,6 +235,9 @@ export default function GroupForm(highprops) {
     setChipState(rechip =>
       rechip.filter(chip => chip.group_name !== chipToDelete.group_name)
     );
+    // here
+    deleteGroups([chipToDelete.group_name]);
+    // checkRemovedGroups();
   };
 
   const handleClick = () => {
@@ -214,8 +245,8 @@ export default function GroupForm(highprops) {
   };
 
   return (
-    <div style={{ margin: "100px" }}>
-      <div style={styles.addToGroup}>
+    <div  style={{ margin: "20px" }}>
+      <div className="group-form-container" style={styles.addToGroup}>
         <Autocomplete
           freeSolo
           id="group-box"
@@ -235,13 +266,13 @@ export default function GroupForm(highprops) {
             />
           )}
         />
-        <button style={styles.submitBtn} onClick={addToGroup}>
-          Add
-        </button>
+        <p className="add-group-btn" onClick={addToGroup}>
+          +
+        </p>
 
-        <button style={styles.submitBtn} onClick={updateGroups}>
+        {/* <button type="submit" style={styles.submitBtn} onClick={updateGroups}>
           Check
-        </button>
+        </button> */}
       </div>
 
       <div className={classes.chip} style={{ width: "400px" }}>
@@ -280,20 +311,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const styles = {
-  submitBtn: {
-    width: "50px",
-    height: "32px",
-    background: "#2196F3",
-    color: "white",
-    border: "none",
-    marginTop: "25px",
-    marginBottom: "20px",
-    borderRadius: "4px",
-    cursor: "pointer",
-    height: "43px",
-    position: "relative",
-    top: "-7px"
-  },
+  // submitBtn: {
+  //   width: "50px",
+  //   height: "32px",
+  //   background: "#2196F3",
+  //   color: "white",
+  //   border: "none",
+  //   marginTop: "25px",
+  //   marginBottom: "20px",
+  //   borderRadius: "4px",
+  //   cursor: "pointer",
+  //   height: "43px",
+  //   position: "relative",
+  //   top: "-7px"
+  // },
   addToGroup: {
     width: "250px",
     display: "flex",

@@ -126,7 +126,6 @@ module.exports = {
       db.groups_track
         .destroy({ contactid: req.params.id })
         .then(post => {
-          
           db.address_book
             .destroy({ contactid: req.params.id })
             .then(post => {
@@ -150,7 +149,6 @@ module.exports = {
         .catch(err => {
           res.status(500).end();
         });
-
     } catch (err) {
       console.error(err);
       res.status(401).end();
@@ -207,5 +205,28 @@ module.exports = {
       console.error(err);
       res.status(401).end();
     }
+  },
+  sort: (req, res) => {
+    const db = req.app.get("db");
+
+    // const { sortType } = db.body;
+
+    console.log(req.params.order)
+
+    db.query(
+      `SELECT contacts.id, first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_or_province, postal_code, country 
+      FROM contacts 
+      INNER JOIN address_book 
+      ON address_book.contactid = contacts.id 
+      WHERE address_book.userid = ${req.params.id} 
+      ORDER BY last_name ${req.params.order}`
+    )
+    .then(post => {
+      res.status(200).json(post);
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).end();
+    });
   }
 };

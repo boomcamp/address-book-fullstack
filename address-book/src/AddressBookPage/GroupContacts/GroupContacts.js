@@ -15,7 +15,9 @@ export default function GroupContacts(highprops) {
   const getGroup = () => {
     axios({
       method: "get",
-      url: "http://localhost:5000/api/contacts/groups/active",
+      url: `http://localhost:5000/api/contacts/groups/active/${sessionStorage.getItem(
+        "userid"
+      )}`,
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
@@ -42,10 +44,13 @@ export default function GroupContacts(highprops) {
   };
 
   const getGroups = e => {
+    highprops.passGroupRef(e);
     // here
     axios({
       method: "get",
-      url: `http://localhost:5000/api/contacts/groups/${e}`,
+      url: `http://localhost:5000/api/contacts/groups/${sessionStorage.getItem(
+        "userid"
+      )}/${e}`,
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
@@ -58,10 +63,14 @@ export default function GroupContacts(highprops) {
   };
 
   const getAllContacts = () => {
+    highprops.passGroupRef(null);
+
     // here
     axios({
       method: "get",
-      url: `http://localhost:5000/api/contacts/${sessionStorage.getItem("userid")}`,
+      url: `http://localhost:5000/api/contacts/${sessionStorage.getItem(
+        "userid"
+      )}`,
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {

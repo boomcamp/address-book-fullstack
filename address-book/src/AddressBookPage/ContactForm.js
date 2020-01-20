@@ -6,6 +6,8 @@ import axios from "axios";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 
+import GroupForm from "./GroupForm/GroupForm";
+
 export default function ContactForm(highprops) {
   const classes = useStyles();
 
@@ -115,39 +117,44 @@ export default function ContactForm(highprops) {
       .catch(e => console.log(e));
   };
 
+  const [upContactData, setUpContactData] = useState();
+
   const addtoGroup = data => {
-    try {
-      if (grpState.selectedGroupName) {
-        let id;
+    console.log("contact datapass", data);
+    setUpContactData(data);
 
-        try {
-          if (data.data[0].id) {
-            id = data.data[0].id;
-          }
-        } catch (error) {
-          id = data.data.id;
-        }
+    // try {
+    //   if (grpState.selectedGroupName) {
+    //     let id;
 
-        console.log("contact id is " + id);
+    //     try {
+    //       if (data.data[0].id) {
+    //         id = data.data[0].id;
+    //       }
+    //     } catch (error) {
+    //       id = data.data.id;
+    //     }
 
-        axios({
-          method: "post",
-          url: "http://localhost:5000/api/contacts/groups/reference",
-          data: {
-            group_name: grpState.selectedGroupName.title,
-            contactid: id,
-            past_group: grpState.recentGroupState
-              ? grpState.recentGroupState.title
-              : ""
-          },
-          headers: { Authorization: sessionStorage.getItem("token") }
-        })
-          .then(data => console.log(data))
-          .catch(e => console.log(e));
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    //     console.log("contact id is " + id);
+
+    //     axios({
+    //       method: "post",
+    //       url: "http://localhost:5000/api/contacts/groups/reference",
+    //       data: {
+    //         group_name: grpState.selectedGroupName.title,
+    //         contactid: id,
+    //         past_group: grpState.recentGroupState
+    //           ? grpState.recentGroupState.title
+    //           : ""
+    //       },
+    //       headers: { Authorization: sessionStorage.getItem("token") }
+    //     })
+    //       .then(data => console.log(data))
+    //       .catch(e => console.log(e));
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   const stateUpdate = e => {
@@ -234,6 +241,7 @@ export default function ContactForm(highprops) {
         return data;
       })
       .then(addtoGroup)
+      // .then(GroupForm.getNewDataDetails)
       .catch(e => console.log(e));
   }
 
@@ -276,7 +284,6 @@ export default function ContactForm(highprops) {
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
-
         console.log(grpState);
 
         let groupContainer = [];
@@ -464,7 +471,7 @@ export default function ContactForm(highprops) {
               />
             </div>
 
-            <Autocomplete
+            {/* <Autocomplete
               freeSolo
               id="group-box"
               value={grpState.selectedGroupName}
@@ -482,10 +489,14 @@ export default function ContactForm(highprops) {
                   fullWidth
                 />
               )}
-            />
+            /> */}
 
-            {/* <Button type="submit">Save</Button>
-            <Button onClick={() => cancel()}>Cancel</Button> */}
+            <GroupForm
+              reference_contact={
+                highprops.contactData ? highprops.contactData.id : null
+              }
+              newContactData={upContactData}
+            />
 
             <button style={styles.submitBtn} type="submit">
               Save

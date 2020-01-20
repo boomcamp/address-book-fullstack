@@ -29,6 +29,7 @@ massive({
     app.get("/api/contacts/:userid", contacts.getAll);
     app.delete("/api/contact/delete/:id", contacts.delete);
     app.put("/api/contact/update/:id", contacts.update);
+    app.get("/api/contacts/groups/:id/sort/:order/:group", contacts.sort)
 
     // groups endpoints
     app.post("/api/contacts/group/add", groups.add);
@@ -37,8 +38,8 @@ massive({
 
     app.get("/api/contacts/groups/reference/retrieve/:id", groups.retieve);
     app.delete("/api/contacts/groups/reference/delete", groups.deleteToGroup);
-    app.get("/api/contacts/groups/active", groups.getGroupList);
-    app.get("/api/contacts/groups/:id", groups.getGroupsContacts);
+    app.get("/api/contacts/groups/active/:userid", groups.getGroupList);
+    app.get("/api/contacts/groups/:userid/:groupid", groups.getGroupsContacts);
     
     app.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`);

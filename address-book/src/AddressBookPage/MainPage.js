@@ -5,11 +5,12 @@ import { Redirect } from "react-router-dom";
 import ContactForm from "./ContactForm";
 import SideBar from "./SideBar/SideBar";
 import { refreshMaterializedView } from "node-pg-migrate/dist/operations/viewsMaterialized";
-import GroupForm from "./GroupForm";
+import SelectSort from "./SelectSort/SelectSort";
 
 export default function MainPage() {
   const [state, setState] = useState(null);
   const [tableState, setTableState] = useState(null);
+  const [groupid, setGroupRef] = useState();
 
   if (!sessionStorage.getItem("token")) {
     return <Redirect to="/" />;
@@ -35,6 +36,10 @@ export default function MainPage() {
     setTableState(data.data);
   };
 
+  const groupReference = e => {
+    setGroupRef(e);
+  };
+
   return (
     <>
       {/* <div className="black-overlay" /> */}
@@ -43,17 +48,15 @@ export default function MainPage() {
         setTableData={setTableData}
         contactData={state}
         prepareNewData={state === null ? true : false}
+        passGroupRef={groupReference}
       />
-      {/* <ContactForm
-        contactData={state}
-        // prepareNewData={state === null ? true : false}
-      /> */}
       <ContactsTable
         contactTransfer={tranferData}
         prepareNewData={prepareNewData}
         tableData={tableState}
       />
-      <GroupForm reference_contact={53}/>
+
+      <SelectSort setTableData={setTableData} setGroupRef={groupid} />
     </>
   );
 }

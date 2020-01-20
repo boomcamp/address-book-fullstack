@@ -98,7 +98,6 @@ module.exports = {
 
     // group name is already available
     if (group_name === "") {
-
       db.query(
         `SELECT groups_track.id FROM groups_track INNER JOIN groups ON groups.id = groups_track.groupid WHERE groups.group_name = '${past_group}' AND contactid = ${contactid};`
       )
@@ -131,16 +130,12 @@ module.exports = {
               AND groups.group_name = '${group_name}'`
             )
               .then(check_data => {
-
-
                 if (check_data.length > 0) {
-
-                  console.log("not adding to groups track ",check_data.length);
+                  console.log("not adding to groups track ", check_data.length);
 
                   res.status(201).json(check_data);
                 } else {
-                  console.log("adding to groups track ",check_data.length);
-
+                  console.log("adding to groups track ", check_data.length);
 
                   db.groups_track
                     .save({
@@ -152,13 +147,13 @@ module.exports = {
                       res.status(201).json(post);
                     })
                     .catch(err => {
-                      console.log(err)
+                      console.log(err);
                       res.status(500).end();
                     });
                 }
               })
               .catch(err => {
-                console.log(err)
+                console.log(err);
 
                 res.status(500).end();
               });
@@ -236,14 +231,26 @@ module.exports = {
   getGroupList: (req, res) => {
     const db = req.app.get("db");
 
+    // db.query(
+    //   `SELECT groups.group_name, groups.id FROM groups INNER JOIN groups_track ON groups.id = groups_track.groupid`
+    // );
+
     db.query(
-      `SELECT groups.group_name, groups.id FROM groups INNER JOIN groups_track ON groups.id = groups_track.groupid`
+      `SELECT group_name, groups.id
+      FROM groups
+      JOIN groups_track
+      ON groups.id = groups_track.groupid
+      JOIN address_book
+      ON address_book.contactid = groups_track.contactid
+      WHERE address_book.userid = ${req.params.userid}
+      `
     )
       .then(data => {
         // console.log("groups", data);
         res.status(201).json(data);
       })
       .catch(err => {
+        console.log();
         res.status(500).end();
       });
     ``;
@@ -252,10 +259,39 @@ module.exports = {
     const db = req.app.get("db");
 
     // const { groupid } = req.body;
+    const { order } = req.query;
 
     db.query(
-      `SELECT 	contacts.id,	first_name,	last_name,	home_phone,	mobile_phone,	work_phone,	email,	city,	state_or_province,	postal_code,	country FROM contacts INNER JOIN groups_track ON contacts.id = groups_track.contactid WHERE groups_track.groupid = ${req.params.id};`
+      `SELECT  contacts.id,
+              first_name,	
+              last_name,	
+              home_phone,	
+              mobile_phone,	
+              work_phone,
+              email,
+              city,
+              state_or_province,
+              postal_code,
+              country
+        FROM contacts
+        JOIN address_book
+        ON address_book.contactid = contacts.id 
+        JOIN groups_track
+        ON contacts.id = groups_track.contactid
+        WHERE
+        ${
+          req.params.groupid
+            ? `groups_track.groupid = ${req.params.groupid}
+        AND`
+            : ``
+        }
+          address_book.userid = ${req.params.userid}
+        ${order ? `ORDER BY last_name ${order}` : ""}`
     )
+
+      // db.query(
+      //   `SELECT 	contacts.id,	first_name,	last_name,	home_phone,	mobile_phone,	work_phone,	email,	city,	state_or_province,	postal_code,	country FROM contacts INNER JOIN groups_track ON contacts.id = groups_track.contactid WHERE groups_track.groupid = ${req.params.id};`
+      // )
       .then(data => {
         // console.log("groups", data);
         res.status(201).json(data);

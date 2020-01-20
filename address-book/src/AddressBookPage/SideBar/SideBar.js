@@ -12,20 +12,19 @@ export default function SideBar(highprops) {
   const [dataPass, setDataPass] = useState(null);
   const [dataFromGroups, setdataFromGroups] = useState(false);
 
-  const refHook = useRef(false)
-
-  useEffect(()=>{
-    console.log(refHook)
-    if(refHook.current){
-      setDataPass(highprops.contactData);
-      // change("open_add");
-
-    } else refHook.current = true;
-  })
+  const refHook = useRef(false);
 
   useEffect(() => {
-    console.log('highprops')
-    if (highprops.contactData) {  
+    console.log(refHook);
+    if (refHook.current) {
+      setDataPass(highprops.contactData);
+      // change("open_add");
+    } else refHook.current = true;
+  });
+
+  useEffect(() => {
+    console.log("highprops");
+    if (highprops.contactData) {
       setDataPass(highprops.contactData);
       change("open_add");
     }
@@ -65,6 +64,10 @@ export default function SideBar(highprops) {
     highprops.setTableData(data);
   };
 
+  const passGroupRef = (e) => {
+    highprops.passGroupRef(e);
+  };
+
   return (
     <>
       <div className="main-container-tabs">
@@ -79,7 +82,7 @@ export default function SideBar(highprops) {
               change("open_groups");
             }}
           >
-            <p> Contact Groups  </p>
+            <p> Contact Groups </p>
           </div>
           <div
             className={
@@ -91,17 +94,24 @@ export default function SideBar(highprops) {
               change("open_add");
             }}
           >
-            <p> Contact Form / {dataPass?dataPass.first_name:'Add'} {dataPass?dataPass.last_name:'New'}</p>
+            <p>
+              {" "}
+              Contact Form / {dataPass ? dataPass.first_name : "Add"}{" "}
+              {dataPass ? dataPass.last_name : "New"}
+            </p>
           </div>
         </div>
 
         <div className="tabs-body-container">
           {state.contactGroups_tab ? (
-             <div className="form-contact-container">
+            <div className="form-contact-container">
               <div className="container-close" onClick={() => close()}>
                 X
               </div>
-              <GroupContacts setDataGroup={DataFromGroups} />
+              <GroupContacts
+                setDataGroup={DataFromGroups}
+                passGroupRef={passGroupRef}
+              />
             </div>
           ) : (
             ""
@@ -120,7 +130,14 @@ export default function SideBar(highprops) {
         </div>
       </div>
 
-      <div onClick={() => close()} className={!state.contactGroups_tab && !state.addContact_tab?'':"black-overlay"} />
+      <div
+        onClick={() => close()}
+        className={
+          !state.contactGroups_tab && !state.addContact_tab
+            ? ""
+            : "black-overlay"
+        }
+      />
     </>
   );
 }

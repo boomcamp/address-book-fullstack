@@ -1,0 +1,24 @@
+.add-group-btn{
+    width: 50px;
+    height: 32px;
+    background: #2196F3;
+    color: white;
+    border: none;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 43px;
+    position: relative;
+    top: -7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.group-form-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
