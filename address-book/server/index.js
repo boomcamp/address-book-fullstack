@@ -1,12 +1,8 @@
 const express = require("express");
 const massive = require("massive");
-const jwt = require("jsonwebtoken");
-const secret = require("../../secret");
 const cors = require("cors");
-
 const users = require("./controllers/users");
 const contacts = require("./controllers/contacts");
-const addressBook = require("./controllers/addressbook");
 const groups = require("./controllers/group");
 
 massive({
@@ -21,20 +17,6 @@ massive({
   app.set("db", db);
   app.use(express.json());
   app.use(cors());
-
-  const auth = (req, res, next) => {
-    if (!req.headers.authorization) {
-      return res.status(401).end();
-    }
-    try {
-      const token = req.headers.authorization.split(" ")[1];
-      jwt.verify(token, secret);
-      next();
-    } catch (err) {
-      console.error(err);
-      res.status(401).end();
-    }
-  };
 
   //signup
   app.post("/signup/users", users.signup);
@@ -51,16 +33,18 @@ massive({
   app.delete("/contacts/:contactid", contacts.deleteContact);
   app.get("/contacts/:userid/:contactid", contacts.getContactByContactId);
   app.get("/contacts/:userid", contacts.getContactByUser);
-  app.post("/addressbook-add", addressBook.add);
 
+  //groupcontacts
   app.post("/groupcontacts/", groups.create);
   app.get("/groupcontacts/:userid", groups.getGroups);
-
   app.delete("/groupcontacts/:groupid", groups.deleteGroup);
   app.patch("/groupcontacts/:groupid", groups.updateGroupContact);
 
+  //groupmembers
   app.post("/groupmembers/", groups.addMember);
   app.get("/groupmembers/:contactid", groups.getContactGroups);
+  app.delete("/groupmembers/:contactid", groups.deleteGroupMember);
+  app.get("/getgroupmembers/:groupid", groups.getContactGroupMembers);
 
   const PORT = 3004;
   app.listen(PORT, () => {

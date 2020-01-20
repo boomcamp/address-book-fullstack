@@ -1,51 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Card } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import Swal from "sweetalert2";
+import jwt from "jsonwebtoken";
 import axios from "axios";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Button,
+  Typography,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  ListItemText,
+  Avatar,
+  IconButton
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import AddGroupModal from "./AddGroupModal";
 import Tooltip from "@material-ui/core/Tooltip";
-import EditGroup from "./EditGroup";
 import GroupIcon from "@material-ui/icons/Group";
-import jwt from "jsonwebtoken";
+import ViewGroupMembers from "./ViewGroupMembers";
+import AddGroupModal from "./AddGroupModal";
+import EditGroup from "./EditGroup";
 
 const useStyles = makeStyles(theme => ({
-  card1: {
+  card: {
     minWidth: 275
-  },
-  card2: {
-    minWidth: 275
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
-  },
-  pos: {
-    marginBottom: 12
-  },
-  root: {
-    flexGrow: 1,
-    maxWidth: 752
   },
   demo: {
     backgroundColor: theme.palette.background.paper
-  },
-  title: {
-    margin: theme.spacing(4, 0, 2)
   }
 }));
 
@@ -54,6 +40,7 @@ export default function AddGroup() {
   const [groupData, setGroupData] = useState([]);
   const [rowData, setRowData] = useState("");
   const [openGroupModal, setOpenGroupModal] = React.useState(false);
+  const [openViewMem, setOpenViewMem] = React.useState(false);
   const [openGroupEdit, setOpenGroupEdit] = React.useState(false);
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
 
@@ -66,9 +53,15 @@ export default function AddGroup() {
     setOpenGroupEdit(true);
   };
 
+  const handleClickOpenViewMem = data => {
+    setRowData(data);
+    setOpenViewMem(true);
+  };
+
   const handleCloseGroupModal = () => {
     setOpenGroupModal(false);
     setOpenGroupEdit(false);
+    setOpenViewMem(false);
   };
 
   useEffect(() => {
@@ -126,7 +119,7 @@ export default function AddGroup() {
           Group List
         </Typography>
         <Card
-          className={classes.card2}
+          className={classes.card}
           variant="outlined"
           style={{ maxHeight: "270px", overflowY: "scroll" }}
         >
@@ -148,7 +141,10 @@ export default function AddGroup() {
                           style={{ margin: "0px" }}
                         >
                           <Tooltip title="Delete Group">
-                            <IconButton onClick={() => handleDeleteGroup(data)}>
+                            <IconButton
+                              onClick={() => handleDeleteGroup(data)}
+                              edge="end"
+                            >
                               <DeleteIcon />
                             </IconButton>
                           </Tooltip>
@@ -156,13 +152,17 @@ export default function AddGroup() {
                           <Tooltip title="Edit Group">
                             <IconButton
                               onClick={() => handleClickOpenGroupEdit(data)}
+                              edge="end"
                             >
                               <EditIcon />
                             </IconButton>
                           </Tooltip>
 
                           <Tooltip title="View Members">
-                            <IconButton>
+                            <IconButton
+                              onClick={() => handleClickOpenViewMem(data)}
+                              edge="end"
+                            >
                               <VisibilityIcon />
                             </IconButton>
                           </Tooltip>
@@ -179,6 +179,14 @@ export default function AddGroup() {
               <EditGroup
                 rowData={rowData}
                 openGroupEdit={openGroupEdit}
+                handleCloseGroupModal={handleCloseGroupModal}
+              />
+
+              <ViewGroupMembers
+                rowData={rowData}
+                // openGroupEdit={openGroupEdit}
+                // handleClickOpenViewMem
+                openViewMem={openViewMem}
                 handleCloseGroupModal={handleCloseGroupModal}
               />
             </Grid>

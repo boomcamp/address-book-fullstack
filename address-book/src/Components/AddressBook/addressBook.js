@@ -1,24 +1,18 @@
 import React, { useEffect } from "react";
-import MaterialTable from "material-table";
-import AppBarAddress from "../AppBar/appBarAddress";
-import Swal from "sweetalert2";
-import { Container, Button } from "@material-ui/core";
 import axios from "axios";
-import Grid from "@material-ui/core/Grid";
-import AddContact from "../AddContact/addContact";
-import ContactDetails from "../ContactDetails/contactDetails";
+import jwt from "jsonwebtoken";
+import Swal from "sweetalert2";
+import MaterialTable from "material-table";
+import { Container, Button, Tooltip, Grid } from "@material-ui/core";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
-import GroupAddOutlinedIcon from "@material-ui/icons/GroupAddOutlined";
-import { Tooltip } from "@material-ui/core";
-import jwt from "jsonwebtoken";
 import AddGroup from "../Group/AddGroup";
-import AddMember from "../Group/AddMember";
+import AppBarAddress from "../AppBar/appBarAddress";
+import AddContact from "../AddContact/addContact";
+import ContactDetails from "../ContactDetails/contactDetails";
 
 export default function AddressBook() {
   const [open, setOpen] = React.useState(false);
-  const [openMember, setOpenMember] = React.useState(false);
-  const [memberData, setMemberData] = React.useState(false);
   const [openView, setOpenView] = React.useState(false);
   const [firstname, setFirstName] = React.useState("");
   const [lastname, setLastName] = React.useState("");
@@ -47,15 +41,9 @@ export default function AddressBook() {
     setOpen(true);
   };
 
-  const handleOpenMember = rowData => {
-    setMemberData(rowData);
-    setOpenMember(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
     setOpenView(false);
-    setOpenMember(false);
   };
 
   const handleViewDetails = id => {
@@ -108,7 +96,6 @@ export default function AddressBook() {
             });
           })
           .catch(err => {
-            console.log(err);
             Swal.fire({
               icon: "error",
               title: "Failed to Delete Contact",
@@ -118,18 +105,6 @@ export default function AddressBook() {
       }
     });
   };
-
-  useEffect(() => {
-    async function result() {
-      await axios({
-        method: "get",
-        url: `http://localhost:3004/contacts/${tokenDecoded.userId}`
-      }).then(res => {
-        setState({ ...state, data: res.data });
-      });
-    }
-    result();
-  }, [tokenDecoded.userId]);
 
   const [state, setState] = React.useState({
     columns: [
@@ -167,19 +142,24 @@ export default function AddressBook() {
                 <DeleteOutlineOutlinedIcon />
               </Button>
             </Tooltip>
-            <Tooltip title="Add to group">
-              <Button>
-                <GroupAddOutlinedIcon
-                  onClick={() => handleOpenMember(rowData)}
-                />
-              </Button>
-            </Tooltip>
           </React.Fragment>
         )
       }
     ],
     data: []
   });
+
+  useEffect(() => {
+    async function result() {
+      await axios({
+        method: "get",
+        url: `http://localhost:3004/contacts/${tokenDecoded.userId}`
+      }).then(res => {
+        setState({ ...state, data: res.data });
+      });
+    }
+    result();
+  }, [state, tokenDecoded.userId]);
 
   if (!localStorage.getItem("Token")) {
     return null;
@@ -212,6 +192,7 @@ export default function AddressBook() {
                 countryView={country}
               />
               <ContactDetails
+                setgroupData={setgroupData}
                 groupData={groupData}
                 handleClose={handleClose}
                 openView={openView}
@@ -226,11 +207,6 @@ export default function AddressBook() {
                 state_or_provinceView={state_or_province}
                 postal_codeView={postal_code}
                 countryView={country}
-              />
-              <AddMember
-                memberData={memberData}
-                openMember={openMember}
-                handleClose={handleClose}
               />
               <Grid item xs={12} sm={12} lg={12} md={12}>
                 <MaterialTable

@@ -2,27 +2,23 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
+import {
+  Button,
+  Dialog,
+  IconButton,
+  Typography,
+  Grid,
+  TextField
+} from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
-import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
 import jwt from "jsonwebtoken";
-
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import ListItemText from "@material-ui/core/ListItemText";
-import Select from "@material-ui/core/Select";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import Checkbox from "@material-ui/core/Checkbox";
-import Chip from "@material-ui/core/Chip";
 
 const styles = theme => ({
   root: {
@@ -36,32 +32,8 @@ const styles = theme => ({
     color: theme.palette.grey[500]
   }
 });
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    width: "100%"
-  },
-  chips: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
-  chip: {
-    margin: 2
-  },
-  noLabel: {
-    marginTop: theme.spacing(3)
-  }
-}));
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-};
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const DialogTitle = withStyles(styles)(props => {
   const { children, classes, onClose, ...other } = props;
@@ -80,6 +52,7 @@ const DialogTitle = withStyles(styles)(props => {
     </MuiDialogTitle>
   );
 });
+
 const DialogContent = withStyles(theme => ({
   root: {
     padding: theme.spacing(2)
@@ -105,11 +78,11 @@ export default function AddContact({ open, handleClose }) {
   const [country, setCountry] = useState("");
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
   const [errorMsgFirstname, setErrorMsgFirstname] = useState("");
+  const [ids, setIds] = useState([]);
 
-  const [groupList, setGroupList] = useState([]);
-  const classes = useStyles();
-  const [groups, setGroups] = useState([]);
-  const handleChange = event => setGroups(event.target.value);
+  const [state, setState] = useState({
+    multiple: []
+  });
 
   useEffect(() => {
     async function result() {
@@ -117,17 +90,14 @@ export default function AddContact({ open, handleClose }) {
         method: "get",
         url: `http://localhost:3004/groupcontacts/${tokenDecoded.userId}`
       })
-        .then(res => {
-          setGroupList(res.data);
-        })
+        .then(res => setState({ ...state, multiple: res.data }))
         .catch(err => console.log(err));
     }
     result();
-  }, [tokenDecoded.userId]);
+  }, [tokenDecoded.userId, state]);
 
   const handleSave = () => {
     if (firstname !== "") {
-      // console.log("hello");
       setErrorMsgFirstname("");
       axios
         .post(`http://localhost:3004/contacts/${tokenDecoded.userId}`, {
@@ -143,11 +113,10 @@ export default function AddContact({ open, handleClose }) {
           country: country
         })
         .then(res => {
-          groups.map(group => {
-            // console.log(group);
+          ids.forEach(group => {
             axios.post(`http://localhost:3004/groupmembers/`, {
               contactid: res.data.id,
-              groupid: group
+              groupid: group.id
             });
             handleClose();
             Swal.fire({
@@ -188,28 +157,39 @@ export default function AddContact({ open, handleClose }) {
         <form>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
-              <FormControl className={classes.formControl}>
-                <InputLabel id="demo-mutiple-checkbox-label">
-                  Group List
-                </InputLabel>
-                <Select
-                  labelId="demo-mutiple-checkbox-label"
-                  id="demo-mutiple-checkbox"
-                  multiple
-                  value={groups}
-                  onChange={handleChange}
-                  input={<Input />}
-                  renderValue={selected => selected.join(", ")}
-                  MenuProps={MenuProps}
-                >
-                  {groupList.map((data, key) => (
-                    <MenuItem key={key} value={data.id}>
-                      <Checkbox checked={groups.indexOf(data.groupname) < -1} />
-                      <ListItemText primary={data.groupname} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                multiple
+                options={state.multiple}
+                getOptionLabel={
+                  state.multiple ? option => option.groupname : false
+                }
+                value={ids
+                  .map(data => state.multiple.findIndex(x => x.id === data.id))
+                  .filter(item => item >= 0)
+                  .map(num => state.multiple[num])}
+                disableCloseOnSelect
+                renderOption={(option, { selected }) => (
+                  <React.Fragment>
+                    <Checkbox
+                      icon={icon}
+                      checkedIcon={checkedIcon}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                    {option.groupname}
+                  </React.Fragment>
+                )}
+                onChange={(e, n) => setIds(n)}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Choose one or more Group List"
+                    placeholder="Group List"
+                    fullWidth
+                  />
+                )}
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -222,6 +202,7 @@ export default function AddContact({ open, handleClose }) {
                 fullWidth
                 autoComplete="firstname"
                 onChange={e => setFirstName(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -232,6 +213,7 @@ export default function AddContact({ open, handleClose }) {
                 fullWidth
                 autoComplete="lastname"
                 onChange={e => setLastName(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12}>
@@ -241,6 +223,7 @@ export default function AddContact({ open, handleClose }) {
                 label="Home Phone Number"
                 fullWidth
                 onChange={e => setHome_phone(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12}>
@@ -250,6 +233,7 @@ export default function AddContact({ open, handleClose }) {
                 label="Mobile Phone Number"
                 fullWidth
                 onChange={e => setMobile_phone(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12}>
@@ -259,6 +243,7 @@ export default function AddContact({ open, handleClose }) {
                 label="Work Phone Number"
                 fullWidth
                 onChange={e => setWork_phone(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12}>
@@ -269,6 +254,7 @@ export default function AddContact({ open, handleClose }) {
                 fullWidth
                 autoComplete="email"
                 onChange={e => setEmail(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -278,6 +264,7 @@ export default function AddContact({ open, handleClose }) {
                 label="City"
                 fullWidth
                 onChange={e => setCity(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -287,6 +274,7 @@ export default function AddContact({ open, handleClose }) {
                 label="State/Province/Region"
                 fullWidth
                 onChange={e => setStateOrProvince(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -296,6 +284,7 @@ export default function AddContact({ open, handleClose }) {
                 label="Zip / Postal code"
                 fullWidth
                 onChange={e => setPostalCode(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -305,6 +294,7 @@ export default function AddContact({ open, handleClose }) {
                 label="Country"
                 fullWidth
                 onChange={e => setCountry(e.target.value)}
+                variant="outlined"
               />
             </Grid>
           </Grid>

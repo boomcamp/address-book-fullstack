@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import jwt from "jsonwebtoken";
 import axios from "axios";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
+import { withStyles } from "@material-ui/core/styles";
+import {
+  Button,
+  Dialog,
+  Typography,
+  Grid,
+  TextField,
+  Checkbox
+} from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import ListItemText from "@material-ui/core/ListItemText";
-import Select from "@material-ui/core/Select";
-import Checkbox from "@material-ui/core/Checkbox";
-import jwt from "jsonwebtoken";
+import { Autocomplete } from "@material-ui/lab";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
 
 const styles = theme => ({
   root: {
@@ -34,32 +33,8 @@ const styles = theme => ({
   }
 });
 
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    width: "100%"
-  },
-  chips: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
-  chip: {
-    margin: 2
-  },
-  noLabel: {
-    marginTop: theme.spacing(3)
-  }
-}));
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-};
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const DialogTitle = withStyles(styles)(props => {
   const { children, classes, onClose, ...other } = props;
@@ -104,7 +79,8 @@ export default function ContactDetails({
   postal_codeView,
   countryView,
   idView,
-  groupData
+  groupData,
+  setgroupData
 }) {
   const [lastname, setLastName] = useState("");
   const [firstname, setFirstName] = useState("");
@@ -120,24 +96,21 @@ export default function ContactDetails({
   const [errorMsgFirstName, setErrorMsgFirstName] = useState("");
 
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
-  const [groupList, setGroupList] = useState([]);
-  const classes = useStyles();
-  const [groups, setGroups] = useState([]);
-  const [groupNames, setGroupNames] = useState([]);
-  const handleChange = event => setGroups(event.target.value);
+
+  const [state, setState] = useState({
+    multiple: []
+  });
   useEffect(() => {
     async function result() {
       await axios({
         method: "get",
         url: `http://localhost:3004/groupcontacts/${tokenDecoded.userId}`
       })
-        .then(res => {
-          setGroupList(res.data);
-        })
+        .then(res => setState({ ...state, multiple: res.data }))
         .catch(err => console.log(err));
     }
     result();
-  }, [tokenDecoded.userId]);
+  }, [tokenDecoded.userId, state]);
 
   const handleEditSave = props => {
     setOpenEdit(true);
@@ -156,8 +129,28 @@ export default function ContactDetails({
           postal_code: postal_code,
           country: country
         })
-        .then(() => {
+        .then(res => {
+          console.log(res.data.id);
+          axios.delete(`http://localhost:3004/groupmembers/${idView}`);
           handleClose();
+        })
+        .then(() => {
+          groupData.forEach(data => {
+            console.log(data.id);
+            console.log(idView);
+            axios
+              .post(`http://localhost:3004/groupmembers`, {
+                contactid: idView,
+                groupid: data.id
+              })
+              .catch(err => {
+                Swal.fire({
+                  title: "Failed to Add Contact to a Group",
+                  icon: "error",
+                  text: err
+                });
+              });
+          });
           Swal.fire({
             title: "Contact Updated Successfully",
             icon: "success"
@@ -185,7 +178,6 @@ export default function ContactDetails({
   const handleEdit = () => {
     axios.get(`http://localhost:3004/groupmember/${idView}`).then(res => {
       console.log(res);
-      // setIds(res.data);
     });
     setOpenEdit(true);
     setFirstName(firstnameView);
@@ -198,12 +190,6 @@ export default function ContactDetails({
     setStateOrProvince(state_or_provinceView);
     setPostalCode(postal_codeView);
     setCountry(countryView);
-  };
-
-  const groupNamesData = () => {
-    groupData.map(groupname => {
-      setGroupNames(...groupname);
-    });
   };
 
   return (
@@ -219,32 +205,40 @@ export default function ContactDetails({
         <form>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
-              <FormControl
-                className={classes.formControl}
+              <Autocomplete
+                multiple
                 disabled={openEdit ? false : true}
-              >
-                <InputLabel id="demo-mutiple-checkbox-label">
-                  Group List
-                </InputLabel>
-                <Select
-                  // defaultValue={groupData[0].groupname}
-                  labelId="demo-mutiple-checkbox-label"
-                  id="demo-mutiple-checkbox"
-                  multiple
-                  value={groupNames}
-                  onChange={handleChange}
-                  input={<Input />}
-                  renderValue={selected => selected.join(", ")}
-                  MenuProps={MenuProps}
-                >
-                  {groupList.map((data, key) => (
-                    <MenuItem key={key} value={data.groupname}>
-                      <Checkbox checked={groups.indexOf(data.groupname) > -1} />
-                      <ListItemText primary={data.groupname} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                options={state.multiple}
+                getOptionLabel={
+                  state.multiple ? option => option.groupname : false
+                }
+                value={groupData
+                  .map(data => state.multiple.findIndex(x => x.id === data.id))
+                  .filter(item => item >= 0)
+                  .map(num => state.multiple[num])}
+                disableCloseOnSelect
+                renderOption={(option, { selected }) => (
+                  <React.Fragment>
+                    <Checkbox
+                      icon={icon}
+                      checkedIcon={checkedIcon}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                    {option.groupname}
+                  </React.Fragment>
+                )}
+                onChange={(e, n) => setgroupData(n)}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Choose one or more Group List"
+                    placeholder="Group List"
+                    fullWidth
+                  />
+                )}
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -259,6 +253,7 @@ export default function ContactDetails({
                 fullWidth
                 autoComplete="firstname"
                 onChange={e => setFirstName(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -271,6 +266,7 @@ export default function ContactDetails({
                 fullWidth
                 autoComplete="lastname"
                 onChange={e => setLastName(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12}>
@@ -282,6 +278,7 @@ export default function ContactDetails({
                 label="Home Phone Number"
                 fullWidth
                 onChange={e => setHome_phone(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12}>
@@ -293,6 +290,7 @@ export default function ContactDetails({
                 label="Mobile Phone Number"
                 fullWidth
                 onChange={e => setMobile_phone(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12}>
@@ -304,6 +302,7 @@ export default function ContactDetails({
                 label="Work Phone Number"
                 fullWidth
                 onChange={e => setWork_phone(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12}>
@@ -316,6 +315,7 @@ export default function ContactDetails({
                 fullWidth
                 autoComplete="email"
                 onChange={e => setEmail(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -328,6 +328,7 @@ export default function ContactDetails({
                 fullWidth
                 autoComplete="billing address-level2"
                 onChange={e => setCity(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -339,6 +340,7 @@ export default function ContactDetails({
                 label="State/Province/Region"
                 fullWidth
                 onChange={e => setStateOrProvince(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -351,6 +353,7 @@ export default function ContactDetails({
                 fullWidth
                 autoComplete="billing postal-code"
                 onChange={e => setPostalCode(e.target.value)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -363,6 +366,7 @@ export default function ContactDetails({
                 fullWidth
                 autoComplete="billing country"
                 onChange={e => setCountry(e.target.value)}
+                variant="outlined"
               />
             </Grid>
           </Grid>

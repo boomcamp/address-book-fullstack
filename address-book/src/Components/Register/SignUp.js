@@ -37,7 +37,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp(props) {
   const classes = useStyles();
-
   const [email, setEmail] = useState("");
   const [errorMsgEmail, setErrorMsgEmail] = useState("");
   const [username, setUsername] = useState("");

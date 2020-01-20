@@ -87,11 +87,39 @@ function getContactGroups(req, res) {
     });
 }
 
+function getContactGroupMembers(req, res) {
+  const db = req.app.get("db");
+  const { groupid } = req.params;
+  db.query(
+    `select * from contacts inner join groupmembers on contacts.id = groupmembers.contactid where groupid =${groupid};`
+  )
+    .then(members => res.status(201).json(members))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
+
+function deleteGroupMember(req, res) {
+  const db = req.app.get("db");
+  const { contactid } = req.params;
+
+  db.groupmembers
+    .destroy({ contactid: contactid })
+    .then(member => res.status(200).json(member))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
+
 module.exports = {
   create,
   getGroups,
   deleteGroup,
   updateGroupContact,
   addMember,
-  getContactGroups
+  getContactGroups,
+  getContactGroupMembers,
+  deleteGroupMember
 };
