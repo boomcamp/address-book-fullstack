@@ -21,7 +21,7 @@ massive({
     app.post('/api/users', users.createUsers);
     app.post('/api/login', users.login);
     app.get('/api/user/:id', users.getUser)
-    app.get('/api/protected/data', // ?
+    app.get('/api/protected/data', // unused in app
         function(req, res){
             const db = req.app.get('db')
 
@@ -39,7 +39,7 @@ massive({
                 res.status(500).end()
             }
     });
-    app.get('/api/users', users.getUsers)
+    app.get('/api/users', users.getUsers) // unused in app
 
     app.post('/api/contacts', users.createContact)
     app.get('/api/contacts', users.getContacts)
@@ -50,7 +50,16 @@ massive({
     app.post('/api/address', users.addAddress)
     app.get('/api/address/:id', users.getAdrress) // ?
     app.patch('/api/address/:id', users.updateAddress)
+
     app.get('/api/search/:id', users.searchText)
+    app.get('/api/sort/:id', users.sortText)
+
+    app.post('/api/group', users.addGroup)
+    app.get('/api/groups', users.getGroups)
+    app.patch('/api/group/:id', users.updateGroup)
+    app.delete('/api/group/:id', users.deleteGroup)
+
+    app.post('/api/member', users.addMember)
     app.listen(port, err=>{
         if(err){
             console.log(`Error Listening to Port ${port}`)

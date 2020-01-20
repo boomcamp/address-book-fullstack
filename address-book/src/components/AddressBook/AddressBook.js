@@ -19,7 +19,7 @@ import Contacts from './Contacts';
 
 export default function UserManage() {
     var [token, emptyToken] = useState(false)
-    const [page, setPage] = useState('contacts')
+    const [page, setPage] = useState('groups')
     const [toggle, setToggle] = useState({left:false})
 
     const logout = () =>{

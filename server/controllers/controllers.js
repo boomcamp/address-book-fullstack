@@ -233,5 +233,80 @@ module.exports = {
             console.log(err)
             res.status(500).end()
         })
+    },
+    sortText: (req, res) => {
+        const db = req.app.get('db')
+
+        db.query(`SELECT * FROM contacts WHERE userid = ${req.params.id} ORDER BY l_name ${req.query.value}`)
+        .then(u => res.status(200).json(u))
+        .catch(err =>{
+            console.log(err)
+            res.status(500).end()
+        })
+    },
+    addGroup: (req, res) => {
+        const db = req.app.get('db')
+        const date = new Date()
+        const { userid, group_name } = req.body
+
+        db.groups
+        .insert({ 
+            userid, group_name, date_created: date.toString()
+        },{
+            fields: [ 'id', 'userid', 'group_name', 'date_created' ]
+        })
+        .then(u => res.status(200).json(u))
+        .catch(err =>{
+            console.log(err)
+            res.status(500).end()
+        })
+    },
+    getGroups: (req, res) => {
+        const db = req.app.get('db')
+
+        db.groups
+        .find()
+        .then(u => res.status(200).json(u))
+        .catch(err => {
+            console.error(err);
+            res.status(500).end();
+        });
+    },
+    updateGroup: (req, res) => {
+        const db = req.app.get('db')
+        const { group_name } = req.body
+
+        db.groups
+        .update({id: req.params.id},{
+            group_name
+        })
+        .then(u => res.status(201).json(u))
+        .catch(err =>{
+            console.log(err)
+            res.status(500).end()
+        })
+    },
+    deleteGroup:(req, res)=>{
+        const db = req.app.get('db')
+
+        db.groups
+        .destroy(req.params.id)
+        .then(u => res.status(201).json(u))
+        .catch(err =>{
+            console.err(err)
+            res.status(500).end()
+        })
+    },
+    addMember: (req, res) => {
+        const db = req.app.get('db')
+        const { userid, groupid, contactid } = req.body
+
+        db.memebers
+        .save({ userid, groupid, contactid })
+        .then(u => res.state(200).json(u))
+        .catch(err =>{
+            console.log(err)
+            res.status(500).end()
+        })
     }
 }
