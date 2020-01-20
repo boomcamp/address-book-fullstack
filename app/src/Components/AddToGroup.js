@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 	headTitle: {
 		background: "#7c7cca",
 		color: "white",
-		marginBottom: "25px"
+		marginBottom: "10px"
 	},
 	bottomLabel: {
 		background: "#7c7cca"
@@ -34,7 +34,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function ViewGroup(props) {
 	const classes = useStyles();
-
 	const theme = useTheme();
 	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -79,7 +78,7 @@ export default function ViewGroup(props) {
 					{"Add to Group"}
 				</DialogTitle>
 				<DialogContent>
-					<FormControl component="fieldset" className={classes.formControl}>
+					<FormControl component="fieldset">
 						{state.map((name, i) => {
 							return (
 								<FormGroup key={i}>

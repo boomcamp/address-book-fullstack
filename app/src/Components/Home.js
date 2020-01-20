@@ -140,6 +140,8 @@ export default function ButtonAppBar() {
 		}).then(function() {
 			window.location = "/";
 		});
+	} else {
+		const { userId } = jwt.decode(localStorage.getItem("Token"));
 	}
 
 	const handleClose = () => {
@@ -157,7 +159,6 @@ export default function ButtonAppBar() {
 	};
 
 	const handleSearch = v => {
-		// setSearch(v);
 		getData(tokenDecoded, order, v);
 	};
 
@@ -229,6 +230,7 @@ export default function ButtonAppBar() {
 				handleCloseDetails={handleCloseDetails}
 				contactId={contactId}
 				handleShow={handleShow}
+				getData={getData}
 			/>
 		);
 	}
@@ -266,7 +268,6 @@ export default function ButtonAppBar() {
 						</div>
 					</Toolbar>
 				</AppBar>
-
 				<Container maxWidth="xl">
 					<Grid container>
 						<Grid item sm={3} xs={12}>
@@ -282,7 +283,11 @@ export default function ButtonAppBar() {
 									Contact List
 								</Typography>
 								<Typography className={classes.add}>
-									<AddContact handleClose={handleClose} id={userInfo.id} />
+									<AddContact
+										handleClose={handleClose}
+										id={userInfo.id}
+										getData={getData}
+									/>
 								</Typography>
 							</div>
 							<Paper
@@ -293,6 +298,8 @@ export default function ButtonAppBar() {
 									id={userInfo.id}
 									handleViewDetails={handleViewDetails}
 									state={state}
+									handleShow={handleShow}
+									getData={getData}
 								/>
 							</Paper>
 							{display}

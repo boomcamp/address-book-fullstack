@@ -13,6 +13,7 @@ import TextField from "@material-ui/core/TextField";
 import swal from "sweetalert";
 import AddIcon from "@material-ui/icons/Add";
 import Tooltip from "@material-ui/core/Tooltip";
+import jwt from "jsonwebtoken";
 
 const useStyles = makeStyles(theme => ({
 	addIcon: {
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function ResponsiveDialog(props) {
 	const classes = useStyles();
-
+	const { getData } = props;
 	const [openModal, setOpenModal] = React.useState(false);
 	const [firstname, setFirstName] = useState("");
 
@@ -54,6 +55,7 @@ export default function ResponsiveDialog(props) {
 
 	const theme = useTheme();
 	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
 
 	const pass = firstname => {
 		if (firstname) {
@@ -76,7 +78,7 @@ export default function ResponsiveDialog(props) {
 						icon: "success",
 						title: "Successful Added New Contact"
 					}).then(() => {
-						window.location = "/home";
+						getData(tokenDecoded, "asc");
 					});
 				});
 		} else {

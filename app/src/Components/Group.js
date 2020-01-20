@@ -17,6 +17,7 @@ import GroupTwoToneIcon from "@material-ui/icons/GroupTwoTone";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useHistory } from "react-router-dom";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 const useStyles = makeStyles(theme => ({
 	paper1: {
@@ -64,6 +65,8 @@ const useStyles = makeStyles(theme => ({
 		fontWeight: "bold",
 		background: "#7c7cca",
 		color: "white",
+		display: "flex",
+		alignItems: "center",
 		"@media (max-width: 767px)": {
 			paddingLeft: "30px",
 			fontSize: "16px"
@@ -104,9 +107,11 @@ const useStyles = makeStyles(theme => ({
 
 export default function ButtonAppBar(props) {
 	const classes = useStyles();
+	const { contactId } = props;
 	const [setOpen] = useState(false);
 	const [setOpenEdit] = useState(false);
 	const [state, setState] = useState([]);
+	const [members, setMembers] = useState([]);
 	const [groupname, setGroupName] = useState("");
 	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
 	let history = useHistory();
@@ -144,6 +149,15 @@ export default function ButtonAppBar(props) {
 		});
 	};
 
+	const handleGroupMembersList = groupId => {
+		axios({
+			method: "get",
+			url: `http://localhost:3006/groupmembers/${groupId}`
+		}).then(res => {
+			setMembers(res.data);
+		});
+	};
+
 	const handleDeleteContact = groupid => {
 		confirmAlert({
 			title: "Are you sure?",
@@ -156,7 +170,7 @@ export default function ButtonAppBar(props) {
 							method: "delete",
 							url: `http://localhost:3006/group-contacts/${groupid}`
 						}).then(() => {
-							window.location = "/home";
+							handleShow();
 						});
 					}
 				},
@@ -186,7 +200,8 @@ export default function ButtonAppBar(props) {
 		<React.Fragment>
 			<Paper className={classes.paper2}>
 				<Typography align="left" className={classes.addGroup}>
-					Add Group
+					<GroupAddIcon style={{ paddingRight: "10px" }} />{" "}
+					<span>Add Group</span>
 				</Typography>
 				<TextField
 					id="outlined-basic"
@@ -230,14 +245,12 @@ export default function ButtonAppBar(props) {
 								<Typography>{data.groupname}</Typography>
 							</div>
 							<div className={classes.groupName}>
-								<ViewGroup handleClose={handleClose} />
-								<Tooltip title="Add Member">
-									<img
-										src={AddMember}
-										alt="add"
-										className={classes.addMember}
-									/>
-								</Tooltip>
+								<ViewGroup
+									handleClose={handleClose}
+									handleGroupMembersList={handleGroupMembersList}
+									groupId={data.id}
+									members={members}
+								/>
 								<EditGroup
 									handleCloseEdit={handleCloseEdit}
 									id={data.id}

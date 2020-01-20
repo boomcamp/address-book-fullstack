@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -139,7 +140,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function Details(props) {
 	const classes = useStyles();
-	const { handleCloseDetails, handleShow } = props;
+	const [groupList, setGroupList] = useState([]);
+	const { handleCloseDetails, handleShow, getData } = props;
 
 	const {
 		firstname,
@@ -154,6 +156,24 @@ export default function Details(props) {
 		country,
 		contactId
 	} = props;
+
+	useEffect(() => {
+		handleContactGroups(contactId);
+	}, [contactId]);
+
+	const handleContactGroups = () => {
+		axios.get(`http://localhost:3006/group-members/${contactId}`).then(res => {
+			setGroupList(res.data);
+		});
+	};
+
+	const handleDeleteContactGroups = (contactId, groupId) => {
+		axios
+			.delete(`http://localhost:3006/group-members/${contactId}/${groupId}`)
+			.then(res => {
+				handleContactGroups();
+			});
+	};
 
 	return (
 		<React.Fragment>
@@ -215,20 +235,22 @@ export default function Details(props) {
 								<b className={classes.pad}>Group/s:</b>{" "}
 							</Typography>
 							<div className={classes.groupStyle}>
-								<Typography align="left" className={classes.groupN}>
-									<FiberManualRecordIcon style={{ fontSize: "10px" }} />{" "}
-									Boomcamp
-									<Tooltip title="Remove Group">
-										<ClearIcon className={classes.trash} />
-									</Tooltip>
-								</Typography>
-								<Typography align="left" className={classes.groupN}>
-									<FiberManualRecordIcon style={{ fontSize: "10px" }} />{" "}
-									Homebase
-									<Tooltip title="Remove Group">
-										<ClearIcon className={classes.trash} />
-									</Tooltip>
-								</Typography>
+								{groupList.map((data, i) => {
+									return (
+										<Typography align="left" className={classes.groupN} key={i}>
+											<FiberManualRecordIcon style={{ fontSize: "10px" }} />{" "}
+											{data.groupname}
+											<Tooltip title="Remove Group">
+												<ClearIcon
+													className={classes.trash}
+													onClick={() => {
+														handleDeleteContactGroups(contactId, data.id);
+													}}
+												/>
+											</Tooltip>
+										</Typography>
+									);
+								})}
 							</div>
 						</Grid>
 						<Grid item xs={12} sm={3} align="center">
@@ -246,6 +268,7 @@ export default function Details(props) {
 									country={country}
 									contactId={contactId}
 									handleShow={handleShow}
+									getData={getData}
 								/>
 								<div className={classes.edit} onClick={handleCloseDetails}>
 									<img src={close} alt="close" className={classes.editIcon} />

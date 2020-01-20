@@ -6,16 +6,15 @@ exports.up = pgm => {
 			type: "serial",
 			primaryKey: true
 		},
-		groupId: {
+		groupid: {
 			type: "integer",
-			notNull: true,
-			references: '"groupcontacts"'
+			notNull: true
 		},
-		contactId: {
+		contactid: {
 			type: "integer",
-			notNull: true,
-			references: '"contacts"'
+			notNull: true
 		}
 	});
 };
+
 exports.down = pgm => {};

@@ -12,6 +12,7 @@ import editIcon from "../assets/images/draw.png";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import swal from "sweetalert";
+import jwt from "jsonwebtoken";
 
 const useStyles = makeStyles(theme => ({
 	edit: {
@@ -83,7 +84,8 @@ export default function ResponsiveDialog(props) {
 		postal_code,
 		country,
 		contactId,
-		handleShow
+		handleShow,
+		getData
 	} = props;
 
 	const [required, setRequired] = useState(false);
@@ -103,6 +105,8 @@ export default function ResponsiveDialog(props) {
 		setRequired(false);
 	};
 
+	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+
 	const pass = editFirstname => {
 		if (editFirstname) {
 			axios
@@ -120,6 +124,7 @@ export default function ResponsiveDialog(props) {
 				})
 				.then(() => {
 					handleShow();
+					getData(tokenDecoded, "asc");
 					setOpen(false);
 					swal({
 						icon: "success",

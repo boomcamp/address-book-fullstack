@@ -65,7 +65,7 @@ export default function ViewGroup(props) {
 					icon: "success",
 					title: "Edit Successful"
 				});
-				window.location = "/home";
+				handleShow();
 			});
 	};
 

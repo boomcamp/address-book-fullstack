@@ -15,6 +15,7 @@ import { useHistory } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import AddToGroup from "./AddToGroup";
+import jwt from "jsonwebtoken";
 
 const useStyles = makeStyles({
 	table: {
@@ -42,7 +43,8 @@ const useStyles = makeStyles({
 
 export default function SimpleTable(props) {
 	const classes = useStyles();
-	const { handleViewDetails, state } = props;
+	const { handleViewDetails, state, id, getData } = props;
+	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
 
 	let history = useHistory();
 
@@ -64,7 +66,7 @@ export default function SimpleTable(props) {
 							method: "delete",
 							url: `http://localhost:3006/contacts/${contactId}`
 						}).then(() => {
-							window.location = "/home";
+							getData(tokenDecoded, "asc");
 						});
 					}
 				},
@@ -116,7 +118,7 @@ export default function SimpleTable(props) {
 										onClick={() => handleViewDetails(row.id)}
 									/>
 								</Tooltip>
-								<AddToGroup handleClose={handleClose} userId={props.id} />
+								<AddToGroup handleClose={handleClose} userId={id} />
 								<Tooltip title="Delete">
 									<img
 										src={trash}

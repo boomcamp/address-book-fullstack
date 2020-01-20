@@ -74,10 +74,106 @@ const editGroup = (req, res) => {
 		});
 };
 
+const addMember = (req, res) => {
+	const db = req.app.get("db");
+	const { contactid, groupid } = req.body;
+	db.groupmembers
+		.insert({
+			groupid,
+			contactid
+		})
+		.then(member => res.status(200).json(member))
+		.catch(err => {
+			res.status(500).end();
+			console.error(err);
+		});
+};
+
+const allMembers = (req, res) => {
+	const db = req.app.get("db");
+
+	db.groupmembers
+		.find()
+		.then(group => res.status(200).json(group))
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+};
+
+const getMembersByGroup = (req, res) => {
+	const db = req.app.get("db");
+	const { groupid } = req.params;
+
+	db.groupmembers
+		.join({
+			contacts: {
+				type: "INNER",
+				on: {
+					id: "contactid"
+				}
+			}
+		})
+		.find({
+			groupid: groupid
+		})
+		.then(group => res.status(200).json(group))
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+};
+
+const deleteContactFromGroup = (req, res) => {
+	const db = req.app.get("db");
+	const { contactid } = req.params;
+
+	db.groupmembers
+		.destroy({ contactid: contactid })
+		.then(contacts => res.status(200).json(contacts))
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+};
+
+const getMembersGroup = (req, res) => {
+	const db = req.app.get("db");
+	const { contactid } = req.params;
+
+	db.query(
+		`select groupcontacts.id, userid, groupname from groupmembers INNER JOIN groupcontacts ON groupmembers.groupid = groupcontacts.id where contactid=${contactid};`
+	)
+		.then(group => res.status(200).json(group))
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+};
+
+const deleteMembersGroup = (req, res) => {
+	const db = req.app.get("db");
+	const { contactid, groupid } = req.params;
+
+	db.groupmembers
+		.destroy({ contactid: contactid, groupid })
+		.then(contacts => res.status(200).json(contacts))
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+};
+
 module.exports = {
 	create,
 	getList,
 	deleteGroup,
 	getGroupsByUser,
-	editGroup
+	editGroup,
+	addMember,
+	allMembers,
+	getMembersByGroup,
+	deleteContactFromGroup,
+	getMembersGroup,
+	deleteMembersGroup
 };

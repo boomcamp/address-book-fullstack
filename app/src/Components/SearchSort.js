@@ -13,7 +13,6 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-
 import Group from "./Group";
 
 import sort from "../assets/images/swap.png";
@@ -76,7 +75,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function ButtonAppBar(props) {
 	const [open, setOpen] = React.useState(false);
-	const { handleSort, handleSearch } = props;
+	const { handleSort, handleSearch, contactId } = props;
 
 	const handleClick = () => {
 		setOpen(!open);
@@ -145,7 +144,7 @@ export default function ButtonAppBar(props) {
 					</List>
 				</Collapse>
 			</Paper>
-			<Group />
+			<Group contactId={contactId} />
 		</Container>
 	);
 }
