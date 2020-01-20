@@ -93,7 +93,7 @@ export const ContactDetails = props => {
         <Row>
           <Label>Group:</Label>
           <Span>
-            {rowData.groupId ? (
+            {rowData.group_id ? (
               <GroupName group_id={rowData.group_id} user={user} />
             ) : (
               "Not assigned"

@@ -11,7 +11,7 @@ export const GroupName = props => {
         const response = await Axios.get(`${url}/groups/${props.group_id}`, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
-        setGroupName(response.data[0].groupName);
+        setGroupName(response.data[0].group_name);
       };
       getData();
     }

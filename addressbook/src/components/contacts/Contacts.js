@@ -25,7 +25,7 @@ const getGroupName = async (group, user, setGroupName) => {
   const response = await Axios.get(`${url}/groups/${group}`, {
     headers: { Authorization: `Bearer ${user.token}` }
   });
-  setGroupName(response.data[0].groupName);
+  setGroupName(response.data[0].group_name);
 };
 export const Contacts = props => {
   const {
@@ -53,7 +53,7 @@ export const Contacts = props => {
   const options = userData
     ? userData.groups
       ? userData.groups.map(x => {
-          return { value: x.id, label: x.groupName };
+          return { value: x.id, label: x.group_name };
         })
       : []
     : [];
@@ -73,6 +73,8 @@ export const Contacts = props => {
 
   const addContact = async e => {
     e.preventDefault();
+
+    console.log({ contact, group_id: group });
     try {
       const response = await Axios.post(
         `${url}/contacts`,

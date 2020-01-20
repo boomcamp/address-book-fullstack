@@ -25,42 +25,15 @@ module.exports = {
       .then(() => res.status(202).send({ message: "successfully removed" }));
   },
   list: (req, res) => {
-    const { contacts, groups } = req.app.get("db");
+    const { groups } = req.app.get("db");
     const db = req.app.get("db");
     const { sort } = req.query;
     const { id } = req.params;
-    const fN = contactList => {
-      groups.find({ user_id: id }).then(groups => {
-        groups.map(x => {
-          delete x.user_id;
-          return x;
-        });
-        res.status(200).send({
-          user_id: id,
-          addressBook: contactList,
-          groups: groups
-        });
-      });
-    };
 
-    if (sort) {
-      db.query(
-        `select * from contacts where user_id=${id} order by lastname asc`,
-        { id: id }
-      )
-        .then(contacts =>
-          contacts.map(x => {
-            delete x.user_id;
-            return x;
-          })
-        )
-        .then(contactList => {
-          fN(contactList);
-        });
-    }
-
-    contacts
-      .find({ user_id: id })
+    db.query(
+      `select * from contacts where user_id=${id} order by last_name ${sort}`,
+      { id: id }
+    )
       .then(contacts =>
         contacts.map(x => {
           delete x.user_id;
@@ -68,7 +41,17 @@ module.exports = {
         })
       )
       .then(contactList => {
-        fN(contactList);
+        groups.find({ user_id: id }).then(groups => {
+          groups.map(x => {
+            delete x.user_id;
+            return x;
+          });
+          res.status(200).send({
+            user_id: id,
+            addressBook: contactList,
+            groups: groups
+          });
+        });
       });
   },
   viewDetails: (req, res) => {

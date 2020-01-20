@@ -91,7 +91,7 @@ export const NestedList = props => {
         subheader={
           <ListSubheader component="div" id="nested-list-subheader">
             <span style={{ textTransform: "capitalize" }}>
-              Hello {user.firstName + " " + user.lastName}!
+              Hello {user.first_name + " " + user.last_name}!
             </span>
           </ListSubheader>
         }
@@ -127,7 +127,7 @@ export const NestedList = props => {
                   <ListItemIcon>
                     <Group style={icons} />
                   </ListItemIcon>
-                  <ListItemText primary={x.groupName} />
+                  <ListItemText primary={x.group_name} />
                 </ListItem>
               ))}
             </React.Fragment>
