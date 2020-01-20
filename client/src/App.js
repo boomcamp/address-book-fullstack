@@ -14,6 +14,10 @@ export default class App extends React.Component {
     };
   }
 
+  myChangeHandler = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
   componentDidMount() {
     this.setState({ token: localStorage.getItem("user") });
   }
@@ -41,6 +45,7 @@ export default class App extends React.Component {
   registerHandler = event => {
     event.preventDefault();
     const Obj = {
+      user_id: localStorage.getItem("user_id"),
       username: this.state.username,
       fname: this.state.fname,
       lname: this.state.lname,
@@ -77,10 +82,6 @@ export default class App extends React.Component {
       .catch(err => toast.error(err.response.data.error));
   };
 
-  addToGroup = groupData => {
-    console.log(groupData);
-  };
-
   redirectHandler = () => {
     this.setState({ redirect: false });
   };
@@ -95,6 +96,7 @@ export default class App extends React.Component {
       <React.Fragment>
         <HashRouter>
           <Routes
+            myChangeHandler={this.myChangeHandler}
             mySubmitHandler={this.mySubmitHandler}
             registerHandler={this.registerHandler}
             redirectHandler={this.redirectHandler}
@@ -102,7 +104,6 @@ export default class App extends React.Component {
             deleteHandler={this.deleteHandler}
             handleLogout={this.handleLogout}
             redirect={this.state.redirect}
-            addToGroup={this.addToGroup}
             token={this.state.token}
             error={this.state.error}
           />

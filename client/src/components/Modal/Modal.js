@@ -51,7 +51,7 @@ export default class Modal extends React.Component {
                       name="fname"
                       label="First Name"
                       fullWidth
-                      onChange={this.props.myChangeHandler}
+                      onChange={this.props.myChangeHandler1}
                       required
                     />
                   </Input>
@@ -63,7 +63,7 @@ export default class Modal extends React.Component {
                       id="lname"
                       name="lname"
                       fullWidth
-                      onChange={this.props.myChangeHandler}
+                      onChange={this.props.myChangeHandler1}
                       required
                     />
                   </Input>
@@ -75,7 +75,7 @@ export default class Modal extends React.Component {
                       type="text"
                       id="home_phone"
                       name="homePhone"
-                      onChange={this.props.myChangeHandler}
+                      onChange={this.props.myChangeHandler1}
                       required
                       fullWidth
                     />
@@ -86,7 +86,7 @@ export default class Modal extends React.Component {
                       type="text"
                       id="mobile_phone"
                       name="mobilePhone"
-                      onChange={this.props.myChangeHandler}
+                      onChange={this.props.myChangeHandler1}
                       required
                       fullWidth
                     />
@@ -99,7 +99,7 @@ export default class Modal extends React.Component {
                       type="text"
                       id="work_phone"
                       name="workPhone"
-                      onChange={this.props.myChangeHandler}
+                      onChange={this.props.myChangeHandler1}
                       required
                       fullWidth
                     />
@@ -110,7 +110,7 @@ export default class Modal extends React.Component {
                       type="email"
                       id="email"
                       name="email"
-                      onChange={this.props.myChangeHandler}
+                      onChange={this.props.myChangeHandler1}
                       required
                       fullWidth
                     />
@@ -123,7 +123,7 @@ export default class Modal extends React.Component {
                       type="text"
                       id="city"
                       name="city"
-                      onChange={this.props.myChangeHandler}
+                      onChange={this.props.myChangeHandler1}
                       required
                       fullWidth
                     />
@@ -134,7 +134,7 @@ export default class Modal extends React.Component {
                       type="text"
                       id="state_or_province"
                       name="state_or_province"
-                      onChange={this.props.myChangeHandler}
+                      onChange={this.props.myChangeHandler1}
                       required
                       fullWidth
                     />
@@ -147,7 +147,7 @@ export default class Modal extends React.Component {
                       type="number"
                       id="postal_code"
                       name="postalCode"
-                      onChange={this.props.myChangeHandler}
+                      onChange={this.props.myChangeHandler1}
                       required
                       fullWidth
                     />
@@ -158,7 +158,7 @@ export default class Modal extends React.Component {
                       type="text"
                       id="country"
                       name="country"
-                      onChange={this.props.myChangeHandler}
+                      onChange={this.props.myChangeHandler1}
                       required
                       fullWidth
                     />

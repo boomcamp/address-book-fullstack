@@ -27,7 +27,7 @@ export default class Edit extends React.Component {
   render() {
     return (
       <div>
-        <Dialog open={this.props.clickToOpen} onClose={this.props.handleClose}>
+        <Dialog open={this.props.clickOpen1} onClose={this.props.clickClose1}>
           <DialogTitle
             id="alert-dialog-title"
             style={{
@@ -48,11 +48,11 @@ export default class Edit extends React.Component {
                   <Input>
                     <TextField
                       type="text"
-                      id="groupName"
+                      id="group_name"
                       name="group_name"
                       label="Group Name"
                       fullWidth
-                      onChange={this.props.editOnchange}
+                      onChange={this.props.myChangeHandler1}
                       required
                     />
                   </Input>
@@ -66,7 +66,7 @@ export default class Edit extends React.Component {
             </form>
           </MDBCol>
           <DialogActions>
-            <Button onClick={this.props.handleClose} color="primary">
+            <Button onClick={this.props.clickClose1} color="primary">
               Close
             </Button>
           </DialogActions>

@@ -15,8 +15,7 @@ export default class Routes extends React.Component {
       redirect,
       redirectHandler,
       myChangeHandler,
-      deleteHandler,
-      addToGroup
+      deleteHandler
     } = this.props;
     return (
       <Switch>
@@ -33,7 +32,6 @@ export default class Routes extends React.Component {
               <Users
                 handleLogout={handleLogout}
                 deleteHandler={deleteHandler}
-                addToGroup={addToGroup}
               />
             )
           }

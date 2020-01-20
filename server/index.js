@@ -1,5 +1,7 @@
 const express = require("express");
 const massive = require("massive");
+const secret = require("../secret");
+const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const users = require("../controllers/users");
 const contacts = require("../controllers/contacts");
@@ -45,6 +47,7 @@ massive({
     app.get("/api/groups", groups.listGroups);
     app.delete("/api/groups/:id/delete", groups.deleteGroup);
     app.patch("/api/groups/:id/edit", groups.editGroup);
+
     const PORT = 5009;
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);

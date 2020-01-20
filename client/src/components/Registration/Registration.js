@@ -30,7 +30,7 @@ export default class Registration extends React.Component {
           <div className="container-fluid">
             <div className="row">
               <Form>
-                <form onSubmit={this.props.RegisterHandler}>
+                <form onSubmit={this.props.registerHandler}>
                   <p
                     className="h4 text-center"
                     style={{
