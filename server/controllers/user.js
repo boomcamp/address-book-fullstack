@@ -68,6 +68,7 @@ module.exports = {
 
         return argon2.verify(user.password, password).then(valid => {
           if (!valid) {
+            res.status(401).end();
             throw new Error("Incorrect password! Please try again.");
           }
           db.users

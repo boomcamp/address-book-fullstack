@@ -6,12 +6,6 @@ import Dashboard from './components/Dashboard/Dashboard';
 
 function App() {
 
-  // const checkSessionToken = () => {
-  //   const sessionid = localStorage.getItem("sessionid");
-  //   const token = localStorage.getItem("token");
-  //   return sessionid && token ? true : false;
-  // };
-
   return (
     <Router>
       <Switch>

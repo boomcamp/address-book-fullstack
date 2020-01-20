@@ -87,10 +87,18 @@ function Login() {
         history.push('/dashboard');
       })
       .catch(error => {
+        let err = String(error).match(/\w+$/g).join();
         setShowLoading(false);
-        console.log(error);
-        
-        localStorage.setItem('error', error)
+        if(err === '401'){
+          toast.warning("Wrong password. Try again", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true
+          });
+        }else{
           toast.error("No Account Found! Try again", {
             position: "bottom-right",
             autoClose: 5000,
@@ -99,6 +107,7 @@ function Login() {
             pauseOnHover: true,
             draggable: true
           });
+        }
       });
   };
 

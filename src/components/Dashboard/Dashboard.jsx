@@ -14,6 +14,7 @@ import TableRow from "@material-ui/core/TableRow";
 import { TableSortLabel } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { Chip, Avatar, Typography } from '@material-ui/core';
+import Hidden from '@material-ui/core/Hidden';
 
 import SearchIcon from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
@@ -47,7 +48,6 @@ function Dashboard() {
     },
     searchDiv: {
       margin: '10px 2.5% 0',
-      float: 'right'
     },
     searchField: {
       margin: 'auto'
@@ -112,21 +112,23 @@ function Dashboard() {
   return (
     <React.Fragment>
       <Header />
-      <Grid item xs={12} sm={4} md={4} lg={2} xl={2} className={classes.searchDiv}>
-        <Grid container direction="row" justify="flex-end" alignItems="center">
-          <TextField
-            fullWidth
-            className={classes.searchField}
-            placeholder="Search"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-            onChange={onChangeHandle}
-          />
+      <Grid container direction="row" justify="flex-end" alignItems="center">
+        <Grid item xs={12} sm={4} md={4} lg={2} xl={2} className={classes.searchDiv}>
+          <Grid container direction="row" justify="flex-end" alignItems="center">
+            <TextField
+              fullWidth
+              className={classes.searchField}
+              placeholder="Search"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={onChangeHandle}
+            />
+          </Grid>
         </Grid>
       </Grid>
       <Grid container justify="center">
@@ -144,9 +146,11 @@ function Dashboard() {
                               Name
                             </TableSortLabel>
                           </TableCell>
-                          <TableCell align="inherit" key="Phone Number" style={{minWidth: 30}}>
-                            Phone Number
-                          </TableCell>
+                          <Hidden only={['xs']}>
+                            <TableCell align="inherit" key="Phone Number" style={{minWidth: 30}}>
+                              Phone Number
+                            </TableCell>
+                          </Hidden>
                           <TableCell align="right" key="Actions" style={{minWidth: 30}} />                            
                         </TableRow>
                       </TableHead>
@@ -158,13 +162,15 @@ function Dashboard() {
                               <TableCell>
                                 <Chip variant="outlined" color="primary" avatar={<Avatar style={{background: generator()}}>{firstNameLetter(row.ab_firstName)}</Avatar>} label={row.ab_lastName+", "+row.ab_firstName}/>
                               </TableCell>
-                              <TableCell>
-                                <Typography variant="overline" display="block" noWrap={false}gutterBottom>
-                                  {row.ab_mobile_phone ? row.ab_mobile_phone : 'N/A'}
-                                </Typography>
-                              </TableCell>
+                              <Hidden only={['xs']}>
+                                <TableCell>
+                                  <Typography variant="overline" display="block" noWrap={false}gutterBottom>
+                                    {row.ab_mobile_phone ? row.ab_mobile_phone : 'N/A'}
+                                  </Typography>
+                                </TableCell>
+                              </Hidden>
                               <TableCell align="right" className={classes.actionBtn}>
-                                <ViewContact data={row} />
+                                <ViewContact fetchContactsFn={fetchContactsFn} data={row} />
                                 <EditContact fetchContactsFn={fetchContactsFn} data={row} />
                                 <DeleteContact fetchContactsFn={fetchContactsFn} contactName={row.ab_firstName+" "+row.ab_lastName} contactID={row.abID} />
                               </TableCell>

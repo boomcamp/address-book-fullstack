@@ -103,7 +103,7 @@ function EditContact({data, fetchContactsFn}) {
           </Fab>
         </Tooltip>
       </Hidden>
-      <Hidden only={['xl', 'lg', 'md']}>
+      <Hidden only={['xl', 'lg', 'md', 'xs']}>
         <ButtonGroup size="small" variant="text">
           <Tooltip title="Edit Contact" placement="bottom" arrow>
             <Button onClick={handleClickOpen} style={{color: '#f19208'}}>

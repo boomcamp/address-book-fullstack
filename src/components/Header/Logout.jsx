@@ -1,16 +1,8 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import MenuItem from '@material-ui/core/MenuItem';
-//import { makeStyles } from "@material-ui/core/styles";
 
 function Logout(props) {
-  // const useStyles = makeStyles(theme => ({
-  //   logoutBtn: {
-  //     color: "#f19208"
-  //   }
-  // }));
-
-  // const classes = useStyles();
   const history = useHistory();
 
   const LogoutFn = () => {

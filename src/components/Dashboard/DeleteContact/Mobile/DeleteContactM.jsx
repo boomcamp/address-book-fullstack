@@ -1,32 +1,22 @@
-import React, { useState } from 'react';
+import React, {Fragment, useState} from 'react';
 import axios from 'axios';
 
-import { makeStyles } from "@material-ui/core/styles";
-import { Fab, Tooltip } from "@material-ui/core";
-import { DeleteOutline } from '@material-ui/icons';
-import { Button, Hidden, ButtonGroup } from '@material-ui/core';
-import { Dialog, DialogContent, DialogActions, DialogTitle } from "@material-ui/core";
-import { Typography } from '@material-ui/core';
+import {IconButton } from '@material-ui/core';
+import {Delete as DeleteIcon} from '@material-ui/icons'; 
+import { makeStyles } from '@material-ui/core/styles';
+
+import { Dialog, DialogTitle, DialogContent, Typography, DialogActions, Button, } from '@material-ui/core';
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function DeleteContact({ fetchContactsFn, contactID, contactName }) {
-  const useStyles = makeStyles(theme => ({
-    delete: {
-      color: '#fff',
-    },
-    form: {
-      width: "100%", // Fix IE 11 issue.
-      marginTop: theme.spacing(1)
-    },
-    center: {
-      display: 'flex', 
-      justifyContent: 'center'
-    }
-  }));
+const useStyles = makeStyles(theme => ({
+  deleteBtn: {
+    color: '#d40054',
+  },
+}));
 
-  const classes = useStyles();
+function DeleteContactM({ contactName, contactID, fetchContactsFn }) {
 
   const [open, setOpen] = useState(false);
 
@@ -68,22 +58,12 @@ function DeleteContact({ fetchContactsFn, contactID, contactName }) {
     setOpen(false);
   }
 
+  const classes = useStyles();
   return (
-    <React.Fragment>
-      <Hidden only={['xs', 'sm']} >
-        <Tooltip title="Delete Contact" placement="bottom" arrow>
-          <Fab size="medium" onClick={handleClickOpen} color="secondary" className={classes.delete} aria-label="delete">
-            <DeleteOutline />
-          </Fab>
-        </Tooltip>
-      </Hidden>
-      <Hidden only={['xl', 'lg', 'md', 'xs']}>
-        <ButtonGroup size="small" variant="text">
-          <Tooltip title="Delete Contact" placement="bottom" arrow>
-            <Button onClick={handleClickOpen} color="secondary"><DeleteOutline /></Button>
-          </Tooltip>
-        </ButtonGroup>
-      </Hidden>
+    <Fragment>
+      <IconButton onClick={handleClickOpen} aria-label="delete" className={classes.deleteBtn}>
+        <DeleteIcon />
+      </IconButton>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -116,8 +96,8 @@ function DeleteContact({ fetchContactsFn, contactID, contactName }) {
           </Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </Fragment>
   )
 }
 
-export default DeleteContact
+export default DeleteContactM

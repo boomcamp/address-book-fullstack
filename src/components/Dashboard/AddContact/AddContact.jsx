@@ -136,7 +136,7 @@ function AddContact(props) {
         </Fab>
       </Tooltip>
       <Dialog fullScreen={fullScreen} open={open} onClose={handleClose} aria-labelledby="Add-Contact-Dialog" maxWidth='md' fullWidth>
-      <form onSubmit={addContactFn} className={classes.form}>
+      <form onSubmit={addContactFn} className={classes.form} style={{}}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Add Contact
         </DialogTitle>
