@@ -9,16 +9,17 @@ import ViewAndEditContact from './ViewAndEditContact';
 import RemoveContact from './RemoveContact';
 
 export default function Contacts() {
-	const { state, setState } = ContactData();
 	const [createModal, setCreateModal] = React.useState(false);
 	const [viewModal, setViewModal] = React.useState(false);
 	const [deleteModal, setDeleteModal] = React.useState(false);
 	const [data, setData] = React.useState({});
 	const [notif, setNotif] = React.useState(false);
-
+	const [sort, setSort] = React.useState(true);
+	const { state, setState } = ContactData(sort);
 	const handleClose = () => {
 		setNotif(false);
 	};
+
 	return (
 		<React.Fragment>
 			<MaterialTable
@@ -41,6 +42,14 @@ export default function Contacts() {
 						tooltip: 'Add User',
 						isFreeAction: true,
 						onClick: event => setCreateModal(true)
+					},
+					{
+						icon: sort ? 'A' : 'Z',
+						tooltip: sort ? 'A-Z' : 'Z',
+						isFreeAction: true,
+						onClick: event => {
+							setSort(!sort);
+						}
 					},
 					{
 						tooltip: 'Remove All Selected Users',

@@ -5,7 +5,6 @@ import Link from './IconList';
 import Contact from './Contacts/Contact';
 import Group from './Groups/Group';
 import Logout from './Logout';
-import Users from './Users/Users';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';

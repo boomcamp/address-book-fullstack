@@ -39,9 +39,8 @@ const create = (req, res) => {
 
 const view = (req, res) => {
 	const db = req.app.get('db');
-
 	db.query(
-		`SELECT * FROM contacts WHERE userid = '${req.params.id}' ORDER BY lastname ASC`
+		`SELECT * FROM contacts WHERE userid = '${req.params.id}' ORDER BY lastname	${req.query.value}`
 	).then(p => res.status(200).json(p));
 };
 
@@ -90,5 +89,29 @@ const deleteContact = (req, res) => {
 			res.status(500).end();
 		});
 };
+const search = (req, res) => {
+	const db = req.app.get('db');
+	console.log(req.query);
+	db.query(
+		`SELECT * FROM contacts WHERE (userid = '${req.params.id}') AND (firstname ilike '%	${req.query.value}%' OR lastname ilike '%${req.query.value}%')`
+	)
+		.then(contact => res.status(200).json(contact))
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+};
 
-module.exports = { create, view, updateContact, deleteContact };
+const sort = (req, res) => {
+	const db = req.app.get('db');
+
+	db.query(
+		`SELECT * FROM contacts WHERE userid = '${req.params.id}' ORDER BY lastname	 ${req.query.value}`
+	)
+		.then(contact => res.status(200).json(contact))
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+};
+module.exports = { create, view, updateContact, deleteContact, search, sort };
