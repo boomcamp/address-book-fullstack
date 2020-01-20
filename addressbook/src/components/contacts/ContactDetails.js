@@ -7,10 +7,12 @@ const Div = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  padding: 30px;
   width: 100%;
-  padding: 10px;
   @media screen and (max-width: 600px) {
     flex-direction: column;
+    padding: 10px;
+    width: 100%;
   }
 `;
 const Span = styled.span`
@@ -28,6 +30,7 @@ const Row = styled.div`
   display: flex;
   flex-direction: column;
   width: 33%;
+  justify-content: space-around;
   @media screen and (max-width: 600px) {
     width: 100%;
   }
@@ -37,7 +40,14 @@ const Title = styled.div`
   justify-content: space-between;
 `;
 export const ContactDetails = props => {
-  const { rowData, setContact, setAction, setDialog, user } = props;
+  const {
+    rowData,
+    setContact,
+    setAction,
+    setDialog,
+    user,
+    windowWidth
+  } = props;
   return (
     <Fragment>
       <div style={{ padding: "10px 10px 0 10px" }}>

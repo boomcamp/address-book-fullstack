@@ -269,6 +269,7 @@ export const Contacts = props => {
               tooltip: "View Details",
               render: rowData => (
                 <ContactDetails
+                  windowWidth={windowWidth}
                   rowData={rowData}
                   setContact={setContact}
                   setAction={setAction}
@@ -278,6 +279,7 @@ export const Contacts = props => {
               )
             }
           ]}
+          onRowClick={(event, rowData, togglePanel) => togglePanel()}
         />
       </MuiThemeProvider>
       {action === "add" ? (
