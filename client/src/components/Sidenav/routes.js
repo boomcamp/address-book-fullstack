@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 
-import Users from "../Users/Users";
+import Contacts from "../Contacts/Contacts";
 
 export default class Routes extends React.Component {
   render() {
@@ -30,6 +30,7 @@ export default class Routes extends React.Component {
       deleteGroupHandler,
       searchHandler,
       groups,
+      search,
       groupData
     } = this.props;
     return (
@@ -37,7 +38,7 @@ export default class Routes extends React.Component {
         <Route
           exact
           render={() => (
-            <Users
+            <Contacts
               handleLogout={handleLogout}
               accessToken={accessToken}
               createContactHandler={createContactHandler}
@@ -62,6 +63,7 @@ export default class Routes extends React.Component {
               deleteGroupHandler={deleteGroupHandler}
               searchHandler={searchHandler}
               groups={groups}
+              search={search}
               groupData={groupData}
             />
           )}

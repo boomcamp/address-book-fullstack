@@ -30,6 +30,7 @@ export default class Routes extends React.Component {
       deleteContact,
       contact,
       groups,
+      search,
       addToGroup,
       addToGroupHandler,
       fetchContact,
@@ -59,6 +60,7 @@ export default class Routes extends React.Component {
                 deleteContact={deleteContact}
                 contact={contact}
                 groups={groups}
+                search={search}
                 groupData={groupData}
                 addAGroup={addAGroup}
                 addAGroupHandler={addAGroupHandler}

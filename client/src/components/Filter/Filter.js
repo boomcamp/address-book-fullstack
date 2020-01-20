@@ -32,7 +32,7 @@ export default class Filter extends React.Component {
             onChange={this.props.changeHandler}
             className="browser-default custom-select"
           >
-            <option>Choose your option</option>
+            <option>Sort by</option>
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
           </select>

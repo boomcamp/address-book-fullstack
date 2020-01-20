@@ -13,21 +13,7 @@ module.exports = {
   createContact: (req, res) => {
     const db = req.app.get("db");
     db.contacts
-      .insert(req.body, {
-        fields: [
-          "id",
-          "first_name",
-          "last_name",
-          "email",
-          "home_phone",
-          "mobile_phone",
-          "work_phone",
-          "city",
-          "state_or_province",
-          "postal_code",
-          "country"
-        ]
-      })
+      .insert(req.body)
       .then(contacts => {
         res.status(201).json(contacts);
       })

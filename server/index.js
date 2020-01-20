@@ -2,6 +2,7 @@ const express = require("express");
 const massive = require("massive");
 const cors = require("cors");
 const secret = require("../secret");
+const jwt = require("jsonwebtoken");
 
 const validate = require("../controllers/validations");
 const contact = require("../controllers/contacts");
@@ -40,21 +41,21 @@ massive({
   app.post("/login", validate.login);
 
   //CONTACT'S ENDPOINT
-  app.get("/contacts/:id/all", contact.allContacts);
-  app.post("/contacts/create", contact.createContact);
-  app.patch("/contacts/:id/edit", contact.editContact);
-  app.delete("/contacts/:id/delete", contact.deleteContact);
+  app.get("/contacts/:id/all", auth, contact.allContacts);
+  app.post("/contacts/create", auth, contact.createContact);
+  app.patch("/contacts/:id/edit", auth, contact.editContact);
+  app.delete("/contacts/:id/delete", auth, contact.deleteContact);
 
   //GROUP'S ENDPOINT
-  app.get("/groups/:id/all", group.groupsByUser);
-  app.get("/groups/:id/contacts", group.contactsByGroup);
-  app.post("/groups/create", group.createGroup);
-  app.patch("/groups/:id/add", group.addToGroup);
-  app.patch("/groups/:id/edit", group.editGroup);
-  app.delete("/groups/:id/delete", group.deleteGroup);
+  app.get("/groups/:id/all", auth, group.groupsByUser);
+  app.get("/groups/:id/contacts", auth, group.contactsByGroup);
+  app.post("/groups/create", auth, group.createGroup);
+  app.patch("/groups/:id/add", auth, group.addToGroup);
+  app.patch("/groups/:id/edit", auth, group.editGroup);
+  app.delete("/groups/:id/delete", auth, group.deleteGroup);
 
   //ADDRESSBOOK ENDPOINT
-  app.get("/addressbook/:id/all", addressbook.fetchAddressBook);
+  app.get("/addressbook/:id/all", auth, addressbook.fetchAddressBook);
 
   const PORT = 4001;
   app.listen(PORT, () => {

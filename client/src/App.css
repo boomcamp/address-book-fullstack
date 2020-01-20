@@ -22,7 +22,7 @@
 }
 
 .MuiTableRow-root:hover {
-  background: #a7edff !important;
+  background: lightgray !important;
 }
 
 tbody.MuiTableBody-root tr.MuiTableRow-root:first-of-type:hover {

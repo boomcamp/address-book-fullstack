@@ -1,15 +1,12 @@
 import React from "react";
+import MaterialTable from "material-table";
+import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import MaterialTable from "material-table";
 import { Tooltip } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
-import Modal from "../Modal/Modal";
-import Filter from "../Filter/Filter";
 import Avatar from "@material-ui/core/Avatar";
 import Zoom from "@material-ui/core/Zoom";
-import styled from "styled-components";
 import {
   MDBDropdown,
   MDBDropdownToggle,
@@ -20,7 +17,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Box from "@material-ui/core/Box";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 
-class Users extends React.Component {
+export default class Table extends React.Component {
   constructor() {
     super();
     this.theme = createMuiTheme({
@@ -39,10 +36,10 @@ class Users extends React.Component {
       data: []
     };
   }
+
   handleClick = () => {
     this.setState({ toggle: !this.state.toggle });
   };
-
   updateDimensions = () => {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   };
@@ -54,27 +51,7 @@ class Users extends React.Component {
   }
 
   render() {
-    const {
-      createContactHandler,
-      changeHandler,
-      selectHandler,
-      handleModalClose,
-      isModal,
-      currentData,
-      editContactHandler,
-      deleteContactHandler,
-      deleteContact,
-      addToGroup,
-      addToGroupHandler,
-      addAGroup,
-      addAGroupHandler,
-      editGroup,
-      editGroupHandler,
-      deleteGroup,
-      deleteGroupHandler,
-      groups
-    } = this.props;
-
+    const { search } = this.props;
     const tableColumns =
       this.state.width < 770
         ? [
@@ -89,7 +66,7 @@ class Users extends React.Component {
                     alignContent="flex-start"
                   >
                     <div>
-                      <Avatar />
+                      <Avatar>{rowData.first_name.charAt(0)}</Avatar>
                     </div>
                     <div style={{ paddingTop: "10px", paddingLeft: "10px" }}>
                       {" "}
@@ -142,7 +119,7 @@ class Users extends React.Component {
                     alignContent="flex-start"
                   >
                     <div>
-                      <Avatar />
+                      <Avatar>{rowData.first_name.charAt(0)}</Avatar>
                     </div>
                     <div style={{ paddingTop: "10px", paddingLeft: "10px" }}>
                       {" "}
@@ -192,114 +169,95 @@ class Users extends React.Component {
               )
             }
           ];
+
     const allContacts = this.props.contact
       ? this.props.contact.allContacts
       : [];
 
-    const title = this.props.groupData
-      ? this.props.groupData.group_name
-      : "All Contacts";
-
-    const Div = styled.div``;
-
     return (
-      <div>
-        <Filter changeHandler={changeHandler} />
-        <MuiThemeProvider theme={this.theme}>
-          <MaterialTable
-            title={
-              <Div>
-                {this.props.groupData ? (
-                  <Typography variant="h5">
-                    {title}
-                    <Tooltip TransitionComponent={Zoom} title="Edit Group">
-                      <IconButton
-                        aria-label="edit"
-                        onClick={() =>
-                          this.props.handleModalOpen(
-                            this.props.groupData,
-                            "editGroup"
-                          )
-                        }
-                        style={{ paddingLeft: "20px" }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip TransitionComponent={Zoom} title="Delete Group">
-                      <IconButton
-                        aria-label="delete"
-                        onClick={() =>
-                          this.props.handleModalOpen(
-                            this.props.groupData,
-                            "deleteGroup"
-                          )
-                        }
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Typography>
-                ) : (
-                  <Typography variant="h5">{title}</Typography>
-                )}
-              </Div>
+      <MuiThemeProvider theme={this.theme}>
+        <MaterialTable
+          title={
+            <div>
+              {this.props.groupData ? (
+                <Typography variant="h5">
+                  {this.props.groupData
+                    ? this.props.groupData.group_name
+                    : "All Contacts"}
+                  <Tooltip TransitionComponent={Zoom} title="Edit Group">
+                    <IconButton
+                      aria-label="edit"
+                      onClick={() =>
+                        this.props.handleModalOpen(
+                          this.props.groupData,
+                          "editGroup"
+                        )
+                      }
+                      style={{ paddingLeft: "20px" }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip TransitionComponent={Zoom} title="Delete Group">
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() =>
+                        this.props.handleModalOpen(
+                          this.props.groupData,
+                          "deleteGroup"
+                        )
+                      }
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Typography>
+              ) : (
+                <Typography variant="h5">
+                  {this.props.groupData
+                    ? this.props.groupData.group_name
+                    : "All Contacts"}
+                </Typography>
+              )}
+            </div>
+          }
+          columns={tableColumns}
+          data={allContacts.filter(val => {
+            const regex = new RegExp(search, "gi");
+            if (val.first_name.match(regex) || val.last_name.match(regex)) {
+              return val;
             }
-            columns={tableColumns}
-            data={allContacts}
-            options={{
-              pageSizeOptions: [10, 15, 20],
-              pageSize: 10,
-              actionsColumnIndex: -1,
-              selection: true,
-              search: false
-            }}
-            actions={[
-              {
-                icon: "add",
-                tooltip: "Add Contact",
-                isFreeAction: true,
-                onClick: (evt, data) =>
-                  this.props.handleModalOpen(data, "addContact")
-              },
-              {
-                icon: "group",
-                tooltip: "Add To Group",
-                onClick: (evt, data) =>
-                  this.props.handleModalOpen(data, "addGroup")
-              },
-              {
-                tooltip: "Remove All Selected Users",
-                icon: "delete",
-                onClick: (evt, data) =>
-                  this.props.handleModalOpen(data, "delete")
-              }
-            ]}
-          />
-        </MuiThemeProvider>
-        <Modal
-          isModal={isModal}
-          currentData={currentData}
-          createContactHandler={createContactHandler}
-          editContactHandler={editContactHandler}
-          deleteContactHandler={deleteContactHandler}
-          addToGroupHandler={addToGroupHandler}
-          addAGroup={addAGroup}
-          editGroup={editGroup}
-          editGroupHandler={editGroupHandler}
-          deleteGroup={deleteGroup}
-          deleteGroupHandler={deleteGroupHandler}
-          addAGroupHandler={addAGroupHandler}
-          changeHandler={changeHandler}
-          selectHandler={selectHandler}
-          handleModalClose={handleModalClose}
-          deleteContact={deleteContact}
-          addToGroup={addToGroup}
-          groups={groups}
+            return null;
+          })}
+          options={{
+            pageSizeOptions: [10, 15, 20],
+            pageSize: 10,
+            actionsColumnIndex: -1,
+            selection: true,
+            search: false
+          }}
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Add Contact",
+              isFreeAction: true,
+              onClick: (evt, data) =>
+                this.props.handleModalOpen(data, "addContact")
+            },
+            {
+              icon: "group",
+              tooltip: "Add To Group",
+              onClick: (evt, data) =>
+                this.props.handleModalOpen(data, "addGroup")
+            },
+            {
+              tooltip: "Remove All Selected Users",
+              icon: "delete",
+              onClick: (evt, data) => this.props.handleModalOpen(data, "delete")
+            }
+          ]}
         />
-      </div>
+      </MuiThemeProvider>
     );
   }
 }
-
-export default Users;

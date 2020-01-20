@@ -2,16 +2,23 @@ module.exports = {
   fetchAddressBook: (req, res) => {
     const db = req.app.get("db");
 
-    db.contacts
-      .find({ user_id: req.params.id })
+    const { id } = req.params;
+    const { sort } = req.query;
+
+    db.query(
+      `select * from contacts where user_id=${id} order by last_name ${sort} `,
+      {
+        id: id
+      }
+    )
       .then(contacts => {
-        db.groups.find({ user_id: req.params.id }).then(group => {
+        db.groups.find({ user_id: id }).then(group => {
           group.map(x => {
             delete x.user_id;
             return x;
           });
           res.status(200).send({
-            user_id: req.params.id,
+            user_id: id,
             allContacts: contacts,
             allGroups: group
           });

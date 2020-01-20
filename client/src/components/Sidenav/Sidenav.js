@@ -79,6 +79,7 @@ function ResponsiveDrawer(props) {
     deleteContactHandler,
     deleteContact,
     groups,
+    search,
     groupData,
     contact,
     addToGroup,
@@ -124,7 +125,7 @@ function ResponsiveDrawer(props) {
         <ListItem
           button
           key={"All Contacts"}
-          onClick={() => props.fetchContact(1, "allContacts")}
+          onClick={() => props.fetchContact(2)}
         >
           <ListItemIcon>
             <PersonIcon />
@@ -163,7 +164,7 @@ function ResponsiveDrawer(props) {
                     button
                     key={e.id}
                     className={classes.nested}
-                    onClick={() => props.fetchContact(e, "group")}
+                    onClick={() => props.fetchContact(e)}
                   >
                     <ListItemIcon>
                       <StarBorder />
@@ -290,6 +291,7 @@ function ResponsiveDrawer(props) {
           deleteGroup={deleteGroup}
           deleteGroupHandler={deleteGroupHandler}
           groups={groups}
+          search={search}
           groupData={groupData}
         />
       </main>

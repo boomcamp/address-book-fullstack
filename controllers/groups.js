@@ -12,9 +12,15 @@ module.exports = {
   },
   contactsByGroup: (req, res) => {
     const db = req.app.get("db");
+    const { id } = req.params;
+    const { sort } = req.query;
 
-    db.contacts
-      .find({ group_id: req.params.id })
+    db.query(
+      `select * from contacts where group_id=${id} order by last_name ${sort} `,
+      {
+        id: id
+      }
+    )
       .then(groups => res.status(200).send({ allContacts: groups }))
       .catch(err => {
         console.error(err);

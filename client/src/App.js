@@ -11,31 +11,37 @@ export default class App extends Component {
     super();
     this.state = {
       isLoading: false,
-      isModal: false
+      isModal: false,
+      sort: "asc"
     };
   }
 
   componentDidMount = () => {
     if (localStorage.getItem("userId")) {
       this.setState({
-        accessToken: localStorage.getItem("user"),
+        accessToken: localStorage.getItem("token"),
         isLoading: true
       });
     } else {
-      this.setState({ accessToken: localStorage.getItem("user") });
+      this.setState({ accessToken: localStorage.getItem("token") });
     }
   };
 
   componentDidUpdate = () => {
     if (this.state.isLoading) {
       this.state.groupData
-        ? this.fetchContact(this.state.groupData, "allContactsByGroup")
-        : this.fetchContact(1, "all");
+        ? this.fetchContact(this.state.groupData)
+        : this.fetchContact(1);
       axios
         .get(
           `http://localhost:4001/addressbook/${localStorage.getItem(
             "userId"
-          )}/all`
+          )}/all?sort=${this.state.sort}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+          }
         )
         .then(response => {
           this.setState({
@@ -46,40 +52,42 @@ export default class App extends Component {
     }
   };
 
-  fetchContact = (data, val) => {
-    return val === "allContacts"
-      ? axios
-          .get(
-            `http://localhost:4001/addressbook/${localStorage.getItem(
-              "userId"
-            )}/all`
-          )
-          .then(response => {
-            this.setState({
+  fetchContact = data => {
+    return axios
+      .get(
+        `http://localhost:4001/addressbook/${localStorage.getItem(
+          "userId"
+        )}/all?sort=${this.state.sort}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        }
+      )
+      .then(response => {
+        data === 2
+          ? this.setState({
               contacts: response.data,
               groupData: null
-            });
-          })
-      : val === "all"
-      ? axios
-          .get(
-            `http://localhost:4001/addressbook/${localStorage.getItem(
-              "userId"
-            )}/all`
-          )
-          .then(response => {
-            this.setState({
+            })
+          : data === 1
+          ? this.setState({
               contacts: response.data
-            });
-          })
-      : axios
-          .get(`http://localhost:4001/groups/${data.id}/contacts`)
-          .then(response => {
-            this.setState({
-              contacts: response.data,
-              groupData: data
-            });
-          });
+            })
+          : axios
+              .get(
+                `http://localhost:4001/groups/${data.id}/contacts?sort=${this.state.sort}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                  }
+                }
+              )
+              .then(response => {
+                this.setState({
+                  contacts: response.data,
+                  groupData: data
+                });
+              });
+      });
   };
 
   handleSignUp = event => {
@@ -115,7 +123,7 @@ export default class App extends Component {
       username: "",
       password: ""
     });
-    toast.info("Successfully Logout!");
+    toast("Successfully Logout!");
   };
 
   submitHandler = event => {
@@ -126,14 +134,14 @@ export default class App extends Component {
       password: this.state.password
     };
 
-    this.state.username && this.state.password
+    return this.state.username && this.state.password
       ? axios
           .post("http://localhost:4001/login", Obj)
           .then(response => {
-            localStorage.setItem("user", response.data.token);
+            localStorage.setItem("token", response.data.token);
             localStorage.setItem("userId", response.data.id);
             this.setState({
-              accessToken: localStorage.getItem("user")
+              accessToken: localStorage.getItem("token")
             });
             this.setState({
               isLoading: true,
@@ -148,7 +156,7 @@ export default class App extends Component {
               console.log(errors);
             }
           })
-      : toast.error("Fill Out All Fields");
+      : "";
   };
 
   editContactHandler = (event, rowData) => {
@@ -169,7 +177,7 @@ export default class App extends Component {
     };
     axios
       .patch(`http://localhost:4001/contacts/${rowData.id}/edit`, Obj, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
       .then(() => {
         this.setState({
@@ -193,7 +201,7 @@ export default class App extends Component {
       axios
         .delete(`http://localhost:4001/contacts/${e.id}/delete`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("user")}`
+            Authorization: `Bearer ${localStorage.getItem("token")}`
           }
         })
         .then(() => {
@@ -220,7 +228,7 @@ export default class App extends Component {
     };
     axios
       .patch(`http://localhost:4001/groups/${data.id}/edit`, Obj, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
       .then(() => {
         this.setState({
@@ -243,7 +251,7 @@ export default class App extends Component {
     axios
       .delete(`http://localhost:4001/groups/${data.id}/delete`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("user")}`
+          Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       })
       .then(() => {
@@ -272,7 +280,7 @@ export default class App extends Component {
     };
     axios
       .post("http://localhost:4001/groups/create", Obj, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
       .then(() => {
         this.setState({
@@ -300,7 +308,9 @@ export default class App extends Component {
             group_id: this.state.selectedGroup
           },
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
           }
         )
         .then(() => {
@@ -338,9 +348,7 @@ export default class App extends Component {
       country: this.state.country
     };
     axios
-      .post("http://localhost:4001/contacts/create", Obj, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("user")}` }
-      })
+      .post("http://localhost:4001/contacts/create", Obj)
       .then(() => {
         this.setState({
           isLoading: true,
@@ -361,7 +369,9 @@ export default class App extends Component {
     this.setState({
       [event.target.name]: event.target.value
     });
-    console.log([event.target.name], event.target.value);
+    if (event.target.name === "sort") {
+      this.setState({ isLoading: true });
+    }
   };
 
   selectHandler = event => {
@@ -494,6 +504,7 @@ export default class App extends Component {
           currentData={this.state.currentData}
           contact={this.state.contacts}
           groups={this.state.groups}
+          search={this.state.search}
           groupData={this.state.groupData}
           fetchContact={this.fetchContact}
         />
