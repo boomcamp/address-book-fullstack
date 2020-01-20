@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { Table, Icon, Tabs, message, Modal, Input, Layout, Select } from "antd";
+import { Table, Icon, Tabs, message, Modal, Layout } from "antd";
 import axios from "axios";
 import Edit from "./editContact";
 import Search from "./search";
+import Grouplist from "./grouplist";
+import Sort from "./sort";
 
 export default class addressTable extends Component {
   constructor() {
@@ -10,34 +12,24 @@ export default class addressTable extends Component {
     this.state = {
       data: [],
       openModal: false,
-      searching: false
+      searching: false,
+      disabled: true,
+      sortVal: "ASC"
     };
   }
   componentDidMount = () => {
-    var arr = [];
-    axios({
-      method: "get",
-      url: `/contact/list/${localStorage.getItem("id")}`
-    }).then(res => {
-      res.data.forEach(data => {
-        arr.push({
-          first_name: data.first_name,
-          last_name: data.last_name,
-          email: data.email,
-          home_phone: data.home_phone,
-          mobile_phone: data.mobile_phone,
-          work_phone: data.work_phone,
-          postal_code: data.postal_code,
-          state_or_province: data.state_or_province,
-          city: data.city,
-          key: data.id,
-          country: data.country
-        });
-      });
-      this.setState({
-        data: arr
-      });
-    });
+    this.loadAgain();
+  };
+
+  handleChange = value => {
+    this.setState(
+      {
+        sortVal: value
+      },
+      () => {
+        this.loadAgain();
+      }
+    );
   };
 
   componentDidUpdate(nextProps) {
@@ -52,8 +44,11 @@ export default class addressTable extends Component {
     var arr = [];
     axios({
       method: "get",
-      url: `/contact/list/${localStorage.getItem("id")}`
+      url: `/contact/list/${localStorage.getItem("id")}?sort=${
+        this.state.sortVal
+      }`
     }).then(res => {
+      console.log(res.data);
       res.data.forEach(data => {
         arr.push({
           first_name: data.first_name,
@@ -65,13 +60,12 @@ export default class addressTable extends Component {
           postal_code: data.postal_code,
           state_or_province: data.state_or_province,
           city: data.city,
-          key: data.id,
+          key: `'${data.id}'`,
           country: data.country
         });
       });
       this.setState({
-        data: arr,
-        length: arr.length
+        data: arr
       });
     });
   };
@@ -118,12 +112,10 @@ export default class addressTable extends Component {
     this.setState({
       data: e
     });
-    // e.length == this.state.length
-    //   ? this.setState({ searching: false })
-    //   : this.setState({ searching: true });
   };
 
   render() {
+    console.log(this.state.data);
     const { TabPane } = Tabs;
     const { Column } = Table;
     const { Content } = Layout;
@@ -134,65 +126,34 @@ export default class addressTable extends Component {
             <Content
               style={{
                 display: "flex",
-                padding: "10px",
-
+                padding: "15px",
                 justifyContent: "flex-end"
               }}
             >
+              <Sort sort={this.handleChange} />
               <Search user={this.search} />
             </Content>
-            <Table dataSource={this.state.data} onClick={e => this.handleOk()}>
+
+            <Table dataSource={this.state.data}>
               <Column
                 title="First Name"
                 dataIndex="first_name"
                 key="first_name"
               />
-              <Column
-                title="Last Name"
-                dataIndex="last_name"
-                key="last_name"
-                sorter={(a, b) => a.last_name.length - b.last_name.length}
-                sortDirections={["descend", "ascend"]}
-              />
-              {/* <Column title="City" dataIndex="city" key="city" /> */}
-              <Column
-                title="State or Province"
-                dataIndex="state_or_province"
-                key="state_or_province"
-              />
-              {/* <Column
-                title="Home phone"
-                dataIndex="home_phone"
-                key="home_phone"
-              />{" "} */}
+              <Column title="Last Name" dataIndex="last_name" key="last_name" />
+
               <Column
                 title="Mobile phone"
                 dataIndex="mobile_phone"
                 key="mobile_phone"
-                defaultSortOrder="ascend"
-                sorter={(a, b) => a.mobile_phone - b.mobile_phone}
-              />
-              {/* <Column
-                title="Work phone"
-                dataIndex="work_phone"
-                key="work_phone"
               />
               <Column
-                title="Postal Code"
-                dataIndex="postal_code"
-                key="postal_code"
-              /> */}
-              {/* <Column title="Country" dataIndex="country" key="country" /> */}
-              <Column
-                title="Edit"
-                key="edit"
+                title="More"
+                key="more"
                 render={(text, record) => (
                   <span>
-                    <Icon
-                      type="edit"
-                      theme="twoTone"
-                      onClick={e => this.handleOk(record)}
-                    />
+                    <Icon type="left" onClick={e => this.handleOk(record)} />
+
                     <Edit
                       visible={this.state.openModal}
                       handleCancel={this.handleCancel}
@@ -204,12 +165,11 @@ export default class addressTable extends Component {
 
               <Column
                 title="Delete"
-                key="id"
+                key="delete"
                 render={(record, text) => (
                   <span>
                     <Icon
                       type="delete"
-                      theme="twoTone"
                       onClick={e => this.handleDelete(record.key)}
                     />
                   </span>
@@ -217,7 +177,9 @@ export default class addressTable extends Component {
               />
             </Table>
           </TabPane>
-          {/* <TabPane tab="dg" key="2"></TabPane> */}
+          <TabPane tab="Groups" key="2">
+            <Grouplist />
+          </TabPane>
         </Tabs>
       </div>
     );

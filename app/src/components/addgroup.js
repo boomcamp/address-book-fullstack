@@ -53,7 +53,7 @@ export default class addgroup extends Component {
             Add Group
           </Button>
           <Modal
-            title="Basic Modal"
+            title="Add Group"
             visible={this.state.visible}
             onOk={this.handleOk}
             onCancel={this.handleCancel}

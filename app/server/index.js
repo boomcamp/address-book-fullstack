@@ -45,7 +45,8 @@ massive({
     app.get("/contact/search/:id", contact.search);
 
     app.post("/create/group/:id", group.addgroup);
-    app.get("/group/list", group.grouplist);
+    app.get("/group/list/:id", group.grouplist);
+    app.post("/add/members/:id", group.addmembers);
     const port = 5000;
 
     app.listen(port, () => {

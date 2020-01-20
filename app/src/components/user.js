@@ -7,15 +7,11 @@ import {
   Menu,
   Icon,
   Avatar,
-  Card,
-  List
+  Card
 } from "antd";
-import "./user.css";
 import Contact from "./contactTable";
 import Addcontact from "./addcontact";
 import Addgroup from "./addgroup";
-import axios from "axios";
-import Image from "./img/logos.jpg";
 
 const header = {
   display: "flex",
@@ -32,23 +28,9 @@ export default class user extends Component {
       username: localStorage.getItem("username"),
       openModal: false,
       query: "",
-      group: []
+      data: []
     };
   }
-  componentDidMount = () => {
-    axios({
-      method: "get",
-      url: `/group/list`,
-      data: {
-        group_name: this.state.group
-      }
-    }).then(res => {
-      // console.log(res.group);
-      // this.setState({
-      //   data: res.group
-      // });
-    });
-  };
 
   handleLogout = key => {
     localStorage.clear();
@@ -133,25 +115,24 @@ export default class user extends Component {
                     </span>
                   }
                 >
-                  <List
-                    itemLayout="horizontal"
-                    dataSource="Group 1"
-                    renderItem={item => (
+                  {/* <List
+                    itemlayout="horizontal"
+                    datasource={this.state.data}
+                    renderitem={item => (
                       <List.Item>
                         <List.Item.Meta
                           avatar={
-                            // <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                             <Avatar>
                               {" "}
                               <Icon type="folder-add" />
                             </Avatar>
                           }
-                          title="Group 1"
-                          width="20px"
+                          title={<a href="https://ant.design">{item.title}</a>}
+                          description={this.state.data.group_name}
                         />
                       </List.Item>
                     )}
-                  />
+                  /> */}
                 </SubMenu>
               </Menu>
             </Sider>

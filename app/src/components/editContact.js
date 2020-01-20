@@ -12,6 +12,7 @@ import {
 } from "antd";
 import axios from "axios";
 import Image from "./img/logos.jpg";
+import Selectgroup from "./selectgroup";
 
 class editContact extends Component {
   constructor() {
@@ -20,7 +21,8 @@ class editContact extends Component {
     this.state = {
       placement: "right",
       loading: false,
-      visible: false
+      visible: false,
+      disabled: true
     };
   }
   componentDidUpdate = nextProps => {
@@ -43,6 +45,7 @@ class editContact extends Component {
       });
     }
   };
+
   handleUpdate = id => {
     this.setState({ loading: true });
     setTimeout(() => {
@@ -67,10 +70,18 @@ class editContact extends Component {
     }).then(res => {
       console.log(res.data);
     });
+    axios.patch(`add/members/${localStorage.getItem("id")}`);
+
     setTimeout(() => {
       message.success({ content: "Successfully Updated", duration: 2 });
-      this.setState({ data: true, visible: false });
+      this.setState({ data: true, visible: true, disabled: true });
     }, 3000);
+  };
+  axios;
+  handleEdit = () => {
+    this.setState({
+      disabled: false
+    });
   };
 
   render() {
@@ -128,6 +139,7 @@ class editContact extends Component {
                           }
                         })
                       }
+                      disabled={this.state.disabled}
                     />
                   </Form.Item>
                 </Col>
@@ -152,6 +164,7 @@ class editContact extends Component {
                           }
                         })
                       }
+                      disabled={this.state.disabled}
                     />
                   </Form.Item>
                 </Col>
@@ -182,6 +195,7 @@ class editContact extends Component {
                           }
                         })
                       }
+                      disabled={this.state.disabled}
                     />
                   </Form.Item>
                 </Col>
@@ -209,6 +223,7 @@ class editContact extends Component {
                           }
                         })
                       }
+                      disabled={this.state.disabled}
                     />
                   </Form.Item>
                 </Col>
@@ -236,6 +251,7 @@ class editContact extends Component {
                           }
                         })
                       }
+                      disabled={this.state.disabled}
                     />
                   </Form.Item>
                 </Col>
@@ -260,83 +276,122 @@ class editContact extends Component {
                           }
                         })
                       }
+                      disabled={this.state.disabled}
                     />
                   </Form.Item>
                 </Col>
               </Row>
-              <Form.Item label="City">
-                <Input
-                  placeholder="City"
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  value={this.state.contact ? this.state.contact.city : null}
-                  onChange={e =>
-                    this.setState({
-                      contact: {
-                        ...this.state.contact,
-                        city: e.target.value
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item label="City">
+                    <Input
+                      placeholder="City"
+                      prefix={
+                        <Icon
+                          type="home"
+                          style={{ color: "rgba(0,0,0,.25)" }}
+                        />
                       }
-                    })
-                  }
-                />
-              </Form.Item>
-              <Form.Item label="State or Province">
-                <Input
-                  placeholder="State or Province"
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  value={
-                    this.state.contact
-                      ? this.state.contact.state_or_province
-                      : null
-                  }
-                  onChange={e =>
-                    this.setState({
-                      contact: {
-                        ...this.state.contact,
-                        state_or_province: e.target.value
+                      value={
+                        this.state.contact ? this.state.contact.city : null
                       }
-                    })
-                  }
-                />
-              </Form.Item>
-              <Form.Item label="Postal Code">
-                <Input
-                  placeholder="Postal code"
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  value={
-                    this.state.contact ? this.state.contact.postal_code : null
-                  }
-                  onChange={e =>
-                    this.setState({
-                      contact: {
-                        ...this.state.contact,
-                        postal_code: e.target.value
+                      onChange={e =>
+                        this.setState({
+                          contact: {
+                            ...this.state.contact,
+                            city: e.target.value
+                          }
+                        })
                       }
-                    })
-                  }
-                />
-              </Form.Item>
-              <Form.Item label="Country">
-                <Input
-                  placeholder="Country"
-                  prefix={
-                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
-                  }
-                  value={this.state.contact ? this.state.contact.country : null}
-                  onChange={e =>
-                    this.setState({
-                      contact: {
-                        ...this.state.contact,
-                        country: e.target.value
+                      disabled={this.state.disabled}
+                    />
+                  </Form.Item>
+                </Col>
+
+                <Col span={12}>
+                  <Form.Item label="State or Province">
+                    <Input
+                      placeholder="State or Province"
+                      prefix={
+                        <Icon
+                          type="home"
+                          style={{ color: "rgba(0,0,0,.25)" }}
+                        />
                       }
-                    })
-                  }
-                />
+                      value={
+                        this.state.contact
+                          ? this.state.contact.state_or_province
+                          : null
+                      }
+                      onChange={e =>
+                        this.setState({
+                          contact: {
+                            ...this.state.contact,
+                            state_or_province: e.target.value
+                          }
+                        })
+                      }
+                      disabled={this.state.disabled}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item label="Postal Code">
+                    <Input
+                      placeholder="Postal code"
+                      prefix={
+                        <Icon
+                          type="home"
+                          style={{ color: "rgba(0,0,0,.25)" }}
+                        />
+                      }
+                      value={
+                        this.state.contact
+                          ? this.state.contact.postal_code
+                          : null
+                      }
+                      onChange={e =>
+                        this.setState({
+                          contact: {
+                            ...this.state.contact,
+                            postal_code: e.target.value
+                          }
+                        })
+                      }
+                      disabled={this.state.disabled}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item label="Country">
+                    <Input
+                      placeholder="Country"
+                      prefix={
+                        <Icon
+                          type="home"
+                          style={{ color: "rgba(0,0,0,.25)" }}
+                        />
+                      }
+                      value={
+                        this.state.contact ? this.state.contact.country : null
+                      }
+                      onChange={e =>
+                        this.setState({
+                          contact: {
+                            ...this.state.contact,
+                            country: e.target.value
+                          }
+                        })
+                      }
+                      disabled={this.state.disabled}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Form.Item label="Add to group">
+                <Selectgroup disabled={this.state.disabled} />
               </Form.Item>
             </Form>
             <div
@@ -354,13 +409,22 @@ class editContact extends Component {
               <Button
                 onClick={this.props.handleCancel}
                 style={{ marginRight: 8 }}
+                disabled={this.props.disabled}
               >
                 Cancel
+              </Button>
+              <Button
+                onClick={e => this.handleEdit()}
+                style={{ marginRight: 8 }}
+                type="primary"
+              >
+                Edit
               </Button>
               <Button
                 onClick={e => this.handleUpdate(this.props.update.key)}
                 type="primary"
                 loading={loading}
+                disabled={this.state.disabled}
               >
                 Save
               </Button>

@@ -117,8 +117,9 @@ function updatecontact(req, res) {
 function contactlist(req, res) {
   const db = req.app.get("db");
 
-  db.contacts
-    .find({ userid: req.params.id })
+  db.query(
+    `select * from contacts where userid=${req.params.id} ORDER BY last_name ${req.query.sort}`
+  )
     .then(user => res.status(200).json(user))
     .catch(error => {
       console.error(error);

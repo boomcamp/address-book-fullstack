@@ -4,13 +4,27 @@ import axios from "axios";
 
 export default class search extends Component {
   handleSearch = e => {
+    const contactData = [];
     axios
       .get(`/contact/search/${localStorage.getItem("id")}?val=${e.value}`)
       .then(res => {
-        // console.log(res.data);
-        this.props.user(res.data);
+        res.data.forEach(data => {
+          contactData.push({
+            first_name: data.first_name,
+            last_name: data.last_name,
+            email: data.email,
+            home_phone: data.home_phone,
+            mobile_phone: data.mobile_phone,
+            work_phone: data.work_phone,
+            postal_code: data.postal_code,
+            state_or_province: data.state_or_province,
+            city: data.city,
+            key: `'${data.id}'`,
+            country: data.country
+          });
+        });
+        this.props.user(contactData);
       });
-    // console.log(this.props);
   };
   render() {
     const { Search } = Input;
