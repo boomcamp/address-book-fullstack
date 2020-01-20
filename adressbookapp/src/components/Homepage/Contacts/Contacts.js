@@ -17,6 +17,14 @@ export default class Contacts extends Component {
   render() {
     return (
       <div className="card">
+        {this.props.contacts.length === 0 ? (
+          <div>
+            {" "}
+            <Empty />
+          </div>
+        ) : (
+          <div></div>
+        )}
         {!Array.isArray(this.props.search) || !this.props.search.length ? (
           this.props.searchinput.length > 0 ? (
             <Empty />
@@ -41,7 +49,7 @@ export default class Contacts extends Component {
                         type="usergroup-add"
                         key="view"
                         style={{ fontSize: "22px", color: "#08c" }}
-                        onClick={() => this.props.viewGroups(a)}
+                        onClick={() => this.props.viewGroups(res)}
                       />
                     </Tooltip>,
                     <Tooltip title="delete" placement="bottom">
@@ -80,6 +88,14 @@ export default class Contacts extends Component {
                       key="view"
                       style={{ fontSize: "22px", color: "#08c" }}
                       onClick={() => this.props.viewHandler(a)}
+                    />
+                  </Tooltip>,
+                  <Tooltip title="add to group" placement="bottom">
+                    <Icon
+                      type="usergroup-add"
+                      key="view"
+                      style={{ fontSize: "22px", color: "#08c" }}
+                      onClick={() => this.props.viewGroups(e)}
                     />
                   </Tooltip>,
                   <Tooltip title="delete" placement="bottom">

@@ -23,6 +23,25 @@ function getGroupById(req, res) {
       res.status(500).end();
     });
 }
+function getSelectedGroups(req, res) {
+  const db = req.app.get("db");
+  db.query(`select * from groups where id != ${req.params.id}`)
+    .then(groups => res.status(200).json(groups))
+    .catch(err => {
+      console.log(err);
+    });
+}
+function getGroupContact(req, res) {
+  const db = req.app.get("db");
+
+  // console.log(req.params);
+  db.groupcontacts
+    .find({ contactid: req.params.id })
+    .then(groups => res.status(200).json(groups))
+    .catch(err => {
+      res.status(500).end();
+    });
+}
 function addtoGroup(req, res) {
   const db = req.app.get("db");
   const { groupid, contactid, userid } = req.body;
@@ -36,5 +55,7 @@ function addtoGroup(req, res) {
 module.exports = {
   addtoGroup,
   group,
-  getGroupById
+  getGroupById,
+  getGroupContact,
+  getSelectedGroups
 };

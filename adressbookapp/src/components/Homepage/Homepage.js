@@ -17,10 +17,12 @@ import axios from "axios";
 import ViewContacts from "./ViewContacts/ViewContacts";
 import AddGroups from "./AddGroups/AddGroups";
 import AddtoGroup from "./AddtoGroups/AddtoGroup";
+import Groups from "./Groups/Groups";
 
 const { confirm } = Modal;
 const { Content } = Layout;
 const TabPane = Tabs.TabPane;
+let arr = [];
 export default class Homepage extends Component {
   constructor(props) {
     super(props);
@@ -29,8 +31,11 @@ export default class Homepage extends Component {
       isOpen: false,
       searchinput: "",
       contacts: [],
+      contactId: null,
+      groups: [],
       search: [],
       info: [],
+      arr: [],
       visible: false,
       visiblee: false,
       disabled: true,
@@ -151,13 +156,48 @@ export default class Homepage extends Component {
       info: e
     });
   };
+
   viewGroups = e => {
-    // console.log(e);
-    this.setState({
-      visiblee: true
+    let current = this;
+    let x = e.contactid;
+
+    const id = localStorage.getItem("id");
+    axios.get(`http://localhost:4000/api/groupContact/${x}`).then(res => {
+      if (res.data.length) {
+        res.data.map(res => {
+          // console.log(res);
+          // arr.push(res.groupid);
+          axios
+            .get(`http://localhost:4000/api/selectedGroup/${res.groupid}`)
+            .then(res => {
+              console.log(res.data);
+              // res.data.map(item => {
+              //   arr.filter(num => num.match(item.id));
+              // });
+            });
+        });
+      } else {
+        axios.get(`http://localhost:4000/api/groups/${id}`).then(res => {
+          console.log(res.data);
+          current.setState({
+            groups: res.data,
+            visiblee: true,
+            contactId: x
+          });
+        });
+      }
+    });
+    this.setState({ arr: arr });
+  };
+  getGroups = e => {
+    const id = localStorage.getItem("id");
+    axios.get(`http://localhost:4000/api/groups/${id}`).then(res => {
+      // console.log(res);
+      this.setState({
+        groups: res.data
+      });
     });
   };
-
   logout() {
     message.success("Sucessfully logout");
     this.props.history.push("/");
@@ -173,6 +213,7 @@ export default class Homepage extends Component {
     });
   };
   render() {
+    console.log(this.state.arr);
     return (
       <div>
         <Layout>
@@ -261,6 +302,10 @@ export default class Homepage extends Component {
                   <AddtoGroup
                     visible={this.state.visiblee}
                     onClickCancel={this.onClickCancel}
+                    getGroups={this.getGroups}
+                    groups={this.state.groups}
+                    onCancel={this.onCancel}
+                    contactId={this.state.contactId}
                   />
                 </TabPane>
                 <TabPane
@@ -272,7 +317,12 @@ export default class Homepage extends Component {
                   }
                   key="2"
                 >
-                  <AddGroups getAll={this.getAll} />
+                  <AddGroups getAll={this.getAll} getGroups={this.getGroups} />
+                  <br></br>
+                  <Groups
+                    getGroups={this.getGroups}
+                    groups={this.state.groups}
+                  />
                 </TabPane>
               </Tabs>
             </Layout>

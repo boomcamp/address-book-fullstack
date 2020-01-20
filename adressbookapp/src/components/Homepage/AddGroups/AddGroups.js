@@ -53,7 +53,7 @@ class AddGroups extends Component {
             this.props.form.setFieldsValue({
               group: ""
             });
-            this.props.getAll();
+            this.props.getGroups();
           }, 1000);
           this.setState({
             visible: false

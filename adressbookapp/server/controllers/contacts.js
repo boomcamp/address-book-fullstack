@@ -51,30 +51,19 @@ function getContactById(req, res) {
   const usersId = req.params.id;
   const sort = req.query.sort;
   const groups = req.query.groups;
-  if (groups == undefined) {
-    db.query(
-      `select * from contacts INNER JOIN addressbook on contacts.id = addressbook.contactid where addressbook.userid = ${usersId} ORDER BY firstname `,
-      []
-    ).then(data => {
-      res.status(200).json(data);
-    });
-  } else {
-    db.query(
-      `select * from contacts INNER JOIN addressbook on contacts.id = addressbook.contactid where addressbook.userid = ${usersId} and addressbook.groupid = ${groups}`
-    ).then(data => {
-      res.status(200).json(data);
-    });
-  }
+  db.query(
+    `select * from contacts INNER JOIN addressbook on contacts.id = addressbook.contactid where addressbook.userid = ${usersId} ORDER BY firstname `,
+    []
+  ).then(data => {
+    res.status(200).json(data);
+  });
 }
 function deleteContactById(req, res) {
   const db = req.app.get("db");
   const id = req.params.id;
-  db.query(
-    `
-  DELETE from addressbook where contactid = ${id}`
-  )
+  db.query(`DELETE from addressbook where contactid = ${id}`)
     .then(() => {
-      db.query(` DELETE from contacts where id = ${id}`);
+      db.query(`DELETE from contacts where id = ${id}`);
     })
     .then(response => {
       res.status(200).json(response);
