@@ -30,7 +30,7 @@ massive({
   app.get("/contacts/list/:id", contacts.list);
   app.patch("/contacts/edit/:id", contacts.update);
   app.delete("/contacts/delete/:id", contacts.delete);
-  app.get("/contacts/group/list/:id", contacts.getByGroup);
+  app.get("/contacts/group/list/:id/:gid", contacts.getByGroup);
 
   app.post("/group/create", group.create);
   app.get("/group/list/:id", group.list);

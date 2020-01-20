@@ -41,7 +41,9 @@ export default function AddContactModal({
   headers,
   match,
   setRows,
-  rows
+  rows,
+  setAll,
+  all
 }) {
   const classes = useStyles();
   const [contact, setContact] = useState({
@@ -120,6 +122,7 @@ export default function AddContactModal({
         alert("Contact Added");
         setOpen({ ...open, contact: false });
         setRows([...rows, res.data]);
+        setAll([...all, res.data]);
       })
       .catch(error => {
         console.log(error);

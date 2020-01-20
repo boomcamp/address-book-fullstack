@@ -122,11 +122,22 @@ module.exports = {
   },
   getByGroup: (req, res) => {
     const db = req.app.get("db");
-    db.grouplist
-      .find({ groupid: req.params.id })
-      .then(data => {
-        console.log(data);
+    const { userid, gid } = req.params;
+    db.groups
+      .find(userid)
+      .then(group => {
+        return db
+          .query(
+            `select  contacts.id, first_name, last_name, mobile_phone 
+            from  grouplist, contacts 
+            where grouplist.groupid = ${gid}
+            and contacts.id = grouplist.contactid`
+          )
+          .then(contact => {
+            res.status(200).json(contact);
+          })
+          .catch(() => res.status(500).end());
       })
-      .then(() => res.status(500).end());
+      .catch(() => res.status(500).end());
   }
 };

@@ -7,6 +7,8 @@ import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
 import * as ls from "local-storage";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import ContactsIcon from "@material-ui/icons/Contacts";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import styled from "styled-components";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -129,8 +131,18 @@ export default function Layout(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleOpen}>Add Contact</MenuItem>
-      <MenuItem onClick={handleOpenGroup}>Add Group</MenuItem>
+      <MenuItem onClick={handleOpen}>
+        <IconButton aria-label="group" aria-haspopup="true" color="inherit">
+          <ContactsIcon />
+        </IconButton>
+        Add Contact
+      </MenuItem>
+      <MenuItem onClick={handleOpenGroup}>
+        <IconButton aria-label="group" aria-haspopup="true" color="inherit">
+          <GroupAddIcon />
+        </IconButton>
+        Add Group
+      </MenuItem>
     </Menu>
   );
   //MOBILE
@@ -273,12 +285,16 @@ export default function Layout(props) {
         match={props.match}
         setRows={props.setRows}
         rows={props.rows}
+        setAll={props.setAll}
+        all={props.all}
       />
       <AddGroupModal
         open={open.group}
         setOpen={setOpen}
         match={props.match}
         headers={props.headers}
+        setGroups={props.setGroups}
+        groups={props.groups}
       />
     </>
   );

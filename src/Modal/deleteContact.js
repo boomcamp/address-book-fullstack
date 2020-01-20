@@ -29,7 +29,8 @@ export default function DeleteContactModal({
   contactId,
   rows,
   setRows,
-  headers
+  headers,
+  setAll
 }) {
   const classes = useStyles();
 
@@ -39,6 +40,7 @@ export default function DeleteContactModal({
       headers
     ).then(() => {
       setRows(rows.filter(row => row.id !== contactId));
+      setAll(rows.filter(row => row.id !== contactId));
       setOpen({ ...open, status: false });
     });
   };

@@ -35,7 +35,14 @@ const CloseButton = styled(Close)`
   cursor: pointer;
 `;
 
-export default function AddGroupModal({ open, setOpen, headers, match }) {
+export default function AddGroupModal({
+  open,
+  setOpen,
+  headers,
+  match,
+  setGroups,
+  groups
+}) {
   const classes = useStyles();
   const [group, setGroup] = useState("");
 
@@ -61,6 +68,7 @@ export default function AddGroupModal({ open, setOpen, headers, match }) {
       .then(res => {
         alert("Group Created");
         setOpen({ ...open, group: false });
+        setGroups([...groups, res.data]);
       })
       .catch(error => {
         console.log(error);
