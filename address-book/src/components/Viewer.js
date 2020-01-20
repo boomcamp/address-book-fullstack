@@ -1,9 +1,9 @@
 import React from "react";
 import "bulma/css/bulma.css";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
+import { Card, CardContent, Avatar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
+
+const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
 
 export default function Viewer({ values }) {
   const classes = useStyles();
@@ -14,9 +14,11 @@ export default function Viewer({ values }) {
           <div className="box">
             <figure className="avatar">
               <Avatar className={classes.avatar}>
-                {`${String(values.firstname).charAt(0)}${String(
-                  values.lastname
-                ).charAt(0)}`}
+                {`${String(values.firstname)
+                  .charAt(0)
+                  .toUpperCase()}${String(values.lastname)
+                  .charAt(0)
+                  .toUpperCase()}`}
               </Avatar>
             </figure>
             <h3 className="title has-text-black">
@@ -29,75 +31,103 @@ export default function Viewer({ values }) {
             <div id="bio"></div>
             <br />
             <table className="table details">
-              <tr>
-                <td>First Name:</td>
-                <td>
-                  <span id="points" className="tag is-info">
-                    {values.firstname}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Last Name:</td>
-                <td>
-                  <span id="points" className="tag is-info">
-                    {values.lastname}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Email Address:</td>
-                <td>
-                  <span id="points" className="tag is-info">
-                    {values.email}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Home Phone No:</td>
-                <td>
-                  <span id="points" className="tag is-warning">
-                    {values.home_phone}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Mobile Phone No:</td>
-                <td>
-                  <span id="points" className="tag is-light">
-                    {values.mobile_phone}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Work Phone No:</td>
-                <td>
-                  <span id="points" className="tag is-danger">
-                    {values.work_phone}
-                  </span>
-                </td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>First Name:</td>
+                  <td>
+                    <span id="points" className="tag is-info">
+                      {values.firstname
+                        ? capitalize(String(values.firstname))
+                        : null}
+                    </span>
+                  </td>
+                </tr>
+                {values.lastname ? (
+                  <tr>
+                    <td>Last Name:</td>
+                    <td>
+                      <span id="points" className="tag is-info">
+                        {capitalize(String(values.lastname))}
+                      </span>
+                    </td>
+                  </tr>
+                ) : null}
+                {values.email ? (
+                  <tr>
+                    <td>Email Address:</td>
+                    <td>
+                      <span id="points" className="tag is-info">
+                        {values.email}
+                      </span>
+                    </td>
+                  </tr>
+                ) : null}
+                {values.home_phone ? (
+                  <tr>
+                    <td>Home Phone No:</td>
+                    <td>
+                      <span id="points" className="tag is-warning">
+                        {values.home_phone}
+                      </span>
+                    </td>
+                  </tr>
+                ) : null}
+                {values.mobile_phone ? (
+                  <tr>
+                    <td>Mobile Phone No:</td>
+                    <td>
+                      <span id="points" className="tag is-light">
+                        {values.mobile_phone}
+                      </span>
+                    </td>
+                  </tr>
+                ) : null}
+                {values.work_phone ? (
+                  <tr>
+                    <td>Work Phone No:</td>
+                    <td>
+                      <span id="points" className="tag is-danger">
+                        {values.work_phone}
+                      </span>
+                    </td>
+                  </tr>
+                ) : null}
+              </tbody>
             </table>
-
             <br />
-            <h3 className="is-size-4">Address</h3>
+            {values.city ||
+            values.state_or_province ||
+            values.postal_code ||
+            values.country ? (
+              <h3 className="is-size-4">Address</h3>
+            ) : null}
             <table className="table details">
-              <tr>
-                <td>City:</td>
-                <td>{values.city}</td>
-              </tr>
-              <tr>
-                <td>State or Province:</td>
-                <td>{values.state_or_province}</td>
-              </tr>
-              <tr>
-                <td>Postal Code:</td>
-                <td>{values.postal_code}</td>
-              </tr>
-              <tr>
-                <td>Country:</td>
-                <td>{values.country}</td>
-              </tr>
+              <tbody>
+                {values.city ? (
+                  <tr>
+                    <td>City:</td>
+                    <td>{values.city}</td>
+                  </tr>
+                ) : null}
+                {values.state_or_province ? (
+                  <tr>
+                    <td>State or Province:</td>
+                    <td>{values.state_or_province}</td>
+                  </tr>
+                ) : null}
+                {values.postal_code ? (
+                  <tr>
+                    <td>Postal Code:</td>
+                    <td>{values.postal_code}</td>
+                  </tr>
+                ) : null}
+                {values.country ? (
+                  <tr>
+                    <td>Country:</td>
+                    <td>{values.country}</td>
+                  </tr>
+                ) : null}
+              </tbody>
             </table>
           </div>
         </div>

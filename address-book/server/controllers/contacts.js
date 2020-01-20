@@ -30,6 +30,7 @@ function create(req, res) {
     .then(contact => res.status(200).json(contact))
     .catch(err => {
       console.error(err);
+      res.status(500).end();
     });
 }
 function getContactByUser(req, res) {

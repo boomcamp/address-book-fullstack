@@ -9,7 +9,7 @@ import GroupCard from "./GroupCard";
 import jwt from "jsonwebtoken";
 
 export default function AddressBook() {
-  const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+  var userId = "";
   if (!localStorage.getItem("Token")) {
     Swal.fire({
       title: "You must login first!",
@@ -24,12 +24,13 @@ export default function AddressBook() {
     }).then(function() {
       window.location = "/";
     });
+  } else {
+    const { userId } = jwt.decode(localStorage.getItem("Token"));
   }
   const [open, setOpen] = React.useState(false);
   const [willEdit, setWillEdit] = useState(false);
   const [willOpenViewer, setWillOpenViewer] = useState(false);
   const [ids, setIds] = useState([]);
-  const [groupList, setGroupList] = useState([]);
   const handleClickOpen = () => {
     setOpen(true);
     setWillOpenViewer(false);
@@ -50,10 +51,9 @@ export default function AddressBook() {
         willEdit={willEdit}
         values={values}
         setValues={setValues}
-        tokenDecoded={tokenDecoded}
         ids={ids}
         setIds={setIds}
-        groupList={groupList}
+        userId={userId}
       />
       <Container
         maxWidth="lg"
@@ -65,9 +65,8 @@ export default function AddressBook() {
           className={classes.table}
           style={{ width: willOpenViewer ? "65%" : "100%" }}
         >
-          <GroupCard tokenDecoded={tokenDecoded} willEdit={willEdit} />
+          <GroupCard willEdit={willEdit} userId={userId} />
           <AddressBookTable
-            tokenDecoded={tokenDecoded}
             handleClickOpen={handleClickOpen}
             teal={classes.teal}
             avatar={classes.avatar}
@@ -76,7 +75,7 @@ export default function AddressBook() {
             setWillEdit={setWillEdit}
             setWillOpenViewer={setWillOpenViewer}
             setIds={setIds}
-            setGroupList={setGroupList}
+            userId={userId}
           />
         </div>
       </Container>
@@ -86,7 +85,6 @@ export default function AddressBook() {
 
 const useStyles = makeStyles(theme => ({
   rooot: {
-    // padding: "0 7.5%!important",
     left: "50%",
     top: "50%",
     position: "absolute",
@@ -94,7 +92,6 @@ const useStyles = makeStyles(theme => ({
     webkitTransform: "translate(-50%, -50%)",
     transform: "translate(-50%, -50%)",
     zIndex: "2",
-    // maxHeight: "50rem",
     height: "calc(100vh - 64px)",
     overflowY: "auto"
   },
@@ -107,7 +104,6 @@ const useStyles = makeStyles(theme => ({
     flexWrap: "wrap"
   },
   table: {
-    // width: ? "65%" : "100%",
     background: "transparent",
     borderRadius: "8px",
     boxShadow: "none",
@@ -119,12 +115,6 @@ const useStyles = makeStyles(theme => ({
       width: "100%!important",
       marginTop: "30%!important"
     }
-    // html: {
-    //   maxHeight: "100vh!important"
-    // },
-    // body: {
-    //   maxHeight: "100vh!important"
-    // }
   },
   teal: {
     backgroundColor: "#26a69a!important",

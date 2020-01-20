@@ -1,62 +1,20 @@
 import React, { useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
+import {
+  Button,
+  Dialog,
+  IconButton,
+  Typography,
+  Grid,
+  TextField
+} from "@material-ui/core";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
-import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import Swal from "sweetalert2";
 import AddToGroupList from "./AddToGroupList";
-
-const styles = theme => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2)
-  },
-  closeButton: {
-    position: "absolute",
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500]
-  }
-});
-
-const DialogTitle = withStyles(styles)(props => {
-  const { children, classes, onClose, ...other } = props;
-  return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          className={classes.closeButton}
-          onClick={onClose}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
-
-const DialogContent = withStyles(theme => ({
-  root: {
-    padding: theme.spacing(2)
-  }
-}))(MuiDialogContent);
-
-const DialogActions = withStyles(theme => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(1)
-  }
-}))(MuiDialogActions);
 
 export default function Alert({
   open,
@@ -65,10 +23,9 @@ export default function Alert({
   willEdit,
   values,
   setValues,
-  tokenDecoded,
   ids,
   setIds,
-  groupList
+  userId
 }) {
   const classes = useStyles();
   const [errorMsgFirstName, setErrorMsgFirstName] = useState("");
@@ -82,7 +39,7 @@ export default function Alert({
             : "Contact Added Successfully",
           icon: "success"
         }).then(() => {
-          // window.location = "/addressbook";
+          window.location = "/addressbook";
         });
       })
       .catch(e => {
@@ -116,27 +73,14 @@ export default function Alert({
           ),
           true
         );
+        axios
+          .delete(`http://localhost:3004/groupmember/${values.id}`)
+          .then(() => postGroup(false));
       } else {
         axios
-          .post(
-            `http://localhost:3004/contacts/${tokenDecoded.userId}`,
-            dataObject
-          )
+          .post(`http://localhost:3004/contacts/${userId}`, dataObject)
           .then(response => {
-            ids.forEach(data => {
-              axios
-                .post(`http://localhost:3004/groupmember`, {
-                  groupid: data.id,
-                  contactid: response.data.id
-                })
-                .catch(err => {
-                  Swal.fire({
-                    title: "Failed to Add Contact to a Group",
-                    icon: "error",
-                    text: err
-                  });
-                });
-            });
+            postGroup(response);
             Swal.fire({
               title: "Contact Added Successfully",
               icon: "success"
@@ -162,6 +106,22 @@ export default function Alert({
       });
     }
   };
+  const postGroup = response => {
+    ids.forEach(data => {
+      axios
+        .post(`http://localhost:3004/groupmember`, {
+          groupid: data.id,
+          contactid: response ? response.data.id : values.id
+        })
+        .catch(err => {
+          Swal.fire({
+            title: "Failed to Add Contact to a Group",
+            icon: "error",
+            text: err
+          });
+        });
+    });
+  };
   return (
     <Dialog
       onClose={handleClose}
@@ -175,7 +135,7 @@ export default function Alert({
         <form>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
-              <AddToGroupList setIds={setIds} ids={ids} groupList={groupList} />
+              <AddToGroupList setIds={setIds} ids={ids} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -335,3 +295,47 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "flex-end"
   }
 }));
+
+const styles = theme => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2)
+  },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500]
+  }
+});
+
+const DialogTitle = withStyles(styles)(props => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          className={classes.closeButton}
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles(theme => ({
+  root: {
+    padding: theme.spacing(2)
+  }
+}))(MuiDialogContent);
+
+const DialogActions = withStyles(theme => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1)
+  }
+}))(MuiDialogActions);

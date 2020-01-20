@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MaterialTable from "material-table";
-import Button from "@material-ui/core/Button";
+import { Button, Avatar } from "@material-ui/core";
 import axios from "axios";
-import Avatar from "@material-ui/core/Avatar";
-import jwt from "jsonwebtoken";
 import Swal from "sweetalert2";
 
 export default function AddressBookTable({
@@ -15,19 +13,12 @@ export default function AddressBookTable({
   setWillEdit,
   setWillOpenViewer,
   setIds,
-  setGroupList
+  userId
 }) {
-  const [state, setState] = useState({
-    columns: [],
-    data: []
-  });
-
-  const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+  const [data, setData] = useState([]);
   const handleClickDetails = id => {
-    axios({
-      method: "get",
-      url: `http://localhost:3004/contacts/${tokenDecoded.userId}/${id}`
-    })
+    axios
+      .get(`http://localhost:3004/contacts/${userId}/${id}`)
       .then(res => {
         setWillOpenViewer(true);
         setValues(res.data[0]);
@@ -35,31 +26,19 @@ export default function AddressBookTable({
       .catch(e => {
         Swal.fire({
           icon: "error",
-          title: "Failed to Retrieve Contact",
+          title: "Failed to Retrieve Details",
           text: e
         });
       });
   };
   const handleClickEdit = id => {
     setWillEdit(true);
-    axios({
-      method: "get",
-      url: `http://localhost:3004/contacts/${tokenDecoded.userId}/${id}`
-    })
+    axios
+      .get(`http://localhost:3004/contacts/${userId}/${id}`)
       .then(res => {
         axios.get(`http://localhost:3004/groupmember/${id}`).then(res => {
           setIds(res.data);
         });
-        axios
-          .get(`http://localhost:3004/group/${tokenDecoded.userId}`)
-          .then(res => {
-            setGroupList(res.data);
-          });
-        // setIds([
-        //   // { id: 5, userid: 1, groupname: "Helloooo" },
-        //   { id: 4, userid: 1, groupname: "Lancerrrrr" },
-        //   { id: 41, userid: 1, groupname: "Hello" }
-        // ]);
         setValues(res.data[0]);
         handleClickOpen();
       })
@@ -83,11 +62,12 @@ export default function AddressBookTable({
       confirmButtonText: "Yes, delete it!"
     }).then(result => {
       if (result.value) {
-        axios({
-          method: "delete",
-          url: `http://localhost:3004/contacts/${rowData.id}`
-        })
-          .then(response => {
+        axios
+          .all([
+            axios.delete(`http://localhost:3004/contacts/${rowData.id}`),
+            axios.delete(`http://localhost:3004/groupmember/${rowData.id}`)
+          ])
+          .then(() => {
             Swal.fire({
               title: "Contact Successfully Deleted",
               icon: "success"
@@ -96,7 +76,6 @@ export default function AddressBookTable({
             });
           })
           .catch(err => {
-            console.log(err);
             Swal.fire({
               icon: "error",
               title: "Failed to Delete Contact",
@@ -110,16 +89,20 @@ export default function AddressBookTable({
     async function result() {
       await axios({
         method: "get",
-        url: `http://localhost:3004/contacts/${tokenDecoded.userId}`
+        url: `http://localhost:3004/contacts/${userId}`
       })
-        .then(res => {
-          setState({ ...state, data: res.data });
-        })
-        .catch(err => console.log(err));
+        .then(res => setData(res.data))
+        .catch(err => {
+          Swal.fire({
+            icon: "error",
+            title: "Failed to Fetch the Data",
+            text: err
+          });
+        });
     }
     result();
-  }, [state, tokenDecoded.userId]);
-  if (!state.data) {
+  }, [userId]);
+  if (!data) {
     localStorage.clear();
     return null;
   }
@@ -132,9 +115,11 @@ export default function AddressBookTable({
           sorting: false,
           render: rowData => (
             <Avatar className={avatar}>
-              {`${String(rowData.firstname).charAt(0)}${String(
-                rowData.lastname
-              ).charAt(0)}`}
+              {`${String(rowData.firstname)
+                .charAt(0)
+                .toUpperCase()}${String(rowData.lastname)
+                .charAt(0)
+                .toUpperCase()}`}
             </Avatar>
           )
         },
@@ -177,16 +162,16 @@ export default function AddressBookTable({
         //   sorting: false,
         //   field: "work_phone"
         // },
-        {
-          title: "",
-          field: "",
-          lookup: {
-            true: "Active",
-            false: "Inactive"
-          },
-          // render: rowData => rowData,
-          filtering: true
-        },
+        // {
+        //   title: "",
+        //   field: "",
+        //   lookup: {
+        //     true: "Active",
+        //     false: "Inactive"
+        //   },
+        //   // render: rowData => rowData,
+        //   filtering: true
+        // },
         {
           title: "Actions",
           headerStyle: {
@@ -223,7 +208,7 @@ export default function AddressBookTable({
       options={{
         filtering: false
       }}
-      data={[...state.data]}
+      data={[...data]}
       actions={[
         {
           icon: "add",

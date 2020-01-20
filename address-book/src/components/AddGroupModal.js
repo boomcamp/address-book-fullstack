@@ -1,23 +1,24 @@
 import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel
+} from "@material-ui/core";
 import WorkIcon from "@material-ui/icons/Work";
 import HomeIcon from "@material-ui/icons/Home";
 import GroupIcon from "@material-ui/icons/Group";
 import PersonIcon from "@material-ui/icons/Person";
 import axios from "axios";
 import Swal from "sweetalert2";
-import jwt from "jsonwebtoken";
 
 export default function AddGroupModal({
   openGroupModal,
@@ -27,16 +28,13 @@ export default function AddGroupModal({
   setGroupName,
   groupId,
   chooseIcon,
-  willEdit
+  userId
 }) {
-  const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
   const [errorMsgGroupName, setErrorMsgGroupName] = useState("");
-  const [value, setValue] = React.useState("female");
-
+  const [value, setValue] = useState("female");
   const handleChange = event => {
     setValue(event.target.value);
   };
-
   const handleSaveGroup = () => {
     if (groupName !== "") {
       setErrorMsgGroupName("");
@@ -62,7 +60,7 @@ export default function AddGroupModal({
               });
             })
         : axios
-            .post(`http://localhost:3004/group/${tokenDecoded.userId}`, {
+            .post(`http://localhost:3004/group/${userId}`, {
               groupname: groupName
             })
             .then(() => {

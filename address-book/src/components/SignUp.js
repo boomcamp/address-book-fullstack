@@ -87,26 +87,20 @@ export default function SignUp(props) {
   const [ErrorPass, setErrorPass] = useState("");
   const [ErrorConfirmPass, setErrorConfirmPass] = useState("");
 
-  const handleChangePassword = prop => event => {
+  const handleChangePassword = prop => event =>
     setValues({ ...values, [prop]: event.target.value });
-  };
-  const handleClickShowPassword = () => {
+  const handleClickShowPassword = () =>
     setValues({ ...values, showPassword: !values.showPassword });
-  };
   const handleChangeConfrmPassword = prop => event => {
     setConfirmValues({ ...confirmValues, [prop]: event.target.value });
     setConf(event.target.value);
   };
-  const handleClickShowConfirmPassword = () => {
+  const handleClickShowConfirmPassword = () =>
     setConfirmValues({
       ...confirmValues,
       showPassword: !confirmValues.showPassword
     });
-  };
-  const handleMouseDownPassword = event => {
-    event.preventDefault();
-  };
-  // const Post
+  const handleMouseDownPassword = event => event.preventDefault();
   const handleSubmit = e => {
     e.preventDefault();
     fname === ""
@@ -144,48 +138,42 @@ export default function SignUp(props) {
       values.password.length >= 8
     ) {
       // Sign Up
-      axios.post("http://localhost:3004/signup/users", {
-        firstname: fname,
-        lastname: lname,
-        username: username,
-        email: email,
-        password: values.password
-      });
-      Swal.fire({
-        title: "Signed Up Successfully",
-        text: "Please Sign In to your account",
-        icon: "success",
-        button: true
-      });
-      // .then(token => {
-      //   localStorage.setItem("Token", token.data.accessToken);
-      //   props.setToken(token.data.accessToken);
-      //   localStorage.setItem("Name", token.data[0].firstName);
-      //   Swal.fire({
-      //     title: "Signed Up Successfully",
-      //     text: "Please Sign In to your account",
-      //     icon: "success",
-      //     button: true
-      //   }).then(function() {
-      //     window.location = "/";
-      //   });
-      // });
-      // .catch(error => {
-      //   try {
-      //     Swal.fire({
-      //       title: error.response.data,
-      //       icon: "error",
-      //       button: true
-      //     });
-      //   } catch {
-      //     Swal.fire({
-      //       title: error,
-      //       icon: "error",
-      //       button: true
-      //     });
-      //   }
-      // });
-      // Sign Up End
+      axios
+        .post("http://localhost:3004/signup/users", {
+          firstname: fname,
+          lastname: lname,
+          username: username,
+          email: email,
+          password: values.password
+        })
+        .then(token => {
+          localStorage.setItem("Token", token.data.token);
+          props.setToken(token.data.accessToken);
+          localStorage.setItem("Name", token.data.firstName);
+          Swal.fire({
+            title: "Signed Up Successfully",
+            text: "Please Sign In to your account",
+            icon: "success",
+            button: true
+          }).then(() => {
+            window.location = "/";
+          });
+        })
+        .catch(error => {
+          try {
+            Swal.fire({
+              title: error.response.data,
+              icon: "error",
+              button: true
+            });
+          } catch {
+            Swal.fire({
+              title: error,
+              icon: "error",
+              button: true
+            });
+          }
+        });
     } else {
       Swal.fire({
         title: "Please complete the Sign Up form first",

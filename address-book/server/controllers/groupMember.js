@@ -38,8 +38,22 @@ function getContactGroups(req, res) {
     });
 }
 
+function deleteGroupMember(req, res) {
+  const db = req.app.get("db");
+  const { contactid } = req.params;
+
+  db.groupmember
+    .destroy({ contactid })
+    .then(group => res.status(201).json(group))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
+
 module.exports = {
   addGroupMember,
   getAllGroupMember,
-  getContactGroups
+  getContactGroups,
+  deleteGroupMember
 };
