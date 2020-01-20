@@ -1,9 +1,14 @@
 module.exports = {
   list: (req, res) => {
-    const { contacts } = req.app.get("db");
+    const db = req.app.get("db");
 
+    const { sort } = req.query;
     const { id } = req.params;
-    contacts.find({ group_id: id }).then(contacts => {
+    let request = `select * from contacts where group_id=${id}`;
+    if (sort) {
+      request += `order by last_name ${sort}`;
+    }
+    db.query(request, { id: id }).then(contacts => {
       res.status(200).send({
         group_id: id,
         contactList: contacts

@@ -45,7 +45,7 @@ export const useStyles = makeStyles(theme => ({
 }));
 
 export const DrawerCont = props => {
-  const { setUser } = props.data;
+  const { resetStates } = props.data;
   return (
     <div>
       <Divider />
@@ -55,7 +55,7 @@ export const DrawerCont = props => {
         <ListItem
           button
           onClick={() => {
-            setUser({});
+            resetStates({});
             toast.info("Successfully logged out!", {
               position: toast.POSITION.TOP_CENTER
             });

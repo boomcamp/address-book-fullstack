@@ -15,9 +15,17 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import { url } from "../../url";
 import { toast } from "react-toastify";
+import { getUserData } from "../customHooks/getUserData";
 
 export const Login = props => {
-  const { handleOnChange, setUser, loginData, setRedirect } = props.data;
+  const {
+    handleOnChange,
+    setUser,
+    loginData,
+    setRedirect,
+    sort,
+    setUserData
+  } = props.data;
   const [error, setError] = useState(false);
 
   const handleLogin = e => {
@@ -25,6 +33,7 @@ export const Login = props => {
     Axios.post(`${url}/login`, loginData)
       .then(res => {
         setUser(res.data);
+        getUserData(res.data, sort).then(user => setUserData(user));
         toast.info("Login sucessful!", {
           position: toast.POSITION.TOP_CENTER
         });
@@ -50,7 +59,6 @@ export const Login = props => {
             label="Username"
             fullWidth
             required
-            helperText={error ? "Invalid username!" : ""}
           />
           <TextField
             error={error}
@@ -62,7 +70,7 @@ export const Login = props => {
             label="Password"
             fullWidth
             required
-            helperText={error ? "Incorrect password!" : ""}
+            helperText={error ? "Incorrect email or password!" : ""}
           />
           <Box>
             <Link

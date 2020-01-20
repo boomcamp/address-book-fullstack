@@ -16,7 +16,7 @@ const Div = styled.div`
 const Span = styled.span`
   border: 2px solid #3f51b5;
   border-radius: 5px;
-  padding: 7px 10px 4px 10px;
+  padding: 5px 10px 5px 10px;
 `;
 const Label = styled.label`
   padding: 3px;

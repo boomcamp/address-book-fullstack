@@ -19,7 +19,8 @@ export const Register = props => {
     handleOnChange,
     validation,
     registrationData,
-    setRedirect
+    setRedirect,
+    buttons
   } = props.data;
 
   const handleRegister = e => {
@@ -77,6 +78,8 @@ export const Register = props => {
             label="Username"
             fullWidth
             required
+            error={validation.username}
+            helperText={validation.usernameMsg}
           />
           <TextField
             style={{ margin: "3px 0 3px 0" }}
@@ -87,6 +90,8 @@ export const Register = props => {
             label="Email"
             fullWidth
             required
+            error={validation.email}
+            helperText={validation.emailMsg}
           />
           <TextField
             style={{ margin: "3px 0 3px 0" }}
@@ -97,9 +102,10 @@ export const Register = props => {
             label="Password"
             fullWidth
             required
+            error={validation.password}
+            helperText={validation.passwordMsg}
           />
           <TextField
-            error={validation.confirmPassword}
             style={{ margin: "3px 0 3px 0" }}
             onChange={e => handleOnChange("register", e.target)}
             name="confirmPassword"
@@ -108,13 +114,16 @@ export const Register = props => {
             label="Confirm Password"
             fullWidth
             required
+            error={validation.confirmPassword}
             helperText={validation.confirmPasswordMsg}
           />
           <Box>
             <Link to="/" style={decoration} onClick={() => setRedirect(true)}>
               <span>Sign in instead</span>
             </Link>
-            <Button type="submit">Sign Up</Button>
+            <Button type="submit" disabled={buttons.registerBtn}>
+              Sign Up
+            </Button>
           </Box>
         </form>
       </RegisterCont>

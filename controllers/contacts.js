@@ -30,10 +30,13 @@ module.exports = {
     const { sort } = req.query;
     const { id } = req.params;
 
-    db.query(
-      `select * from contacts where user_id=${id} order by last_name ${sort}`,
-      { id: id }
-    )
+    let request = `select * from contacts where user_id=${id}`;
+
+    if (sort) {
+      request += ` order by last_name ${sort}`;
+    }
+
+    db.query(request, { id: id })
       .then(contacts =>
         contacts.map(x => {
           delete x.user_id;

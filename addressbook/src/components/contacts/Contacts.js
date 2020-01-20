@@ -4,7 +4,7 @@ import { columnData, columnDataMobile, action2, action1 } from "../data/data";
 import { DialogCont, DeleteDialog, Group } from "./Dialog";
 import Axios from "axios";
 import { url } from "../../url";
-import { getUserData } from "../customHooks/getUserData";
+import { getUserData, fetch } from "../customHooks/getUserData";
 import { toast } from "react-toastify";
 import "../../App.css";
 import { MuiThemeProvider, createMuiTheme, TextField } from "@material-ui/core";
@@ -14,13 +14,6 @@ import { useWindowSize } from "../customHooks/useWindowSize";
 import { ContactDetails } from "./ContactDetails";
 import styled from "styled-components";
 
-const fetch = async (user, group, userData, setUserData) => {
-  const response = await Axios.get(`${url}/groups/${group}/list`, {
-    headers: { Authorization: `Bearer ${user.token}` }
-  });
-
-  setUserData({ ...userData, addressBook: response.data.contactList });
-};
 const getGroupName = async (group, user, setGroupName) => {
   const response = await Axios.get(`${url}/groups/${group}`, {
     headers: { Authorization: `Bearer ${user.token}` }
@@ -74,7 +67,6 @@ export const Contacts = props => {
   const addContact = async e => {
     e.preventDefault();
 
-    console.log({ contact, group_id: group });
     try {
       const response = await Axios.post(
         `${url}/contacts`,
@@ -92,7 +84,7 @@ export const Contacts = props => {
       if (!group) {
         return getUserData(user, sort).then(user => setUserData(user));
       }
-      fetch(user, group, userData, setUserData);
+      fetch(user, group, userData, setUserData, sort);
     } catch (err) {
       console.error(err);
     }
@@ -114,7 +106,7 @@ export const Contacts = props => {
       if (!group) {
         return getUserData(user, sort).then(user => setUserData(user));
       }
-      fetch(user, group, userData, setUserData);
+      fetch(user, group, userData, setUserData, sort);
     } catch (err) {
       console.error(err);
     }
@@ -133,7 +125,7 @@ export const Contacts = props => {
       if (!group) {
         return getUserData(user, sort).then(user => setUserData(user));
       }
-      fetch(user, group, userData, setUserData);
+      fetch(user, group, userData, setUserData, sort);
     });
 
     toast.info(`Succefully deleted items!`, {
@@ -155,7 +147,7 @@ export const Contacts = props => {
       if (!group) {
         return getUserData(user, sort).then(user => setUserData(user));
       }
-      fetch(user, group, userData, setUserData);
+      fetch(user, group, userData, setUserData, sort);
     });
     toast.info(`Succefully moved to ${selectedGroup.label}!`, {
       position: toast.POSITION.TOP_CENTER
@@ -201,10 +193,16 @@ export const Contacts = props => {
             value={sort}
             onChange={e => {
               setSort(e.target.value);
-              getUserData(user, e.target.value).then(user => setUserData(user));
+              if (group === null) {
+                return getUserData(user, e.target.value).then(user =>
+                  setUserData(user)
+                );
+              }
+              fetch(user, group, userData, setUserData, e.target.value);
             }}
-            label="sort"
+            displayEmpty
           >
+            <MenuItem value={""}>Sort by</MenuItem>
             <MenuItem value={"asc"}>Ascending</MenuItem>
             <MenuItem value={"desc"}>Descending</MenuItem>
           </Select>
@@ -226,6 +224,7 @@ export const Contacts = props => {
                     if (x.first_name.match(regex) || x.last_name.match(regex)) {
                       return x;
                     }
+                    return null;
                   })
                 : []
               : []

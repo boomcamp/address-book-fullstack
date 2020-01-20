@@ -51,6 +51,10 @@ export const Button = styled.button`
   @media screen and (max-width: 600px) {
     padding: 7px 15px 7px 15px;
   }
+  :disabled {
+    background: gray;
+    color: whitesmoke;
+  }
 `;
 
 export const Box = styled.div`

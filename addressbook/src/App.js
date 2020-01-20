@@ -5,9 +5,7 @@ import { Routes } from "./components/routes/Routes";
 import { useLocalStorage } from "./components/customHooks/useLocalStorage";
 import { ToastContainer } from "react-toastify";
 import "../node_modules/react-toastify/dist/ReactToastify.css";
-import { getUserData } from "./components/customHooks/getUserData";
-import Axios from "axios";
-import { url } from "./url";
+import { getUserData, fetch } from "./components/customHooks/getUserData";
 
 function App() {
   const [loginData, setloginData] = useState({});
@@ -21,52 +19,121 @@ function App() {
   const [userData, setUserData] = useState({});
   const [contact, setContact] = useState({});
   const [group, setGroup] = useState(null);
-  const [sort, setSort] = useState("asc");
+  const [sort, setSort] = useState("");
   const [buttons, setButtons] = useState({
-    addEditContactBtn: false
+    addEditContactBtn: false,
+    registerBtn: true
   });
 
+  const resetStates = () => {
+    setUser({});
+    setUserData({});
+    setSort("asc");
+    setContact({});
+    setGroup(null);
+    setButtons({});
+  };
   useEffect(() => {
     if (user) {
       getUserData(user, sort).then(user => setUserData(user));
     }
-  }, [user]);
+  }, []);
 
+  const handleDisabledButtons = () =>
+    setButtons({
+      ...buttons,
+      registerBtn: true
+    });
+  const handleEnabledButtons = () =>
+    setButtons({
+      ...buttons,
+      registerBtn: false
+    });
   const handleOnChange = (key, data) => {
+    const { name, value } = data;
+
     key === "login"
-      ? setloginData({ ...loginData, [data.name]: data.value })
+      ? setloginData({ ...loginData, [name]: value })
       : key === "register"
       ? setRegistrationData({
           ...registrationData,
-          [data.name]: data.value
+          [name]: value
         })
-      : setContact({ ...contact, [data.name]: data.value });
-    if (data.name === "confirmPassword") {
-      registrationData.password !== data.value
-        ? setValidation({
-            ...validation,
-            confirmPassword: true,
-            confirmPasswordMsg: "Password don't match!"
-          })
-        : setValidation({
-            ...validation,
-            confirmPassword: false,
-            confirmPasswordMsg: ""
-          });
+      : setContact({ ...contact, [name]: value });
+    if (name === "confirmPassword") {
+      if (registrationData.password !== value) {
+        setValidation({
+          ...validation,
+          confirmPassword: true,
+          confirmPasswordMsg: "Password don't match!"
+        });
+        handleDisabledButtons();
+      } else {
+        setValidation({
+          ...validation,
+          confirmPassword: false,
+          confirmPasswordMsg: ""
+        });
+        handleEnabledButtons();
+      }
+    } else if (name === "password") {
+      if (value.length < 6) {
+        handleDisabledButtons();
+        return setValidation({
+          ...validation,
+          password: true,
+          passwordMsg: "Must have at least 6 characters!"
+        });
+      }
+
+      handleEnabledButtons();
+      setValidation({
+        ...validation,
+        password: false,
+        passwordMsg: ""
+      });
+    } else if (name === "email") {
+      if (!emailRegex.test(String(value))) {
+        handleDisabledButtons();
+        return setValidation({
+          ...validation,
+          email: true,
+          emailMsg: "Must be a valid Email Address!"
+        });
+      }
+
+      handleEnabledButtons();
+      setValidation({
+        ...validation,
+        email: false,
+        emailMsg: ""
+      });
+    } else if (name === "username") {
+      if (!usernameRegex.test(value)) {
+        handleDisabledButtons();
+        return setValidation({
+          ...validation,
+          username: true,
+          usernameMsg: "Must have at least 6 alpha-numeric characters"
+        });
+      }
+
+      handleEnabledButtons();
+      setValidation({
+        ...validation,
+        username: false,
+        usernameMsg: ""
+      });
     }
   };
 
   const handleFilterByGroup = async id => {
     if (!id) {
-      console.log("try");
       setGroup(null);
       return getUserData(user, sort).then(user => setUserData(user));
     }
-    const response = await Axios.get(`${url}/groups/${id}/list`, {
-      headers: { Authorization: `Bearer ${user.token}` }
-    });
     setGroup(id);
-    setUserData({ ...userData, addressBook: response.data.contactList });
+    fetch(user, id, userData, setUserData, sort);
   };
   return (
     <HashRouter>
@@ -93,9 +160,11 @@ function App() {
         setSort={setSort}
         buttons={buttons}
         setButtons={setButtons}
+        resetStates={resetStates}
       />
     </HashRouter>
   );
 }
-
+const emailRegex = /^(([^<>(),;:\s@]+([^<>(),;:\s@]+)*)|(.+))@(([^<>()[,;:\s@]+)+[^<>()[.,;:\s@]{2,})$/i;
+const usernameRegex = /^[a-zA-Z0-9]{6,}$/;
 export default App;
