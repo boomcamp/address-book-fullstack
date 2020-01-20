@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 function TemplateMainPage({enqueueSnackbar, children}) {
     const classes = useStyles();
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     useEffect( () => {
         // if(sessionStorage.getItem('token'))

@@ -11,18 +11,38 @@ import TableActions from '../tools/TableActions'
 import fetchGroupContact from '../tools/fetchGroupContact'
 import Table from '../tools/Table';
 
+    const contactLogoStyle = {
+        background: `#4c6572`,
+        width: `6vh`, height: `6vh`,
+        textAlign: `center`,
+        borderRadius: `50%`,
+        display: `flex`,
+        alignItems: `center`,
+        justifyContent: `center`,
+        color: `white`,
+        textTransform: `uppercase`
+    }
+
 function TabPanel({ fetchGroupFn, value, index, groupObj, updateGroupListFn, ...other }) {
     const [state, setState] = useState({
         columns: [
-            { title: "#", field: `tableData.id` },
-            { title: 'Firstname', field: 'firstName' },
-            { title: 'Lastname', field: 'lastName' },
-            { title: 'Home Phone', field: 'homePhone' },
-            { title: 'Mobile Phone', field: 'mobilePhone' },
-            { title: 'Work Phone', field: 'workPhone' },
-            { title: 'Actions', field: '', cellStyle: { margin: `0` }, headerStyle: { margin: `0` },
+            // { title: "#", field: `tableData.id` },
+            { title: 'Name', field: 'first_name', cellStyle: { padding: `0 0 0 15px` },
                 render: (rowData) => (
-                    <TableActions 
+                    <div style={{ display: `flex`, alignItems: `center` }}>
+                        <span style={contactLogoStyle}>{rowData.first_name[0]}</span>
+                        <p style={{ fontFamily: `Helvetica`, padding: `10px` }}>{rowData.first_name} {rowData.last_name}</p>
+                    </div>
+                )
+            },
+            { title: '', field: 'last_name', headerStyle: { display: `none` }, cellStyle: { display: `none` } },
+            { title: 'Home Phone', field: 'home_phone' },
+            { title: 'Mobile Phone', field: 'mobile_phone' },
+            { title: 'Work Phone', field: 'work_phone' },
+            {
+                title: 'Actions', field: '', cellStyle: { margin: `0` }, headerStyle: { margin: `0` },
+                render: (rowData) => (
+                    <TableActions
                         rowData={rowData}
                         setStateFn={(oldData) =>
                             setState(prevState => {
@@ -43,15 +63,15 @@ function TabPanel({ fetchGroupFn, value, index, groupObj, updateGroupListFn, ...
         data: [],
     });
 
-    const fetchContact = () => {
+    const fetchContact = (sort) => {
         axios({
             method: 'get',
-            url: '/api/groups/' + groupObj.id,
+            url: `/api/groups/${groupObj.id}${(sort) ? `?sortLastname=${sort}` : ``}`,
             headers: {
                 Authorization: 'Bearer ' + sessionStorage.getItem('token')
             }
         })
-            .then(res => setState(prevState => { return { ...prevState, data: res.data } }))
+            .then(res => setState(prevState => { return { ...prevState, data: res.data, sort: { sort } } }))
             .catch(err => console.log(err))
 
     }
@@ -73,7 +93,7 @@ function TabPanel({ fetchGroupFn, value, index, groupObj, updateGroupListFn, ...
                 updateGroupListFn={updateGroupListFn}
                 state={state}
                 updateTableFn={fetchContact}
-                setStateFn={ (oldData) =>
+                setStateFn={(oldData) =>
                     setState(prevState => {
                         const data = [...prevState.data];
                         data.splice(data.indexOf(oldData), 1);
@@ -108,7 +128,7 @@ export default function Group() {
                 // if(!isCancelled)
                 setGroup(res)
                 // console.log(res)
-            })        
+            })
     }
 
     useEffect(() => {
@@ -123,7 +143,7 @@ export default function Group() {
             <AppBar position="static" style={{ backgroundColor: `#e7e8ea`, color: `black` }}>
                 <Tabs value={value} onChange={(event, newValue) => setValue(newValue)} aria-label="group-contact" >
                     {group.map((x, i) => (
-                        <Tab label={x.groupName} {...a11yProps(i)} key={i} />
+                        <Tab label={x.group_name} {...a11yProps(i)} key={i} />
                     ))
                     }
                 </Tabs>

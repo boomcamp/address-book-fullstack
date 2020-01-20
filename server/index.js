@@ -26,7 +26,7 @@ massive({
     app.post('/api/contacts/:id', contacts.create);
     app.get('/api/contacts/:id', contacts.list);
     app.delete('/api/contacts/:id', contacts.delete);
-    app.put('/api/contacts/:id', contacts.update)
+    app.put('/api/contacts/:id', contacts.update);
 
     app.get('/api/groups', group.list)
     app.get('/api/groups/:id', group.contactList)

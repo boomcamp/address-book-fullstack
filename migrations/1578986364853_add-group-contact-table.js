@@ -8,7 +8,7 @@ exports.up = (pgm) => {
             type: 'serial',
             primaryKey: true,
         },
-        groupName: {
+        group_name: {
             type: 'text',
             notNull: true,
         },

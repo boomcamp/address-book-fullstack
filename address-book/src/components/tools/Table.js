@@ -14,6 +14,18 @@ import DetailedContact from '../Contacts/DetailedContact'
 import CreateGroup from '../Group/CreateGroup'
 import UpdateGroup from '../tools/fields/UpdateGroup'
 
+    const btnStyle = {
+        display: `flex`,
+        alignItems: `center`,
+        border: `none`,
+        backgroundColor: `#e1e2e1`,
+        cursor: `pointer`,
+        borderRadius: `5px`,
+        padding: `10px`,
+        margin: `5px`,
+        width: `140px`
+    }
+
     const btnStyleDelete = {
         display: `flex`,
         alignItems: `center`,
@@ -122,16 +134,20 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
             }
         })
         .then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             updateGroupListFn(res.data)
             enqueueSnackbar('Successfully Deleted', { variant: 'success', autoHideDuration: 1000, })
         })
         .catch(err => { console.log(err) })
     }
 
+    const handleSort = (e) => {
+        updateTableFn(e.target.value)
+    }
     return (
         <React.Fragment>
             <PopUpModal
+                title="Create New Contact"
                 open={open.create}
                 closeFn={() => setOpen({ ...open, create: false })}
             >
@@ -139,6 +155,7 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
             </PopUpModal>
 
             <PopUpModal
+                title="Contact Details"
                 open={open.detailedContact.openModal}
                 closeFn={() => setOpen({ ...open, detailedContact: { openModal: false } })}
             >
@@ -146,6 +163,7 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
             </PopUpModal>
 
             <PopUpModal
+                title="Update Group"
                 open={open.group}
                 closeFn={() => setOpen({ ...open, group: false })}
             >
@@ -153,6 +171,7 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
             </PopUpModal>
 
             <PopUpModal
+                title="Add Contacts to Group"
                 open={open.createGroup.openModal}
                 closeFn={() => setOpen({ ...open, createGroup: false })}
             >
@@ -199,6 +218,7 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                         setOpen({ ...open, detailedContact: { openModal: true, row: rowData } });
                     } }
                     options={{
+                        sorting:false,
                         selection: true,
                         pageSize: 10,
                         actionsColumnIndex: -1,
@@ -211,12 +231,14 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                         Toolbar: props => (
                             <div>
                                 <MTableToolbar {...props} style={{backgroundColor:`red`}}/>
-                                <div style={{ padding: '0px 10px', display:`flex`}}>
-                                    {/* <select>
-                                        <option>-Sort By-</option>
-                                    </select> */}
+                                <div style={{ padding: '0px 10px', display:`flex`, justifyContent:`space-between`}}>
+                                    <select style={btnStyle} onChange={handleSort} value={(state.sort)&&state.sort.sort}>
+                                        <option style={{color:`grey`}} value="">Sort By Lastname</option>
+                                        <option value="ASC">Ascending</option>
+                                        <option value="DESC">Descending</option>                                        
+                                    </select>
                                     {(groupObj) ? (
-                                        <>
+                                        <div style={{display:`flex`, flexDirection:`row`}}>
                                             <button style={btnStyleEdit} onClick={() => setOpen({ ...open, group: true })}><EditIcon /> &nbsp;Edit Group</button>
                                             <button 
                                                 style={btnStyleDelete} 
@@ -227,7 +249,7 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                                                 }}><DeleteIcon /> 
                                                 &nbsp;Delete Group
                                             </button>
-                                        </>
+                                        </div>
                                     ) : null}
                                 </div>
                             </div>

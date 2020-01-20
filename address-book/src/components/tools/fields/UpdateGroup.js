@@ -6,14 +6,14 @@ import GroupIcon from '@material-ui/icons/Group';
 import Button from '@material-ui/core/Button';
 
 export default function UpdateGroup({updateGroupListFn, groupObj, closeFn}) {
-    const [group, setGroup] = useState(groupObj.groupName)
+    const [group, setGroup] = useState(groupObj.group_name)
 
     const handleSubmit = () => {
         axios({
             method: `put`,
             url:`/api/group/` + groupObj.id,
             data: {
-                "groupName": group,
+                "group_name": group,
             },
             headers: {
                 Authorization: 'Bearer ' + sessionStorage.getItem('token')
@@ -29,8 +29,9 @@ export default function UpdateGroup({updateGroupListFn, groupObj, closeFn}) {
 
     return (
         <div style={{display:`flex`, flexDirection:`column`}}>
-            <h1 style={{textAlign:`center` }}>Update Group</h1>
+            {/* <h1 style={{textAlign:`center` }}>Update Group</h1> */}
             <TextField
+                style={{margin:`20px`}}
                 variant="outlined"
                 label="Group Name"
                 onChange={(e) => setGroup(e.target.value)}
@@ -46,7 +47,7 @@ export default function UpdateGroup({updateGroupListFn, groupObj, closeFn}) {
             />
              <Button 
                 type="submit" 
-                style={{backgroundColor:`#4c6572`, color:`white`, margin:`30px 0`}} 
+                style={{backgroundColor:`#4c6572`, color:`white`, margin:`10px`}} 
                 onClick={handleSubmit}>
                     
                 Update Group

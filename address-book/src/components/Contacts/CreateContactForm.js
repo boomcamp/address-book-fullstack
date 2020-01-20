@@ -49,19 +49,19 @@ export default function CreateContactForm({addGroupId, closeFn, createRowFn}) {
             method: 'post',
             url: '/api/contacts/' + sessionStorage.getItem('userId'),
             data: {
-                "firstName": user.firstname,
-                "lastName": user.lastname,
-                "homePhone": user.homePhone,
-                "mobilePhone": user.mobilePhone,
-                "workPhone": user.workPhone,
+                "first_name": user.firstname,
+                "last_name": user.lastname,
+                "home_phone": user.homePhone,
+                "mobile_phone": user.mobilePhone,
+                "work_phone": user.workPhone,
                 "email": user.email,
                 "city": user.city,
-                "stateProvince": user.stateProvince,
-                "postalCode": user.postalCode,
+                "state_province": user.stateProvince,
+                "postal_code": user.postalCode,
                 "country": user.country,
                 
                 "groupAdd": group.groupAdd,
-                "groupName": group.groupName,
+                "group_name": group.groupName,
                 "groupId": addGroupId
             }, 
             headers: {
@@ -80,7 +80,7 @@ export default function CreateContactForm({addGroupId, closeFn, createRowFn}) {
     
     return (
         <React.Fragment>
-            <h1 style={{textAlign:`center`}}>Create New Contact</h1 >
+            {/* <h1 style={{textAlign:`center`}}>Create New Contact</h1 > */}
             <ValidatorForm
                 style={formStyle}
                 onSubmit={handleSubmit}

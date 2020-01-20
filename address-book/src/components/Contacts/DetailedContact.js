@@ -24,7 +24,7 @@ const style = {
         justifyContent:`space-around`, 
         alignItems:`top`
     },
-    box: {margin:`0 0 40px 0`, alignItems:`center`, textAlign:`center`},
+    box: {margin:`0 0 20px 0`, alignItems:`center`, textAlign:`center`},
     address: {
         textAlign:`center`, 
         fontWeight:`normal`,
@@ -39,15 +39,15 @@ export default function DetailedContact({row}) {
         
         setUser({
             groupId: row.groupId,
-            firstName: row.firstName,
-            lastName: row.lastName,
-            homePhone: row.homePhone,
-            mobilePhone: row.mobilePhone,
-            workPhone: row.workPhone,
+            firstName: row.first_name,
+            lastName: row.last_name,
+            homePhone: row.home_phone,
+            mobilePhone: row.mobile_phone,
+            workPhone: row.work_phone,
             email: row.email,
             city: row.city,
-            stateProvince: row.stateProvince,
-            postalCode: row.postalCode,
+            stateProvince: row.state_province,
+            postalCode: row.postal_code,
             country: row.country
         })
 
@@ -60,7 +60,7 @@ export default function DetailedContact({row}) {
         })
             .then(res => {
                 if(res.data.length !== 0)
-                    setUser(prevState => {return {...prevState, groupName: res.data[0].groupName}})
+                    setUser(prevState => {return {...prevState, groupName: res.data[0].group_name}})
                 else    
                     setUser(prevState => {return {...prevState, groupName: ""}})
             })
@@ -70,9 +70,9 @@ export default function DetailedContact({row}) {
     }, [])
     return (
         <React.Fragment>
-            <h1 style={style.header}>Contact Details</h1>
+            {/* <h1 style={style.header}>Contact Details</h1> */}
             <div style={style.container}>
-                <img src={dp} alt="profile_picture" width="200" height="200" style={{borderRadius:`50%`}}/> 
+                <img src={dp} alt="profile_picture" width="200" height="200" style={{borderRadius:`50%`, margin:`20px 0 0 0`}}/> 
                 <div style={{margin:`0 50px`, width:`80%`}}>
                     <h1 style={style.user}>{user.firstName} {user.lastName}</h1>
                     <h5 style={style.address}>

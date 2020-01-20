@@ -5,7 +5,7 @@ const secret = require('../../secret')
 module.exports = {
     create: (req, res) => {
         const db = req.app.get('db');
-        const {firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country, groupAdd, groupName, groupId} = req.body
+        const {first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_province, postal_code, country, groupAdd, group_name, groupId} = req.body
         
         if (!req.headers.authorization) 
             return res.status(401).end();        
@@ -18,17 +18,17 @@ module.exports = {
                 db.group_contact
                 .findOne(
                     {
-                        groupName 
+                        group_name 
                     },
                     {
-                        fields:  ['id', 'groupName']
+                        fields:  ['id', 'group_name']
                     }
                 )
                 .then(group => {
                     if(group){
                         db.contacts
                         .save({
-                            userid: req.params.id, groupid: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
+                            userid: req.params.id, groupid: group.id, first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_province, postal_code, country,
                         })
                         .then(contact => res.status(201).json(contact))
                         .catch(err => {
@@ -39,11 +39,11 @@ module.exports = {
 
                     if(!group){
                         db.group_contact
-                        .save({ groupName, userid: req.params.id})
+                        .save({ group_name, userid: req.params.id})
                         .then(group => {
                             db.contacts
                             .save({
-                                userid: req.params.id, groupid: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
+                                userid: req.params.id, groupid: group.id, first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_province, postal_code, country,
                             })
                             .then(contact => res.status(201).json(contact))
                             .catch(err => {
@@ -66,7 +66,7 @@ module.exports = {
             else if(!groupAdd && !groupId){
                 db.contacts
                 .save({
-                    userid: req.params.id, groupid: null, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
+                    userid: req.params.id, groupid: null, first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_province, postal_code, country,
                 })
                 .then(contact => res.status(201).json(contact))
                 .catch(err => {
@@ -78,7 +78,7 @@ module.exports = {
             else if(groupId){
                 db.contacts
                 .save({
-                    userid: req.params.id, groupid: groupId, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country,
+                    userid: req.params.id, groupid: groupId, first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_province, postal_code, country,
                 })
                 .then(contact => res.status(201).json(contact))
                 .catch(err => {
@@ -94,6 +94,7 @@ module.exports = {
 
     list: (req, res) => {
         const db = req.app.get('db');
+        const {sortLastname} = req.query
 
         if (!req.headers.authorization) 
             return res.status(401).end();        
@@ -102,27 +103,15 @@ module.exports = {
             const token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, secret); 
 
-            db.users
-            .findOne({
-                id: req.params.id,
-            })
-            .then(user => {
-                if(user){
-                    db.contacts
-                    .find({userid: user.id})
-                    .then(contact => {
-                        res.status(200).json(contact)
-                    })
-                    .catch(err => {
-                        console.log(err)
-                        res.status(500).end()
-                    })
-                }
+            db.query(`SELECT * FROM contacts WHERE userid=${req.params.id} ${(sortLastname)?`ORDER BY last_name ${sortLastname}`:``}`)
+            .then(contact => {
+                res.status(200).json(contact)
             })
             .catch(err => {
                 console.log(err)
                 res.status(500).end()
             })
+            
         } catch (err) {
             console.error(err);
             res.status(401).end();
@@ -158,7 +147,7 @@ module.exports = {
 
     update: (req, res) => {
         const db = req.app.get('db');
-        const {firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country, groupName} = req.body
+        const {first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_province, postal_code, country, group_name} = req.body
         const {userId} = req.query
         
         if (!req.headers.authorization) 
@@ -168,14 +157,14 @@ module.exports = {
             const token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, secret);
 
-            if(groupName){
+            if(group_name){
                 db.group_contact
-                .findOne( { groupName }, { fields:  ['id', 'groupName'] } )
+                .findOne( { group_name }, { fields:  ['id', 'group_name'] } )
                 .then(group => {
                     if(group){
                         db.contacts
                         .update(
-                            {id: req.params.id}, {groupid: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
+                            {id: req.params.id}, {groupid: group.id, first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_province, postal_code, country}
                         )
                         .then(contact => {
                             res.status(200).json(contact)
@@ -188,11 +177,11 @@ module.exports = {
 
                     if(!group){
                         db.group_contact
-                        .save({ groupName, userid: userId})
+                        .save({ group_name, userid: userId})
                         .then(group => {
                             db.contacts
                             .update(
-                                {id: req.params.id}, {groupid: group.id, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
+                                {id: req.params.id}, {groupid: group.id, first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_province, postal_code, country}
                             )
                             .then(contact => {
                                 res.status(200).json(contact)
@@ -205,10 +194,10 @@ module.exports = {
                     }
                 })
             }
-            else if(!groupName){
+            else if(!group_name){
                 db.contacts
                 .update(
-                    {id: req.params.id}, {groupid: null, firstName, lastName, homePhone, mobilePhone, workPhone, email, city, stateProvince, postalCode, country}
+                    {id: req.params.id}, {groupid: null, first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_province, postal_code, country}
                 )
                 .then(contact => {
                     res.status(200).json(contact)
@@ -222,5 +211,5 @@ module.exports = {
             console.error(err);
             res.status(401).end();
         }
-    }
+    },    
 }

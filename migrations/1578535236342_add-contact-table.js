@@ -18,23 +18,23 @@ exports.up = pgm => {
             notNull: false,
             references: 'group_contact', 
         },
-        firstName: {
+        first_name: {
             type: 'text',
             notNull: true,
         },
-        lastName: {
+        last_name: {
             type: 'text',
             notNull: true,
         },
-        homePhone: {
+        home_phone: {
             type: 'text',
             notNull: true,
         },
-        mobilePhone: {
+        mobile_phone: {
             type: 'text',
             notNull: true,
         },
-        workPhone: {
+        work_phone: {
             type: 'text',
             notNull: true,
         },
@@ -46,11 +46,11 @@ exports.up = pgm => {
             type: 'text',
             notNull: true,
         },
-        stateProvince: {
+        state_province: {
             type: 'text',
             notNull: true,
         },
-        postalCode: {
+        postal_code: {
             type: 'text',
             notNull: true,
         },

@@ -14,21 +14,23 @@ import IconButton from '@material-ui/core/IconButton';
 
   // STYLES
   const containerStyle = {
-        border: '1px solid lightgrey',
-        boxShadow: '4px 5px 5px 1px rgba(0,0,0,0.14)',
-        width: '450px',
-        height: '80%',
-        margin: '13% 0 1% 0',
-    }
+    border: '1px solid lightgrey',
+    boxShadow: '4px 5px 5px 1px rgba(0,0,0,0.14)',
+    width: '500px',
+    // height: '80%',
+    // margin: '13% 0 1% 0',
+    margin:`250px auto 10px auto`
+}
 
-    const headerStyle = {
-        background: `#4B6573`, 
-        margin: `0`, 
-        color: `white`, 
-        padding: `30px 20px`, 
-        borderTopLeftRadius: `3px`, 
-        borderTopRightRadius: `3px`
-    }
+const headerStyle = {
+    background: `#4B6573`, 
+    margin: `0`, 
+    color: `white`, 
+    padding: `30px 20px`, 
+    borderTopLeftRadius: `3px`, 
+    borderTopRightRadius: `3px`,
+    textAlign:`left`
+}
 
     const formStyle = {
         display: 'flex',
@@ -85,7 +87,7 @@ export default function Signup() {
         return <Redirect to='/dashboard'/>
 
     return (
-        <div style={{display:`flex`, flexDirection:`column`, alignItems:`center`}}>
+        <div style={{textAlign:`center`}}>
             <Paper style={containerStyle} className="container">
                 <h3 style={headerStyle}>Sign Up</h3>
 

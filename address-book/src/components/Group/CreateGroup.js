@@ -23,18 +23,18 @@ function CreateGroup({row, closeFn, enqueueSnackbar}) {
                     method: 'put',
                     url: `/api/contacts/${x.id}?userId=${x.userid}`,
                     data: {
-                        "firstName": x.firstName,
-                        "lastName": x.lastName,
-                        "homePhone": x.homePhone,
-                        "mobilePhone": x.mobilePhone,
-                        "workPhone": x.workPhone,
+                        "first_name": x.first_name,
+                        "last_name": x.last_name,
+                        "home_phone": x.home_phone,
+                        "mobile_phone": x.mobile_phone,
+                        "work_phone": x.work_phone,
                         "email": x.email,
                         "city": x.city,
-                        "stateProvince": x.stateProvince,
-                        "postalCode": x.postalCode,
+                        "state_province": x.state_province,
+                        "postal_code": x.postal_code,
                         "country": x.country,
 
-                        "groupName": user.groupName,
+                        "group_name": user.groupName,
                     }, 
                     headers: {
                     Authorization: 'Bearer ' + sessionStorage.getItem('token')
@@ -53,8 +53,8 @@ function CreateGroup({row, closeFn, enqueueSnackbar}) {
     }
 
     return (
-        <div style={{display:`flex`, flexDirection:`column`, textAlign:`center`}}>
-            <h1>Add Contacts to Group</h1>
+        <div style={{display:`flex`, flexDirection:`column`, textAlign:`center`, margin:`10px 0 0 0`}}>
+            {/* <h1>Add Contacts to Group</h1> */}
             { (!group.groupExist) ? 
                     <GroupCreate group={user.groupName} groupNameFn={(e) => setUser({...user, groupName: e.target.value} )}>
                         <span style={addGroupStyle} onClick={() => setGroup({...group, groupExist: true})} href="">Add to Existing Group</span>
@@ -65,7 +65,7 @@ function CreateGroup({row, closeFn, enqueueSnackbar}) {
                     </GroupSelect>
                 : null } 
 
-            <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`, margin:`30px 0`}} onClick={handleSubmit}>Create Group</Button>
+            <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`, margin:`20px 0 10px 0`}} onClick={handleSubmit}>Create Group</Button>
         </div>
     )
 }

@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import fetchGroupContact from '../fetchGroupContact'
 
-export default function GroupSelect({group, groupNameFn , children}) {
+export default function GroupSelect({group, groupNameFn, children}) {
     const [groupName, setGroupName] = useState([])
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export default function GroupSelect({group, groupNameFn , children}) {
                 style={{margin:`0 0 8px 0`}}
                 select
                 label="Add to Existing Group"
-                value={group}
+                value={(group)?group:''}
                 onChange={(e) => groupNameFn(e)}
                 InputProps={{
                     startAdornment: (
@@ -33,12 +33,12 @@ export default function GroupSelect({group, groupNameFn , children}) {
                     ),
                 }}
             >
-                 <MenuItem value="" >
+                 <MenuItem value={(group)?group:''}>
                     - Select Group -
                 </MenuItem>
                 { groupName.map(x => (
-                        <MenuItem value={x.groupName} key={x.id}>
-                            {x.groupName}
+                        <MenuItem value={x.group_name} key={x.id}>
+                            {x.group_name}
                         </MenuItem> )) 
                 }
             </TextField>
@@ -55,7 +55,7 @@ export function GroupCreate({group, groupNameFn, children}){
                 label="Add to new Group"
                 onChange={(e) => groupNameFn(e)}
                 name="groupName"
-                value={group}
+                value={(group)?group:''}
                 // validators={['required']}
                 // errorMessages={['This Field is Required']}
                 InputProps={{

@@ -56,6 +56,7 @@ function TableActions({ rowData, enqueueSnackbar, updateTableFn, setStateFn, gro
     return (
         <>
             <PopUpModal
+                title="Update Contact"
                 onClick={(e) => e.stopPropagation()}
                 open={update.openModal}
                 closeFn={(e) => {

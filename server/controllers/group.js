@@ -19,8 +19,9 @@ module.exports = {
 
     contactList: (req, res) => {
         const db = req.app.get('db')
+        const {sortLastname} = req.query
 
-        db.query(`SELECT * FROM group_contact, contacts WHERE contacts.groupid = ${req.params.id} AND group_contact.id = contacts.groupid`)
+        db.query(`SELECT * FROM group_contact, contacts WHERE contacts.groupid = ${req.params.id} AND group_contact.id = contacts.groupid ${(sortLastname)?`ORDER BY last_name ${sortLastname}`: ''}`)
         .then(group => {
             res.status(200).json(group)
         })
@@ -84,10 +85,10 @@ module.exports = {
 
     updateGroup: (req, res) => {
         const db = req.app.get('db');
-        const {groupName} = req.body
+        const {group_name} = req.body
 
         db.group_contact
-        .update({id: req.params.id}, {groupName})
+        .update({id: req.params.id}, {group_name})
         .then(group => {
             db.group_contact.find().then(group => res.status(200).json(group))
         })

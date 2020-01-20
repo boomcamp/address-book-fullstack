@@ -44,15 +44,15 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
     useEffect(() => {
         setUser({
             groupId: row.groupId,
-            firstname: row.firstName,
-            lastname: row.lastName,
-            homePhone: row.homePhone,
-            mobilePhone: row.mobilePhone,
-            workPhone: row.workPhone,
+            firstname: row.first_name,
+            lastname: row.last_name,
+            homePhone: row.home_phone,
+            mobilePhone: row.mobile_phone,
+            workPhone: row.work_phone,
             email: row.email,
             city: row.city,
-            stateProvince: row.stateProvince,
-            postalCode: row.postalCode,
+            stateProvince: row.state_province,
+            postalCode: row.postal_code,
             country: row.country
         })
 
@@ -65,7 +65,7 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
         })
         .then(res => {
             if(res.data.length !== 0)
-                setUser(prevState => {return {...prevState, groupName: res.data[0].groupName}})
+                setUser(prevState => {return {...prevState, groupName: res.data[0].group_name}})
             else    
                 setUser(prevState => {return {...prevState, groupName: ""}})
         })
@@ -79,18 +79,18 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
             method: 'put',
             url: `/api/contacts/${row.id}?userId=${row.userid}`,
             data: {
-                "firstName": user.firstname,
-                "lastName": user.lastname,
-                "homePhone": user.homePhone,
-                "mobilePhone": user.mobilePhone,
-                "workPhone": user.workPhone,
+                "first_name": user.firstname,
+                "last_name": user.lastname,
+                "home_phone": user.homePhone,
+                "mobile_phone": user.mobilePhone,
+                "work_phone": user.workPhone,
                 "email": user.email,
                 "city": user.city,
-                "stateProvince": user.stateProvince,
-                "postalCode": user.postalCode,
+                "state_province": user.stateProvince,
+                "postal_code": user.postalCode,
                 "country": user.country,
 
-                "groupName": user.groupName
+                "group_name": user.groupName
             }, 
             headers: {
               Authorization: 'Bearer ' + sessionStorage.getItem('token')
@@ -108,7 +108,7 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
 
     return (
         <React.Fragment>
-            <h1 style={{textAlign:`center`}}>Update Contact</h1 >
+            {/* <h1 style={{textAlign:`center`}}>Update Contact</h1 > */}
             <ValidatorForm
                 onClick={(e) => e.stopPropagation()}
                 style={formStyle}
