@@ -19,7 +19,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import EditContacts from "./modal/editContacts";
 import Tooltip from "@material-ui/core/Tooltip";
 import GroupIcon from "@material-ui/icons/Group";
-
 const styles = {
   main: {
     ["@media (max-width:640px)"]: {
@@ -34,6 +33,7 @@ class Addressbooktable extends Component {
     super(props);
 
     this.state = {
+      tempData: [],
       disabled: true,
       buttonChange: "Edit",
       saveDisabled: true,
@@ -54,7 +54,7 @@ class Addressbooktable extends Component {
       openModal: false,
       data: [],
       open: false,
-      list:[],
+      list: [],
       columns: [
         {
           title: "FullName",
@@ -147,7 +147,6 @@ class Addressbooktable extends Component {
                   />
                 </Tooltip>
               </span>
-
             </div>
           )
         }
@@ -206,25 +205,18 @@ class Addressbooktable extends Component {
   };
 
   handleCloseModal = () => {
+    console.log("lll")
     localStorage.removeItem("idEdit");
     this.setState({
       openModal: false
     });
-console.log("table")
+    this.props.getAll()
+    
   };
 
   componentDidMount() {
-    this.getAll();
+    this.props.getAll();  
   }
-
-  getAll = () => {
-    const id = localStorage.getItem("id");
-    axios.get(`/addressbook/${id}`).then(res => {
-      this.setState({
-        data: res.data
-      });
-    });
-  };
 
   handleGetid = item => {
     console.log(item.item.rowData.contactid);
@@ -243,13 +235,14 @@ console.log("table")
     this.setState({
       open: false
     });
+    this.props.getAll()
   };
   handleYes = () => {
     axios
       .delete(`/addressbook/deleteContact/${localStorage.getItem("idDelete")}`)
       .then(res => {
         localStorage.removeItem("idDelete");
-        this.getAll();
+        this.props.getAll();
         this.setState({
           open: false
         });
@@ -270,7 +263,8 @@ console.log("table")
     // console.log(fieldname);
   };
   render() {
-    // console.log(this.state.data);
+  
+    console.log(this.props.bygroups)
     const { classes } = this.props;
     return (
       <React.Fragment>
@@ -322,25 +316,27 @@ console.log("table")
                 sm={12}
                 xs={12}
                 style={{
-                  border: "solid 1px",
-                  display: "flex"
+                  border: "solid 1.5px #999",
+                  display: "flex",
+                  justifyContent:"space-between",
+                  padding:15
                 }}
               >
                 {/* Group */}
-                <Grid item lg={2} md={3} sm={12} xs={12}>
+                <Grid item lg={3} md={3} sm={12} xs={12}
+                
+                >
                   <GroupList />
                 </Grid>
 
                 {/*Contact Table */}
                 <Grid
                   item
-                  lg={10}
+                  lg={8}
                   md={9}
                   sm={12}
                   xs={12}
-                  style={{
-                    border: "solid 1px red"
-                  }}
+                  
                 >
                   <MaterialTable
                     options={{
@@ -360,7 +356,7 @@ console.log("table")
                     title="Contacts"
                     fullWidth
                     columns={this.state.columns}
-                    data={this.state.data}
+                    data={this.props.searchValue.length > 0 ? this.props.tempData : this.props.data}
                   />
                 </Grid>
               </Grid>

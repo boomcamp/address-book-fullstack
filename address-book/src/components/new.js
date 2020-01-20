@@ -14,7 +14,7 @@ export default class New extends Component {
 
     this.state = {
       open: false,
-      openModal: false
+      openModal: false,
     };
   }
 
@@ -35,6 +35,7 @@ export default class New extends Component {
       });
     }
   };
+
 
   render() {
     const { classes } = this.props;

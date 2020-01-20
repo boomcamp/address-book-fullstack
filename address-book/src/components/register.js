@@ -3,11 +3,11 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Icon from "@material-ui/core/Icon";
-import EmailIcon from '@material-ui/icons/Email';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import PersonIcon from '@material-ui/icons/Person';
-import LockIcon from '@material-ui/icons/Lock';
+import EmailIcon from "@material-ui/icons/Email";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import PersonIcon from "@material-ui/icons/Person";
+import LockIcon from "@material-ui/icons/Lock";
 import {
   TextField,
   Grid,
@@ -52,7 +52,7 @@ class Register extends Component {
       snackbarMessage: "",
       icon: "",
       fname: "",
-      lname:""
+      lname: ""
     };
   }
   handleCloseSnackbar = () => {
@@ -66,7 +66,7 @@ class Register extends Component {
     });
   };
 
-  componentDidMount(){
+  componentDidMount() {
     if (localStorage.getItem("token") === null) {
     } else {
       this.props.history.push("/addressbook");
@@ -74,9 +74,8 @@ class Register extends Component {
   }
   handleSubmit = event => {
     event.preventDefault();
-    
-    if (this.state.pword == this.state.cpword) {
 
+    if (this.state.pword == this.state.cpword) {
       axios
         .post("/users", {
           firstname: this.state.fname,
@@ -84,20 +83,20 @@ class Register extends Component {
           email: this.state.email,
           username: this.state.uname,
           password: this.state.pword
-        }).then(res => {
-       
+        })
+        .then(res => {
           localStorage.setItem("token", res.data.token);
-          localStorage.setItem("id", res.data.id)
+          localStorage.setItem("id", res.data.id);
           this.props.history.push("/addressbook");
           this.setState({
             firstname: "",
-            lastname:"",
+            lastname: "",
             email: "",
             uname: "",
             pword: "",
-            cpword: "",
+            cpword: ""
           });
-        })
+        });
     } else {
       this.handleOpenSnackbar("Invalid password confirmation", "#9a0707");
       this.setState({
@@ -154,11 +153,11 @@ class Register extends Component {
               <Typography variant="h6" className={classes.title}>
                 New User
               </Typography>
-           
             </Toolbar>
           </AppBar>
         </div>
-        <form className={classes.container}
+        <form
+          className={classes.container}
           onSubmit={e => {
             this.handleSubmit(e);
           }}
@@ -186,7 +185,9 @@ class Register extends Component {
               <TextField
                 required
                 id="standard-required"
-                label={this.state.fnameError ? "Required FirstName" : "FirstName"}
+                label={
+                  this.state.fnameError ? "Required FirstName" : "FirstName"
+                }
                 error={this.state.fnameError}
                 className={classes.textField}
                 margin="normal"
@@ -200,12 +201,12 @@ class Register extends Component {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PersonAddIcon style={{color: 'grey'}}/>
+                      <PersonAddIcon style={{ color: "grey" }} />
                     </InputAdornment>
-                  ),
-              }}
+                  )
+                }}
               />
-                <TextField
+              <TextField
                 required
                 id="standard-required"
                 label={this.state.lnameError ? "Required LastName" : "LastName"}
@@ -222,13 +223,11 @@ class Register extends Component {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PersonAddIcon style={{color: 'grey'}}/>
+                      <PersonAddIcon style={{ color: "grey" }} />
                     </InputAdornment>
-                  ),
-              }}
+                  )
+                }}
               />
-              
-              
 
               <TextField
                 required
@@ -247,10 +246,10 @@ class Register extends Component {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <EmailIcon style={{color: 'grey'}}/>
+                      <EmailIcon style={{ color: "grey" }} />
                     </InputAdornment>
-                  ),
-              }}
+                  )
+                }}
               />
 
               <TextField
@@ -271,10 +270,10 @@ class Register extends Component {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <PersonIcon style={{color: 'grey'}}/>
+                      <PersonIcon style={{ color: "grey" }} />
                     </InputAdornment>
-                  ),
-              }}
+                  )
+                }}
               />
               <TextField
                 required
@@ -294,10 +293,10 @@ class Register extends Component {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <LockIcon style={{color: 'grey'}}/>
+                      <LockIcon style={{ color: "grey" }} />
                     </InputAdornment>
-                  ),
-              }}
+                  )
+                }}
               />
 
               <TextField
@@ -322,17 +321,13 @@ class Register extends Component {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <LockIcon style={{color: 'grey'}}/>
+                      <LockIcon style={{ color: "grey" }} />
                     </InputAdornment>
-                  ),
-              }}
+                  )
+                }}
               />
 
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
+              <Button variant="contained" color="primary" type="submit">
                 Register
               </Button>
               <Link style={{ textDecoration: "none" }} to={`/`}>

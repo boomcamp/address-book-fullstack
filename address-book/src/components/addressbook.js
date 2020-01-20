@@ -3,7 +3,7 @@ import Icon from "@material-ui/core/Icon";
 import Table from "./addressbooktable";
 import Search from "./search";
 
-import RecentActorsIcon from '@material-ui/icons/RecentActors';
+import RecentActorsIcon from "@material-ui/icons/RecentActors";
 import {
   TextField,
   Grid,
@@ -31,7 +31,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -45,9 +45,24 @@ class Addressbook extends Component {
     this.state = {
       snackbarState: false,
       snackbarMessage: "",
-      icon: ""
+      icon: "",
+      data: [],
+      tempData: [],
+      searchValue:"",
+      query:"ASC"
+
     };
+   
   }
+  getAll = () => {
+    const id = localStorage.getItem("id");
+    axios.get(`/addressbook/${id}?sort=${this.state.query}`).then(res => {
+      this.setState({
+        data: res.data
+      });
+    });
+  };
+
   handleCloseSnackbar = () => {
     this.setState({ snackbarState: false, snackbarMessage: "" });
   };
@@ -76,6 +91,7 @@ class Addressbook extends Component {
       this.setState({
         icon: "check"
       });
+      this.getAll();
       localStorage.removeItem("auth");
     }
     if (newUsers) {
@@ -83,9 +99,36 @@ class Addressbook extends Component {
       this.setState({
         icon: "check"
       });
+      this.getAll();
       localStorage.removeItem("create");
     }
   }
+
+  handleSearch = e => {
+    
+    const contacts = this.state.data.filter(
+      con =>
+        con.first_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !==
+          -1 ||
+        con.last_name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+    );
+    this.setState({
+      tempData: contacts,
+      searchValue: e.target.value
+    });
+   
+  };
+
+  handleSort=(e)=>{
+    this.setState({
+      query: e.target.value
+    }, ()=> {
+      this.getAll()
+    })
+    console.log(this.state.query)
+   
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -110,15 +153,13 @@ class Addressbook extends Component {
           autoHideDuration={2000}
           onClose={this.handleCloseSnackbar}
         />
-       
+
         {/* sample */}
-  
 
-        <Container maxWidth="xl" className={classes.root}
-          style={{marginTop: '70px',
-          
-          }}
-
+        <Container
+          maxWidth="xl"
+          className={classes.root}
+          style={{ marginTop: "70px" }}
         >
           <AppBar>
             <Toolbar>
@@ -149,7 +190,6 @@ class Addressbook extends Component {
                   </Grid>
                 </Box>
                 <Box>
-                 
                   <Tooltip title="Logout">
                     <IconButton onClick={e => this.handleLogout(e)}>
                       <ExitToApp className={classes.exitIcon} />
@@ -159,52 +199,14 @@ class Addressbook extends Component {
               </Grid>
             </Toolbar>
           </AppBar>
-          {/* <Dialog open={this.state.editDialog}>
-            <form onSubmit={e => this.formSubmitUpdateGroup(e)}>
-              <DialogTitle>Edit Group Name</DialogTitle>
-              <DialogContent>
-                <TextField
-                  className={classes.textField}
-                  helperText={this.state.editHelpertextError}
-                  error={this.state.editHelperError}
-                  margin="dense"
-                  value={this.state.nameValue}
-                  label="Group Name"
-                  type="text"
-                  onChange={e =>
-                    this.setState({
-                      nameValue: e.target.value
-                    })
-                  }
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PeopleOutline />
-                      </InputAdornment>
-                    )
-                  }}
-                />
-              </DialogContent>
-
-              <DialogActions>
-                <Button>Save</Button>
-
-                <Button
-                  onClick={() =>
-                    this.setState({
-                      editDialog: false,
-                      editHelpertextError: ""
-                    })
-                  }
-                >
-                  Cancel
-                </Button>
-              </DialogActions>
-            </form>
-          </Dialog> */}
         </Container>
-        <Search />
-        <Table />
+        <Search
+          data={this.state.data}
+          tempData={this.state.tempData}
+          handleSearch={this.handleSearch}
+          handleSort={this.handleSort}
+        />
+        <Table searchValue={this.state.searchValue} getAll={this.getAll} data={this.state.data} tempData={this.state.tempData}/>
       </React.Fragment>
     );
   }

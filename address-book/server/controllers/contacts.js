@@ -63,14 +63,15 @@ function contactList(req, res) {
   const groups = req.query.groups;
 
   if (groups == undefined) {
-    // console.log(sort);
+
     db.query(
-      `select * from contacts INNER JOIN address_book on contacts.id = address_book.contactid where address_book.userid = ${userId} ORDER BY last_name `,
+      `select * from contacts INNER JOIN address_book on contacts.id = address_book.contactid where address_book.userid = ${userId} ORDER BY last_name ${sort}`,
       []
     ).then(data => {
       res.status(200).json(data);
     });
   } else {
+    console.log(groups)
     db.query(
       `select * from contacts INNER JOIN address_book on contacts.id = address_book.contactid where address_book.userid = ${userId} and address_book.groupid = ${groups}`
     ).then(data => {

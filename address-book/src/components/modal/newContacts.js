@@ -11,15 +11,11 @@ import RecentActorsIcon from "@material-ui/icons/RecentActors";
 import {} from "@material-ui/core";
 import axios from "axios";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import MenuIcon from "@material-ui/icons/Menu";
-import Container from "@material-ui/core/Container";
-// import Contacts from "@material-ui/icons/Contacts";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import PeopleOutline from "@material-ui/icons/PeopleOutline";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import PersonIcon from "@material-ui/icons/Person";
 import EmailIcon from "@material-ui/icons/Email";
@@ -62,29 +58,33 @@ export default class NewContacts extends Component {
     });
   };
 
-  handleCreateContact = (e) => {
-    e.preventDefault()
+  handleCreateContact = e => {
+    e.preventDefault();
     const id = localStorage.getItem("id");
-    axios
-      .post(`/createcontact`, {
-        id: id,
-        first_name: this.state.fname,
-        last_name: this.state.lname,
-        home_phone: this.state.homephone,
-        mobile_phone: this.state.mobilephone,
-        work_phone: this.state.workphone,
-        email: this.state.email,
-        city: this.state.city,
-        state_or_province: this.state.stateOrProvince,
-        postal_code: this.state.postalcode,
-        country: this.state.country
-      })
-      .then(res => {
-        console.log(this.state.homephone);
-      });
+    if (this.state.fname === "" && this.state.lname === "") {
+      alert("empty");
+    } else {
+      axios
+        .post(`/createcontact`, {
+          id: id,
+          first_name: this.state.fname,
+          last_name: this.state.lname,
+          home_phone: this.state.homephone,
+          mobile_phone: this.state.mobilephone,
+          work_phone: this.state.workphone,
+          email: this.state.email,
+          city: this.state.city,
+          state_or_province: this.state.stateOrProvince,
+          postal_code: this.state.postalcode,
+          country: this.state.country
+        })
+        .then(res => {
+          window.location.reload();
+          this.props.handleCloseModal();
+        });
+    }
   };
   setFields = event => {
-    // console.log(event)
     var fieldname = event.target.name;
     var fieldError = fieldname + "Error";
     var value = event.target.value;
@@ -97,7 +97,7 @@ export default class NewContacts extends Component {
   render() {
     const { openModal, handleCloseModal, handleOpenModal } = this.props;
     const { classes } = this.props;
-
+    // console.log(this.props);
     return (
       <React.Fragment>
         <Dialog

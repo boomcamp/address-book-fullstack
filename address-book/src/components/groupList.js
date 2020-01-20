@@ -22,6 +22,12 @@ import NewGroups from "./modal/newGroups";
 import EditIcon from "@material-ui/icons/Edit";
 import Tooltip from "@material-ui/core/Tooltip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import Table from "./addressbooktable";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+
 import {
   Dialog,
   DialogActions,
@@ -41,7 +47,10 @@ export default class GroupList extends Component {
       openModal: false,
       contacts: [],
       selectValue: [],
-      idArray: []
+      idArray: [],
+      query: "ASC",
+      bygroups: [],
+      open: false
     };
   }
 
@@ -59,21 +68,37 @@ export default class GroupList extends Component {
 
   handleGetContacts = () => {
     const id = localStorage.getItem("id");
-    axios.get(`/addressbook/${id}`).then(res => {
+    axios.get(`/addressbook/${id}?sort=${this.state.query}`).then(res => {
       this.setState({
         contacts: res.data
       });
     });
   };
 
-  handleOpenModal = (id) => {
-    console.log(id)
+  handleGetByGroups = id => {
+    const userid = localStorage.getItem("id");
+    axios.get(`/addressbook/${userid}?groups=${id}`).then(res => {
+      this.setState({
+        bygroups: res.data,
+        open: true
+      });
+      // this.state.bygroups.map(item =>{
+      //   console.log(item)
+      // })
+    });
+  };
+
+  handleOpenModal = id => {
+    console.log(id);
     this.handleGetContacts();
     this.setState({ openModal: true, currentGroupId: id });
   };
 
   handleCloseModal = () => {
     this.setState({ openModal: false });
+  };
+  handleClose = () => {
+    this.setState({ open: false });
   };
 
   handleAddToGroups = e => {
@@ -87,32 +112,28 @@ export default class GroupList extends Component {
     });
     e.map(row => {
       // console.log(row.id);
-      this.state.idArray.push(e)
+      this.state.idArray.push(e);
     });
   };
 
-
   handleAdd = () => {
-
     // console.log('sadasd')
-    if(this.state.idArray.length <= 0){
-      console.log('No selected')
-    }
-    else{
-    this.state.idArray.forEach(x => {
+    if (this.state.idArray.length <= 0) {
+      console.log("No selected");
+    } else {
+      this.state.idArray.forEach(x => {
         x.forEach(element => {
-          const idLocal = localStorage.getItem  ("id")
-          axios.patch(`/addressbook/addtogroup/${idLocal}/${element.id}`,{
-            groupid: this.state.currentGroupId
-          }).then(res => {
-          
-          }); 
+          const idLocal = localStorage.getItem("id");
+          axios
+            .patch(`/addressbook/addtogroup/${idLocal}/${element.id}`, {
+              groupid: this.state.currentGroupId
+            })
+            .then(res => {});
         });
-        
       });
+    }
+    this.handleCloseModal();
   };
-  this.handleCloseModal()
-}
 
   render() {
     // console.log(this.state.currentGroupId)
@@ -152,7 +173,21 @@ export default class GroupList extends Component {
                   </Button>
 
                   <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
+                    <IconButton
+                      edge="end"
+                      aria-label="Show"
+                      onClick={() => this.handleGetByGroups(group.id)}
+                    >
+                      <Tooltip title="Show Member">
+                        <VisibilityIcon>
+                          <Table
+                            handleGetByGroups={this.handleGetByGroups}
+                            bygroups={this.state.bygroups}
+                          />
+                        </VisibilityIcon>
+                      </Tooltip>
+                    </IconButton>
+                    <IconButton edge="end" aria-label="Edit">
                       <Tooltip title="Edit Group">
                         <EditIcon />
                       </Tooltip>
@@ -210,6 +245,58 @@ export default class GroupList extends Component {
               Cancel
             </Button>
           </DialogActions>
+        </Dialog>
+
+        <Dialog
+          style={{
+            border: "solid 1px"
+          }}
+          fullWidth
+          maxWidth="md"
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="form-dialog-title"
+          placement="top"
+        >
+          <DialogTitle id="form-dialog-title">List of Group</DialogTitle>
+          <DialogContent style={{ border: "solid 1px red", height: "600px  " }}>
+            <Grid
+              container
+              justify="flex-start"
+              style={{ width: "100%", boder: "solid yellow" }}
+            >
+              {this.state.bygroups.map(list => {
+                return (
+                  <Grid item style={{ margin: 30 }} lg={3}>
+                    <Card>
+                      <CardContent>
+                        <Typography
+                          variant="h5"
+                          style={{ textTransform: "capitalize" }}
+                        >
+                          {" "}
+                          {list.first_name} {list.last_name}{" "}
+                        </Typography>
+                        <Typography variant="h6" style={{ color: "#999" }}>
+                          <em>{list.mobile_phone}</em>
+                        </Typography>
+                      </CardContent>
+                      <CardActions
+                        style={{ border: "solid 1px", margin: 0, padding: 0 }}
+                      >
+                        <Button
+                          size="small"
+                          style={{ textAlign: "center !important" }}
+                        >
+                          Remove from Group
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </DialogContent>
         </Dialog>
       </React.Fragment>
     );
