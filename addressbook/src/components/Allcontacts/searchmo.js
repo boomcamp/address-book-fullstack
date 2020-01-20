@@ -1,4 +1,4 @@
-<div className="card">
+{/* <div className="card">
         {!Array.isArray(this.props.search) || !this.props.search.length ? (
           this.props.searchinput.length > 0 ? (
             <div
@@ -418,3 +418,409 @@ this.state.search
         </div>
       </Modal>
     </div>
+
+
+<div>
+<Modal
+  title="Contact Info"
+  visible={this.state.visible}
+  onOk={this.handleOk}
+  onCancel={this.handleCancel}
+  footer={null}
+>
+  <div>
+    <Form>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%"
+        }}
+      >
+        <Form.Item>
+          <Tooltip
+            placement="bottomRight"
+            title="Last Name"
+          >
+            <Input
+              prefix={
+                <Icon
+                  type="user"
+                  style={{ color: "rgba(0,0,0,.25)" }}
+                />
+              }
+              disabled={this.state.disabled}
+              placeholder="Last Name"
+              name="lname"
+              required
+              value={this.state.lastname}
+              onChange={e =>
+                this.handleChange(e.target)
+              }
+            />
+          </Tooltip>
+        </Form.Item>
+        <Form.Item>
+          <Tooltip
+            placement="bottomRight"
+            title="First Name"
+          >
+            <Input
+              prefix={
+                <Icon
+                  type="user"
+                  style={{ color: "rgba(0,0,0,.25)" }}
+                />
+              }
+              disabled={this.state.disabled}
+              placeholder="First Name"
+              name="fname"
+              required
+              value={this.state.firstname}
+              onChange={e =>
+                this.handleChange(e.target)
+              }
+            />
+          </Tooltip>
+        </Form.Item>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column"
+        }}
+      >
+        <Form.Item>
+          <Tooltip
+            placement="bottomRight"
+            title="Home Phone Number"
+          >
+            <Input
+              prefix={
+                <Icon
+                  type="phone"
+                  style={{ color: "rgba(0,0,0,.25)" }}
+                />
+              }
+              disabled={this.state.disabled}
+              style={{ width: "100%" }}
+              placeholder="Home Phone Number"
+              name="homephonenum"
+              value={this.state.home_phone}
+              onChange={e =>
+                this.handleChange(e.target)
+              }
+            />
+          </Tooltip>
+        </Form.Item>
+        <Form.Item>
+          <Tooltip
+            placement="bottomRight"
+            title="Mobile Phone Number"
+          >
+            <Input
+              prefix={
+                <Icon
+                  type="phone"
+                  style={{ color: "rgba(0,0,0,.25)" }}
+                />
+              }
+              disabled={this.state.disabled}
+              style={{ width: "100%" }}
+              placeholder="Mobile Phone Number"
+              name="mobilePhone"
+              value={this.state.mobile_phone}
+              onChange={e =>
+                this.handleChange(e.target)
+              }
+            />
+          </Tooltip>
+        </Form.Item>
+        <Form.Item>
+          <Tooltip
+            placement="bottomRight"
+            title="Work Phone Number"
+          >
+            <Input
+              prefix={
+                <Icon
+                  type="phone"
+                  style={{ color: "rgba(0,0,0,.25)" }}
+                />
+              }
+              disabled={this.state.disabled}
+              style={{ width: "100%" }}
+              placeholder="Work Phone Number"
+              name="workPhone"
+              value={this.state.work_phone}
+              onChange={e =>
+                this.handleChange(e.target)
+              }
+            />
+          </Tooltip>
+        </Form.Item>
+        <Form.Item>
+          <Tooltip
+            placement="bottomRight"
+            title="Email"
+          >
+            <Input
+              name="email"
+              prefix={
+                <Icon
+                  type="mail"
+                  style={{ color: "rgba(0,0,0,.25)" }}
+                />
+              }
+              disabled={this.state.disabled}
+              onChange={e =>
+                this.handleChange(e.target)
+              }
+              placeholder="Email"
+              value={this.state.email}
+              required
+            />
+          </Tooltip>
+        </Form.Item>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%"
+        }}
+      >
+        <Form.Item>
+          <Tooltip placement="bottomRight" title="City">
+            <Input
+              prefix={
+                <Icon
+                  type="environment"
+                  style={{ color: "rgba(0,0,0,.25)" }}
+                />
+              }
+              disabled={this.state.disabled}
+              placeholder="City"
+              name="city"
+              required
+              value={this.state.city}
+              onChange={e =>
+                this.handleChange(e.target)
+              }
+            />
+          </Tooltip>
+        </Form.Item>
+        <Form.Item>
+          <Tooltip
+            placement="bottomRight"
+            title="State or Province"
+          >
+            <Input
+              prefix={
+                <Icon
+                  type="bank"
+                  style={{ color: "rgba(0,0,0,.25)" }}
+                />
+              }
+              disabled={this.state.disabled}
+              placeholder="State or Province"
+              name="state"
+              value={this.state.stae_or_province}
+              required
+              onChange={e =>
+                this.handleChange(e.target)
+              }
+            />
+          </Tooltip>
+        </Form.Item>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%"
+        }}
+      >
+        <Form.Item>
+          <Tooltip
+            placement="bottomRight"
+            title="Postal Code"
+          >
+            <Input
+              prefix={
+                <Icon
+                  type="code"
+                  style={{ color: "rgba(0,0,0,.25)" }}
+                />
+              }
+              disabled={this.state.disabled}
+              placeholder="Postal Code"
+              name="postalCode"
+              required
+              value={this.state.postal_code}
+              onChange={e =>
+                this.handleChange(e.target)
+              }
+            />
+          </Tooltip>
+        </Form.Item>
+        <Form.Item>
+          <Tooltip
+            placement="bottomRight"
+            title="Country"
+          >
+            <Input
+              prefix={
+                <Icon
+                  type="flag"
+                  style={{ color: "rgba(0,0,0,.25)" }}
+                />
+              }
+              disabled={this.state.disabled}
+              disabled={this.state.disabled}
+              placeholder="Country"
+              name="country"
+              required
+              value={this.state.country}
+              onChange={e =>
+                this.handleChange(e.target)
+              }
+            />
+          </Tooltip>
+        </Form.Item>
+      </div>
+      <div>
+        <Form.Item>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row"
+            }}
+          >
+            <Popconfirm
+              placement="topLeft"
+              title="Want to Add ?"
+              onConfirm={e => this.handleSubmit(conID)}
+              okText="Yes"
+              cancelText="No"
+              disabled={this.state.disabled}
+            >
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ width: "100%" }}
+                disabled={this.state.disabled}
+                // onSubmit={e => this.handleSubmit(e)}
+              >
+                Save
+              </Button>
+            </Popconfirm>
+            <Button
+              type="primary"
+              style={{
+                width: "100%",
+                marginLeft: "5px"
+              }}
+              onClick={this.handleEdit}
+            >
+              Edit
+            </Button>
+          </div>
+        </Form.Item>
+      </div>
+    </Form>
+  </div>
+</Modal>
+</div> */}
+
+
+
+<div className="card">
+        {!Array.isArray(this.props.search) || !this.props.search.length ? (
+          this.props.searchinput.length > 0 ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Empty />
+            </div>
+          ) : (
+            this.props.contacts.map(res => {
+              const e = res.contactid;
+              const a = res;
+              return (
+                <Card
+                  style={{ width: 240, marginRight: 10, marginBottom: 10 }}
+                  actions={[
+                    <Tooltip title="view" placement="bottom">
+                      <Icon
+                        type="eye"
+                        key="view"
+                        style={{ fontSize: "22px", color: "#08c" }}
+                        onClick={() => this.props.viewHandler(a)}
+                      />
+                    </Tooltip>,
+                    <Tooltip title="delete" placement="bottom">
+                      <Icon
+                        type="delete"
+                        key="view"
+                        onClick={() => this.props.deleteHandler(e)}
+                        style={{ fontSize: "22px", color: "red" }}
+                      />
+                    </Tooltip>
+                  ]}
+                  key={res.contactid}
+                >
+                  <Meta
+                    avatar={
+                      <Avatar src="https://www.pngkey.com/png/detail/121-1219231_user-default-profile.png" />
+                    }
+                    title={`${res.firstname} ${res.lastname}`}
+                    description={res.home_phone}
+                  />
+                </Card>
+              );
+            })
+          )
+        ) : (
+          this.props.search.map(res => {
+            const e = res.contactid;
+            const a = res;
+            return (
+              <Card
+                style={{ width: 240, marginRight: 10, marginBottom: 10 }}
+                actions={[
+                  <Tooltip title="view" placement="bottom">
+                    <Icon
+                      type="eye"
+                      key="view"
+                      style={{ fontSize: "22px", color: "#08c" }}
+                      onClick={() => this.props.viewHandler(a)}
+                    />
+                  </Tooltip>,
+                  <Tooltip title="delete" placement="bottom">
+                    <Icon
+                      type="delete"
+                      key="view"
+                      onClick={() => this.props.deleteHandler(e)}
+                      style={{ fontSize: "22px", color: "red" }}
+                    />
+                  </Tooltip>
+                ]}
+                key={res.contactid}
+              >
+                <Meta
+                  avatar={
+                    <Avatar src="https://www.pngkey.com/png/detail/121-1219231_user-default-profile.png" />
+                  }
+                  title={`${res.firstname} ${res.lastname}`}
+                  description={res.home_phone}
+                />
+              </Card>
+            );
+          })
+        )}
+      </div>

@@ -11,6 +11,7 @@ class AddBookCard extends Component {
     super(props);
 
     this.state = {
+      allGroups:this.props.getAllgroups,
       visible:false,
       lastname: "",
       firstname: "",
@@ -87,7 +88,7 @@ class AddBookCard extends Component {
           visible:false
         })
         this.props.getCont()
-        setTimeout(window.location.reload.bind(window.location), 3000);
+        setTimeout(window.location.reload.bind(window.location), 250);
       });
     } else {
       message.warning("Please Fill Out the Form");
@@ -165,7 +166,7 @@ class AddBookCard extends Component {
         <Option value="87">+87</Option>
       </Select>
     );
-
+  console.log(this.state.getAllgroups)
     const { visible, onCancel, onCreate, form } = this.props;
     // const { getFieldDecorator } = form;
     return (
@@ -182,7 +183,7 @@ class AddBookCard extends Component {
               ></Icon>
             </Tooltip>
 
-            <Groups />
+            <Groups userid={this.state.userid} allGroups={this.state.allGroups}/>
           </div>
         </div>
 

@@ -13,43 +13,54 @@ const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default class AddHomePage extends Component {
-
   constructor(props) {
-    super(props)  
-  
+    super(props);
+
     this.state = {
-       id:'',
-       lastname:'',
-       allContacts:[],
-       ids:parseInt(localStorage.getItem('id'))
-    }
+      id: "",
+      lastname: "",
+      allGroups:[],
+      allContacts: [],
+      ids: parseInt(localStorage.getItem("id"))
+    };
   }
-  
+
   componentDidMount() {
     if (localStorage.getItem("token") != null) {
       this.props.history.push("/homepage");
     } else {
       this.props.history.push("/");
     }
-    this.getCont()
+    this.getCont();
+   
   }
 
   getCont = () => {
-  const  id = localStorage.getItem('id')
+    const id = localStorage.getItem("id");
     axios.get(`http://localhost:3003/api/allContacts/${id}`).then(data => {
-        // console.log(data.lastname);
-        // console.log(data)
-        this.setState({ allContacts: data.data });
-        // data.data.map(e => {
-        //   console.log(e.lastname);
-        //   console.log(e);
-        //   this.setState({ lastname: e.lastname, firstname: e.firstname });
-        // });
-      });
-  }
-handleSearch =(e)=>{
-  console.log(e)
-}
+      // console.log(data.lastname);
+      // console.log(data)
+      this.setState({ allContacts: data.data });
+      // data.data.map(e => {
+      //   console.log(e.lastname);
+      //   console.log(e);
+      //   this.setState({ lastname: e.lastname, firstname: e.firstname });
+      // });
+    });
+  };
+
+  // getAllgroups = () => {
+  //   const id = localStorage.getItem("id");
+  //   axios.get(`http://localhost:3003/api/allgroups/${id}`).then(datas => {
+  //     console.log(datas.data);
+  //   this.setState({allGroups:datas.data})
+  //     //  this.setState({allGroups:dat})
+  //   });
+  // };
+
+  handleSearch = e => {
+    console.log(e);
+  };
   handleLogout = e => {
     localStorage.clear();
     this.props.history.push("/");
@@ -71,9 +82,9 @@ handleSearch =(e)=>{
     this.setState({ collapsed });
   };
   render() {
+    console.log(this.state.getAllgroups)
     return (
       <div>
-        
         <div className="addHeader">
           <div className="addBook">
             <Icon
@@ -85,7 +96,7 @@ handleSearch =(e)=>{
           </div>
 
           <div className="pop">
-            <Card getCont={this.getCont}/>
+            <Card getCont={this.getCont} getAllgroups={this.state.allGroups} />
             <Popconfirm
               placement="leftTop"
               title="Are you Sure to logout?"
@@ -104,12 +115,15 @@ handleSearch =(e)=>{
               </Tooltip>
             </Popconfirm>
 
-            <Addcontacts   />
+            <Addcontacts />
           </div>
         </div>
-        
+
         <div className="allContacts">
-          <Allcontacts getCont={this.getCont} allContacts={this.state.allContacts}/>
+          <Allcontacts
+            getCont={this.getCont}
+            allContacts={this.state.allContacts}
+          />
         </div>
         <Footers />
       </div>

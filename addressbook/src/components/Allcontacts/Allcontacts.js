@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  Empty,
   Card,
   Icon,
   Avatar,
@@ -23,6 +24,7 @@ class Allcontacts extends Component {
     super(props);
 
     this.state = {
+      
       visible: false,
       lastname: "",
       firstname: "",
@@ -36,15 +38,16 @@ class Allcontacts extends Component {
       country: "",
       disabled: true,
       search: [],
-      ids: ""
+      ids: "",
+      datas: []
     };
   }
   showModal = e => {
     // console.log(this.props.allContacts)
-    console.log(e.id);
-    console.log(this.state)
+    // console.log(e.id);
+    // console.log(this.state)
     this.setState({
-      ids:e.id,
+      ids: e.id,
       visible: true,
       lastname: e.lastname,
       firstname: e.firstname,
@@ -62,7 +65,7 @@ class Allcontacts extends Component {
     // console.log(this.props.allContacts);
     // this.setState({userId:ids})
     // console.log(this.state.userid);
-    console.log(this.state.ids)
+    console.log(this.state.ids);
     e.name === "lname"
       ? this.setState({ lastname: e.value })
       : e.name === "fname"
@@ -157,8 +160,8 @@ class Allcontacts extends Component {
     });
   };
   handleEdit = e => {
-    console.log(this.state)
-    console.log(this.state.ids);
+    // console.log(this.state)
+    // console.log(this.state.ids);
     // console.log(this.state);
     this.setState({
       disabled: false
@@ -178,8 +181,15 @@ class Allcontacts extends Component {
     });
     console.log(search);
   };
-
+  handleSort = () => {
+    this.setState({
+      datas: this.props.allContacts.sort((a, b) =>
+        b.lastname.localeCompare(a.lastname)
+      )
+    });
+  };
   render() {
+    // console.log(this.state.datas)
     // console.log(this.props.allContacts == null ? "nani" : "eupo");
     // console.log(this.state.search);
     // const { getFieldDecorator } = this.props.form;
@@ -189,7 +199,9 @@ class Allcontacts extends Component {
           style={{
             whidth: "100px",
             display: "flex",
-            justifyContent: "space-evenly"
+            justifyContent: "space-evenly",
+            fontWeight: "bolder",
+            flexWrap: "wrap"
           }}
         >
           Contacts
@@ -197,95 +209,129 @@ class Allcontacts extends Component {
             search={this.handleSearch}
             style={{ display: "flex", justifyContent: "center" }}
           />
+          {/* <button onClick={e=>this.handleSort()}>sort</button> */}
         </h1>
 
         <hr className="underline"></hr>
 
         <div className="mainCon">
           {/* {this.props.allContacts == [] ? <div>dtae</div> : <div>nani</div>} */}
-          {this.state.search.length > 0
-            ? this.state.search
-                .sort((a, b) => a.lastname.localeCompare(b.lastname))
-                .map(contact => {
-                  let conID = contact.id;
-                  let contacts = contact;
-                  // console.log(conID)
-                  return (
-                    <Card
-                      // hoverable
+          {this.props.allContacts.length === 0 ? (
+            <div>
+              {" "}
+              <Empty
+                image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+                imageStyle={{
+                  height: 60
+                }}
+                description={
+                  <span style={{ color: "grey", fontWeight: "bolder" }}>
+                    No Contact Available
+                  </span>
+                }
+              ></Empty>
+            </div>
+          ) : (
+            <div style={{ display: "none" }}>con</div>
+          )}
+          {
+            //Search Contacts Data
+          }
+          {
+          
+          this.state.search.length > 0
+
+
+            ? this.state.search.map(contact => {
+                let conID = contact.id;
+                let contacts = contact;
+                // console.log(conID)
+                return (
+                  <Card
+                    // hoverable
+                    style={{
+                      width: 240,
+                      marginTop: "15px",
+                      marginLeft: "10px",
+                      borderRadius: "10px",
+                      boxShadow: "5px 10px 18px #888888"
+                      // backgroundColor: "aqua"
+                    }}
+                    key={contact.id}
+                  >
+                    <Avatar
                       style={{
-                        width: 240,
-                        marginTop: "15px",
-                        marginLeft: "10px",
-                        borderRadius: "10px",
-                        boxShadow: "5px 10px 18px #888888"
-                        // backgroundColor: "aqua"
+                        // height:'10px',
+                        backgroundColor: "#102844",
+                        justifyContent: "center",
+                        width: "100%",
+                        boxShadow: "5px 4px 10px #888888"
                       }}
-                      key={contact.id}
-                    >
-                      <Avatar
-                        style={{
-                          // height:'10px',
-                          backgroundColor: "#102844",
-                          justifyContent: "center",
-                          width: "100%",
-                          boxShadow: "5px 4px 10px #888888"
-                        }}
-                        icon="user"
-                        size={70}
-                        shape="square"
-                      />
-                      <hr className="underline"></hr>
-                      <div className="additional">
-                        <p className="lastFirstname">
-                          Name:{" "}
-                          <span className="names1">
-                            {contact.lastname} {contact.firstname}
-                          </span>
-                        </p>
+                      icon="user"
+                      size={70}
+                      shape="square"
+                    />
+                    <hr className="underline"></hr>
+                    <div className="additional">
+                      <p className="lastFirstname">
+                        Name:{" "}
+                        <span className="names1">
+                          {contact.lastname} {contact.firstname}
+                        </span>
+                      </p>
 
-                        <p>
-                          Contact Number:{" "}
-                          <span className="names">{contact.mobile_phone}</span>
-                        </p>
-                      </div>
+                      <p>
+                        Contact Number:{" "}
+                        <span className="names">{contact.mobile_phone}</span>
+                      </p>
+                    </div>
 
-                      <hr className="underline"></hr>
+                    <hr className="underline"></hr>
 
-                      <div className="allActions">
-                        {/* <Tooltip placement="bottomRight" title="Edit">
+                    <div className="allActions">
+                      {/* <Tooltip placement="bottomRight" title="Edit">
                       <Icon
                         type="edit"
                         key="edit"
                         style={{ fontSize: "20px" }}
                       />
                     </Tooltip> */}
-                        <Popconfirm
-                          placement="top"
-                          title="Sure to delete?"
-                          onConfirm={re => this.onDelete(conID)}
-                          okText="Yes"
-                          cancelText="No"
-                        >
-                          <Tooltip placement="bottomRight" title="Delete">
-                            <Icon type="delete" style={{ fontSize: "20px" }} />
-                          </Tooltip>
-                        </Popconfirm>
-
-                        <Tooltip placement="bottomRight" title="Show All Info">
-                          <Icon
-                            type="eye"
-                            key="edit"
-                            onClick={() => this.showModal(contacts)}
-                            style={{
-                              fontSize: "20px"
-                            }}
-                          />
+                      <Popconfirm
+                        placement="top"
+                        title="Sure to delete?"
+                        onConfirm={re => this.onDelete(conID)}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <Tooltip placement="bottomRight" title="Delete">
+                          <Icon type="delete" style={{ fontSize: "20px" }} />
                         </Tooltip>
-                      </div>
-                    </Card>
-                  ); //mapsreturnstail
-                }) //mapstail
+                      </Popconfirm>
+
+                      <Tooltip placement="bottomRight" title="Show All Info">
+                        <Icon
+                          type="eye"
+                          key="edit"
+                          onClick={() => this.showModal(contacts)}
+                          style={{
+                            fontSize: "20px"
+                          }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Add Group" placement="bottom">
+                        <Icon
+                          type="usergroup-add"
+                          key="edit"
+                          onClick={() => this.showModal(contacts)}
+                          style={{
+                            fontSize: "20px"
+                          }}
+                        ></Icon>
+                      </Tooltip>
+                    </div>
+                  </Card>
+                ); //mapsreturnstail
+              }) //mapstail
             : this.props.allContacts
 
                 // this.state.search
@@ -366,6 +412,16 @@ class Allcontacts extends Component {
                             }}
                           />
                         </Tooltip>
+                        <Tooltip title="Add to Group" placement="bottom">
+                          <Icon
+                            type="usergroup-add"
+                            key="edit"
+                            onClick={() => this.showModal()}
+                            style={{
+                              fontSize: "20px"
+                            }}
+                          ></Icon>
+                        </Tooltip>
                       </div>
                     </Card>
                   ); //mapsreturnstail
@@ -373,11 +429,15 @@ class Allcontacts extends Component {
           }
           {/* { !Array.isArray(this.props.allContacts) ?<div>nodata</div>:<div>asdasd</div>} */}
         </div>
+
+        {
+          //All Contacts Data
+        }
         {this.props.allContacts
           // .sort((a, b) => a.lastname.localeCompare(b.lastname))
           .map(contact => {
             let conID = contact.id;
-            console.log(conID)
+            // console.log(conID)
             let contacts = contact;
             return (
               <div>
@@ -389,7 +449,7 @@ class Allcontacts extends Component {
                   footer={null}
                 >
                   <div>
-                    <Form onSubmit={e=>this.handleSubmit(conID)}>
+                    <Form onSubmit={e => this.handleSubmit(conID)}>
                       <div
                         style={{
                           display: "flex",
@@ -635,7 +695,9 @@ class Allcontacts extends Component {
                                 htmlType="submit"
                                 style={{ width: "100%" }}
                                 disabled={this.state.disabled}
-                                onSubmit={e => this.handleSubmit(this.state.ids)}
+                                onSubmit={e =>
+                                  this.handleSubmit(this.state.ids)
+                                }
                               >
                                 Save
                               </Button>
@@ -646,7 +708,7 @@ class Allcontacts extends Component {
                                 width: "100%",
                                 marginLeft: "5px"
                               }}
-                              onClick={()=>this.handleEdit(conID)}
+                              onClick={() => this.handleEdit(conID)}
                             >
                               Edit
                             </Button>
