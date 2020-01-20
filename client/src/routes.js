@@ -33,7 +33,10 @@ export default class Routes extends React.Component {
       addGroup,
       handleOpenGroup,
       handleCloseGroup,
-      toggleG
+      toggleG,
+      handleOpenSide,
+      handleCloseSide,
+      left
     } = this.props;
     return (
       <Switch>
@@ -61,6 +64,9 @@ export default class Routes extends React.Component {
                 handleOpenGroup={handleOpenGroup}
                 handleCloseGroup={handleCloseGroup}
                 toggleG={toggleG}
+                handleOpenSide={handleOpenSide}
+                handleCloseSide={handleCloseSide}
+                left={left}
               />
             ) : (
               <Login

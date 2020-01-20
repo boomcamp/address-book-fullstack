@@ -10,7 +10,7 @@ module.exports = {
           group_name
         },
         {
-          fields: ["id", "user_id", "group", "group_name"]
+          fields: ["group_id", "user_id", "group_name"]
         }
       )
       .then(group => {

@@ -13,6 +13,7 @@ export default class App extends React.Component {
       toggleEdit: false,
       toggleDel: false,
       toggleG: false,
+      left: false,
       rowValue: {}
     };
   }
@@ -50,10 +51,9 @@ export default class App extends React.Component {
           message.error(response.data.error);
         } else {
           localStorage.setItem("user", JSON.stringify(response.data));
-          localStorage.setItem("user_id", response.data.id);
+          localStorage.setItem("userId", response.data.id);
           this.setState({ token: localStorage.getItem("user") });
         }
-        message.success(`Welcome ${response.data.first_name}`, 2);
       })
       .catch(err => {
         console.log(err);
@@ -101,7 +101,7 @@ export default class App extends React.Component {
 
   addContact = () => {
     const inputs = {
-      user_id: localStorage.getItem("user_id"),
+      user_id: localStorage.getItem("userId"),
       first_name: this.state.first_name,
       last_name: this.state.last_name,
       email: this.state.email,
@@ -132,7 +132,7 @@ export default class App extends React.Component {
   editContact = (event, rowValue) => {
     event.preventDefault();
     const inputs = {
-      user_id: localStorage.getItem("user_id"),
+      user_id: localStorage.getItem("userId"),
       first_name: this.state.first_name,
       last_name: this.state.last_name,
       email: this.state.email,
@@ -165,7 +165,7 @@ export default class App extends React.Component {
 
   addGroup = () => {
     const inputs = {
-      user_id: localStorage.getItem("user_id"),
+      user_id: localStorage.getItem("userId"),
       group_name: this.state.group_name
     };
     axios
@@ -231,6 +231,14 @@ export default class App extends React.Component {
     this.setState({ toggleG: false });
   };
 
+  handleOpenSide = () => {
+    this.setState({ left: true });
+  };
+
+  handleCloseSide = () => {
+    this.setState({ left: false });
+  };
+
   render() {
     return (
       <HashRouter>
@@ -261,6 +269,9 @@ export default class App extends React.Component {
           handleOpenGroup={this.handleOpenGroup}
           handleCloseGroup={this.handleCloseGroup}
           toggleG={this.state.toggleG}
+          handleOpenSide={this.handleOpenSide}
+          handleCloseSide={this.handleCloseSide}
+          left={this.state.left}
         />
       </HashRouter>
     );

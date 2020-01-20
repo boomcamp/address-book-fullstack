@@ -8,7 +8,8 @@ export const Div = styled.div({
 });
 
 export const H3 = styled.h3({
-  textAlign: "center"
+  textAlign: "center",
+  fontWeight: "700"
 });
 
 export const Foot = styled.div({
@@ -16,17 +17,17 @@ export const Foot = styled.div({
 });
 
 export const TableSize = styled.div({
-  width: "70%",
+  width: "75%",
   float: "right",
   marginTop: "25px",
-  marginRight: "40px",
+  marginRight: "100px",
   marginLeft: "40px"
 });
 
-export const Cont = styled.div({
-  display: "flex",
-  flexDirection: "row"
-});
+// export const Cont = styled.div({
+//   display: "flex",
+//   flexDirection: "row"
+// });
 
 export const TitleCont = styled.div({
   display: "flex",
@@ -34,7 +35,8 @@ export const TitleCont = styled.div({
 });
 
 export const Boxbtn = styled.div({
-  marginLeft: "15px"
+  marginLeft: "15px",
+  marginRight: "15px"
 });
 
 export const Box = styled.div`

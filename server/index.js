@@ -6,6 +6,20 @@ const users = require("../controller/users");
 const contact = require("../controller/contacts");
 const group = require("../controller/group");
 
+const auth = (req, res, next) => {
+  if (!req.headers.authorization) {
+    return res.status(401).end();
+  }
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    jwt.verify(token, secret);
+    next();
+  } catch (err) {
+    console.error(err);
+    res.status(401).end();
+  }
+};
+
 massive({
   host: "localhost",
   port: 5432,
@@ -28,6 +42,7 @@ massive({
   app.delete("/delete-contact/:id", contact.deleteContact);
 
   app.post("/create-group", group.addgroup);
+  app.get("/group-list/:id", group.groupList);
 
   const PORT = 4005;
   app.listen(PORT, () => {

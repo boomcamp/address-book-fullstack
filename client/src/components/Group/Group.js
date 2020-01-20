@@ -21,7 +21,7 @@ export default class Group extends React.Component {
             <MDBCol>
               <MDBCardBody>
                 <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
+                  <DialogContentText className="text-center">
                     <strong>Group Name</strong>
                   </DialogContentText>
                 </DialogContent>
