@@ -26,6 +26,8 @@ import DeleteContact from './DeleteContact/DeleteContact';
 
 import { generator } from '../functions';
 
+import Groups from './Groups/Groups';
+
 function Dashboard() {
 
   const useStyles = makeStyles(theme => ({
@@ -34,9 +36,6 @@ function Dashboard() {
     },
     container: {
       maxHeight: '70vh',
-    },
-    table: {
-      marginTop: "1%"
     },
     paper: {
       height: "auto",
@@ -109,103 +108,119 @@ function Dashboard() {
     ( sortDirection === 'desc') ? setSortDirection('asc') : setSortDirection('desc');
   }
 
+  const [defaultDisplay, setDefaultDisplay] = useState(true);
+
+  const displayContacts = () => {
+    setDefaultDisplay(true);
+  }
+
+  const displayGroups = () => {
+    setDefaultDisplay(false);
+  }
+
   return (
     <React.Fragment>
-      <Header />
-      <Grid container direction="row" justify="flex-end" alignItems="center">
-        <Grid item xs={12} sm={4} md={4} lg={2} xl={2} className={classes.searchDiv}>
+      <Header displayContacts={displayContacts} displayGroups={displayGroups}/>
+      {(defaultDisplay) ? 
+        <React.Fragment>
           <Grid container direction="row" justify="flex-end" alignItems="center">
-            <TextField
-              fullWidth
-              className={classes.searchField}
-              placeholder="Search"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              onChange={onChangeHandle}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid container justify="center">
-        <Grid item xs={12} sm={12} md={12} lg={12} xl={11}>
-          <Paper className={classes.paper}>
-            <Grid item xs={12}>
-              <Grid container direction="row" justify="center">
-                <Paper className={classes.root}>
-                  <TableContainer className={classes.container}>
-                    <Table stickyHeader aria-label="sticky table">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell align="inherit" key="Name" style={{minWidth: 30}}>
-                            <TableSortLabel active={activeSort} onClick={sortByLastnameFn} direction={sortDirection}>
-                              Name
-                            </TableSortLabel>
-                          </TableCell>
-                          <Hidden only={['xs']}>
-                            <TableCell align="inherit" key="Phone Number" style={{minWidth: 30}}>
-                              Phone Number
-                            </TableCell>
-                          </Hidden>
-                          <TableCell align="right" key="Actions" style={{minWidth: 30}} />                            
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                      {searchData
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-                          return (
-                            <TableRow hover tabIndex={-1} key={row.abID}>
-                              <TableCell>
-                                <Chip variant="outlined" color="primary" avatar={<Avatar style={{background: generator()}}>{firstNameLetter(row.ab_firstName)}</Avatar>} label={row.ab_lastName+", "+row.ab_firstName}/>
-                              </TableCell>
-                              <Hidden only={['xs']}>
-                                <TableCell>
-                                  <Typography variant="overline" display="block" noWrap={false}gutterBottom>
-                                    {row.ab_mobile_phone ? row.ab_mobile_phone : 'N/A'}
-                                  </Typography>
-                                </TableCell>
-                              </Hidden>
-                              <TableCell align="right" className={classes.actionBtn}>
-                                <ViewContact fetchContactsFn={fetchContactsFn} data={row} />
-                                <EditContact fetchContactsFn={fetchContactsFn} data={row} />
-                                <DeleteContact fetchContactsFn={fetchContactsFn} contactName={row.ab_firstName+" "+row.ab_lastName} contactID={row.abID} />
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                    </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <TablePagination
-                    style={{justifyContent: 'center', display: 'flex'}}
-                    component="div"
-                    rowsPerPageOptions={[10, 25, 100]}
-                    count={searchData.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                  />
-                </Paper>
+            <Grid item xs={12} sm={4} md={4} lg={2} xl={2} className={classes.searchDiv}>
+              <Grid container direction="row" justify="flex-end" alignItems="center">
+                <TextField
+                  fullWidth
+                  className={classes.searchField}
+                  placeholder="Search"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={onChangeHandle}
+                />
               </Grid>
             </Grid>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={12} md={12} lg={12} xl={11}>
-          <Grid
-            container
-            direction="row"
-            justify="flex-end"
-            alignItems="flex-end"
-          >
-          <AddContact fetchContactsFn={fetchContactsFn} sessionid={sessionid}/>
           </Grid>
-        </Grid>
-      </Grid>
+          <Grid container justify="center">
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={11}>
+              <Paper className={classes.paper}>
+                <Grid item xs={12}>
+                  <Grid container direction="row" justify="center">
+                    <Paper className={classes.root}>
+                      <TableContainer className={classes.container}>
+                        <Table stickyHeader aria-label="sticky table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell align="inherit" key="Name" style={{minWidth: 30}}>
+                                <TableSortLabel active={activeSort} onClick={sortByLastnameFn} direction={sortDirection}>
+                                  Name
+                                </TableSortLabel>
+                              </TableCell>
+                              <Hidden only={['xs']}>
+                                <TableCell align="inherit" key="Phone Number" style={{minWidth: 30}}>
+                                  Phone Number
+                                </TableCell>
+                              </Hidden>
+                              <TableCell align="right" key="Actions" style={{minWidth: 30}} />                            
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                          {searchData
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
+                              return (
+                                <TableRow hover tabIndex={-1} key={row.abID}>
+                                  <TableCell>
+                                    <Chip variant="outlined" color="primary" avatar={<Avatar style={{background: generator()}}>{firstNameLetter(row.ab_firstName)}</Avatar>} label={row.ab_lastName+", "+row.ab_firstName}/>
+                                  </TableCell>
+                                  <Hidden only={['xs']}>
+                                    <TableCell>
+                                      <Typography variant="overline" display="block" noWrap={false}gutterBottom>
+                                        {row.ab_mobile_phone ? row.ab_mobile_phone : 'N/A'}
+                                      </Typography>
+                                    </TableCell>
+                                  </Hidden>
+                                  <TableCell align="right" className={classes.actionBtn}>
+                                    <ViewContact fetchContactsFn={fetchContactsFn} data={row} />
+                                    <EditContact fetchContactsFn={fetchContactsFn} data={row} />
+                                    <DeleteContact fetchContactsFn={fetchContactsFn} contactName={row.ab_firstName+" "+row.ab_lastName} contactID={row.abID} />
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                        </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <TablePagination
+                        style={{justifyContent: 'center', display: 'flex'}}
+                        component="div"
+                        rowsPerPageOptions={[10, 25, 100]}
+                        count={searchData.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                      />
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={11}>
+              <Grid
+                container
+                direction="row"
+                justify="flex-end"
+                alignItems="flex-end"
+              >
+              <AddContact fetchContactsFn={fetchContactsFn} sessionid={sessionid}/>
+              </Grid>
+            </Grid>
+          </Grid>
+        </React.Fragment>
+      :
+      <Groups sessionid={sessionid} key="groups"/>
+      }
     </React.Fragment>
   );
 }

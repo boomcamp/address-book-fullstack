@@ -23,21 +23,6 @@ exports.up = (pgm) => {
         }
       }
     },
-    groupID: {
-      type: 'int',
-      notNull: false,
-      unique: false,
-      length: 11,
-      references: '"groups"',
-      foreignKey: {
-        name: 'address_book_groupID_fk',
-        table: 'groups',
-        rules: {
-          onDelete: 'CASCADE',
-          onUpdate: 'CASCADE'
-        }
-      }
-    },
     ab_firstName: {
       type: 'text',
       notNull: true
@@ -82,5 +67,5 @@ exports.up = (pgm) => {
 };
 
 exports.down = (pgm) => {
-
+  return pgm.dropTable('address_book');
 };

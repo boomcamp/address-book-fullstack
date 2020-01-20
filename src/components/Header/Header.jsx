@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function MenuAppBar() {
+export default function Header({displayContacts, displayGroups}) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -90,7 +90,7 @@ export default function MenuAppBar() {
     <AppBar position="static">
       <Toolbar>
         { (localStorage.getItem('sessionid') && localStorage.getItem('token')) &&
-          <LeftDrawer name={(details.user_firstName && details.user_lastName) && details.user_firstName+" "+details.user_lastName} />
+          <LeftDrawer displayContacts={displayContacts} displayGroups={displayGroups} name={(details.user_firstName && details.user_lastName) && details.user_firstName+" "+details.user_lastName} />
         }
         <Typography variant="h6" className={classes.greeting}>
           { greetFn((details.user_firstName) && details.user_firstName) }

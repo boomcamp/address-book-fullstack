@@ -15,7 +15,7 @@ exports.up = (pgm) => {
     userID: {
       type: 'int',
       notNull: true,
-      unique: true,
+      unique: false,
       length: 11,
       references: '"users"',
       foreignKey: {
@@ -31,5 +31,5 @@ exports.up = (pgm) => {
 };
 
 exports.down = (pgm) => {
-
+  return pgm.dropTable('groups');
 };

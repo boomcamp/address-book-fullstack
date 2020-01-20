@@ -7,7 +7,6 @@ module.exports = {
     db.address_book
     .insert({
       userID,
-      groupID: null,
       ab_firstName: firstname,
       ab_lastName: lastname,
       ab_home_phone: home_phone,

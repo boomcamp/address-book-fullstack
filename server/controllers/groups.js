@@ -1,4 +1,15 @@
 module.exports = {
+  listGroups: (req, res) => {
+    const db = req.app.get("db");
+    const { userID, order } = req.params;
+    
+    db.query(`SELECT * FROM groups WHERE "userID" = ${userID} ORDER BY "groupName" ${order}`)
+    .then(groups => res.status(200).send(groups))
+    .catch(error => {
+      console.error(error);
+      res.status(500).end();
+    })
+  },
   addGroup: (req, res) => {
     const db = req.app.get("db");
     const { groupName } = req.body;

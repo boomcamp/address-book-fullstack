@@ -6,7 +6,7 @@ import { SwipeableDrawer, List, ListItem, ListItemIcon, ListItemText, Divider, A
 import ContactsIcon from '@material-ui/icons/Contacts';
 import GroupIcon from '@material-ui/icons/Group';
 
-function LeftDrawer({ name }) {
+function LeftDrawer({ name, displayContacts, displayGroups }) {
 
   const useStyles = makeStyles(theme => ({
     menuButton: {
@@ -42,9 +42,12 @@ function LeftDrawer({ name }) {
 
   const nameAcronym = (val) => {
     if(val){
-      //const newName = val.split(' ');
+      const newName = val.split(' ');
       //return newName[0].substring(0,1).toUpperCase() + newName[newName.length-1].substring(0,1).toUpperCase();
-      return val;
+      for(let index in newName){
+        newName[index] = newName[index].charAt(0).toUpperCase() + newName[index].substring(1);  
+      }
+      return newName.join(' ');
     }
     return null;
   }
@@ -62,12 +65,12 @@ function LeftDrawer({ name }) {
         <Avatar variant="rounded" style={{background: generator(), width: '95%'}} className={classes.avatarText}>{nameAcronym(name)}</Avatar>
         <Divider />
         <List className={classes.list} role="presentation" onKeyDown={toggleDrawer(false)}>
-          <ListItem className={classes.listItem} button onClick={() => console.log('e')}>
+          <ListItem className={classes.listItem} button onClick={displayContacts}>
             <ListItemIcon><ContactsIcon /></ListItemIcon>
             <ListItemText primary="Contacts" />
           </ListItem>
           <Divider />
-          <ListItem className={classes.listItem} button onClick={() => console.log('e')}>
+          <ListItem className={classes.listItem} button onClick={displayGroups}>
             <ListItemIcon><GroupIcon /></ListItemIcon>
             <ListItemText primary="Groups" />
           </ListItem>

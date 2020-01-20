@@ -24,4 +24,6 @@ exports.up = pgm => {
   });
 };
 
-exports.down = pgm => {};
+exports.down = pgm => {
+  return pgm.dropTable('users');
+};
