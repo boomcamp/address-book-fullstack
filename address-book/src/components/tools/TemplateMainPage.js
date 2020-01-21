@@ -43,12 +43,22 @@ const useStyles = makeStyles(theme => ({
 
 function TemplateMainPage({enqueueSnackbar, children}) {
     const classes = useStyles();
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState((window.innerWidth<800)?false:true);
 
     useEffect( () => {
         // if(sessionStorage.getItem('token'))
         //     enqueueSnackbar('Welcome User!', {autoHideDuration: 2000,})
+        window.addEventListener("resize", handleResize);
+
+        return () => {window.addEventListener("resize", null); };
     }, [])
+    
+    const handleResize = (WindowSize, event) => {
+        if(window.innerWidth<800)
+            setOpen(false)
+        else    
+            setOpen(true)
+    }
 
     if(!sessionStorage.getItem('token'))
         return <Redirect to='/'/>

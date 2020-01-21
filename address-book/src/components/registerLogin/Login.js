@@ -113,7 +113,7 @@ function Login() {
                         }}
                     ></TextValidator>
                     
-                    { (status.error) ? <h5 style={{color:`red`, margin:`5px`}}>Incorrect Username/Password</h5> : null}
+                    { (status.error) ? <h5 style={{color:`red`, margin:`5px`, textAlign:`left`}}>Incorrect Username/Password</h5> : null}
                     
                     <Button type="submit">Login</Button>
                 </ValidatorForm>

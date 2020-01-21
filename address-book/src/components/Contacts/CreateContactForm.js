@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -26,6 +26,7 @@ import AddressFields from '../tools/fields/AddressFields'
     }
 
 export default function CreateContactForm({addGroupId, closeFn, createRowFn}) {
+    const [windowSize, setWindowSize] = useState(window.innerWidth);
     const [user, setUser] = useState({
         firstname: "",
         lastname: "",
@@ -43,6 +44,12 @@ export default function CreateContactForm({addGroupId, closeFn, createRowFn}) {
         groupExist: false,
         groupName: "",
     })
+
+    useEffect(() => {
+        window.addEventListener("resize", (WindowSize, event) => setWindowSize(window.innerWidth));
+
+        return () => {window.addEventListener("resize", null); };
+    }, [])
 
     const handleSubmit = () => {
         axios({
@@ -93,7 +100,7 @@ export default function CreateContactForm({addGroupId, closeFn, createRowFn}) {
                     lastname = {user.lastname}
                 />
                 
-                <div style={{display: `flex`}}>
+                <div style={{display: `flex`, flexDirection:(windowSize<426)?`column`:`row`}}>
                     <ContactFields 
                         homePhoneFn = {(e) => setUser({ ...user, homePhone: e.target.value })}
                         mobilePhoneFn = {(e) => setUser({ ...user, mobilePhone: e.target.value })}

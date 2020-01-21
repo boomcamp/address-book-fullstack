@@ -6,8 +6,8 @@ import Table from '../tools/Table'
 
     const contactLogoStyle = {
         background:`#4c6572`, 
-        width:`6vh`, 
-        height:`6vh`, 
+        width:`40px`, 
+        height:`40px`, 
         textAlign:`center`, 
         borderRadius:`50%`, 
         display:`flex`, 
@@ -27,13 +27,14 @@ export default function AddressBookTable() {
         })
         .then(res => {
             // console.log(res.data)
-            setState({ ...state, data: res.data, sort:{sort}})
+            setState({ ...state, data: res.data, sort:sort})
         })
         .catch(err => {
             console.log(err)
         })
     }
     
+    const [windowSize, setWindowSize] = useState(window.innerWidth);
     const [state, setState] = useState({
         columns: [
             // { title: "#", field: `tableData.id` },
@@ -46,10 +47,10 @@ export default function AddressBookTable() {
                 )
             },
             { title: '', field: 'last_name', headerStyle:{display:`none`}, cellStyle:{display:`none`}   },
-            { title: 'Home Phone', field: 'home_phone' },
-            { title: 'Mobile Phone', field: 'mobile_phone' },
-            { title: 'Work Phone', field: 'work_phone' },
-            { title: 'Actions', field:'', cellStyle: {padding:`0`}, headerStyle:{padding:`0`},
+            { title: 'Home Phone', field: 'home_phone', hidden: (windowSize<426)?true:false},
+            { title: 'Mobile Phone', field: 'mobile_phone',  hidden: (windowSize<426)?true:false},
+            { title: 'Work Phone', field: 'work_phone', hidden: (windowSize<426)?true:false},
+            { title: 'Actions', field:'', cellStyle: {margin:`0`, width:`10%`}, headerStyle:{margin:`0`, width:`10%`},
                 render: (rowData) => (
                    <TableActions 
                     rowData={rowData}
@@ -70,7 +71,9 @@ export default function AddressBookTable() {
 
     useEffect(() => {
         updateTable();
-        return () => { };
+        window.addEventListener("resize", setWindowSize(window.innerWidth));
+
+        return () => {window.addEventListener("resize", null); };
     }, [])
 
     return (

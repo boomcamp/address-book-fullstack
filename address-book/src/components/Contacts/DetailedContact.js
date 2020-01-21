@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react'
 import dp from '../../assets/download.jpeg'
 import axios from 'axios'
 
-import fetchGroupContact from '../tools/fetchGroupContact'
 import PhoneIcon from '@material-ui/icons/Phone';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import WorkIcon from '@material-ui/icons/Work'; 

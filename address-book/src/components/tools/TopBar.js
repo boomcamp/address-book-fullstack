@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function TopBar({ handleOpenfn, open }) {
+export default function TopBar({ handleOpenfn, open}) {
     const classes = useStyles();
     const [user, setUser] = useState();
 
@@ -67,10 +67,13 @@ export default function TopBar({ handleOpenfn, open }) {
                     className={clsx(classes.menuButton, open && classes.hide)}>
                     <MenuIcon />
                 </IconButton>
+                {/* {(open) ? (
                 <div style={{ width: `100%`, display: `flex`, justifyContent: `space-between`, alignItems: `center` }}>
-                    <h2>Address Book Fullstack Project</h2>
+                    <h2>Address Book Project</h2>
                     <h3>Welcome, {user}!</h3>
-                </div>
+                </div> ) :  */}
+                <h2>Address Book Project</h2> 
+                {/* } */}
             </Toolbar>
         </AppBar>
     )

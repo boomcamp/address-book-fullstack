@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import MaterialTable, {MTableToolbar} from 'material-table';
+import MaterialTable, { MTableToolbar, MTableHeader } from 'material-table';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { withSnackbar } from 'notistack';
 
@@ -14,49 +14,48 @@ import DetailedContact from '../Contacts/DetailedContact'
 import CreateGroup from '../Group/CreateGroup'
 import UpdateGroup from '../tools/fields/UpdateGroup'
 
-    const btnStyle = {
-        display: `flex`,
-        alignItems: `center`,
-        border: `none`,
-        backgroundColor: `#e1e2e1`,
-        cursor: `pointer`,
-        borderRadius: `5px`,
-        padding: `10px`,
-        margin: `5px`,
-        width: `140px`
-    }
+const btnStyle = {
+    display: `flex`,
+    alignItems: `center`,
+    border: `none`,
+    backgroundColor: `#e1e2e1`,
+    cursor: `pointer`,
+    borderRadius: `5px`,
+    padding: `10px`,
+    margin: `5px`,
+    width: `140px`
+}
 
-    const btnStyleDelete = {
-        display: `flex`,
-        alignItems: `center`,
-        border: `none`,
-        color: `white`,
-        backgroundColor: `#f83e3f`,
-        cursor: `pointer`,
-        borderRadius: `5px`,
-        padding: `10px`,
-        margin: `5px`,
-        width: `130px`
-    }
+const btnStyleEdit = {
+    display: `flex`,
+    alignItems: `center`,
+    border: `none`,
+    color: `#4c6571`,
+    backgroundColor: `transparent`,
+    cursor: `pointer`,
+    height: `30px`
+    // padding: `10px`,
+    // margin: `5px`,
+    // width: `130px`,
+}
 
-    const btnStyleEdit = {
-        display: `flex`,
-        alignItems: `center`, 
-        border: `none`,
-        color: `white`,
-        backgroundColor: `#4c6572`,
-        cursor: `pointer`,
-        borderRadius: `5px`,
-        padding: `10px`,
-        margin: `5px`,
-        width: `130px`,
-        ":hover": {
-            color:`red`,
-            background: "#efefef"
-        },
-    }
+const btnStyleDelete = {
+    display: `flex`,
+    alignItems: `center`,
+    border: `none`,
+    color: `red`,
+    backgroundColor: `transparent`,
+    cursor: `pointer`,
+    borderLeft: `1px solid #b4c5ce`,
+    height: `30px`,
+    paddingLeft: `2px`,
+    // margin: `5px`,
+    // width: `130px`
+}
 
-function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn,  enqueueSnackbar}) {
+
+function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, enqueueSnackbar }) {
+    const [windowSize, setWindowSize] = useState(window.innerWidth);
     const [open, setOpen] = useState({
         create: false,
         detailedContact: {
@@ -66,20 +65,26 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
         group: false,
         createGroup: {
             openModal: false,
-            row:[]
+            row: []
         }
     });
 
+    useEffect(() => {
+        window.addEventListener("resize", (WindowSize, event) => setWindowSize(window.innerWidth));
+
+        return () => { window.addEventListener("resize", null); };
+    }, [])
+
     const theme = createMuiTheme({
         palette: {
-          primary: {
-            main: '#4B6573',
-          },
-          secondary: {
-            main: '#334854',
-          },
+            primary: {
+                main: '#4B6573',
+            },
+            secondary: {
+                main: '#334854',
+            },
         },
-  
+
     });
 
     const createRow = (newData) => {
@@ -90,12 +95,12 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                 // createFn(newData)
             }, 600);
         }).then(res => {
-            if(!groupObj){
+            if (!groupObj) {
                 enqueueSnackbar('Successfully Created', { variant: 'success', autoHideDuration: 1000, })
             }
-            if(groupObj)
+            if (groupObj)
                 enqueueSnackbar('Successfully Added to Group', { variant: 'success', autoHideDuration: 1000, })
-            
+
         })
     }
 
@@ -119,7 +124,7 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                             Authorization: 'Bearer ' + sessionStorage.getItem('token')
                         }
                     })
-                    .then(res => {  setStateFn(x) })
+                    .then(res => { setStateFn(x) })
                     .catch(err => { console.log(err) })
             }
         })
@@ -128,22 +133,23 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
 
     const deleteGroup = (id) => {
         axios
-        .delete('/api/groups/' + id, {
-            headers: {
-                Authorization: 'Bearer ' + sessionStorage.getItem('token')
-            }
-        })
-        .then(res => {
-            // console.log(res.data)
-            updateGroupListFn(res.data)
-            enqueueSnackbar('Successfully Deleted', { variant: 'success', autoHideDuration: 1000, })
-        })
-        .catch(err => { console.log(err) })
+            .delete('/api/groups/' + id, {
+                headers: {
+                    Authorization: 'Bearer ' + sessionStorage.getItem('token')
+                }
+            })
+            .then(res => {
+                // console.log(res.data)
+                updateGroupListFn(res.data)
+                enqueueSnackbar('Successfully Deleted', { variant: 'success', autoHideDuration: 1000, })
+            })
+            .catch(err => { console.log(err) })
     }
 
     const handleSort = (e) => {
         updateTableFn(e.target.value)
     }
+
     return (
         <React.Fragment>
             <PopUpModal
@@ -167,7 +173,7 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                 open={open.group}
                 closeFn={() => setOpen({ ...open, group: false })}
             >
-                <UpdateGroup updateGroupListFn={updateGroupListFn} groupObj={groupObj} closeFn={() => setOpen({ ...open, group: false })}/>
+                <UpdateGroup updateGroupListFn={updateGroupListFn} groupObj={groupObj} closeFn={() => setOpen({ ...open, group: false })} />
             </PopUpModal>
 
             <PopUpModal
@@ -175,13 +181,12 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                 open={open.createGroup.openModal}
                 closeFn={() => setOpen({ ...open, createGroup: false })}
             >
-                <CreateGroup row={open.createGroup.row} closeFn={() => setOpen({ ...open, createGroup: {openModal: false}}) } />
+                <CreateGroup row={open.createGroup.row} closeFn={() => setOpen({ ...open, createGroup: { openModal: false } })} />
             </PopUpModal>
-
 
             <MuiThemeProvider theme={theme}>
                 <MaterialTable
-                    title=""
+                    title={(groupObj) ? (windowSize < 426) ? null : <h1>{groupObj.group_name}</h1> : 'Contact Lists'}
                     columns={state.columns}
                     data={state.data}
                     actions={[
@@ -195,7 +200,7 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                         {
                             icon: 'group',
                             tooltip: 'Add to Group',
-                            onClick: (event, rowData) => setOpen({...open, createGroup: {openModal: true, row: rowData}})
+                            onClick: (event, rowData) => setOpen({ ...open, createGroup: { openModal: true, row: rowData } })
                         },
                         {
                             icon: 'delete',
@@ -211,14 +216,14 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                                 }
                             }
                         },
-                
+
 
                     ]}
-                    onRowClick={(e, rowData, togglePanel) => {                  
+                    onRowClick={(e, rowData, togglePanel) => {
                         setOpen({ ...open, detailedContact: { openModal: true, row: rowData } });
-                    } }
+                    }}
                     options={{
-                        sorting:false,
+                        sorting: false,
                         selection: true,
                         pageSize: 10,
                         actionsColumnIndex: -1,
@@ -230,32 +235,38 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                     components={{
                         Toolbar: props => (
                             <div>
-                                <MTableToolbar {...props} style={{backgroundColor:`red`}}/>
-                                <div style={{ padding: '0px 10px', display:`flex`, justifyContent:`space-between`}}>
-                                    <select style={btnStyle} onChange={handleSort} value={(state.sort)&&state.sort.sort}>
-                                        <option style={{color:`grey`}} value="">Sort By Lastname</option>
-                                        <option value="ASC">Ascending</option>
-                                        <option value="DESC">Descending</option>                                        
-                                    </select>
+                                <MTableToolbar {...props} style={{ backgroundColor: `red` }} />
+                                <div style={{ padding: '0px 10px', display: `flex`, justifyContent:(groupObj)?`space-between`:`flex-end`, alignItems:`center`}}>
                                     {(groupObj) ? (
-                                        <div style={{display:`flex`, flexDirection:`row`}}>
-                                            <button style={btnStyleEdit} onClick={() => setOpen({ ...open, group: true })}><EditIcon /> &nbsp;Edit Group</button>
-                                            <button 
-                                                style={btnStyleDelete} 
-                                                onClick={() => { 
-                                                    if(window.confirm('Are you sure to delete this group?')){
-                                                        deleteGroup(groupObj.id)      
-                                                    }
-                                                }}><DeleteIcon /> 
-                                                &nbsp;Delete Group
-                                            </button>
-                                        </div>
-                                    ) : null}
+                                    <div style={{ display: `flex`}}>
+                                        <button style={btnStyleEdit} onClick={() => setOpen({ ...open, group: true })}>
+                                            <EditIcon /> Edit Group
+                                            
+                                        </button>
+                                        <button
+                                            style={btnStyleDelete}
+                                            onClick={() => {
+                                                if (window.confirm('Are you sure to delete this group?')) {
+                                                    deleteGroup(groupObj.id)
+                                                }
+                                            }}>
+                                            <DeleteIcon /> Delete Group
+                                        </button>
+                                    </div>
+                                ) : null}
+
+                                    <select style={btnStyle} onChange={handleSort} value={(state.sort) && state.sort}>
+                                        <option style={{ color: `grey` }} value="">Sort By Lastname</option>
+                                        <option value="ASC">Ascending</option>
+                                        <option value="DESC">Descending</option>
+                                    </select>
                                 </div>
                             </div>
                         ),
+
+
                     }}
-                    // isLoading={true}
+                // isLoading={true}
                 />
             </MuiThemeProvider>
         </React.Fragment>

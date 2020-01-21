@@ -3,7 +3,6 @@ import Button from '@material-ui/core/Button';
 import { ValidatorForm } from 'react-material-ui-form-validator';
 import axios from 'axios';
 
-import fetchGroupContact from '../tools/fetchGroupContact'
 import NameFields from '../tools/fields/NameFields'
 import ContactFields from '../tools/fields/ContactFields'
 import AddressFields from '../tools/fields/AddressFields'
@@ -23,6 +22,7 @@ import GroupSelect, {GroupCreate} from '../tools/fields/GroupSelect';
     }
 
 export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
+    const [windowSize, setWindowSize] = useState(window.innerWidth);
     const [user, setUser] = useState({
         groupId: "", 
         groupName: "",
@@ -71,7 +71,9 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
         })
         .catch(err => console.log(err))
 
-        return () => { };
+        window.addEventListener("resize", (WindowSize, event) => setWindowSize(window.innerWidth));
+
+        return () => {window.addEventListener("resize", null); };
     }, [])
     
     const handleSubmit = () => {
@@ -122,7 +124,7 @@ export default function UpdateContactForm({ updateRowFn, closeFn, row }) {
                     lastname = {user.lastname}
                 />
                 
-                <div style={{display: `flex`, margin:`0 0 30px 0`}}>
+                <div style={{display: `flex`, margin:`0 0 30px 0`, flexDirection:(windowSize<426)?`column`:`row`}}>
                     <ContactFields 
                         homePhoneFn = {(e) => setUser({ ...user, homePhone: e.target.value })}
                         mobilePhoneFn = {(e) => setUser({ ...user, mobilePhone: e.target.value })}

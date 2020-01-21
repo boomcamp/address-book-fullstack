@@ -4,7 +4,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import MenuItem from '@material-ui/core/MenuItem';
 // import { TextValidator } from 'react-material-ui-form-validator';
 import TextField from '@material-ui/core/TextField';
-import fetchGroupContact from '../fetchGroupContact'
+import fetchGroupContact from '../js/fetchGroupContact'
 
 export default function GroupSelect({group, groupNameFn, children}) {
     const [groupName, setGroupName] = useState([])

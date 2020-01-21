@@ -159,7 +159,7 @@ export default function Signup() {
                             ),
                           }}
                     ></TextValidator>
-                      { (status.error) ? <h5 style={{color:`red`, margin:`5px`}}>Username Already Exist</h5> : null}
+                      { (status.error) ? <h5 style={{color:`red`, margin:`5px`, textAlign:`left`}}>Username Already Exist</h5> : null}
                     <Button type="submit">Signup</Button>
                 </ValidatorForm>
             </Paper>

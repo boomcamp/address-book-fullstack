@@ -6,7 +6,7 @@ import CountrySelect from './CountrySelect'
 
 export default function AddressFields({cityFn, stateProvinceFn, postalCodeFn, countryFn, city, stateProvince, postalCode, country}) {
     return (
-        <fieldset style={{width:`50%`}}>
+        <fieldset style={{width:`90%`, margin:`10px 2px`}}>
             <legend>Address: </legend>
             <TextValidator
                 style={{ margin: '10px', width:`95%` }}

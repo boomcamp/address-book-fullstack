@@ -1,19 +1,20 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import GroupSelect, {GroupCreate} from '../tools/fields/GroupSelect'
+import GroupSelect from '../tools/fields/GroupSelect'
 import Button from '@material-ui/core/Button';
 import { withSnackbar } from 'notistack';
 
-    const addGroupStyle = {
-        // width:`30%`, 
-        cursor:`pointer`,
-        color: `#4c6571`,
-        textAlign:`right`,
-    }
+    // const addGroupStyle = {
+    //     // width:`30%`, 
+    //     cursor:`pointer`,
+    //     color: `#4c6571`,
+    //     textAlign:`right`,
+    // }
+
 function CreateGroup({row, closeFn, enqueueSnackbar}) {
-    const [group, setGroup] = useState({
-        groupExist: false,
-    })
+    // const [group, setGroup] = useState({
+    //     groupExist: false,
+    // })
     const [user, setUser] = useState({groupName: ""})
 
     const handleSubmit = () => {
@@ -55,15 +56,16 @@ function CreateGroup({row, closeFn, enqueueSnackbar}) {
     return (
         <div style={{display:`flex`, flexDirection:`column`, textAlign:`center`, margin:`10px 0 0 0`}}>
             {/* <h1>Add Contacts to Group</h1> */}
-            { (!group.groupExist) ? 
+            
+            {/* { (!group.groupExist) ? 
                     <GroupCreate group={user.groupName} groupNameFn={(e) => setUser({...user, groupName: e.target.value} )}>
                         <span style={addGroupStyle} onClick={() => setGroup({...group, groupExist: true})} href="">Add to Existing Group</span>
                     </GroupCreate>
-                : (group.groupExist || user.groupName) ? 
+                : (group.groupExist || user.groupName) ?  */}
                     <GroupSelect group={user.groupName} groupNameFn={(e) => setUser(prevState => { return {...prevState, groupName: e.target.value} })}>
-                        <span style={addGroupStyle} onClick={() => setGroup({...group, groupExist: false})} href="">Add to New Group</span>
+                        {/* <span style={addGroupStyle} onClick={() => setGroup({...group, groupExist: false})} href="">Add to New Group</span> */}
                     </GroupSelect>
-                : null } 
+                {/* : null }  */}
 
             <Button type="submit" style={{backgroundColor:`#4c6572`, color:`white`, margin:`20px 0 10px 0`}} onClick={handleSubmit}>Create Group</Button>
         </div>
