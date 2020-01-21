@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -15,24 +15,17 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 
-export default function Edit({ openViewMem, handleCloseGroupModal, rowData }) {
-  const [groupmembers, setGroupmembers] = useState([]);
-
-  useEffect(() => {
-    async function result() {
-      await axios({
-        method: "get",
-        url: `http://localhost:3004/getgroupmembers/${rowData.id}`
-      }).then(res => {
-        setGroupmembers(res.data);
-      });
-    }
-    result();
-  }, [rowData.id]);
+export default function Edit({
+  openViewMem,
+  handleCloseGroupModal,
+  rowData,
+  groupmembers
+}) {
+  let history = useHistory();
 
   const handleDeleteGroupMem = members => {
-    console.log(members);
     Swal.fire({
       title: `Are you sure you want to delete from your group contacts?`,
       text: "You won't be able to revert this!",
@@ -45,18 +38,18 @@ export default function Edit({ openViewMem, handleCloseGroupModal, rowData }) {
       if (result.value) {
         axios({
           method: "delete",
-          url: `http://localhost:3004/groupmembers/${members.id}`
+          url: `http://localhost:3004/deletegroupmembers/${members.id}`
         })
           .then(() => {
             Swal.fire({
               title: "Group Contact Deleted  Successfully",
               icon: "success"
             }).then(() => {
-              window.location = "/addressbook";
+              handleCloseGroupModal();
+              history.push("/addressbook");
             });
           })
           .catch(err => {
-            console.log(err);
             Swal.fire({
               icon: "error",
               title: "Failed to Delete Group Contact",
@@ -79,7 +72,6 @@ export default function Edit({ openViewMem, handleCloseGroupModal, rowData }) {
       <DialogContent>
         <Grid item xs={12} md={12}>
           {groupmembers.map((members, key) => {
-            // console.log(members);
             return (
               <List key={key}>
                 <ListItem>
@@ -97,7 +89,7 @@ export default function Edit({ openViewMem, handleCloseGroupModal, rowData }) {
                       <IconButton
                         edge="end"
                         aria-label="delete"
-                        onClick={members => handleDeleteGroupMem(members)}
+                        onClick={() => handleDeleteGroupMem(members)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -107,7 +99,6 @@ export default function Edit({ openViewMem, handleCloseGroupModal, rowData }) {
               </List>
             );
           })}
-          {/* </div> */}
         </Grid>
       </DialogContent>
     </Dialog>

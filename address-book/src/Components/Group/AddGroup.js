@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import jwt from "jsonwebtoken";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import {
   Grid,
   Card,
@@ -36,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function AddGroup() {
+  let history = useHistory();
   const classes = useStyles();
   const [groupData, setGroupData] = useState([]);
   const [rowData, setRowData] = useState("");
@@ -43,6 +45,7 @@ export default function AddGroup() {
   const [openViewMem, setOpenViewMem] = React.useState(false);
   const [openGroupEdit, setOpenGroupEdit] = React.useState(false);
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+  const [groupmembers, setGroupmembers] = useState([]);
 
   const handleClickOpenGroupModal = () => {
     setOpenGroupModal(true);
@@ -54,8 +57,14 @@ export default function AddGroup() {
   };
 
   const handleClickOpenViewMem = data => {
-    setRowData(data);
-    setOpenViewMem(true);
+    axios({
+      method: "get",
+      url: `http://localhost:3004/getgroupmembers/${data.id}`
+    }).then(res => {
+      setRowData(data);
+      setOpenViewMem(true);
+      setGroupmembers(res.data);
+    });
   };
 
   const handleCloseGroupModal = () => {
@@ -74,10 +83,9 @@ export default function AddGroup() {
       });
     }
     result();
-  }, [tokenDecoded.userId]);
+  }, [tokenDecoded.userId, groupData]);
 
   const handleDeleteGroup = data => {
-    console.log(data);
     Swal.fire({
       title: `Are you sure you want to delete ${data.groupname} from your contacts?`,
       text: "You won't be able to revert this!",
@@ -94,14 +102,13 @@ export default function AddGroup() {
         })
           .then(() => {
             Swal.fire({
-              title: "Group Contact Deleted  Successfully",
+              title: "Group Contact Deleted Successfully",
               icon: "success"
             }).then(() => {
-              window.location = "/addressbook";
+              history.push("/addressbook");
             });
           })
           .catch(err => {
-            console.log(err);
             Swal.fire({
               icon: "error",
               title: "Failed to Delete Group Contact",
@@ -113,17 +120,28 @@ export default function AddGroup() {
   };
 
   return (
-    <Grid container spacing={2} style={{ margin: "0 auto", width: "100%" }}>
+    <Grid container style={{ margin: "2% auto", width: "100%" }}>
       <Grid item sm={12} xs={12} md={12} lg={12}>
-        <Typography variant="h6" component="h2">
-          Group List
-        </Typography>
-        <Card
-          className={classes.card}
-          variant="outlined"
-          style={{ maxHeight: "270px", overflowY: "scroll" }}
-        >
-          <CardContent>
+        <Card className={classes.card} variant="outlined">
+          <Typography
+            variant="h6"
+            component="h2"
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              paddingLeft: "3%",
+              paddingTop: "2%"
+            }}
+          >
+            Group List
+          </Typography>
+          <CardContent
+            style={{
+              maxHeight: "200px",
+              minHeight: "200px",
+              overflowY: "scroll"
+            }}
+          >
             <Grid item xs={12} md={10}>
               <div className={classes.demo}>
                 {groupData.map((data, key) => {
@@ -183,9 +201,8 @@ export default function AddGroup() {
               />
 
               <ViewGroupMembers
+                groupmembers={groupmembers}
                 rowData={rowData}
-                // openGroupEdit={openGroupEdit}
-                // handleClickOpenViewMem
                 openViewMem={openViewMem}
                 handleCloseGroupModal={handleCloseGroupModal}
               />

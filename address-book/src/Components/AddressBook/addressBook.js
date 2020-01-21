@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import Swal from "sweetalert2";
-import MaterialTable from "material-table";
+import MaterialTable, { MTableToolbar } from "material-table";
 import { Container, Button, Tooltip, Grid } from "@material-ui/core";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
@@ -10,6 +10,7 @@ import AddGroup from "../Group/AddGroup";
 import AppBarAddress from "../AppBar/appBarAddress";
 import AddContact from "../AddContact/addContact";
 import ContactDetails from "../ContactDetails/contactDetails";
+import { useHistory } from "react-router-dom";
 
 export default function AddressBook() {
   const [open, setOpen] = React.useState(false);
@@ -26,15 +27,18 @@ export default function AddressBook() {
   const [country, setCountry] = React.useState("");
   const [id, setId] = React.useState("");
   const [groupData, setgroupData] = React.useState([]);
-  const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+  let history = useHistory();
 
+  var userId;
   if (!localStorage.getItem("Token")) {
     Swal.fire({
       icon: "warning",
       title: "You must login first"
     }).then(function() {
-      window.location = "/";
+      history.push("/");
     });
+  } else {
+    userId = jwt.decode(localStorage.getItem("Token")).userId;
   }
 
   const handleOpen = () => {
@@ -49,7 +53,7 @@ export default function AddressBook() {
   const handleViewDetails = id => {
     axios({
       method: "get",
-      url: `http://localhost:3004/contacts/${tokenDecoded.userId}/${id}`
+      url: `http://localhost:3004/contacts/${userId}/${id}`
     }).then(res => {
       axios({
         method: "get",
@@ -92,7 +96,7 @@ export default function AddressBook() {
               title: "Contact Deleted  Successfully",
               icon: "success"
             }).then(() => {
-              window.location = "/addressbook";
+              history.push("/addressbook");
             });
           })
           .catch(err => {
@@ -153,13 +157,13 @@ export default function AddressBook() {
     async function result() {
       await axios({
         method: "get",
-        url: `http://localhost:3004/contacts/${tokenDecoded.userId}`
+        url: `http://localhost:3004/contacts/${userId}`
       }).then(res => {
         setState({ ...state, data: res.data });
       });
     }
     result();
-  }, [state, tokenDecoded.userId]);
+  }, [state, userId]);
 
   if (!localStorage.getItem("Token")) {
     return null;
@@ -170,7 +174,7 @@ export default function AddressBook() {
         <div
           style={{
             display: "flex",
-            margin: "50px auto",
+            marginTop: "50px",
             paddingTop: "2%"
           }}
         >
@@ -210,28 +214,29 @@ export default function AddressBook() {
               />
               <Grid item xs={12} sm={12} lg={12} md={12}>
                 <MaterialTable
-                  title="Contact List"
-                  style={{
-                    minHeight: "450px",
-                    maxHeight: "450px",
-                    overflowY: "scroll"
+                  components={{
+                    Toolbar: props => (
+                      <div>
+                        <MTableToolbar {...props} />
+                      </div>
+                    )
                   }}
+                  title="Contact List"
                   columns={state.columns}
                   data={state.data}
                   actions={[
                     {
                       icon: "add",
-                      tooltip: "Add User",
+                      tooltip: "Add Contact",
                       isFreeAction: true,
                       onClick: () => handleOpen()
                     }
                   ]}
-                  options={{ paging: false }}
                 />
               </Grid>
             </Container>
             <Container>
-              <Grid item lg={12} style={{ display: "flex", width: "100%" }}>
+              <Grid item style={{ display: "flex", width: "100%" }}>
                 <AddGroup />
               </Grid>
             </Container>

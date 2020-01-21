@@ -8,11 +8,13 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import jwt from "jsonwebtoken";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 export default function AddGroupModal({
   openGroupModal,
   handleCloseGroupModal
 }) {
+  let history = useHistory();
   const [groupname, setGroupname] = useState("");
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
 
@@ -28,7 +30,7 @@ export default function AddGroupModal({
           title: "Group Contact Added Successfully",
           icon: "success"
         }).then(() => {
-          window.location = "/addressbook";
+          history.push("/addressbook");
         });
       })
       .catch(e => {
@@ -68,7 +70,7 @@ export default function AddGroupModal({
           Cancel
         </Button>
         <Button
-          onClick={handleAddGroup}
+          onClick={() => handleAddGroup()}
           variant="contained"
           color="primary"
           size="small"

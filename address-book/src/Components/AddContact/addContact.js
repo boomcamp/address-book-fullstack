@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -22,8 +23,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 const styles = theme => ({
   root: {
-    margin: 0,
-    padding: theme.spacing(2)
+    margin: 0
   },
   closeButton: {
     position: "absolute",
@@ -66,6 +66,7 @@ const DialogActions = withStyles(theme => ({
 }))(MuiDialogActions);
 
 export default function AddContact({ open, handleClose }) {
+  let history = useHistory();
   const [lastname, setLastName] = useState("");
   const [firstname, setFirstName] = useState("");
   const [home_phone, setHome_phone] = useState("");
@@ -118,13 +119,15 @@ export default function AddContact({ open, handleClose }) {
               contactid: res.data.id,
               groupid: group.id
             });
-            handleClose();
-            Swal.fire({
-              title: "Contact Added Successfully",
-              icon: "success"
-            }).then(() => {
-              window.location = "/addressbook";
-            });
+          });
+        })
+        .then(() => {
+          handleClose();
+          Swal.fire({
+            title: "Contact Added Successfully",
+            icon: "success"
+          }).then(() => {
+            history.push("/addressbook");
           });
         })
         .catch(e => {
@@ -313,7 +316,7 @@ export default function AddContact({ open, handleClose }) {
           size="small"
           variant="contained"
           color="primary"
-          onClick={handleSave}
+          onClick={() => handleSave()}
         >
           Save Contact
         </Button>

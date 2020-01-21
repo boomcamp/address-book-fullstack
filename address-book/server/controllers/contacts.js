@@ -29,7 +29,7 @@ function create(req, res) {
       postal_code,
       country
     })
-    .then(contact => res.status(200).json(contact))
+    .then(contact => res.status(200).send(contact))
     .catch(err => {
       console.error(err);
     });
@@ -41,10 +41,10 @@ function getContactByUser(req, res) {
 
   db.contacts
     .find({ userid })
-    .then(contacts => res.status(200).json(contacts))
+    .then(contacts => res.status(200).send(contacts))
     .catch(err => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).send(err);
     });
 }
 
@@ -77,10 +77,10 @@ function updateContact(req, res) {
       postal_code,
       country
     })
-    .then(contact => res.status(200).json(contact))
+    .then(contact => res.status(200).send(contact))
     .catch(err => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).send(err);
     });
 }
 
@@ -89,10 +89,18 @@ function deleteContact(req, res) {
   const { contactid } = req.params;
   db.contacts
     .destroy({ id: contactid })
-    .then(contacts => res.status(200).json(contacts))
+    .then(contacts => res.status(200).send(contacts))
     .catch(err => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).send(err);
+    });
+
+  db.groupmembers
+    .destroy({ contactid })
+    .then(contacts => res.status(200).send(contacts))
+    .catch(err => {
+      console.error(err);
+      res.status(500).send(err);
     });
 }
 
@@ -102,10 +110,10 @@ function getContactByContactId(req, res) {
 
   db.contacts
     .find({ userid: userid, id: contactid })
-    .then(contacts => res.status(200).json(contacts))
+    .then(contacts => res.status(200).send(contacts))
     .catch(err => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).send(err);
     });
 }
 

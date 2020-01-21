@@ -44,6 +44,7 @@ massive({
   app.post("/groupmembers/", groups.addMember);
   app.get("/groupmembers/:contactid", groups.getContactGroups);
   app.delete("/groupmembers/:contactid", groups.deleteGroupMember);
+  app.delete("/deletegroupmembers/:id", groups.deleteGroupMembersByID);
   app.get("/getgroupmembers/:groupid", groups.getContactGroupMembers);
 
   const PORT = 3004;

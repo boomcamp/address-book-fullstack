@@ -8,9 +8,10 @@ function create(req, res) {
       userid,
       groupname
     })
-    .then(group => res.status(200).json(group))
+    .then(group => res.status(200).send(group))
     .catch(err => {
       console.error(err);
+      res.status(500).send(err);
     });
 }
 
@@ -24,9 +25,9 @@ function addMember(req, res) {
       groupid,
       contactid
     })
-    .then(member => res.status(200).json(member))
+    .then(member => res.status(200).send(member))
     .catch(err => {
-      res.status(500).end();
+      res.status(500).send(err);
       console.error(err);
     });
 }
@@ -37,10 +38,10 @@ function getGroups(req, res) {
 
   db.groupcontacts
     .find({ userid: userid })
-    .then(group => res.status(200).json(group))
+    .then(group => res.status(200).send(group))
     .catch(err => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).send(err);
     });
 }
 
@@ -50,10 +51,32 @@ function deleteGroup(req, res) {
 
   db.groupcontacts
     .destroy({ id: groupid })
-    .then(groupcontacts => res.status(200).json(groupcontacts))
+    .then(groupcontacts => {
+      res.status(200).send(groupcontacts);
+      db.groupmembers
+        .destroy({ groupid: groupid })
+        .then(member => res.status(200).send(member))
+        .catch(err => {
+          console.error(err);
+          res.status(500).send(err);
+        });
+    })
     .catch(err => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).send(err);
+    });
+}
+
+function deleteGroupMembersByID(req, res) {
+  const db = req.app.get("db");
+  const { id } = req.params;
+
+  db.groupmembers
+    .destroy({ id })
+    .then(member => res.status(200).send(member))
+    .catch(err => {
+      console.error(err);
+      res.status(500).send(err);
     });
 }
 
@@ -66,10 +89,10 @@ function updateGroupContact(req, res) {
       id: groupid,
       groupname
     })
-    .then(groupcontact => res.status(200).json(groupcontact))
+    .then(groupcontact => res.status(200).send(groupcontact))
     .catch(err => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).send(err);
     });
 }
 ``;
@@ -80,10 +103,10 @@ function getContactGroups(req, res) {
   db.query(
     `select groupcontacts.id, userid, groupname from groupmembers INNER JOIN groupcontacts ON groupmembers.groupid = groupcontacts.id where contactid=${contactid};`
   )
-    .then(group => res.status(201).json(group))
+    .then(group => res.status(201).send(group))
     .catch(err => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).send(err);
     });
 }
 
@@ -91,12 +114,12 @@ function getContactGroupMembers(req, res) {
   const db = req.app.get("db");
   const { groupid } = req.params;
   db.query(
-    `select * from contacts inner join groupmembers on contacts.id = groupmembers.contactid where groupid =${groupid};`
+    `select * from contacts INNER JOIN groupmembers ON contacts.id = groupmembers.contactid where groupid=${groupid};`
   )
-    .then(members => res.status(201).json(members))
+    .then(members => res.status(201).send(members))
     .catch(err => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).send(err);
     });
 }
 
@@ -105,11 +128,11 @@ function deleteGroupMember(req, res) {
   const { contactid } = req.params;
 
   db.groupmembers
-    .destroy({ contactid: contactid })
-    .then(member => res.status(200).json(member))
+    .destroy({ contactid })
+    .then(member => res.status(200).send(member))
     .catch(err => {
       console.error(err);
-      res.status(500).end();
+      res.status(500).send(err);
     });
 }
 
@@ -121,5 +144,6 @@ module.exports = {
   addMember,
   getContactGroups,
   getContactGroupMembers,
-  deleteGroupMember
+  deleteGroupMember,
+  deleteGroupMembersByID
 };

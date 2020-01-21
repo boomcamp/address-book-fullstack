@@ -24,7 +24,7 @@ signup = (req, res) => {
     })
     .then(user => {
       const token = jwt.sign({ userId: user.id }, secret);
-      res.status(201).json({ ...user, token });
+      res.status(201).send({ ...user, token });
     })
     .catch(err => {
       console.error(err);
@@ -53,12 +53,12 @@ login = (req, res) => {
 
         const token = jwt.sign({ userId: user.id }, secret);
         delete user.password;
-        res.status(200).json({ ...user, token });
+        res.status(200).send({ ...user, token });
       });
     })
     .catch(err => {
       if (["Invalid username", "Incorrect password"].includes(err.message))
-        res.status(401).json({ error: err.message });
+        res.status(401).send({ error: err.message });
       else {
         console.error(err);
         res.status(500).end();
@@ -70,7 +70,7 @@ function getAll(req, res) {
   const db = req.app.get("db");
   db.users
     .find()
-    .then(users => res.status(200).json(users))
+    .then(users => res.status(200).send(users))
     .catch(err => {
       console.error(err);
       res.status(500).end();
@@ -81,7 +81,7 @@ function getById(req, res) {
   const { username } = req.body;
   db.users
     .findOne({ username: username })
-    .then(user => res.status(200).json(user))
+    .then(user => res.status(200).send(user))
     .catch(err => {
       console.error(err);
       res.status(500).end();

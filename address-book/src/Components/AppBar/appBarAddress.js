@@ -18,9 +18,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const logout = () => {
-  Swal.fire(`Logged out Successfully!`).then(function() {
-    window.location = "/";
-    localStorage.clear();
+  Swal.fire({
+    title: "Are you sure you want to log out?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Log out!"
+  }).then(result => {
+    if (result.value) {
+      window.location = "/";
+      localStorage.clear();
+    }
   });
 };
 
@@ -35,7 +44,7 @@ export default function ButtonAppBar() {
             Address Book
           </Typography>
           <div>
-            <Button color="inherit" onClick={logout}>
+            <Button color="inherit" onClick={() => logout()}>
               Log out
             </Button>
           </div>

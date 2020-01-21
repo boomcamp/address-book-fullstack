@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import jwt from "jsonwebtoken";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -82,6 +83,7 @@ export default function ContactDetails({
   groupData,
   setgroupData
 }) {
+  let history = useHistory();
   const [lastname, setLastName] = useState("");
   const [firstname, setFirstName] = useState("");
   const [home_phone, setHome_phone] = useState("");
@@ -130,14 +132,10 @@ export default function ContactDetails({
           country: country
         })
         .then(res => {
-          console.log(res.data.id);
-          axios.delete(`http://localhost:3004/groupmembers/${idView}`);
-          handleClose();
+          axios.delete(`http://localhost:3004/groupmembers/${res.data.id}`);
         })
         .then(() => {
           groupData.forEach(data => {
-            console.log(data.id);
-            console.log(idView);
             axios
               .post(`http://localhost:3004/groupmembers`, {
                 contactid: idView,
@@ -150,12 +148,14 @@ export default function ContactDetails({
                   text: err
                 });
               });
+            handleClose();
           });
           Swal.fire({
             title: "Contact Updated Successfully",
             icon: "success"
           }).then(() => {
-            window.location = "/addressbook";
+            setOpenEdit(false);
+            history.push("/addressbook");
           });
         })
         .catch(e => {
@@ -176,9 +176,6 @@ export default function ContactDetails({
   };
 
   const handleEdit = () => {
-    axios.get(`http://localhost:3004/groupmember/${idView}`).then(res => {
-      console.log(res);
-    });
     setOpenEdit(true);
     setFirstName(firstnameView);
     setLastName(lastnameView);
@@ -190,6 +187,7 @@ export default function ContactDetails({
     setStateOrProvince(state_or_provinceView);
     setPostalCode(postal_codeView);
     setCountry(countryView);
+    setgroupData(groupData);
   };
 
   return (
@@ -385,7 +383,7 @@ export default function ContactDetails({
           size="small"
           variant="contained"
           style={{ backgroundColor: "#065786d9", color: "white" }}
-          onClick={handleEdit}
+          onClick={() => handleEdit()}
         >
           Edit
         </Button>
@@ -394,7 +392,7 @@ export default function ContactDetails({
           variant="contained"
           color="primary"
           disabled={openEdit ? false : true}
-          onClick={handleEditSave}
+          onClick={() => handleEditSave()}
         >
           Save Contact
         </Button>

@@ -61,11 +61,9 @@ export default function SignIn(props) {
           password: password
         })
         .then(res => {
-          console.log(res);
           sessionStorage.setItem("isLoggedIn", true);
           localStorage.setItem("Token", res.data.token);
           localStorage.setItem("username", username);
-          // localStorage.setItem("userid", res.data.id);
           Swal.fire({
             icon: "success",
             title: "Logged In Successfully!",
