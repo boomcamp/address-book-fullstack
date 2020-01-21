@@ -12,7 +12,6 @@ import {
 } from "antd";
 import axios from "axios";
 import Image from "./img/logos.jpg";
-import Selectgroup from "./selectgroup";
 
 class editContact extends Component {
   constructor() {
@@ -22,7 +21,8 @@ class editContact extends Component {
       placement: "right",
       loading: false,
       visible: false,
-      disabled: true
+      disabled: true,
+      openModal: false
     };
   }
   componentDidUpdate = nextProps => {
@@ -49,7 +49,7 @@ class editContact extends Component {
   handleUpdate = id => {
     this.setState({ loading: true });
     setTimeout(() => {
-      this.setState({ loading: false, visible: false });
+      this.setState({ loading: false, visible: false, openModal: false });
     }, 3000);
 
     axios({
@@ -73,8 +73,11 @@ class editContact extends Component {
     axios.patch(`add/members/${localStorage.getItem("id")}`);
 
     setTimeout(() => {
-      message.success({ content: "Successfully Updated", duration: 2 });
-      this.setState({ data: true, visible: true, disabled: true });
+      message.success({
+        content: "Successfully Updated",
+        duration: 2,
+        openModal: false
+      });
     }, 3000);
   };
   axios;
@@ -89,10 +92,10 @@ class editContact extends Component {
     const { getFieldDecorator } = this.props.form;
     const { loading } = this.state;
     const prefixSelector = getFieldDecorator("prefix", {
-      initialValue: "+63"
+      initialValue: ""
     })(
       <Select style={{ width: 70 }}>
-        <Option value="09">09</Option>
+        <Option value="63">+63</Option>
       </Select>
     );
 
@@ -200,7 +203,7 @@ class editContact extends Component {
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item label="Mobile name">
+                  <Form.Item label="Mobile phone">
                     <Input
                       placeholder="Mobile phone"
                       addonBefore={prefixSelector}
@@ -228,7 +231,7 @@ class editContact extends Component {
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item label="Work name">
+                  <Form.Item label="Work phone">
                     <Input
                       placeholder="Work phone"
                       addonBefore={prefixSelector}
@@ -336,62 +339,45 @@ class editContact extends Component {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item label="Postal Code">
-                    <Input
-                      placeholder="Postal code"
-                      prefix={
-                        <Icon
-                          type="home"
-                          style={{ color: "rgba(0,0,0,.25)" }}
-                        />
+
+              <Form.Item label="Postal Code">
+                <Input
+                  placeholder="Postal code"
+                  prefix={
+                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
+                  }
+                  value={
+                    this.state.contact ? this.state.contact.postal_code : null
+                  }
+                  onChange={e =>
+                    this.setState({
+                      contact: {
+                        ...this.state.contact,
+                        postal_code: e.target.value
                       }
-                      value={
-                        this.state.contact
-                          ? this.state.contact.postal_code
-                          : null
+                    })
+                  }
+                  disabled={this.state.disabled}
+                />
+              </Form.Item>
+
+              <Form.Item label="Country">
+                <Input
+                  placeholder="Country"
+                  prefix={
+                    <Icon type="home" style={{ color: "rgba(0,0,0,.25)" }} />
+                  }
+                  value={this.state.contact ? this.state.contact.country : null}
+                  onChange={e =>
+                    this.setState({
+                      contact: {
+                        ...this.state.contact,
+                        country: e.target.value
                       }
-                      onChange={e =>
-                        this.setState({
-                          contact: {
-                            ...this.state.contact,
-                            postal_code: e.target.value
-                          }
-                        })
-                      }
-                      disabled={this.state.disabled}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item label="Country">
-                    <Input
-                      placeholder="Country"
-                      prefix={
-                        <Icon
-                          type="home"
-                          style={{ color: "rgba(0,0,0,.25)" }}
-                        />
-                      }
-                      value={
-                        this.state.contact ? this.state.contact.country : null
-                      }
-                      onChange={e =>
-                        this.setState({
-                          contact: {
-                            ...this.state.contact,
-                            country: e.target.value
-                          }
-                        })
-                      }
-                      disabled={this.state.disabled}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Form.Item label="Add to group">
-                <Selectgroup disabled={this.state.disabled} />
+                    })
+                  }
+                  disabled={this.state.disabled}
+                />
               </Form.Item>
             </Form>
             <div
@@ -420,6 +406,7 @@ class editContact extends Component {
               >
                 Edit
               </Button>
+
               <Button
                 onClick={e => this.handleUpdate(this.props.update.key)}
                 type="primary"

@@ -10,7 +10,15 @@ const container = {
   alignContent: "center",
   width: "100%",
   height: "100vh",
-  padding: "2%"
+  padding: "2%",
+  "@media (max-width: 768px)": {
+    display: "flex",
+    flexDirection: "column"
+  },
+  "@media (max-width: 425px)": {
+    display: "flex",
+    flexDirection: "column"
+  }
 };
 
 const formholder = {
@@ -21,11 +29,6 @@ const formholder = {
   width: "450px",
   textAlign: "center",
   height: "60%"
-
-  // ['@media (max-width:450px)']: {s
-  //      width: '95%',
-  //      marginTop: '50px',
-  //     },
 };
 
 class login extends Component {

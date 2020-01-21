@@ -51,22 +51,15 @@ function viewcontact(req, res) {
 }
 function deletecontact(req, res) {
   const db = req.app.get("db");
-  const { id } = req.params;
-
-  if (id) {
-    db.contacts
-      .destroy({ id })
-      .then(list => {
-        res.status(201).json(list);
-      })
-      .catch(err => {
-        res.status(200).json({ error: err.message });
-        console.log(err);
-        res.status(500).end();
-      });
-  } else {
-    res.status(201).json("deleted");
-  }
+  db.query(`DELETE FROM contacts WHERE id=${req.params.id}`)
+    .then(list => {
+      res.status(201).json(list);
+    })
+    .catch(err => {
+      res.status(200).json({ error: err.message });
+      console.log(err);
+      res.status(500).end();
+    });
 }
 
 function updatecontact(req, res) {
@@ -139,6 +132,18 @@ function search(req, res) {
       res.status(500).end();
     });
 }
+function selectedcont(req, res) {
+  const db = req.app.get("db");
+  console.log(req.params.id);
+
+  db.contacts
+    .find({ userid: req.params.id, id: req.query.contact_id })
+    .then(user => res.status(200).json(user))
+    .catch(error => {
+      console.error(error);
+      res.status(500).end();
+    });
+}
 
 module.exports = {
   addcontact,
@@ -146,5 +151,6 @@ module.exports = {
   deletecontact,
   updatecontact,
   contactlist,
-  search
+  search,
+  selectedcont
 };

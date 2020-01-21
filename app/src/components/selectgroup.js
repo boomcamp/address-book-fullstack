@@ -21,20 +21,7 @@ export default class selectgroup extends Component {
       });
     });
   };
-  onChange = value => {
-    console.log(`selected ${value}`);
-  };
-  onBlur = () => {
-    console.log("blur");
-  };
 
-  onFocus = () => {
-    console.log("focus");
-  };
-
-  onSearch = val => {
-    console.log("search:", val);
-  };
   render() {
     console.log(this.state.data);
     const { Option } = Select;

@@ -19,7 +19,9 @@ const header = {
   color: "#fff"
 };
 const logout = {
-  marginLeft: "1590px"
+  display: "flex",
+  alignContent: "center",
+  justifyContent: "flex-end"
 };
 export default class user extends Component {
   constructor() {
@@ -60,7 +62,6 @@ export default class user extends Component {
   };
 
   render() {
-    console.log(this.props);
     const { Title } = Typography;
     const { Header, Content, Sider } = Layout;
     const { Meta } = Card;
@@ -114,26 +115,7 @@ export default class user extends Component {
                       <Icon type="usergroup-add" /> <span>Group</span>
                     </span>
                   }
-                >
-                  {/* <List
-                    itemlayout="horizontal"
-                    datasource={this.state.data}
-                    renderitem={item => (
-                      <List.Item>
-                        <List.Item.Meta
-                          avatar={
-                            <Avatar>
-                              {" "}
-                              <Icon type="folder-add" />
-                            </Avatar>
-                          }
-                          title={<a href="https://ant.design">{item.title}</a>}
-                          description={this.state.data.group_name}
-                        />
-                      </List.Item>
-                    )}
-                  /> */}
-                </SubMenu>
+                ></SubMenu>
               </Menu>
             </Sider>
 

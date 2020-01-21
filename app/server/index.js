@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const secret = require("../secret.js");
 const contact = require("../controllers/contact");
 const group = require("../controllers/group");
+const contactgroup = require("../controllers/contactgroup");
 
 massive({
   host: "localhost",
@@ -38,15 +39,20 @@ massive({
     app.get("/users/list", authentication, users.userlist);
 
     app.post("/contact", contact.addcontact);
-    app.get("/contact/view", contact.viewcontact);
+    app.get("/contact/view/:id", contact.viewcontact);
     app.get("/contact/list/:id", contact.contactlist);
     app.delete("/delete/:id", contact.deletecontact);
     app.patch("/update/:id", contact.updatecontact);
     app.get("/contact/search/:id", contact.search);
+    app.get("/selected/contact/:id", contact.selectedcont);
 
     app.post("/create/group/:id", group.addgroup);
     app.get("/group/list/:id", group.grouplist);
-    app.post("/add/members/:id", group.addmembers);
+
+    app.post("/add/members/:id", contactgroup.addmembers);
+    app.get("/member/:id", contactgroup.members);
+    app.delete("/member/delete/:id", contactgroup.memberdelete);
+
     const port = 5000;
 
     app.listen(port, () => {

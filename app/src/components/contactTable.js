@@ -48,7 +48,6 @@ export default class addressTable extends Component {
         this.state.sortVal
       }`
     }).then(res => {
-      console.log(res.data);
       res.data.forEach(data => {
         arr.push({
           first_name: data.first_name,
@@ -78,7 +77,7 @@ export default class addressTable extends Component {
       onOk() {
         axios({
           method: "delete",
-          url: `/delete/${id}`
+          url: `/delete/${id.slice(1, -1)}`
         }).then(res => {
           setTimeout(() => {
             message.success({ content: "Successfully Deleted", duration: 2 });
@@ -115,7 +114,6 @@ export default class addressTable extends Component {
   };
 
   render() {
-    console.log(this.state.data);
     const { TabPane } = Tabs;
     const { Column } = Table;
     const { Content } = Layout;
