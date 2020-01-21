@@ -30,7 +30,7 @@ export default function Delete({ openDelete, deleteClose, id }) {
             onClose={deleteClose}
             aria-labelledby="responsive-dialog-title"
         >
-            <DialogTitle id="responsive-dialog-title">{"Are you sure you want to delete?"}</DialogTitle>
+            <DialogTitle id="responsive-dialog-title">{"Are you sure you want to delete this contact?"}</DialogTitle>
             <DialogContent>
 
             </DialogContent>

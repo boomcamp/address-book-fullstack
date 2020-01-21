@@ -38,9 +38,9 @@ export default class Login extends Component {
         })
     }
 
-    handleWarning = e => {
-        if (e.target.value.length === 0) {
-            this.state.warning({})
+    componentDidMount() {
+        if (localStorage.getItem('token')) {
+            this.props.history.push("/addressbook");
         }
     }
 
@@ -57,6 +57,8 @@ export default class Login extends Component {
             .then(e => window.location.href = "#/addressbook")
             .catch(e => console.log(e))
     }
+
+    useState
 
     render() {
         const { step } = this.state;

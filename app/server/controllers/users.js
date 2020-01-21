@@ -91,7 +91,7 @@ function updateUser(req, res) {
     } = req.body;
     const { user_id } = req.params
 
-    db.contacts
+    db.users
         .update(
             {
                 user_id

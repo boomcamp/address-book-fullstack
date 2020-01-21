@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -21,19 +21,25 @@ import MailIcon from '@material-ui/icons/Mail';
 import List from '@material-ui/core/List';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonIcon from '@material-ui/icons/Person';
-import Tooltip from '@material-ui/core/Tooltip'
+import Tooltip from '@material-ui/core/Tooltip';
+import jwt_decode from 'jwt-decode';
+import axios from 'axios';
 
 import Contact from './AddressBookUsers/Contact';
+
 
 export default function Navbar() {
     const classes = useStyles();
     const auth = React.useState(true);
-    // const [anchorEl, setAnchorEl] = React.useState(null);
-    // const open = Boolean(anchorEl);
-    const [search, setSearch] = React.useState('');
+    const [, setSearch] = React.useState('');
     const theme = useTheme();
     const [openDrawer, setOpenDrawer] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [users, setUsers] = useState([]);
+    const [searchData, setSearchData] = useState([])
 
+    // Dialogs
     const handleDrawerOpen = () => {
         setOpenDrawer(true);
     };
@@ -41,28 +47,6 @@ export default function Navbar() {
     const handleDrawerClose = () => {
         setOpenDrawer(false);
     };
-
-    // const handleMenu = event => {
-    //     setAnchorEl(event.currentTarget);
-    // };
-
-    // const handleClose = () => {
-    //     setAnchorEl(null);
-    // };
-
-    const logOut = () => {
-        localStorage.clear();
-        window.location.href = "/"
-    }
-
-    const handleSearch = (e) => {
-        e.preventDefault();
-        setSearch({ name: e.target.value })
-        console.log(search)
-    }
-
-    const [open, setOpen] = React.useState(false);
-    const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -79,6 +63,87 @@ export default function Navbar() {
     const menuClose = () => {
         setAnchorEl(null);
     };
+    // End Dialogs
+
+    // In App Functions
+    const logOut = () => {
+        localStorage.clear();
+        window.location.href = "/"
+    }
+
+    // fetch user_id from token
+    const token = jwt_decode(localStorage.getItem('token'));
+    const id = token.user_id
+
+    useEffect(() => {
+        axios({
+            method: 'get',
+            url: `http://localhost:3001/api/contacts/${id}/contacts`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+            .then(res => {
+                setUsers(res.data);
+            })
+            .catch(e => console.log(e))
+    }, [id]);
+
+    const sortFnameAZ = () => {
+        axios({
+            method: 'get',
+            url: `/api/contacts/${id}/contact/fa-z`,
+        })
+            .then(res => {
+                setUsers(res.data);
+            })
+            .catch(e => console.log(e))
+    }
+
+    const sortFnameZA = () => {
+        axios({
+            method: 'get',
+            url: `/api/contacts/${id}/contact/fz-a`,
+        })
+            .then(res => {
+                setUsers(res.data);
+            })
+            .catch(e => console.log(e))
+    }
+
+    const sortLnameAZ = () => {
+        axios({
+            method: 'get',
+            url: `/api/contacts/${id}/contact/la-z`,
+        })
+            .then(res => {
+                setUsers(res.data);
+            })
+            .catch(e => console.log(e))
+    }
+
+    const sortLnameZA = () => {
+        axios({
+            method: 'get',
+            url: `/api/contacts/${id}/contact/lz-a`,
+        })
+            .then(res => {
+                setUsers(res.data);
+            })
+            .catch(e => console.log(e))
+    }
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        setSearch({ [e.target.name]: e.target.value })
+        const filteredSearch = users.filter(name =>
+            name.fname.toLowerCase().indexOf(e.target.value) !==
+            -1 ||
+            name.lname.toLowerCase().indexOf(e.target.value) !== -1
+        );
+
+        setSearchData(filteredSearch);
+    }
 
     return (
         <div className={classes.root}>
@@ -125,33 +190,13 @@ export default function Navbar() {
                             <div>
                                 <Tooltip title="Sign Out">
                                     <IconButton
-                                        aria-label="account of current user"
-                                        aria-controls="menu-appbar"
-                                        aria-haspopup="true"
                                         onClick={logOut}
                                         color="inherit"
                                     >
                                         <ExitToAppIcon />
                                     </IconButton>
                                 </Tooltip>
-                                {/* <Menu
-                                    id="menu-appbar"
-                                    anchorEl={anchorEl}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={open}
-                                    onClose={handleClose}
-                                > */}
-                                {/* <MenuItem onClick={handleClose}>Profile</MenuItem> */}
-                                {/* <MenuItem onClick={logOut}>Sign Out</MenuItem> */}
-                                {/* </Menu> */}
+
                             </div>
                         )}
                     </div>
@@ -175,7 +220,11 @@ export default function Navbar() {
                 <List>
                     {['Profile', 'Contacts'].map((text, index) => (
                         <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <PersonIcon /> : <MailIcon />}</ListItemIcon>
+                            <ListItemIcon>{index % 2 === 0 ?
+                                <PersonIcon /> :
+                                <MailIcon />
+                            }
+                            </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>
                     ))}
@@ -196,6 +245,12 @@ export default function Navbar() {
                         anchorEl={anchorEl}
                         menuOpen={menuOpen}
                         menuClose={menuClose}
+                        sortFnameAZ={sortFnameAZ}
+                        sortFnameZA={sortFnameZA}
+                        sortLnameAZ={sortLnameAZ}
+                        sortLnameZA={sortLnameZA}
+                        users={users}
+                        searchData={searchData}
                     />
                 </div>
             </main>

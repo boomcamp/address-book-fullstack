@@ -58,7 +58,7 @@ function updateContact(req, res) {
     } = req.body;
     const { contact_id } = req.params
 
-    db.contacts
+    db.contact
         .update(
             {
                 contact_id
@@ -128,7 +128,7 @@ function addContact(req, res) {
 
 }
 
-function contactAsc(req, res) {
+function contactFnameAsc(req, res) {
     const db = req.app.get("db");
     const { user_id } = req.params
 
@@ -145,7 +145,24 @@ function contactAsc(req, res) {
         });
 }
 
-function contactDesc(req, res) {
+function contactFnameDesc(req, res) {
+    const db = req.app.get("db");
+    const { user_id } = req.params
+
+    db.query(
+        `SELECT *
+        FROM contact 
+        WHERE user_id = ${user_id} 
+        ORDER BY contact.fname DESC`
+    )
+        .then(contact => res.status(200).json(contact))
+        .catch(err => {
+            console.error(err);
+            res.status(500).end();
+        });
+}
+
+function contactLnameAsc(req, res) {
     const db = req.app.get("db");
     const { user_id } = req.params
 
@@ -162,6 +179,36 @@ function contactDesc(req, res) {
         });
 }
 
+function contactLnameDesc(req, res) {
+    const db = req.app.get("db");
+    const { user_id } = req.params
+
+    db.query(
+        `SELECT *
+        FROM contact 
+        WHERE user_id = ${user_id} 
+        ORDER BY contact.lname DESC`
+    )
+        .then(contact => res.status(200).json(contact))
+        .catch(err => {
+            console.error(err);
+            res.status(500).end();
+        });
+}
+
+function getContactByID(req, res) {
+    const db = req.app.get('db');
+    const { contact_id } = req.params
+
+    db.contact
+        .findOne(contact_id)
+        .then(contact => res.status(200).json(contact))
+        .catch(e => {
+            console.erro(e);
+            res.status(500).end();
+        })
+}
+
 module.exports = {
-    getUserContacts, updateContact, deleteContact, addContact, contactAsc, contactDesc
+    getUserContacts, updateContact, deleteContact, addContact, contactFnameAsc, contactFnameDesc, contactLnameAsc, contactLnameDesc, getContactByID
 }

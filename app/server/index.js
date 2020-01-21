@@ -36,14 +36,17 @@ massive({
         app.post('/api/contacts/:user_id', contact.addContact);
         // Fetch all contact
         app.get('/api/contacts/:user_id/contacts', contact.getUserContacts);
+        // Fetch contact by ID
+        app.get('/api/contacts/:contact_id', contact.getContactByID)
         // Edit contact
         app.patch('/api/contacts/:contact_id', contact.updateContact);
         // Delete contact
         app.delete('/api/contacts/:contact_id', contact.deleteContact);
         // Sort contact
-        app.get('/api/contacts/:user_id/contact/a-z', contact.contactAsc);
-        app.get('/api/contacts/:user_id/contact/z-a', contact.contactDesc);
-
+        app.get('/api/contacts/:user_id/contact/fa-z', contact.contactFnameAsc);
+        app.get('/api/contacts/:user_id/contact/fz-a', contact.contactFnameDesc);
+        app.get('/api/contacts/:user_id/contact/la-z', contact.contactLnameAsc);
+        app.get('/api/contacts/:user_id/contact/lz-a', contact.contactLnameDesc);
 
         const port = 3001;
         app.listen(port, () => {

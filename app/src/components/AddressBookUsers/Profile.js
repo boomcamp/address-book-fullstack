@@ -15,7 +15,6 @@ export default function Profile() {
 const useStyles = makeStyles(theme => ({
     root: {
         display: "flex",
-        flexDirection: 'column',
         margin: "auto"
     }
 }));

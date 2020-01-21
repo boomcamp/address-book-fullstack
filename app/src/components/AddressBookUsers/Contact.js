@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button';
 
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -19,20 +18,14 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Slide from '@material-ui/core/Slide';
-import Avatar from '@material-ui/core/Avatar';
-import { deepPurple } from '@material-ui/core/colors';
-import clsx from 'clsx';
-
-import axios from 'axios';
-import jwt_decode from 'jwt-decode';
+// import AddToPhotosTwoToneIcon from '@material-ui/icons/AddToPhotosTwoTone';
 
 import Delete from './Dialogs/Delete';
 import Edit from './Dialogs/Edit';
 import AddContact from './Dialogs/AddContact';
 
-export default function Contact({ handleClose, handleClickOpen, menuOpen, menuClose, open, anchorEl }) {
+export default function Contact({ users, handleClose, handleClickOpen, menuOpen, menuClose, open, anchorEl, sortFnameAZ, sortFnameZA, sortLnameAZ, sortLnameZA, searchData }) {
     const classes = useStyles();
-    const [users, setUsers] = useState([]);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [openEdit, setOpenEdit] = React.useState(false);
@@ -40,28 +33,6 @@ export default function Contact({ handleClose, handleClickOpen, menuOpen, menuCl
         return <Slide direction="up" ref={ref} {...props} />;
     });
     const [openDelete, setOpenDelete] = React.useState(false);
-
-    // fetch user_id from token
-    const token = jwt_decode(localStorage.getItem('token'));
-    const id = token.user_id
-
-    useEffect(() => {
-        if (localStorage.getItem('token')) {
-            axios({
-                method: 'get',
-                url: `http://localhost:3001/api/contacts/${id}/contacts`,
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-                .then(res => {
-                    setUsers(res.data);
-                })
-                .catch(e => console.log(e))
-        } else {
-            window.location.href = "/"
-        }
-    }, [id]);
 
     const editOpen = () => {
         setOpenEdit(true);
@@ -77,31 +48,6 @@ export default function Contact({ handleClose, handleClickOpen, menuOpen, menuCl
 
     const deleteClose = () => {
         setOpenDelete(false);
-    }
-
-    const sortFname = () => {
-        axios({
-            method: 'get',
-            url: `/api/contacts/${id}/contact/a-z`,
-        })
-            .then(res => {
-                setUsers(res.data);
-            })
-            .catch(e => console.log(e))
-    }
-
-    const sortLname = () => {
-        axios({
-            method: 'get',
-            url: `/api/contacts/${id}/contact/z-a`,
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-            .then(res => {
-                setUsers(res.data);
-            })
-            .catch(e => console.log(e))
     }
 
     return (
@@ -134,8 +80,10 @@ export default function Contact({ handleClose, handleClickOpen, menuOpen, menuCl
                                     open={Boolean(anchorEl)}
                                     onClose={menuClose}
                                 >
-                                    <MenuItem onClick={sortFname}>Sort: First Name(A-Z)</MenuItem>
-                                    <MenuItem onClick={sortLname}>Sort: Last Name(A-Z)</MenuItem>
+                                    <MenuItem onClick={sortFnameAZ}>First Name(A-Z)</MenuItem>
+                                    <MenuItem onClick={sortFnameZA}>First Name(Z-A)</MenuItem>
+                                    <MenuItem onClick={sortLnameAZ}>Last Name(A-Z)</MenuItem>
+                                    <MenuItem onClick={sortLnameZA}>Last Name(Z-A)</MenuItem>
                                 </Menu>
                             </Grid>
                         </Tooltip>
@@ -150,27 +98,21 @@ export default function Contact({ handleClose, handleClickOpen, menuOpen, menuCl
                             alignItems="flex-start"
                             style={{ marginTop: 20 }}
                         >
-                            <Grid item xs={12} sm={6} md={4} lg={3} className={classes.cards}>
-                                {users.map(i => (
+
+                            {searchData ? searchData.map(i => (
+                                <Grid item key={i.contact_id} xs={12} sm={6} md={4} lg={3} className={classes.cards}>
                                     <Card key={i.contact_id} elevation={5}>
                                         <CardActionArea>
                                             <CardContent>
-                                                <div className={classes.media}>
-                                                    <div className={classes.name}>
-                                                        <Typography gutterBottom variant="h5" component="h2">
-                                                            {i.fname} {i.lname}
-                                                        </Typography>
-                                                        <Typography variant="body2" color="textSecondary" component="p">
-                                                            Mobile No: {i.mobile_phone}
-                                                        </Typography>
-                                                    </div>
-                                                    <div className={classes.avatar}>
-                                                        <Avatar className={clsx(classes.purple, classes.large)}>{i.fname[0]}</Avatar>
-                                                    </div>
-                                                </div>
+                                                <Typography gutterBottom variant="h5" component="h2">
+                                                    {i.fname} {i.lname}
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary" component="p">
+                                                    Mobile No: {i.mobile_phone}
+                                                </Typography>
                                             </CardContent>
                                         </CardActionArea>
-                                        <CardActions className={classes.action}>
+                                        <div className={classes.action}>
                                             <Tooltip title="Edit Contact">
                                                 <IconButton aria-label="edit" onClick={editOpen}>
                                                     <EditTwoToneIcon />
@@ -180,6 +122,17 @@ export default function Contact({ handleClose, handleClickOpen, menuOpen, menuCl
                                                 openEdit={openEdit}
                                                 editClose={editClose}
                                                 Transition={Transition}
+                                                fname={i.fname}
+                                                lname={i.lname}
+                                                home_phone={i.home_phone}
+                                                mobile_phone={i.mobile_phone}
+                                                work_phone={i.work_phone}
+                                                city={i.city}
+                                                state={i.state}
+                                                postal_code={i.postal_code}
+                                                country={i.country}
+                                                user_id={i.user_id}
+                                                id={i.contact_id}
                                             />
 
 
@@ -193,10 +146,113 @@ export default function Contact({ handleClose, handleClickOpen, menuOpen, menuCl
                                                 openDelete={openDelete}
                                                 deleteClose={deleteClose}
                                             />
-                                        </CardActions>
+                                        </div>
                                     </Card>
-                                ))}
-                            </Grid>
+                                </Grid>
+                            )) : users.map(i => (
+                                <Grid item key={i.contact_id} xs={12} sm={6} md={4} lg={3} className={classes.cards}>
+                                    <Card key={i.contact_id} elevation={5}>
+                                        <CardActionArea>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h5" component="h2">
+                                                    {i.fname} {i.lname}
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary" component="p">
+                                                    Mobile No: {i.mobile_phone}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                        <div className={classes.action}>
+                                            <Tooltip title="Edit Contact">
+                                                <IconButton aria-label="edit" onClick={editOpen}>
+                                                    <EditTwoToneIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Edit
+                                                openEdit={openEdit}
+                                                editClose={editClose}
+                                                Transition={Transition}
+                                                fname={i.fname}
+                                                lname={i.lname}
+                                                home_phone={i.home_phone}
+                                                mobile_phone={i.mobile_phone}
+                                                work_phone={i.work_phone}
+                                                city={i.city}
+                                                state={i.state}
+                                                postal_code={i.postal_code}
+                                                country={i.country}
+                                                user_id={i.user_id}
+                                                id={i.contact_id}
+                                            />
+
+
+                                            <Tooltip title="Delete Contact">
+                                                <IconButton aria-label="delete" onClick={deleteOpen}>
+                                                    <DeleteTwoToneIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Delete
+                                                id={i.contact_id}
+                                                openDelete={openDelete}
+                                                deleteClose={deleteClose}
+                                            />
+                                        </div>
+                                    </Card>
+                                </Grid>
+                            ))}
+
+                            {/* {users.map(i => (
+                                <Grid item key={i.contact_id} xs={12} sm={6} md={4} lg={3} className={classes.cards}>
+                                    <Card key={i.contact_id} elevation={5}>
+                                        <CardActionArea>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h5" component="h2">
+                                                    {i.fname} {i.lname}
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary" component="p">
+                                                    Mobile No: {i.mobile_phone}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                        <div className={classes.action}>
+                                            <Tooltip title="Edit Contact">
+                                                <IconButton aria-label="edit" onClick={editOpen}>
+                                                    <EditTwoToneIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Edit
+                                                openEdit={openEdit}
+                                                editClose={editClose}
+                                                Transition={Transition}
+                                                fname={i.fname}
+                                                lname={i.lname}
+                                                home_phone={i.home_phone}
+                                                mobile_phone={i.mobile_phone}
+                                                work_phone={i.work_phone}
+                                                city={i.city}
+                                                state={i.state}
+                                                postal_code={i.postal_code}
+                                                country={i.country}
+                                                user_id={i.user_id}
+                                                id={i.contact_id}
+                                            />
+
+
+                                            <Tooltip title="Delete Contact">
+                                                <IconButton aria-label="delete" onClick={deleteOpen}>
+                                                    <DeleteTwoToneIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Delete
+                                                id={i.contact_id}
+                                                openDelete={openDelete}
+                                                deleteClose={deleteClose}
+                                            />
+                                        </div>
+                                    </Card>
+                                </Grid>
+                            ))
+                            } */}
                         </Grid>
                     </div>
                 </Container>
@@ -208,7 +264,6 @@ export default function Contact({ handleClose, handleClickOpen, menuOpen, menuCl
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        margin: 20,
         '&:hover': {
             backgroundColor: 'transparent',
         },
@@ -225,34 +280,9 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'flex-end'
     },
     height: {
-        height: 'auto'
-    },
-    media: {
-        display: 'flex'
-    },
-    name: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start'
-    },
-    avatar: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        width: '50%'
-    },
-    purple: {
-        color: theme.palette.getContrastText(deepPurple[500]),
-        backgroundColor: deepPurple[500],
-    },
-    large: {
-        width: theme.spacing(7),
-        height: theme.spacing(7),
+        height: '100%'
     },
     action: {
-        padding: 0
-    },
-    cards: {
-        display: 'flex',
-        flexFlow: 'row' || 'flex-wrap',
+        display: 'flex'
     }
 }));
