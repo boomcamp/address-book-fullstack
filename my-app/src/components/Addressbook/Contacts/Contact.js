@@ -70,6 +70,7 @@ export default function Contacts() {
 				createModal={createModal}
 				setState={setState}
 				setNotif={setNotif}
+				setModal={setCreateModal}
 			/>
 			<ViewAndEditContact
 				data={data}

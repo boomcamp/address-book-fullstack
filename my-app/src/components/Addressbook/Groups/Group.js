@@ -19,10 +19,7 @@ export default function Group() {
 		setOpen(false);
 	};
 	const [state, setState] = useState({
-		columns: [
-			{ title: 'Group Name', field: 'group_name' }
-			// { title: 'Date Created', field: 'date_created', editable: 'never' }
-		],
+		columns: [{ title: 'Group Name', field: 'group_name' }],
 		data: []
 	});
 
@@ -40,20 +37,21 @@ export default function Group() {
 			})
 			.catch(err => console.log(err));
 	}, [userId]);
+
 	return (
 		<React.Fragment>
 			<MaterialTable
 				title="Groups"
 				columns={state.columns}
 				data={state.data}
-				detailPanel={rowData => {
-					return <ContactPerGroup rowData={rowData} />;
-				}}
 				options={{
 					search: true,
 					actionsColumnIndex: -1,
 					isFreeAction: true,
 					detailPanelType: 'single'
+				}}
+				detailPanel={rowData => {
+					return <ContactPerGroup rowData={rowData} />;
 				}}
 				onRowClick={(event, rowData, togglePanel) => togglePanel()}
 				editable={{

@@ -6,18 +6,26 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import DeleteIcon from '@material-ui/icons/Delete';
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 
 import axios from 'axios';
+import AddMembers from './AddMember';
+import RemoveMember from './RemoveMember';
+import ViewMember from './ViewMember';
 
 export default function ContactPerGroup(props) {
 	const classes = useStyles();
 	const userId = localStorage.getItem('id');
 	const { rowData } = props;
+
 	const [members, setMembers] = useState([]);
 	const [contacts, setContacts] = useState([]);
+
+	const [data, setData] = React.useState({});
+	const [modal, setModal] = useState(false);
+	const [deleteModal, setDeleteModal] = useState(false);
+	const [viewModal, setViewModal] = React.useState(false);
+
 	useEffect(() => {
 		axios
 			.get(`/api/contacts/userId-${userId}?value=ASC`, {
@@ -39,19 +47,22 @@ export default function ContactPerGroup(props) {
 				setMembers(res.data);
 			})
 			.catch(err => console.log(err));
-	}, []);
+	}, [deleteModal, userId, rowData.id]);
 
+	const handleModal = () => {
+		setModal(true);
+	};
 	return (
 		<React.Fragment>
 			<div className={classes.title}>
 				<h2>{rowData.group_name}</h2>
-				<GroupAddIcon />
+				<GroupAddIcon onClick={handleModal} style={{ cursor: 'pointer' }} />
 			</div>
 			<div className={classes.content}>
 				{Object.keys(members).length !== 0 ? (
 					contacts.map((contact, index) => {
 						return members.map(member => {
-							if (contact.id === parseInt(member.contactid)) {
+							if (contact.id === member.contactid) {
 								return (
 									<Card className={classes.card} key={index}>
 										<CardActionArea>
@@ -69,22 +80,57 @@ export default function ContactPerGroup(props) {
 											</CardContent>
 										</CardActionArea>
 										<CardActions>
-											<Button size="small" color="primary">
+											<Button
+												size="small"
+												color="primary"
+												onClick={() => {
+													setData(member.id);
+													setDeleteModal(true);
+												}}
+											>
 												Remove
 											</Button>
-											<Button size="small" color="primary">
+											<Button
+												size="small"
+												color="primary"
+												onClick={() => {
+													setData(contacts[index]);
+													setViewModal(true);
+												}}
+											>
 												View
 											</Button>
 										</CardActions>
 									</Card>
 								);
 							}
+							return null;
 						});
 					})
 				) : (
 					<h2>No contacts</h2>
 				)}
 			</div>
+			<AddMembers
+				rowData={rowData}
+				modal={modal}
+				setModal={setModal}
+				member={members}
+				setMembers={setMembers}
+			/>
+			<RemoveMember
+				data={data}
+				modal={deleteModal}
+				setModal={setDeleteModal}
+				member={members}
+				setMembers={setMembers}
+			/>
+			<ViewMember
+				data={data}
+				setData={setData}
+				modal={viewModal}
+				setModal={setViewModal}
+			/>
 		</React.Fragment>
 	);
 }

@@ -7,8 +7,9 @@ exports.up = pgm => {
 			primaryKey: true
 		},
 		userid: {
-			type: 'text',
-			notNull: true
+			type: 'integer',
+			notNull: true,
+			references: '"users"'
 		},
 		firstname: {
 			type: 'text',

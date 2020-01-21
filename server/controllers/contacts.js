@@ -40,7 +40,7 @@ const create = (req, res) => {
 const view = (req, res) => {
 	const db = req.app.get('db');
 	db.query(
-		`SELECT * FROM contacts WHERE userid = '${req.params.id}' ORDER BY lastname	${req.query.value}`
+		`SELECT * FROM contacts WHERE userid = ${req.params.id} ORDER BY lastname	${req.query.value}`
 	).then(p => res.status(200).json(p));
 };
 
