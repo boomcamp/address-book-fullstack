@@ -43,6 +43,7 @@ massive({
 
   app.post("/create-group", group.addgroup);
   app.get("/group-list/:id", group.groupList);
+  app.patch("/add-to-group/:id", group.addToGroup);
 
   const PORT = 4005;
   app.listen(PORT, () => {

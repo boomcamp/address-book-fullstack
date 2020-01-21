@@ -10,7 +10,7 @@ exports.up = pgm => {
       type: "integer",
       notNull: true
     },
-    group: {
+    group_id: {
       type: "integer"
     },
     first_name: {

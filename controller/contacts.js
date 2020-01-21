@@ -16,37 +16,19 @@ module.exports = {
     } = req.body;
 
     db.contacts
-      .insert(
-        {
-          user_id,
-          first_name,
-          last_name,
-          email,
-          home_phone,
-          mobile_phone,
-          work_phone,
-          city,
-          state_or_province,
-          postal_code,
-          country
-        },
-        {
-          fields: [
-            "id",
-            "user_id",
-            "first_name",
-            "last_name",
-            "email",
-            "home_phone",
-            "mobile_phone",
-            "work_phone",
-            "city",
-            "state_or_province",
-            "postal_code",
-            "country"
-          ]
-        }
-      )
+      .insert({
+        user_id,
+        first_name,
+        last_name,
+        email,
+        home_phone,
+        mobile_phone,
+        work_phone,
+        city,
+        state_or_province,
+        postal_code,
+        country
+      })
       .then(contact => {
         res.status(201).json({ contact });
       })
@@ -57,8 +39,15 @@ module.exports = {
   },
   contactList: (req, res) => {
     const db = req.app.get("db");
-    db.contacts
-      .find({ user_id: req.params.id })
+    const { id } = req.params;
+    const { sort } = req.query;
+
+    db.query(
+      `select * from contacts where user_id=${id} order by last_name ${sort} `,
+      {
+        id: id
+      }
+    )
       .then(users => res.status(200).json(users))
       .catch(err => {
         res.status(500).end();

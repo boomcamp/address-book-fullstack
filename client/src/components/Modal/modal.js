@@ -13,11 +13,16 @@ export default class Modal extends React.Component {
   }
 
   render() {
-    const { handleChange, handleCloseAdd, toggleAdd, addContact } = this.props;
+    const {
+      handleChange,
+      handleCloseAdd,
+      handleOpenAdd,
+      addContact
+    } = this.props;
     return (
       <Div>
         <Dialog
-          open={toggleAdd}
+          open={handleOpenAdd}
           onClose={handleCloseAdd}
           maxWidth={"md"}
           fullWidth={true}
@@ -31,7 +36,6 @@ export default class Modal extends React.Component {
                     <MDBCol md="6" className="mb-3">
                       <label className="grey-text">First Name</label>
                       <input
-                        value={this.state.first_name}
                         name="first_name"
                         onChange={handleChange}
                         type="text"
@@ -43,7 +47,6 @@ export default class Modal extends React.Component {
                     <MDBCol md="6" className="mb-3">
                       <label className="grey-text">Last Name</label>
                       <input
-                        value={this.state.last_name}
                         name="last_name"
                         onChange={handleChange}
                         type="text"
@@ -57,7 +60,6 @@ export default class Modal extends React.Component {
                     <MDBCol md="8" className="mb-3">
                       <label className="grey-text">Email</label>
                       <input
-                        value={this.state.email}
                         name="email"
                         onChange={handleChange}
                         type="text"
@@ -71,7 +73,6 @@ export default class Modal extends React.Component {
                     <MDBCol md="4" className="mb-3">
                       <label className="grey-text">Home Phone</label>
                       <input
-                        value={this.state.home_phone}
                         name="home_phone"
                         onChange={handleChange}
                         type="number"
@@ -83,7 +84,6 @@ export default class Modal extends React.Component {
                     <MDBCol md="4" className="mb-3">
                       <label className="grey-text">Mobile Phone</label>
                       <input
-                        value={this.state.mobile_phone}
                         name="mobile_phone"
                         onChange={handleChange}
                         type="number"
@@ -95,7 +95,6 @@ export default class Modal extends React.Component {
                     <MDBCol md="4" className="mb-3">
                       <label className="grey-text">Work Phone</label>
                       <input
-                        value={this.state.work_phone}
                         name="work_phone"
                         onChange={handleChange}
                         type="number"
@@ -109,7 +108,6 @@ export default class Modal extends React.Component {
                     <MDBCol md="3" className="mb-3">
                       <label className="grey-text">City</label>
                       <input
-                        value={this.state.city}
                         name="city"
                         onChange={handleChange}
                         type="text"
@@ -121,7 +119,6 @@ export default class Modal extends React.Component {
                     <MDBCol md="3" className="mb-3">
                       <label className="grey-text">State or Province</label>
                       <input
-                        value={this.state.state_or_province}
                         name="state_or_province"
                         onChange={handleChange}
                         type="text"
@@ -133,7 +130,6 @@ export default class Modal extends React.Component {
                     <MDBCol md="3" className="mb-3">
                       <label className="grey-text">Postal Code</label>
                       <input
-                        value={this.state.postal_code}
                         name="postal_code"
                         onChange={handleChange}
                         type="text"
@@ -145,7 +141,6 @@ export default class Modal extends React.Component {
                     <MDBCol md="3" className="mb-3">
                       <label className="grey-text">Country</label>
                       <input
-                        value={this.state.country}
                         name="country"
                         onChange={handleChange}
                         type="text"

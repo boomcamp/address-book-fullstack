@@ -13,10 +13,15 @@ export default class Group extends React.Component {
   }
 
   render() {
-    const { handleChange, handleCloseGroup, toggleG, addGroup } = this.props;
+    const {
+      handleChange,
+      handleCloseGroup,
+      handleOpenGroup,
+      addGroup
+    } = this.props;
     return (
       <Div>
-        <Dialog open={toggleG} onClose={handleCloseGroup}>
+        <Dialog open={handleOpenGroup} onClose={handleCloseGroup}>
           <form onSubmit={addGroup}>
             <MDBCol>
               <MDBCardBody>

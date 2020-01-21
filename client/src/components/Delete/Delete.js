@@ -15,11 +15,16 @@ export default class Edit extends React.Component {
   }
 
   render() {
-    const { deleteContact, handleCloseDel, toggleDel, rowValue } = this.props;
+    const {
+      deleteContact,
+      handleCloseDel,
+      handleOpenDel,
+      rowValue
+    } = this.props;
     return (
       <Div>
         <Dialog
-          open={toggleDel}
+          open={handleOpenDel}
           onClose={handleCloseDel}
           maxWidth={"sm"}
           fullWidth={true}

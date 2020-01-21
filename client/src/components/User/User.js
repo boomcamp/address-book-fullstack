@@ -1,17 +1,27 @@
 import React from "react";
-import { MDBNavbar, MDBNavbarBrand } from "mdbreact";
+import { MDBNavbar, MDBNavbarBrand, MDBCol } from "mdbreact";
 import MaterialTable from "material-table";
 import { Tooltip } from "@material-ui/core";
 import Zoom from "@material-ui/core/Zoom";
 import "../../App.css";
 import axios from "axios";
-import { TableSize, H3, TitleCont, Boxbtn } from "../Styled-Component/style";
+import { message } from "antd";
+import {
+  TableSize,
+  H4,
+  TitleCont,
+  Right,
+  BtnCont
+} from "../Styled-Component/style";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import Add from "@material-ui/icons/GroupAdd";
+import AddIcon from "@material-ui/icons/Add";
 import ReorderIcon from "@material-ui/icons/Reorder";
 import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import AddBoxIcon from "@material-ui/icons/AddBox";
 
 import Modal from "../Modal/modal";
 import Edit from "../Edit/Edit";
@@ -43,13 +53,24 @@ export default class User extends React.Component {
           field: "",
           render: rowData => (
             <React.Fragment>
+              <Tooltip TransitionComponent={Zoom} title="Add to Group">
+                <AddBoxIcon />
+              </Tooltip>
+            </React.Fragment>
+          )
+        },
+        {
+          title: "",
+          field: "",
+          render: rowData => (
+            <React.Fragment>
               <Tooltip TransitionComponent={Zoom} title="Edit Contact">
-                <Button onClick={() => this.props.handleOpenEdit(rowData)}>
+                <Button onClick={() => this.handleOpenEdit(rowData)}>
                   <EditIcon />
                 </Button>
               </Tooltip>
               <Tooltip TransitionComponent={Zoom} title="Delete Contact">
-                <Button onClick={() => this.props.handleOpenDel(rowData)}>
+                <Button onClick={() => this.handleOpenDel(rowData)}>
                   <DeleteIcon />
                 </Button>
               </Tooltip>
@@ -57,92 +78,242 @@ export default class User extends React.Component {
           )
         }
       ],
-      data: [],
+      contactData: [],
       isOpen: false,
-      width: 0,
-      height: 0
+      toggleAdd: false,
+      toggleEdit: false,
+      toggleDel: false,
+      rowValue: {},
+      toggleG: false,
+      left: false,
+      sort: "asc"
     };
   }
 
-  updateDimensions = () => {
-    this.setState({ width: window.innerWidth, height: window.innerHeight });
-  };
   componentDidMount = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    axios.get(`http://localhost:4005/contact-list/${user.id}`).then(results => {
-      this.setState({ data: results.data });
-    });
-    window.addEventListener("resize", this.updateDimensions);
+    this.fetchData(this.state.sort);
   };
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions);
-  }
 
-  toggleCollapse = () => {
-    this.setState({ isOpen: !this.state.isOpen });
+  fetchData = data => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    axios
+      .get(`http://localhost:4005/contact-list/${user.id}/?sort=${data}`)
+      .then(results => {
+        this.setState({ contactData: results.data });
+        axios
+          .get(`http://localhost:4005/group-list/${user.id}/?sort=${data}`)
+          .then(res => {
+            this.setState({ groupData: res.data });
+          });
+      });
+  };
+
+  addContact = () => {
+    const Obj = {
+      user_id: localStorage.getItem("userId"),
+      first_name: this.state.first_name,
+      last_name: this.state.last_name,
+      email: this.state.email,
+      home_phone: this.state.home_phone,
+      mobile_phone: this.state.mobile_phone,
+      work_phone: this.state.work_phone,
+      city: this.state.city,
+      state_or_province: this.state.state_or_province,
+      postal_code: this.state.postal_code,
+      country: this.state.country
+    };
+    axios
+      .post("http://localhost:4005/add-contact", Obj)
+      .then(res => {
+        message.success("Contact Successfully added");
+        this.fetchData(this.state.sort);
+        this.handleCloseAdd();
+      })
+      .catch(err => {
+        console.log(err);
+        try {
+          message.error(err.response.data.error);
+        } catch {
+          console.log(err);
+        }
+      });
+  };
+
+  editContact = (event, rowValue) => {
+    event.preventDefault();
+    const inputs = {
+      user_id: localStorage.getItem("userId"),
+      first_name: this.state.first_name,
+      last_name: this.state.last_name,
+      email: this.state.email,
+      home_phone: this.state.home_phone,
+      mobile_phone: this.state.mobile_phone,
+      work_phone: this.state.work_phone,
+      city: this.state.city,
+      state_or_province: this.state.state_or_province,
+      postal_code: this.state.postal_code,
+      country: this.state.country
+    };
+    axios
+      .patch(`http://localhost:4005/update-contact/${rowValue.id}`, inputs)
+      .then(res => {
+        message.info("Edit Successful!", 2);
+        this.fetchData(this.state.sort);
+        this.handleCloseEdit();
+      });
+  };
+
+  deleteContact = (event, rowValue) => {
+    event.preventDefault();
+    axios
+      .delete(`http://localhost:4005/delete-contact/${rowValue.id}`)
+      .then(() => {
+        message.warning("Contact successfully deleted", 2);
+        this.fetchData(this.state.sort);
+        this.handleCloseDel();
+      });
+  };
+
+  addGroup = () => {
+    const inputs = {
+      user_id: localStorage.getItem("userId"),
+      group_name: this.state.group_name
+    };
+    axios
+      .post("http://localhost:4005/create-group", inputs)
+      .then(() => {
+        message.success("Group contact successfully created");
+        this.fetchData(this.state.sort);
+      })
+      .catch(err => {
+        console.log(err);
+        try {
+          message.error(err.response.data.error);
+        } catch {
+          console.log(err);
+        }
+      });
+  };
+
+  handleSort = event => {
+    this.setState({ sort: event.target.value });
+    this.fetchData(event.target.value);
+  };
+
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  handleOpenAdd = () => {
+    this.setState({ toggleAdd: true });
+  };
+
+  handleCloseAdd = () => {
+    this.setState({ toggleAdd: false });
+  };
+
+  handleOpenEdit = rowValue => {
+    this.setState({
+      first_name: rowValue.first_name,
+      last_name: rowValue.last_name,
+      email: rowValue.email,
+      home_phone: rowValue.home_phone,
+      mobile_phone: rowValue.mobile_phone,
+      work_phone: rowValue.work_phone,
+      city: rowValue.city,
+      state_or_province: rowValue.state_or_province,
+      postal_code: rowValue.postal_code,
+      country: rowValue.country
+    });
+    this.setState({ rowData: rowValue, toggleEdit: true });
+    console.log(rowValue);
+  };
+
+  handleCloseEdit = () => {
+    this.setState({ toggleEdit: false });
+  };
+
+  handleOpenDel = rowValue => {
+    this.setState({ rowData: rowValue, toggleDel: true });
+  };
+
+  handleCloseDel = () => {
+    this.setState({ toggleDel: false });
+  };
+
+  handleOpenGroup = () => {
+    this.setState({ toggleG: true });
+  };
+
+  handleCloseGroup = () => {
+    this.setState({ toggleG: false });
+  };
+
+  handleOpenSide = () => {
+    this.setState({ left: true });
+  };
+
+  handleCloseSide = () => {
+    this.setState({ left: false });
   };
 
   render() {
-    const {
-      myhandleLogout,
-      editContact,
-      addContact,
-      handleChange,
-      handleOpenAdd,
-      handleCloseAdd,
-      toggleAdd,
-      handleOpenEdit,
-      handleCloseEdit,
-      toggleEdit,
-      rowValue,
-      deleteContact,
-      handleOpenDel,
-      handleCloseDel,
-      toggleDel,
-      addGroup,
-      handleOpenGroup,
-      handleCloseGroup,
-      toggleG,
-      handleOpenSide,
-      handleCloseSide,
-      left
-    } = this.props;
+    const { myhandleLogout } = this.props;
     return (
       <div>
         <MDBNavbar color="primary-color" dark expand="md">
-          <Boxbtn>
-            <Button onClick={handleOpenSide}>
+          <div>
+            <Button onClick={() => this.handleOpenSide()}>
               <ReorderIcon />
             </Button>
-          </Boxbtn>
+          </div>
           <MDBNavbarBrand>
             <strong className="white-text">Address Book</strong>
           </MDBNavbarBrand>
         </MDBNavbar>
+
         <span>
           <TableSize>
+            <Right>
+              <MDBCol sm="3">
+                <select
+                  name="sort"
+                  className="browser-default custom-select"
+                  onChange={this.handleSort}
+                >
+                  <option value="asc">Sort by</option>
+                  <option value="asc">Ascending</option>
+                  <option value="desc">Descending</option>
+                </select>
+              </MDBCol>
+            </Right>
+            <BtnCont>
+              <ButtonGroup
+                size="large"
+                color="primary"
+                aria-label="large button group"
+              >
+                <Tooltip title="Create a Group">
+                  <Button onClick={this.handleOpenGroup}>
+                    <Add />
+                  </Button>
+                </Tooltip>
+
+                <Tooltip title="Add Contact">
+                  <Button onClick={this.handleOpenAdd}>
+                    <AddIcon />
+                  </Button>
+                </Tooltip>
+              </ButtonGroup>
+            </BtnCont>
             <MaterialTable
               title={
                 <TitleCont>
-                  <H3>All Contact</H3>
-                  <Boxbtn>
-                    <Button onClick={this.props.handleOpenGroup}>
-                      <Add />
-                      Create a Group
-                    </Button>
-                  </Boxbtn>
+                  <H4>All Contact</H4>
                 </TitleCont>
               }
               columns={this.state.columns}
-              data={this.state.data}
-              actions={[
-                {
-                  tooltip: "Add Contact",
-                  isFreeAction: true,
-                  icon: "add",
-                  onClick: handleOpenAdd
-                }
-              ]}
+              data={this.state.contactData}
               options={{
                 pageSize: 10,
                 sorting: false,
@@ -154,37 +325,35 @@ export default class User extends React.Component {
           </TableSize>
         </span>
         <Modal
-          toggleAdd={toggleAdd}
-          handleCloseAdd={handleCloseAdd}
-          addContact={addContact}
-          handleChange={handleChange}
+          handleOpenAdd={this.state.toggleAdd}
+          handleCloseAdd={this.handleCloseAdd}
+          addContact={this.addContact}
+          handleChange={this.handleChange}
         />
         <Edit
-          toggleEdit={toggleEdit}
-          handleOpenEdit={handleOpenEdit}
-          handleCloseEdit={handleCloseEdit}
-          editContact={editContact}
-          rowValue={rowValue}
-          handleChange={handleChange}
+          handleOpenEdit={this.state.toggleEdit}
+          handleCloseEdit={this.handleCloseEdit}
+          editContact={this.editContact}
+          rowValue={this.state.rowData}
+          handleChange={this.handleChange}
         />
         <Delete
-          deleteContact={deleteContact}
-          handleOpenDel={handleOpenDel}
-          handleCloseDel={handleCloseDel}
-          rowValue={rowValue}
-          toggleDel={toggleDel}
+          deleteContact={this.deleteContact}
+          handleOpenDel={this.state.toggleDel}
+          handleCloseDel={this.handleCloseDel}
+          rowValue={this.state.rowData}
         />
         <Group
-          handleChange={handleChange}
-          addGroup={addGroup}
-          handleOpenGroup={handleOpenGroup}
-          handleCloseGroup={handleCloseGroup}
-          toggleG={toggleG}
+          handleChange={this.handleChange}
+          addGroup={this.addGroup}
+          handleOpenGroup={this.state.toggleG}
+          handleCloseGroup={this.handleCloseGroup}
         />
         <SideDrawer
-          handleCloseSide={handleCloseSide}
-          left={left}
+          handleCloseSide={this.handleCloseSide}
+          handleOpenSide={this.state.left}
           myhandleLogout={myhandleLogout}
+          groupData={this.state.groupData}
         />
       </div>
     );

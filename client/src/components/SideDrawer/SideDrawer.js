@@ -1,14 +1,13 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import GroupIcon from "@material-ui/icons/Group";
+
+import { List } from "../Styled-Component/style";
 
 export default class Select extends React.Component {
   constructor() {
@@ -17,25 +16,45 @@ export default class Select extends React.Component {
   }
 
   render() {
-    const { handleCloseSide, left, myhandleLogout } = this.props;
+    const {
+      handleCloseSide,
+      handleOpenSide,
+      myhandleLogout,
+      groupData
+    } = this.props;
     return (
       <div>
-        <Drawer open={left} onClose={handleCloseSide}>
+        <Drawer open={handleOpenSide} onClose={handleCloseSide}>
           <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem button key={text}>
+            <List>
+              <ListItemText>Group List</ListItemText>
+            </List>
+            <List>
+              {groupData
+                ? groupData.map(val => (
+                    <ListItem
+                      button
+                      onClick={() => console.log("hey")}
+                      key={val.group_id}
+                    >
+                      <ListItemIcon>
+                        <GroupIcon />
+                      </ListItemIcon>
+                      <ListItemText>{val.group_name}</ListItemText>
+                    </ListItem>
+                  ))
+                : null}
+            </List>
+            <Divider />
+            <List>
+              <ListItem button onClick={myhandleLogout}>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  <ExitToAppIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText>Logout</ListItemText>
               </ListItem>
-            ))}
+            </List>
           </List>
-          <Divider />
-          <Button onClick={myhandleLogout}>
-            <ExitToAppIcon />
-            Logout
-          </Button>
         </Drawer>
       </div>
     );

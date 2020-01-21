@@ -15,28 +15,7 @@ export default class Routes extends React.Component {
       token,
       success,
       handleSuccess,
-      passconfirm,
-      addContact,
-      editContact,
-      handleChange,
-      handleOpenAdd,
-      handleCloseAdd,
-      toggleAdd,
-      handleOpenEdit,
-      handleCloseEdit,
-      toggleEdit,
-      rowValue,
-      deleteContact,
-      handleOpenDel,
-      handleCloseDel,
-      toggleDel,
-      addGroup,
-      handleOpenGroup,
-      handleCloseGroup,
-      toggleG,
-      handleOpenSide,
-      handleCloseSide,
-      left
+      passconfirm
     } = this.props;
     return (
       <Switch>
@@ -44,30 +23,7 @@ export default class Routes extends React.Component {
           exact
           render={() =>
             token ? (
-              <User
-                myhandleLogout={myhandleLogout}
-                addContact={addContact}
-                editContact={editContact}
-                handleChange={handleChange}
-                handleOpenAdd={handleOpenAdd}
-                handleCloseAdd={handleCloseAdd}
-                toggleAdd={toggleAdd}
-                handleOpenEdit={handleOpenEdit}
-                handleCloseEdit={handleCloseEdit}
-                toggleEdit={toggleEdit}
-                rowValue={rowValue}
-                deleteContact={deleteContact}
-                handleOpenDel={handleOpenDel}
-                handleCloseDel={handleCloseDel}
-                toggleDel={toggleDel}
-                addGroup={addGroup}
-                handleOpenGroup={handleOpenGroup}
-                handleCloseGroup={handleCloseGroup}
-                toggleG={toggleG}
-                handleOpenSide={handleOpenSide}
-                handleCloseSide={handleCloseSide}
-                left={left}
-              />
+              <User myhandleLogout={myhandleLogout} />
             ) : (
               <Login
                 myhandleChange={myhandleChange}

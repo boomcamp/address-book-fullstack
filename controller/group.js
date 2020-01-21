@@ -29,5 +29,14 @@ module.exports = {
       .catch(err => {
         res.status(500).end();
       });
+  },
+  addToGroup: (req, res) => {
+    const db = req.app.get("db");
+    db.groups
+      .update({ user_id: req.params.id })
+      .then(users => res.status(200).json(users))
+      .catch(err => {
+        res.status(500).end();
+      });
   }
 };
