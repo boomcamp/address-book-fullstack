@@ -1,12 +1,5 @@
 # Project Summary - Fullstack Address Book
 
-The set of technologies you'll be required to use are as follows
-
-- Web application and UI - [React.js](https://reactjs.org/)
-- Backend Server / API - [Node.js](https://nodejs.org) using the
-  [express](https://expressjs.com/) server framework
-- Database - [PostgreSQL](https://www.postgresql.org/)
-
 ## Getting Started
 
 start the docker container for postgres database using the following command (or anything as such)
@@ -37,4 +30,6 @@ to run the react app and the backend concurrently use the following command
   #### Sort
   - Click the sort select button to sort by `last_name`, either ascending or descending in order
 
-  **Creator/Jeffrey R. Molleno**
+  <br/>
+
+  **Creator / <i>Jeffrey R. Molleno</i>**
