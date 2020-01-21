@@ -15,13 +15,33 @@ export default class New extends Component {
     this.state = {
       open: false,
       openModal: false,
+      groupName: ""
     };
   }
-
+  handleCreateGroups = () => {
+    const id = localStorage.getItem("id");
+    if (this.state.groupName === "") {
+      alert("error");
+    } else {
+      axios
+        .post(`/createGroup`, {
+          userid: id,
+          group_name: this.state.groupName
+        })
+        .then(res => {
+          this.setState({
+            groupName: ""
+          });
+        });
+      window.location.reload();
+      this.props.handleCloseModal();
+    }
+  };
   handleCloseModal = () => {
     this.setState({
       open: false,
-      openModal: false
+      openModal: false,
+      groupName: ""
     });
   };
   handleOpenModal = e => {
@@ -35,7 +55,11 @@ export default class New extends Component {
       });
     }
   };
-
+  handleTarget = e => {
+    this.setState({
+      groupName: e.target.value
+    });
+  };
 
   render() {
     const { classes } = this.props;
@@ -50,14 +74,7 @@ export default class New extends Component {
         >
           <Box>
             <Tooltip title="Add New Contact">
-              <IconButton
-                onClick={() => this.handleOpenModal(1)}
-                // onClick={() =>
-                //   this.setState({
-                //     open: true
-                //   })
-                // }
-              >
+              <IconButton onClick={() => this.handleOpenModal(1)}>
                 <div
                   style={{
                     padding: "20px"
@@ -88,6 +105,9 @@ export default class New extends Component {
             <Groups
               handleCloseModal={this.handleCloseModal}
               open={this.state.open}
+              handleCreateGroups={this.handleCreateGroups}
+              groupName={this.state.groupName}
+              handleTarget={this.handleTarget}
             />
           </Box>
         </div>

@@ -21,36 +21,15 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import PeopleOutline from "@material-ui/icons/PeopleOutline";
 
-
 export default class NewGroups extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      groupName:""
-
-    };
-  }
-
-  handleCreateGroups=()=>{
-   const id = localStorage.getItem("id")
-    axios.post(`/createGroup`,{
-    userid: id,
-    group_name: this.state.groupName,
-    }
-    ).then(res =>{
-      this.setState({
-        groupName: ""
-      })
-    })
-    window.location.reload();
-    this.props.handleCloseModal()
-  
-   
+    this.state = {};
   }
 
   render() {
-    const {open, handleCloseModal} = this.props
+    const { open, handleCloseModal } = this.props;
 
     return (
       <React.Fragment>
@@ -66,33 +45,21 @@ export default class NewGroups extends Component {
               //   className={classes.textField}
               required
               id="standard-required"
-              error={this.state.groupNameError}
               label="Group Name"
-              value={this.state.groupName}
-              onChange={e =>
-                this.setState({
-                  groupName: e.target.value
-                })
-              }
+              value={this.props.groupName}
+              onChange={e => this.props.handleTarget(e)}
             />
           </DialogContent>
           <DialogActions>
             <Button
               type="submit"
               color="primary"
-              onClick={() =>
-                this.handleCreateGroups()
-              }
+              onClick={() => this.props.handleCreateGroups()}
             >
               Add
             </Button>
 
-            <Button
-              onClick={() =>
-               handleCloseModal()
-              }
-              color="primary"
-            >
+            <Button onClick={() => handleCloseModal()} color="primary">
               Cancel
             </Button>
           </DialogActions>

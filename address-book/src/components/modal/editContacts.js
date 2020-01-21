@@ -40,7 +40,6 @@ export default class EditContacts extends Component {
 
   render() {
     const { openModal, handleCloseModal, dataEdit } = this.props;
-    // console.log(this.props.mobilephone);
     return (
       <React.Fragment>
         <Dialog

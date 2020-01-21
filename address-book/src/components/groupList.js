@@ -27,7 +27,7 @@ import Table from "./addressbooktable";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-
+import Confrimation from "./modal/confirmation";
 import {
   Dialog,
   DialogActions,
@@ -50,7 +50,8 @@ export default class GroupList extends Component {
       idArray: [],
       query: "ASC",
       bygroups: [],
-      open: false
+      open: false,
+      openMods: false
     };
   }
 
@@ -95,7 +96,7 @@ export default class GroupList extends Component {
   };
 
   handleCloseModal = () => {
-    this.setState({ openModal: false });
+    this.setState({ openModal: false,openMods:false });
   };
   handleClose = () => {
     this.setState({ open: false });
@@ -134,10 +135,27 @@ export default class GroupList extends Component {
     }
     this.handleCloseModal();
   };
+  handleRemove = idRemove => {
+    localStorage.setItem("idRemove", idRemove.idRemove.list.id);
+    this.setState({
+      openMods: true
+    });
+    console.log("a")
+    
+    // axios.patch(`/addressbook/removeToGroup/${iD}`).then(res => {
+    //   console.log("success");
+    // });
+  };
+  handleCloseMods = () => {
+    
+    this.setState({
+      openMods: false
+    });
+    console.log(this.state.openMods)
+  };
 
   render() {
-    // console.log(this.state.currentGroupId)
-    // console.log(this.state.idArray);
+    console.log(this.state.openMods)
     return (
       <React.Fragment>
         <div
@@ -247,9 +265,13 @@ export default class GroupList extends Component {
           </DialogActions>
         </Dialog>
 
+
+              {/* Displaying Members */}
+
         <Dialog
           style={{
-            border: "solid 1px"
+            border: "solid 1px",
+            overflow: "scroll"
           }}
           fullWidth
           maxWidth="md"
@@ -258,8 +280,15 @@ export default class GroupList extends Component {
           aria-labelledby="form-dialog-title"
           placement="top"
         >
-          <DialogTitle id="form-dialog-title">List of Group</DialogTitle>
-          <DialogContent style={{ border: "solid 1px red", height: "600px  " }}>
+          <DialogTitle
+            id="form-dialog-title"
+            style={{
+              borderBottom: "solid 3px black"
+            }}
+          >
+            List of Group
+          </DialogTitle>
+          <DialogContent style={{ height: "600px  " }}>
             <Grid
               container
               justify="flex-start"
@@ -274,8 +303,7 @@ export default class GroupList extends Component {
                           variant="h5"
                           style={{ textTransform: "capitalize" }}
                         >
-                          {" "}
-                          {list.first_name} {list.last_name}{" "}
+                          {list.first_name} {list.last_name}
                         </Typography>
                         <Typography variant="h6" style={{ color: "#999" }}>
                           <em>{list.mobile_phone}</em>
@@ -287,9 +315,17 @@ export default class GroupList extends Component {
                         <Button
                           size="small"
                           style={{ textAlign: "center !important" }}
+                          onClick={idRemove =>
+                            this.handleRemove({ idRemove: { list } })
+                          }
                         >
+                          
                           Remove from Group
                         </Button>
+                        <Confrimation
+                            openMods={this.state.openMods}
+                            handleCloseMods={this.handleCloseMods}
+                          />
                       </CardActions>
                     </Card>
                   </Grid>

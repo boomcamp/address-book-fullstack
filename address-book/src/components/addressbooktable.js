@@ -205,17 +205,16 @@ class Addressbooktable extends Component {
   };
 
   handleCloseModal = () => {
-    console.log("lll")
+    console.log("lll");
     localStorage.removeItem("idEdit");
     this.setState({
       openModal: false
     });
-    this.props.getAll()
-    
+    this.props.getAll();
   };
 
   componentDidMount() {
-    this.props.getAll();  
+    this.props.getAll();
   }
 
   handleGetid = item => {
@@ -235,7 +234,7 @@ class Addressbooktable extends Component {
     this.setState({
       open: false
     });
-    this.props.getAll()
+    this.props.getAll();
   };
   handleYes = () => {
     axios
@@ -260,11 +259,8 @@ class Addressbooktable extends Component {
       [fieldname]: value,
       [fieldError]: value ? false : true
     });
-    // console.log(fieldname);
   };
   render() {
-  
-    console.log(this.props.bygroups)
     const { classes } = this.props;
     return (
       <React.Fragment>
@@ -318,26 +314,17 @@ class Addressbooktable extends Component {
                 style={{
                   border: "solid 1.5px #999",
                   display: "flex",
-                  justifyContent:"space-between",
-                  padding:15
+                  justifyContent: "space-between",
+                  padding: 15
                 }}
               >
                 {/* Group */}
-                <Grid item lg={3} md={3} sm={12} xs={12}
-                
-                >
+                <Grid item lg={3} md={3} sm={12} xs={12}>
                   <GroupList />
                 </Grid>
 
                 {/*Contact Table */}
-                <Grid
-                  item
-                  lg={8}
-                  md={9}
-                  sm={12}
-                  xs={12}
-                  
-                >
+                <Grid item lg={8} md={9} sm={12} xs={12}>
                   <MaterialTable
                     options={{
                       search: false,
@@ -356,7 +343,11 @@ class Addressbooktable extends Component {
                     title="Contacts"
                     fullWidth
                     columns={this.state.columns}
-                    data={this.props.searchValue.length > 0 ? this.props.tempData : this.props.data}
+                    data={
+                      this.props.searchValue.length > 0
+                        ? this.props.tempData
+                        : this.props.data
+                    }
                   />
                 </Grid>
               </Grid>

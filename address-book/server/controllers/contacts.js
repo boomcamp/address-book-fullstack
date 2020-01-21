@@ -97,6 +97,22 @@ function deleteContact(req, res) {
       res.status(500).end();
     });
 }
+
+function removeToGroup(req, res) {
+  const db = req.app.get("db");
+  const id = req.params.id;
+
+  db.query(
+    `
+  UPDATE  address_book set groupid=null where contactid = ${id}`
+  )
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      res.status(500).end();
+    });
+}
 function updateContact(req, res) {
   const db = req.app.get('db')
   const {
@@ -133,5 +149,6 @@ module.exports = {
   getById,
   contactList,
   deleteContact,
-  updateContact
+  updateContact,
+  removeToGroup
 };

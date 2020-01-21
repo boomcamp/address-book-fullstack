@@ -27,6 +27,7 @@ massive({
     app.get("/addressbook/:id", contacts.contactList);
     app.delete("/addressbook/deleteContact/:id", contacts.deleteContact);
     app.patch("/addressbook/update/:id", contacts.updateContact);
+    app.patch("/addressbook/removeToGroup/:id", contacts.removeToGroup);
 
     ///groups
     app.post("/createGroup", groups.createGroup);
