@@ -127,18 +127,18 @@ module.exports = {
         .find()
         .then(u => res.status(200).json(u))
         .catch(err => {
-            console.error(err);
+            console.log(err);
             res.status(500).end();
         });
     },
     getContact: (req, res) => {
         const db = req.app.get('db')
+        const {userid} = req.params
 
-        db.contacts
-        .findOne(req.params.id)
+        db.query(`SELECT * FROM contacts WHERE userid=${userid}`)
         .then(u => res.status(201).json(u))
         .catch(err =>{
-            console.err(err)
+            console.log(err)
             res.status(500).end()
         })
     },
@@ -170,7 +170,7 @@ module.exports = {
         })
         .then(u => res.status(201).json(u))
         .catch(err =>{
-            console.err(err)
+            console.log(err)
             res.status(500).end()
         })
     },
@@ -263,9 +263,9 @@ module.exports = {
     },
     getGroups: (req, res) => {
         const db = req.app.get('db')
+        const { userid } = req.params
 
-        db.groups
-        .find()
+        db.query(`SELECT * FROM groups WHERE userid='${userid}'`)
         .then(u => res.status(200).json(u))
         .catch(err => {
             console.error(err);
@@ -280,7 +280,7 @@ module.exports = {
         .update({id: req.params.id},{
             group_name
         })
-        .then(u => res.status(201).json(u))
+        .then(u => res.status(200).json(u))
         .catch(err =>{
             console.log(err)
             res.status(500).end()
@@ -291,7 +291,7 @@ module.exports = {
 
         db.groups
         .destroy(req.params.id)
-        .then(u => res.status(201).json(u))
+        .then(u => res.status(200).json(u))
         .catch(err =>{
             console.err(err)
             res.status(500).end()
@@ -301,9 +301,31 @@ module.exports = {
         const db = req.app.get('db')
         const { userid, groupid, contactid } = req.body
 
-        db.memebers
+        db.members
         .save({ userid, groupid, contactid })
-        .then(u => res.state(200).json(u))
+        .then(u => res.status(200).json(u))
+        .catch(err =>{
+            console.log(err)
+            res.status(500).end()
+        })
+    },
+    getMembers: (req, res) => {
+        const db = req.app.get('db')
+        const {userid, groupid} = req.params
+
+        db.query(`SELECT * FROM members WHERE userid= '${userid}' AND groupid = '${groupid}'`)
+        .then(u => res.status(200).json(u))
+        .catch(err =>{
+            console.log(err)
+            res.status(500).end()
+        })
+    },
+    deleteMember: (req, res) => {
+        const db = req.app.get('db')
+        const {userid, contactid} = req.params
+
+        db.query(`DELETE FROM members WHERE userid='${userid}' AND contactid='${contactid}'`)
+        .then(u => res.status(200).json(u))
         .catch(err =>{
             console.log(err)
             res.status(500).end()

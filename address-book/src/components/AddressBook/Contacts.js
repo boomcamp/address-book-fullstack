@@ -29,7 +29,7 @@ export default function Contacts(){
         })
         .then(res=>{
             axios
-            .get('http://localhost:5001/api/contacts')
+            .get(`http://localhost:5001/api/contact/${localStorage.getItem('id')}`)
             .then(res => {
                 setState(contact=>{
                     return{ ...contact, data:res.data };
@@ -56,7 +56,7 @@ export default function Contacts(){
         })
     }
     const eventHandler = (e) => {
-        console.log(e.target.value)
+        // console.log(e.target.value)
         axios
         .get(`http://localhost:5001/api/search/${localStorage.getItem('id')}?value=${e.target.value}`)
         .then(res=>{

@@ -21,7 +21,7 @@ massive({
     app.post('/api/users', users.createUsers);
     app.post('/api/login', users.login);
     app.get('/api/user/:id', users.getUser)
-    app.get('/api/protected/data', // unused in app
+    app.get('/api/protected/data',
         function(req, res){
             const db = req.app.get('db')
 
@@ -32,18 +32,17 @@ massive({
             try{
                 const token = req.headers.authorization.split(' ')[1];
                 jwt.verify(token, secret);
-                // console.log(db.users)
                 res.status(200).json({ data: 'here is the protected data.', token: token});
             }catch(err){
                 console.error(err)
                 res.status(500).end()
             }
     });
-    app.get('/api/users', users.getUsers) // unused in app
+    app.get('/api/users', users.getUsers)
 
     app.post('/api/contacts', users.createContact)
     app.get('/api/contacts', users.getContacts)
-    app.get('/api/contact/:id', users.getContact) // ?
+    app.get('/api/contact/:userid', users.getContact) // ?
     app.patch('/api/contact/:id', users.updateContact)
     app.delete('/api/contact/:id', users.deleteContact)
 
@@ -55,11 +54,13 @@ massive({
     app.get('/api/sort/:id', users.sortText)
 
     app.post('/api/group', users.addGroup)
-    app.get('/api/groups', users.getGroups)
+    app.get('/api/groups/:userid', users.getGroups)
     app.patch('/api/group/:id', users.updateGroup)
     app.delete('/api/group/:id', users.deleteGroup)
 
     app.post('/api/member', users.addMember)
+    app.get('/api/members/:userid/:groupid', users.getMembers)
+    app.delete('/api/members/:userid/:contactid', users.deleteMember)
     app.listen(port, err=>{
         if(err){
             console.log(`Error Listening to Port ${port}`)

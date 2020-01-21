@@ -17,15 +17,12 @@ const useStyles = makeStyles(theme =>({
         marginTop: '5%',
     },
     titleHeader:{
-        // backgroundColor: 'rgba(0,0,0,0.05)',
         width: '100%',
         display: 'flex'
     },
     title: {
         paddingTop: '20px',
         width: '100%'
-        // marginRight: '50px',
-        // float: 'right',
     },
     actions: {
         display: 'flex',

@@ -2,25 +2,26 @@ import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import AddGroup from './Actions/Addgroup';
-// import AddGroupContact from './Actions/AddGroupContact';
+import ViewGroupContacts from './Actions/ViewGroupContacts';
 import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import AddGroupContact from './Actions/AddGroupContact';
 
-export default function Groups(){
+export default function Groups(props){
+    const [addContactModal, setAddContactModal] = useState(false);
     const [addModal, setAddModal] = useState(false);
-    // const [addContactModal, setAddContactModal] = useState(false);
+    const [groupId, setGroupId] = useState({g_id: ''})
     const [data, setData] = useState({
         columns: [
             {title: 'Group Name', field: 'group_name'},
             {title: 'Date Created', field: 'date_created'}
         ]
     })
-    const [contacts, setContacts] = useState({fname: '', lname: '', mobile_phone: ''})
+    const [contacts, setContacts] = useState([])
 
     useEffect(()=>{
         axios
-        .get('http://localhost:5001/api/groups')
+        .get(`http://localhost:5001/api/groups/${localStorage.getItem('id')}`)
         .then(res => {
             setData(groups =>{
                 return{...groups, data:res.data}
@@ -28,13 +29,25 @@ export default function Groups(){
         })
 
         axios
-        .get('http://localhost:5001/api/contacts')
+        .get(`http://localhost:5001/api/contact/${localStorage.getItem('id')}`)
         .then(res => {
-            res.data.map((x)=>{
-                setContacts(contact =>{
-                    return{ ...contact, fname:x.f_name, lname:x.l_name, mobile_phone:x.mobile_phone}
-                })
+            // var memArr = []
+
+            // contacts.map(x=>{
+            //     return memArr.push(x.id)
+            // })
+
+
+            var temp = []
+            res.data.map(x=>{
+                // if(temp.indexOf(x.id) === -1) {
+                    // if(memArr.includes(x.id)){
+                        temp.push({fname:x.f_name, lname:x.l_name, mobile_phone:x.mobile_phone, id:x.id})
+                    // }
+                // }
+                return temp
             })
+            setContacts(temp)
         })
     },[])
     
@@ -54,31 +67,12 @@ export default function Groups(){
             console.log(res)
         })
     }
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    const handleClick = event => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const openModal = (e) => {
+        setGroupId(c =>{return{ ...c, g_id:e}})
+        setAddContactModal(true)
+    }
     return(
         <React.Fragment>
-            <div>
-                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                    ADD
-                </Button>
-                <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                >
-                    {console.log(data.data)}
-                </Menu>
-            </div>
             <MaterialTable
                 style={{width: '70%', margin: '70px auto'}}
                 options={{
@@ -100,35 +94,22 @@ export default function Groups(){
                             setAddModal(true)
                         }
                     },
-                    // {
-                    //     icon: 'personAdd',
-                    //     tooltip: 'Add Contact to this Group',
-                    //     isFreeAction: true,
-                    //     onClick: () => {
-                    //         // handleClick()
-                    //         // setAddContactModal(true)
-                    //     }
-                    // }
                 ]}
-                detailPanel={[
-                    {
-                        tooltip: 'account_circle',
-                        render: rowData => {
-                            return (
-                                <div
-                                  style={{
-                                    fontSize: 10,
-                                    textAlign: 'center',
-                                    color: 'white',
-                                    backgroundColor: '#FDD835',
-                                  }}
-                                >
-                                    <h1>hello!</h1>
-                                </div>
-                            )
-                        }
-                    }
-                ]}
+                
+                detailPanel={rowData => {
+                    return (
+                        <div>
+                            <Button title="Add Contact" aria-controls="simple-menu" aria-haspopup="true" onClick={() => openModal(rowData.id)}>
+                                <PersonAddIcon/>
+                            </Button>
+                            <ViewGroupContacts
+                                contacts={contacts}
+                                rowData={rowData}
+                            /> 
+                        </div>
+                    )
+                }}
+                onRowClick={(event, rowData, togglePanel) => togglePanel()}
                 editable={{
                     onRowUpdate: (newData, oldData) =>
                     new Promise(resolve => {
@@ -159,14 +140,14 @@ export default function Groups(){
             <AddGroup
                 setModal={setAddModal}
                 modal={addModal}
-                // setData={setData}
                 data={data} 
             />
-            {/* <AddGroupContact
+            <AddGroupContact
                 setModal={setAddContactModal}
                 modal={addContactModal}
                 data={contacts}
-            /> */}
+                id={groupId}
+            />
         </React.Fragment>
     )
 }

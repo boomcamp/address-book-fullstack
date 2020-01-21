@@ -137,7 +137,6 @@ export default function UserDetails(props){
         axios
         .get(`http://localhost:5001/api/address/${localStorage.getItem('id')}`)
         .then(res => {
-            // console.log(Object.keys(res.data).length)
             if(Object.keys(res.data).length === 0){
                 console.log('Database is still Empty')
             }else{
