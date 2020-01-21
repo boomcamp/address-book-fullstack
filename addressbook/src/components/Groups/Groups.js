@@ -32,7 +32,7 @@ class Groups extends Component {
       ModalText: "Content of the modal",
       visible: false,
       confirmLoading: false,
-      grpName: [],
+      grpName: "",
       userid: this.props.userid
     };
   }
@@ -43,7 +43,7 @@ class Groups extends Component {
 componentDidMount( ){
     const id = localStorage.getItem("id");
     axios.get(`http://localhost:3003/api/allgroups/${id}`).then(datas => {
-      console.log(datas.data);
+      // console.log(datas.data);
     this.setState({getAllgroups:datas.data})
       //  this.setState({allGroups:dat})
     });
@@ -51,6 +51,7 @@ componentDidMount( ){
 }
 
   handleChange = value => {
+    
     console.log(`selected ${value}`);
   };
 
@@ -68,8 +69,8 @@ componentDidMount( ){
   };
   handleSub = e => {
     e.preventDefault();
-    console.log(this.state.grpName);
     if (this.state.grpName !== "") {
+     
       axios
         .post("http://localhost:3003/api/addgroup", {
           userid: this.state.userid,
@@ -94,7 +95,7 @@ componentDidMount( ){
     });
   };
   handleChangeGrpName = e => {
-    console.log(e.value);
+    // console.log(e.value);
     // console.log(this.props.userid);
     e.name === "grpName"
       ? this.setState({ grpName: e.value })
@@ -127,14 +128,14 @@ componentDidMount( ){
   };
 
   handleCancel = () => {
-    console.log("Clicked cancel button");
+    // console.log("Clicked cancel button");
     this.setState({
       visible: false
     });
   };
   render() {
-    console.log(this.state);
-    console.log(this.props.allGroups)
+    // console.log(this.state);
+    // console.log(this.props.allGroups)
     const { getFieldDecorator } = this.props.form;
     return (
       <div style={{ display: "inline-flex" }}>
@@ -154,7 +155,7 @@ componentDidMount( ){
           onClose={this.onClose}
           visible={this.state.visibleDrawer}
         >
-          
+          <div style={{display:'flex',justifyContent:'space-between'}}>
           <Tooltip title="Add Group" placement="bottom">
             <Icon
               type="usergroup-add"
@@ -164,21 +165,6 @@ componentDidMount( ){
               onClick={this.showModal}
             ></Icon>
           </Tooltip>
-          <span>Select Group</span>
-          <hr />
-          <Select
-            defaultValue="-- q    Select--"
-            style={{ width: 120 }}
-            onChange={e=>this.handleChange(e)}
-          >
-          {this.state.getAllgroups.map(groups=>{
-            console.log(groups.groupname)
-            return<Option value={groups.id}>{groups.groupname}</Option>
-          
-           
-         
-          })}
-          </Select>
           <Tooltip title="Delete" placement="bottom">
             <Icon
               type="delete"
@@ -188,6 +174,33 @@ componentDidMount( ){
               onClick={this.showModal}
             ></Icon>
           </Tooltip>
+          <Tooltip title="Edit" placement="bottom">
+            <Icon
+              type="edit"
+              style={{ fontSize: "25px", color: "black" }}
+              theme="outlined"
+              className="add-user"
+              onClick={this.showModal}
+            ></Icon>
+          </Tooltip>
+          </div>
+          {/* <span>Select Group</span> */}
+          <hr />
+          <Select
+            defaultValue="--Select Group--"
+            style={{ width: '210px' }}
+            onChange={e=>this.handleChange(e)}
+          >
+          {this.state.getAllgroups.map(groups=>{
+            //  localStorage.setItem('grpids',groups.id)
+            // console.log(groups.id)
+            return<Option value={groups.id}>{groups.groupname}</Option>
+          
+           
+         
+          })}
+          </Select>
+         
         </Drawer>
         {
           //Modal add to Gruops
@@ -204,7 +217,7 @@ componentDidMount( ){
               <Form
                 onSubmit={e => {
                   e.preventDefault();
-                  this.handleSubmit(e);
+                  this.handleSub(e);
                 }}
               >
                 <div
@@ -249,7 +262,7 @@ componentDidMount( ){
                         type="primary"
                         htmlType="submit"
                         style={{ width: "100%" }}
-                        // onSubmit={e => this.handleSubmit(e)}
+                        onSubmit={e => this.handleSub(e)}
                       >
                         Save
                       </Button>

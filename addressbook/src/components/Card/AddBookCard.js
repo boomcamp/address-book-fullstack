@@ -170,7 +170,7 @@ class AddBookCard extends Component {
     const { visible, onCancel, onCreate, form } = this.props;
     // const { getFieldDecorator } = form;
     return (
-      <div>
+      <div className="cardsContainer">
         <div className="addContainer">
           <div className="adding">
             <Tooltip title="Add Contact" placement="bottom">

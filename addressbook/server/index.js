@@ -28,7 +28,13 @@ massive({
     app.patch("/api/update/:id", addcontact.update);
    //groups
     app.post("/api/addgroup", addgroup.addgroup);
+    app.post("/api/addtogroup", addgroup.addtogroup);
     app.get("/api/allgroups/:id", addgroup.allgroups);
+//groupmembers
+    app.get("/api/groupsmember/:id", addgroup.groupmembers);
+    
+
+
     // app.get('/addressbook/:id', contacts.contactList);
 
     app.post("/api/create", addcontact.addcontact);

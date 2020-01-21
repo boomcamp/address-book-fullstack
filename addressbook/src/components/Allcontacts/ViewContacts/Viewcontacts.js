@@ -1,26 +1,27 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 import {
-    Card,
-    Icon,
-    Avatar,
-    Tooltip,
-    Popconfirm,
-    Form,
-    Modal,
-    Input,
-    Button,
-    Typography
-  } from "antd";
-  import Search from '../Search/Searches'
+  Card,
+  Icon,
+  Avatar,
+  Tooltip,
+  Popconfirm,
+  Form,
+  Modal,
+  Input,
+  Button,
+  Typography
+} from "antd";
+import Search from "../Search/Searches";
+import './view.css'
 export default class Viewcontacts extends Component {
   constructor(props) {
-    super(props)
-  
+    super(props);
+
     this.state = {
-       search:[]
-    }
+      search: []
+    };
   }
-  
+
   handleSearch = e => {
     const search = this.props.allContacts.filter(
       data =>
@@ -35,29 +36,35 @@ export default class Viewcontacts extends Component {
     console.log(search);
   };
 
-  rend
-    render() {
-      console.log(this.props.search)
-        return (
-            <div>
-                 <h1
-          style={{
-            whidth: "100px",
-            display: "flex",
-            justifyContent: "space-evenly"
-          }}
-        >
-          Contacts
+  rend;
+  render() {
+    console.log(this.props.search);
+    return (
+      <div>
+        <span clasname="headContacts"  style={{
+            width: "100%",
+            // display: "flex",
+            // justifyContent: "space-evenly"
+          }} >
+          <h1
+          // style={{
+          //   width: "1000%",
+          //   // display: "flex",
+          //   // justifyContent: "space-evenly"
+          // }}
+          >
+            Contacts
+          </h1>
+
           <Search
             searches={this.state.search}
             style={{ display: "flex", justifyContent: "center" }}
           />
-        </h1>
-
+        </span>
 
         <div className="mainCon">
           {// this.props.allContacts
- 
+
           this.props.search
             .sort((a, b) => a.lastname.localeCompare(b.lastname))
             .map(contact => {
@@ -137,13 +144,11 @@ export default class Viewcontacts extends Component {
                       />
                     </Tooltip>
                   </div>
-                
                 </Card>
-              )
-            })
-          }
+              );
+            })}
         </div>
-            </div>
-        )
-    }
+      </div>
+    );
+  }
 }

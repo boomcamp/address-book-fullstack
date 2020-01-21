@@ -123,6 +123,7 @@ export default class AddHomePage extends Component {
           <Allcontacts
             getCont={this.getCont}
             allContacts={this.state.allContacts}
+            // allgroup ={this.state.}
           />
         </div>
         <Footers />

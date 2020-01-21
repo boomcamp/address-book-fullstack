@@ -10,21 +10,23 @@ import {
   Modal,
   Input,
   Button,
-  Typography
+  Typography,
+  Select
 } from "antd";
 import { message } from "antd";
 import Search from "./Search/Searches";
-import Groups from "../Groups/Groups";
+// import Groups from "./Groups/Groups"
+import Addtogroup from "./Addgroup/Addtogroup";
 import "./allcontacts.css";
 import axios from "axios";
-
+const { Option } = Select;
 const { Paragraph } = Typography;
 class Allcontacts extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      
+      input: "",
       visible: false,
       lastname: "",
       firstname: "",
@@ -39,7 +41,13 @@ class Allcontacts extends Component {
       disabled: true,
       search: [],
       ids: "",
-      datas: []
+      datas: [],
+      contactId: "",
+      userids: "",
+      getAllgroups: [],
+
+      groupids: "",
+      user:""
     };
   }
   showModal = e => {
@@ -90,6 +98,16 @@ class Allcontacts extends Component {
 
     this.setState({ disabled: false });
   };
+  componentDidMount() {
+    const id = localStorage.getItem("id");
+    axios.get(`http://localhost:3003/api/allgroups/${id}`).then(datas => {
+      //   console.log(datas.data);
+      this.setState({ getAllgroups: datas.data });
+    });
+    // console.log(this.props.allgroups);
+
+    // console.log(this.state.visible)
+  }
 
   handleSubmit = e => {
     console.log(e);
@@ -126,7 +144,8 @@ class Allcontacts extends Component {
             country: "",
             disabled: true,
             visible: false,
-            search: []
+            search: [],
+            addtogroupModal: false
           });
           this.props.getCont();
           setTimeout(window.location.reload.bind(window.location), 100);
@@ -142,13 +161,41 @@ class Allcontacts extends Component {
     });
   };
 
+  ///addto groups
+  showAddtoGroup = e => {
+    console.log("contactd",e);
+    localStorage.setItem("userids", e);
+    this.setState({ userids: e, addtogroupModal: true });
+  };
+  handleAdd = () => {
+    axios.post("http://localhost:3003/api/addtogroup", {
+      userid: this.state.user,
+      contactid:this.state.userids,
+      groupid: this.state.groupids,
+       })
+    this.props.getCont();
+    message.success("Added Successfully!");
+    // setTimeout(window.location.reload.bind(window.location), 100);
+  };
+
   handleCancel = e => {
     console.log(e);
     this.setState({
       visible: false,
-      disabled: true
+      disabled: true,
+      addtogroupModal: false
     });
   };
+
+  handleChangeGroup = value => {
+    const lo = localStorage.getItem("id");
+    console.log(lo);
+    console.log(`selected ${value}`);
+    this.setState({ groupids: value,user:lo});
+
+    
+  };
+  //delete contact
   onDelete = e => {
     console.log(e);
     axios.delete(`http://localhost:3003/api/deleteContact/${e}`).then(res => {
@@ -156,19 +203,17 @@ class Allcontacts extends Component {
       console.log("DELETE");
       message.success("Deleted!");
       this.props.getCont();
-      // setTimeout(window.location.reload.bind(window.location), 250);
     });
   };
   handleEdit = e => {
-    // console.log(this.state)
-    // console.log(this.state.ids);
-    // console.log(this.state);
     this.setState({
       disabled: false
     });
   };
+  ///search contact
   handleSearch = e => {
     this.props.getCont();
+    this.setState({ input: e.target.value });
     const search = this.props.allContacts.filter(
       data =>
         new RegExp(`${e.target.value}`, "i").test(
@@ -179,39 +224,61 @@ class Allcontacts extends Component {
     this.setState({
       search: search
     });
-    console.log(search);
+    //console.log(search);
   };
-  handleSort = () => {
-    this.setState({
-      datas: this.props.allContacts.sort((a, b) =>
-        b.lastname.localeCompare(a.lastname)
-      )
-    });
-  };
+
   render() {
+    // console.log(this.props.allContacts);
     // console.log(this.state.datas)
     // console.log(this.props.allContacts == null ? "nani" : "eupo");
     // console.log(this.state.search);
     // const { getFieldDecorator } = this.props.form;
     return (
       <div>
-        <h1
-          style={{
-            whidth: "100px",
-            display: "flex",
-            justifyContent: "space-evenly",
-            fontWeight: "bolder",
-            flexWrap: "wrap"
-          }}
-        >
-          Contacts
-          <Search
-            search={this.handleSearch}
-            style={{ display: "flex", justifyContent: "center" }}
-          />
-          {/* <button onClick={e=>this.handleSort()}>sort</button> */}
-        </h1>
-
+        {/* <Addtogroup
+          userids={this.state.userids}
+          allgroups={this.state.addtogroupModal}
+        /> */}
+        <div>
+          <Modal
+            title="Add to Group"
+            visible={this.state.addtogroupModal}
+            onOk={this.handleAdd}
+            onCancel={this.handleCancel}
+            width={280}
+            //   footer={null}
+          >
+            <Select
+              defaultValue="--Select Group--"
+              style={{ width: "210px" }}
+              onChange={e => this.handleChangeGroup(e)}
+            >
+              {this.state.getAllgroups.map(groups => {
+                //  localStorage.setItem('grpids',groups.id)
+                //   console.log(groups.id);
+                return <Option value={groups.id}>{groups.groupname}</Option>;
+              })}
+            </Select>
+          </Modal>
+        </div>
+        <div>
+          <h1
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              fontWeight: "bolder",
+              flexWrap: "wrap"
+            }}
+          >
+            Contacts
+            <Search
+              search={this.handleSearch}
+              style={{ display: "flex", justifyContent: "center" }}
+            />
+            {/* <button onClick={e=>this.handleSort()}>sort</button> */}
+          </h1>
+        </div>
         <hr className="underline"></hr>
 
         <div className="mainCon">
@@ -237,12 +304,30 @@ class Allcontacts extends Component {
           {
             //Search Contacts Data
           }
-          {
-          
-          this.state.search.length > 0
 
-
-            ? this.state.search.map(contact => {
+          {!this.state.search.length ? (
+            this.state.input.length > 0 ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Empty
+                  image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+                  imageStyle={{
+                    height: 60
+                  }}
+                  description={
+                    <span style={{ color: "grey", fontWeight: "bolder" }}>
+                      No Contact Available
+                    </span>
+                  }
+                ></Empty>
+              </div>
+            ) : (
+              this.props.allContacts.map(contact => {
                 let conID = contact.id;
                 let contacts = contact;
                 // console.log(conID)
@@ -322,7 +407,7 @@ class Allcontacts extends Component {
                         <Icon
                           type="usergroup-add"
                           key="edit"
-                          onClick={() => this.showModal(contacts)}
+                          onClick={() => this.showAddtoGroup(conID)}
                           style={{
                             fontSize: "20px"
                           }}
@@ -331,101 +416,104 @@ class Allcontacts extends Component {
                     </div>
                   </Card>
                 ); //mapsreturnstail
-              }) //mapstail
-            : this.props.allContacts
-
-                // this.state.search
-                .sort((a, b) => a.lastname.localeCompare(b.lastname))
-                .map(contact => {
-                  let conID = contact.id;
-                  let contacts = contact;
-                  // console.log(conID)
-                  return (
-                    <Card
-                      // hoverable
+              })
+            ) //mapstail
+          ) : (
+            //SEARCH CONTACT
+            this.state.search
+              // this.state.search
+              .sort((a, b) => a.lastname.localeCompare(b.lastname))
+              .map(contact => {
+                let conID = contact.id;
+                let contacts = contact;
+                // console.log(conID)
+                return (
+                  <Card
+                    // hoverable
+                    style={{
+                      width: 240,
+                      marginTop: "15px",
+                      marginLeft: "10px",
+                      borderRadius: "10px",
+                      boxShadow: "5px 10px 18px #888888"
+                      // backgroundColor: "aqua"
+                    }}
+                    key={contact.id}
+                  >
+                    <Avatar
                       style={{
-                        width: 240,
-                        marginTop: "15px",
-                        marginLeft: "10px",
-                        borderRadius: "10px",
-                        boxShadow: "5px 10px 18px #888888"
-                        // backgroundColor: "aqua"
+                        // height:'10px',
+                        backgroundColor: "#102844",
+                        justifyContent: "center",
+                        width: "100%",
+                        boxShadow: "5px 4px 10px #888888"
                       }}
-                      key={contact.id}
-                    >
-                      <Avatar
-                        style={{
-                          // height:'10px',
-                          backgroundColor: "#102844",
-                          justifyContent: "center",
-                          width: "100%",
-                          boxShadow: "5px 4px 10px #888888"
-                        }}
-                        icon="user"
-                        size={70}
-                        shape="square"
-                      />
-                      <hr className="underline"></hr>
-                      <div className="additional">
-                        <p className="lastFirstname">
-                          Name:{" "}
-                          <span className="names1">
-                            {contact.lastname} {contact.firstname}
-                          </span>
-                        </p>
+                      icon="user"
+                      size={70}
+                      shape="square"
+                    />
+                    <hr className="underline"></hr>
+                    <div className="additional">
+                      <p className="lastFirstname">
+                        Name:{" "}
+                        <span className="names1">
+                          {contact.lastname} {contact.firstname}
+                        </span>
+                      </p>
 
-                        <p>
-                          Contact Number:{" "}
-                          <span className="names">{contact.mobile_phone}</span>
-                        </p>
-                      </div>
+                      <p>
+                        Contact Number:{" "}
+                        <span className="names">{contact.mobile_phone}</span>
+                      </p>
+                    </div>
 
-                      <hr className="underline"></hr>
+                    <hr className="underline"></hr>
 
-                      <div className="allActions">
-                        {/* <Tooltip placement="bottomRight" title="Edit">
+                    <div className="allActions">
+                      {/* <Tooltip placement="bottomRight" title="Edit">
                       <Icon
                         type="edit"
                         key="edit"
                         style={{ fontSize: "20px" }}
                       />
                     </Tooltip> */}
-                        <Popconfirm
-                          placement="top"
-                          title="Sure to delete?"
-                          onConfirm={re => this.onDelete(conID)}
-                          okText="Yes"
-                          cancelText="No"
-                        >
-                          <Tooltip placement="bottomRight" title="Delete">
-                            <Icon type="delete" style={{ fontSize: "20px" }} />
-                          </Tooltip>
-                        </Popconfirm>
+                      <Popconfirm
+                        placement="top"
+                        title="Sure to delete?"
+                        onConfirm={re => this.onDelete(conID)}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <Tooltip placement="bottomRight" title="Delete">
+                          <Icon type="delete" style={{ fontSize: "20px" }} />
+                        </Tooltip>
+                      </Popconfirm>
 
-                        <Tooltip placement="bottomRight" title="Show All Info">
-                          <Icon
-                            type="eye"
-                            key="edit"
-                            onClick={() => this.showModal(contacts)}
-                            style={{
-                              fontSize: "20px"
-                            }}
-                          />
-                        </Tooltip>
-                        <Tooltip title="Add to Group" placement="bottom">
-                          <Icon
-                            type="usergroup-add"
-                            key="edit"
-                            onClick={() => this.showModal()}
-                            style={{
-                              fontSize: "20px"
-                            }}
-                          ></Icon>
-                        </Tooltip>
-                      </div>
-                    </Card>
-                  ); //mapsreturnstail
-                }) //mapstail
+                      <Tooltip placement="bottomRight" title="Show All Info">
+                        <Icon
+                          type="eye"
+                          key="edit"
+                          onClick={() => this.showModal(contacts)}
+                          style={{
+                            fontSize: "20px"
+                          }}
+                        />
+                      </Tooltip>
+                      <Tooltip title="Add to Group" placement="bottom">
+                        <Icon
+                          type="usergroup-add"
+                          key="edit"
+                          onClick={() => this.showAddtoGroup(conID)}
+                          style={{
+                            fontSize: "20px"
+                          }}
+                        ></Icon>
+                      </Tooltip>
+                    </div>
+                  </Card>
+                ); //mapsreturnstail
+              })
+          ) //mapstail
           }
           {/* { !Array.isArray(this.props.allContacts) ?<div>nodata</div>:<div>asdasd</div>} */}
         </div>
