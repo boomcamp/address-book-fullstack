@@ -108,7 +108,6 @@ export const Register = props => {
             }}
             name="email"
             variant="outlined"
-            type="email"
             label="Email"
             fullWidth
             inputRef={register({

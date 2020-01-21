@@ -167,12 +167,11 @@ export const Contacts = props => {
   };
   React.useEffect(() => {
     if (group === null) {
-      console.log("try");
       getUserData(user, sort).then(user => setUserData(user));
       return setGroupName("Contacts");
     }
     if (group) {
-      return () => getGroupName(group, user, setGroupName);
+      getGroupName(group, user, setGroupName);
     }
   }, [group, user]);
   return (
