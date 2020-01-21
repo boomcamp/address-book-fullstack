@@ -196,14 +196,14 @@ export default function GroupForm(highprops) {
 
   return (
     <div>
-      <div className="group-form-container">
+      <div className={classes.grpFormContainer}>
         <Autocomplete
           // freeSolo
+          className={classes.textfields}
           id="group-box"
           options={grpState.groupList}
           getOptionLabel={option => option.title}
           onInputChange={grpStateUpdate}
-          className={classes.textfields}
           value={grpState.selectedGroupName}
           renderInput={params => (
             <TextField
@@ -214,22 +214,12 @@ export default function GroupForm(highprops) {
             />
           )}
         />
-        <p className="add-group-btn" onClick={addToGroup}>
+        <p className={classes.addbtn} onClick={addToGroup}>
           +
         </p>
       </div>
 
-      <p
-        style={{
-          fontSize: "0.6em",
-          color: "#b7b7b7",
-          position: "relative",
-          top: "-18px",
-          left: "-56px"
-        }}
-      >
-        click + button to confirm action
-      </p>
+      <p className={classes.addCaption}>click + button to confirm action</p>
 
       <div className={classes.chip}>
         {chipState
@@ -257,13 +247,107 @@ export default function GroupForm(highprops) {
 
 const useStyles = makeStyles(theme => ({
   textfields: {
-    width: "2000px",
-    margin: "10px"
+    margin: "10px",
+    [theme.breakpoints.up("md")]: {
+      width: "700px",
+      position: "relative",
+      right: "20px"
+    },
+    [theme.breakpoints.down("md")]: {
+      width: "700px",
+      position: "relative",
+      right: "20px"
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "300px",
+      position: "relative",
+      right: "20px"
+    },
+    [theme.breakpoints.down(420)]: {
+      width: "200px",
+      position: "relative",
+      right: "20px"
+    }
+  },
+  addCaption: {
+    fontSize: "0.6em",
+    color: "#b7b7b7",
+    position: "relative",
+    top: "-18px",
+    left: "-4px",
+    [theme.breakpoints.down("md")]: {
+      left: "-146px"
+    },
+    [theme.breakpoints.down("sm")]: {
+      left: "-5px"
+    }
   },
   chip: {
-    width: "353px",
+    width: "428px",
     position: "relative",
-    left: "-68px",
-    top: "-13px"
+    left: "-157px",
+    top: "-13px",
+    [theme.breakpoints.down("md")]: {
+      width: "298px",
+      left: "-65px"
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "298px",
+      left: "-65px"
+    },
+    [theme.breakpoints.down(420)]: {
+      width: "200px",
+      left: "-14px"
+    }
+  },
+  addbtn: {
+    width: "70px",
+    color: "rgb(182, 182, 182)",
+    border: "none",
+    marginTop: "0",
+    marginBottom: "0",
+    borderRadius: "4px",
+    cursor: "pointer",
+    height: "50px",
+    position: "relative",
+    top: "-1px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    border: "1px solid rgb(182, 182, 182)",
+    marginLeft: "2px",
+    "&:hover": {
+      color: "#2196f3",
+      border: "2px solid #2196f3"
+    },
+    [theme.breakpoints.up("md")]: {
+      right: "24px"
+    },
+    [theme.breakpoints.down("md")]: {
+      width: "70px",
+      position: "relative",
+      right: "24px"
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "40px",
+      position: "relative",
+      right: "24px"
+    }
+  },
+  grpFormContainer: {
+    width: "500px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    right: "150px",
+    [theme.breakpoints.down("md")]: {
+      width: "500px",
+      right: "150px"
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "400px",
+      right: "74px"
+    }
   }
 }));

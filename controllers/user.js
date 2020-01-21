@@ -8,31 +8,45 @@ module.exports = {
 
     const { username, password } = req.body;
 
-    argon2
-      .hash(password)
-      .then(hash => {
-        return db.users.insert(
-          {
-            username,
-            password: hash
-          },
-          {
-            fields: ["id", "username"]
-          }
-        );
-      })
-      .then(user => {
-        const token = jwt.sign({ username: user.id }, secret);
-        res.status(201).json({ ...user, token });
+    db.users
+      .findOne({ username })
+      .then(data => {
+        if (data) {
+          throw new Error("Username already exists");
+        } else {
+          argon2
+            .hash(password)
+            .then(hash => {
+              return db.users.insert(
+                {
+                  username,
+                  password: hash
+                },
+                {
+                  fields: ["id", "username"]
+                }
+              );
+            })
+            .then(user => {
+              const token = jwt.sign({ username: user.id }, secret);
+              res.status(201).json({ ...user, token });
+            })
+            .catch(err => {
+              console.error(err);
+              res.status(500).end();
+            });
+        }
       })
       .catch(err => {
-        console.error(err);
-        res.status(500).end();
+        if (["Username already exists"].includes(err.message)) {
+          res.status(400).json({ error: err.message });
+        } else {
+          res.status(500).end();
+        }
       });
   },
   login: (req, res) => {
     const db = req.app.get("db");
-
 
     const { username, password } = req.body;
 

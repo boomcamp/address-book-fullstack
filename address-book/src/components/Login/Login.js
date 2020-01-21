@@ -63,7 +63,7 @@ export default function Login() {
 
   return (
     <Fragment>
-      <div className="login-container" style={styles.loginContainer}>
+      <div className={classes.loginContainer}>
         <p>Login</p>
         <div className="input-fields">
           <ValidatorForm
@@ -107,7 +107,6 @@ export default function Login() {
             <button style={styles.submitBtn} type="submit">
               Submit
             </button>
-            
           </ValidatorForm>
         </div>
 
@@ -129,10 +128,7 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(1),
       width: 200
     }
-  }
-}));
-
-const styles = {
+  },
   loginContainer: {
     display: "flex",
     justifyContent: "center",
@@ -145,8 +141,21 @@ const styles = {
     marginTop: "190px",
     boxShadow: "rgb(214, 214, 214) 1px 1px 5px 0px",
     borderRadius: "9px",
-    background:'white'
-  },
+    background: "white",
+    [theme.breakpoints.down(600)]: {
+      width: "400px",
+      marginBottom: "10px",
+      marginTop: "70px"
+    },
+    [theme.breakpoints.down(420)]: {
+      width: "320px",
+      marginTop: "70px",
+      marginBottom: "10px"
+    }
+  }
+}));
+
+const styles = {
   inputfields: {
     display: "flex",
     justifyContent: "center",

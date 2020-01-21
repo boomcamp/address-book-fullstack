@@ -38,7 +38,9 @@ export default function ContactForm(highprops) {
   });
 
   useEffect(() => {
-    if (highprops.contactData === null) {
+
+    const {contactData} = highprops;
+    if (contactData === null) {
       setState({
         first_name: "",
         last_name: "",
@@ -56,12 +58,13 @@ export default function ContactForm(highprops) {
       });
     }
 
-    if (highprops.contactData) {
-      const data = highprops.contactData;
+    if (contactData) {
+      const data =  Object.assign({}, contactData)
+      // const data = highprops.contactData;
       setDataTranfered(data);
       setState(data);
 
-      setGroup(highprops.contactData.id);
+      setGroup(contactData.id);
     }
     getGroup();
   }, [highprops.contactData]);
@@ -177,20 +180,36 @@ export default function ContactForm(highprops) {
   }
 
   const saveData = () => {
+
+    console.log(state)
     if (highprops.contactData === null) {
       AddData(state);
     } else {
       EditData(state, highprops.contactData);
     }
+
     alert("Registering data, please wait");
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 200);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 200);
   };
 
   const cancel = () => {
-    console.log(highprops.contactData);
+
+    // axios({
+    //   method:"get",
+    //   url:`http://localhost:5000/api/contacts/${highprops.contactData.id}`,
+    //   headers: { Authorization: sessionStorage.getItem("token") }
+    // })
+    // .then(data=>{
+    //   setState(data.data)
+    // })
+    // .catch(err=>{
+    //   console.log(err)
+    // })
+
+    // console.log(highprops.contactData);
 
     if (highprops.prepareNewData) {
       setState({
@@ -485,7 +504,10 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    width: "1000px"
+    width: "1000px",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column"
+    }
   },
   SubmitButton: {
     width: "186px",
@@ -496,7 +518,11 @@ const useStyles = makeStyles(theme => ({
     marginBottom: "10px",
     borderRadius: "4px",
     cursor: "pointer",
-    marginRight: "30px"
+    marginRight: "30px",
+    [theme.breakpoints.down("sm")]: {
+      marginRight: "0",
+      width: "230px"
+    }
   },
   CancelButton: {
     width: "186px",
@@ -511,7 +537,11 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center",
     alignItems: "center",
     fontSize: "0.8em",
-    marginTop: "0px"
+    marginTop: "0px",
+    [theme.breakpoints.down("sm")]: {
+      marginRight: "0",
+      width: "242px"
+    }
   }
 }));
 

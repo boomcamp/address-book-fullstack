@@ -15,14 +15,12 @@ export default function SideBar(highprops) {
   const refHook = useRef(false);
 
   useEffect(() => {
-    console.log(refHook);
     if (refHook.current) {
       setDataPass(highprops.contactData);
     } else refHook.current = true;
   });
 
   useEffect(() => {
-    console.log("highprops");
     if (highprops.contactData) {
       setDataPass(highprops.contactData);
       change("open_add");
@@ -33,8 +31,6 @@ export default function SideBar(highprops) {
       change("open_add");
       console.log('opening add')
     }
-
-    console.log(highprops.prepareNewData)
   }, [highprops.contactData, highprops.prepareNewData]);
 
   const change = control => {

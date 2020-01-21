@@ -47,8 +47,6 @@ export default function ContactsTable(highprops) {
         return { ...state, data: highprops.tableData };
       });
     } else {
-      console.log(sessionStorage.getItem("userid"));
-
       axios({
         method: "get",
         url: `http://localhost:5000/api/contacts/${sessionStorage.getItem(
@@ -57,8 +55,6 @@ export default function ContactsTable(highprops) {
         headers: { Authorization: sessionStorage.getItem("token") }
       })
         .then(contacts => {
-          console.log(contacts.data);
-
           let contact_data = [];
 
           contacts.data.map(contact => {
@@ -78,7 +74,6 @@ export default function ContactsTable(highprops) {
             });
           });
 
-          console.log(contact_data);
           setState(state => {
             return { ...state, data: contact_data };
           });

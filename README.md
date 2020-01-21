@@ -9,12 +9,20 @@ The set of technologies you'll be required to use are as follows
 
 ## Getting Started
 
-`Fork` and `clone` this project.
+start the docker container for postgres database using the following command (or anything as such)
 
-There is no starter code for this project. Use the appropriate tools to
-initialize a project and track any dependencies required to run your project.
+`docker-compose up db`
 
-## Design Constraints
+to run the react app and the backend concurrently use the following command
+
+`npm run dev`
+
+## Walktrough and Implemented Functionalities
+
+### Login / Registration
+
+1. Click sign-up link to register as a user then if succesful the user will be redirected to the login page which will redirect the user to the main page of the app given the proper information is provided.
+
 
 1. You should create a responsive UI for three device categories **mobile**,
    **tablet** and **desktop**. There are no exact device requirement, but your

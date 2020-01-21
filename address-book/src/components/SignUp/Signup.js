@@ -14,6 +14,8 @@ export default function Signup() {
     repassword: ""
   });
 
+  const [errstate, seterrState] = useState({});
+
   useEffect(() => {
     ValidatorForm.addValidationRule("isPasswordMatch", value => {
       if (value !== state.password) {
@@ -69,7 +71,9 @@ export default function Signup() {
           return data;
         })
         .catch(err => {
-          console.log(err);
+          seterrState(err.response);
+
+          console.log(err.response);
         });
     }
   };
@@ -84,7 +88,7 @@ export default function Signup() {
 
   return (
     <Fragment>
-      <div className="login-container" style={styles.loginContainer}>
+      <div className={classes.loginContainer}>
         <p>Sign Up</p>
         <div className="input-fields">
           <ValidatorForm
@@ -95,6 +99,7 @@ export default function Signup() {
             onError={errors => console.log(errors)}
           >
             <TextValidator
+              error={errstate.status === 400 ? true : false}
               id="outlined-required"
               name="username"
               value={state.username}
@@ -128,6 +133,13 @@ export default function Signup() {
               onChange={PassVerify}
               type="password"
             />
+            {errstate.status === 400 ? (
+              <p style={{ color: "red", fontSize: "0.8em" }}>
+                {errstate.data.error}
+              </p>
+            ) : (
+              ""
+            )}
 
             <button style={styles.submitBtn} type="submit">
               Register
@@ -158,10 +170,7 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(1),
       width: 200
     }
-  }
-}));
-
-const styles = {
+  },
   loginContainer: {
     display: "flex",
     justifyContent: "center",
@@ -175,8 +184,21 @@ const styles = {
     boxShadow: "rgb(214, 214, 214) 1px 1px 5px 0px",
     borderRadius: "9px",
     padding: "15px 0",
-    background: "white"
-  },
+    background: "white",
+    [theme.breakpoints.down(600)]: {
+      width: "400px",
+      marginBottom: "10px",
+      marginTop: "50px",
+    },
+    [theme.breakpoints.down(420)]: {
+      width: "320px",
+      marginTop: "70px",
+      marginBottom: "10px"
+    }
+  }
+}));
+
+const styles = {
   inputfields: {
     display: "flex",
     justifyContent: "center",
