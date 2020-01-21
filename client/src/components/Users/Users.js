@@ -11,28 +11,28 @@ import {
   MDBDropdownMenu,
   MDBDropdownItem
 } from "mdbreact";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import MaterialTable from "material-table";
 import styled from "styled-components";
 import axios from "axios";
 import { Tooltip } from "@material-ui/core";
-import Drawer from "@material-ui/core/Drawer";
 import Zoom from "@material-ui/core/Zoom";
 import EditAttributesIcon from "@material-ui/icons/EditAttributes";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
+import AccountBox from "@material-ui/icons/AccountBox";
+import Home from "@material-ui/icons/Home";
+import Work from "@material-ui/icons/Work";
 import Button from "@material-ui/core/Button";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import LocationOn from "@material-ui/icons/LocationOn";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { FaArrowCircleDown } from "react-icons/fa";
-
+import { FaArrowCircleDown, FaMobileAlt, FaCity } from "react-icons/fa";
+import { AiOutlineUsergroupDelete } from "react-icons/ai";
+import { MdEmail } from "react-icons/md";
 import Modal from "../Modal/Modal";
 import Edit from "../Modal/Edit";
 import Group from "../Modal/Group";
@@ -50,6 +50,24 @@ const Grp = styled.div`
   flex-wrap: wrap;
 `;
 
+const Box = styled.div`
+  display: flex;
+  width: 100%;
+  @media screen and (max-width: 800px) {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+`;
+
+const Item = styled.div`
+  padding: 10px 20px 10px 20px;
+  width: 50%;
+  @media screen and (max-width: 800px) {
+    width: 100%;
+  }
+`;
+
 export default class Users extends React.Component {
   constructor(props) {
     super(props);
@@ -60,7 +78,7 @@ export default class Users extends React.Component {
           render: rowData => (
             <React.Fragment>
               <button
-                onClick={() => this.clickBottomToggle(rowData)}
+                onClick={() => this.clickOpen4(rowData)}
                 style={{
                   border: "transparent",
                   backgroundColor: "transparent"
@@ -68,30 +86,6 @@ export default class Users extends React.Component {
               >
                 <FaArrowCircleDown />
               </button>
-              <Drawer
-                anchor="bottom"
-                open={this.state.bottomToggle}
-                onClose={this.closeBottomToggle}
-              >
-                <List>
-                  <ListItem>
-                    <ListItemText>
-                      <h1>Contact Details</h1>
-                      <Divider />
-                      <p>First Name: {rowData.fname}</p>
-                      <p>Last Name: {rowData.fname}</p>
-                      <p>Home Phone: {rowData.work_phone}</p>
-                      <p>Work Phone: {rowData.mobile_phone}</p>
-                      <p>Mobile Phone: {rowData.mobile_phone}</p>
-                      <p>Email: {rowData.email}</p>
-                      <p>City: {rowData.city}</p>
-                      <p>State/Province: {rowData.state_or_province}</p>
-                      <p>Postal Code: {rowData.postal_code}</p>
-                      <p>Country: {rowData.country}</p>
-                    </ListItemText>
-                  </ListItem>
-                </List>
-              </Drawer>
             </React.Fragment>
           )
         },
@@ -100,9 +94,21 @@ export default class Users extends React.Component {
           field: "fname",
           render: rowData => (
             <React.Fragment>
-              <div> {" " + rowData.fname + " " + rowData.lname}</div>
+              <div
+                style={{
+                  fontWeight: "bold"
+                }}
+              >
+                {" "}
+                {" " + rowData.fname + " " + rowData.lname}
+              </div>
             </React.Fragment>
           )
+        },
+        {
+          title: "",
+          field: "lname",
+          render: () => <React.Fragment></React.Fragment>
         },
         {
           title: "Contact #",
@@ -151,103 +157,103 @@ export default class Users extends React.Component {
 
               <Tooltip title="Delete Contact">
                 <Button>
-                  <DeleteSweepIcon
-                    onClick={() => this.props.deleteHandler(rowData)}
-                  />
+                  <DeleteSweepIcon onClick={() => this.clickOpen3(rowData)} />
                 </Button>
               </Tooltip>
             </React.Fragment>
           )
-        },
-        {
-          title: "Group",
-          render: rowData => (
-            <React.Fragment>
-              <div>
-                {this.state.groupData
-                  ? this.state.groupData.filter(x => {
-                      if (x.id === rowData.group_id) {
-                        return console.log(x.group_name);
-                      }
-                      return null;
-                    })
-                  : ""}
-              </div>
-            </React.Fragment>
-          )
         }
       ],
+      sortType: "asc",
       data: [],
+      rowInfo: {},
+      sort: "",
       toggleModal: false,
       toggleModal1: false,
       toggleModal2: false,
       toggleModal3: false,
+      toggleModal4: false,
+      toggleModal5: false,
       bottomToggle: false,
-      rowInfo: {},
       isOpen: false
     };
   }
 
-  toggleCollapse = () => {
-    this.setState({ isOpen: !this.state.isOpen });
-  };
-  handleClickOpen = () => {
-    this.setState({ toggleModal: true });
-  };
-  clickOpen = rowInfo => {
-    this.setState({ toggleModal1: true, rowData: rowInfo });
-  };
-  clickOpen1 = rowInfo => {
-    this.setState({ toggleModal2: true, rowData: rowInfo });
-  };
-  clickOpen2 = groupData => {
-    this.setState({ toggleModal3: true, x: groupData });
-  };
-  clickBottomToggle = () => {
-    this.setState({ bottomToggle: true });
-  };
-
-  handleClose = () => {
-    this.setState({ toggleModal: false });
-  };
-  clickClose = () => {
-    this.setState({ toggleModal1: false });
-  };
-  clickClose1 = () => {
-    this.setState({ toggleModal2: false });
-  };
-  clickClose2 = () => {
-    this.setState({ toggleModal3: false });
-  };
-  closeBottomToggle = () => {
-    this.setState({ bottomToggle: false });
-  };
-
-  myChangeHandler1 = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
   componentDidMount = () => {
-    axios
-      .get(
-        `http://localhost:5009/api/contacts/${localStorage.getItem("user_id")}`
-      )
-      .then(results => {
-        this.setState({ data: results.data });
+    return localStorage.getItem("user") ? this.fetchData(undefined) : "";
+  };
 
-        axios.get("http://localhost:5009/api/groups").then(results => {
-          this.setState({ groupData: results.data });
-        });
-      })
-      .catch(err => {
-        alert(err.response.data.error);
-      });
+  fetchData = data => {
+    data
+      ? axios
+          .get(
+            `http://localhost:5009/api/groups/${data.id}/list?sort=${this.state.sort}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("user")}`
+              }
+            }
+          )
+          .then(results => {
+            this.setState({ data: results.data, groupVal: data });
+
+            axios
+              .get(
+                `http://localhost:5009/api/groups/${localStorage.getItem(
+                  "user_id"
+                )}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("user")}`
+                  }
+                }
+              )
+              .then(results => {
+                this.setState({ groupData: results.data });
+              });
+          })
+          .catch(err => {
+            alert(err);
+          })
+      : axios
+          .get(
+            `http://localhost:5009/api/contacts/${localStorage.getItem(
+              "user_id"
+            )}?sort=${this.state.sort}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("user")}`
+              }
+            }
+          )
+          .then(results => {
+            this.setState({ data: results.data, groupVal: undefined });
+
+            axios
+              .get(
+                `http://localhost:5009/api/groups/${localStorage.getItem(
+                  "user_id"
+                )}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("user")}`
+                  }
+                }
+              )
+              .then(results => {
+                this.setState({ groupData: results.data });
+              });
+          })
+          .catch(err => {
+            alert(err);
+          });
   };
 
   contactHandler = event => {
     event.preventDefault();
     const Obj = {
       user_id: localStorage.getItem("user_id"),
+      group_id: this.state.groupVal.id,
       fname: this.state.fname,
       lname: this.state.lname,
       home_phone: this.state.homePhone,
@@ -267,6 +273,7 @@ export default class Users extends React.Component {
         }
       })
       .then(() => {
+        this.fetchData(this.state.groupVal);
         toast.success("Success!!");
         this.handleClose();
       })
@@ -297,6 +304,7 @@ export default class Users extends React.Component {
         }
       })
       .then(res => {
+        this.fetchData(this.state.groupVal);
         toast.info("Successfully Edited!!");
         this.clickClose();
       })
@@ -316,6 +324,7 @@ export default class Users extends React.Component {
         }
       })
       .then(res => {
+        this.fetchData(this.state.groupVal);
         toast.success(`Successfully added to the group`);
         this.clickClose();
       })
@@ -336,13 +345,14 @@ export default class Users extends React.Component {
         }
       })
       .then(() => {
+        this.fetchData(this.state.groupVal);
         toast.success("Group Added!!");
         this.clickClose1();
       })
       .catch(err => toast.error(err.response.data.error));
   };
 
-  groupName = event => {
+  deleteGroup = event => {
     event.preventDefault();
     axios
       .delete(`http://localhost:5009/api/groups/${this.state.x.id}/delete`, {
@@ -351,16 +361,211 @@ export default class Users extends React.Component {
         }
       })
       .then(() => {
+        this.setState({ groupVal: undefined });
+        this.fetchData(this.state.groupVal);
         toast.info("Successfully Deleted");
         this.clickClose2();
       })
       .catch(err => toast.error(err.response.data.error));
   };
 
+  deleteHandler = event => {
+    event.preventDefault();
+    axios
+      .delete(
+        `http://localhost:5009/api/contacts/${this.state.rowData.id}/delete`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("user")}`
+          }
+        }
+      )
+      .then(() => {
+        this.fetchData(this.state.groupVal);
+        toast.info("Successfully Deleted");
+        this.clickClose3();
+      })
+      .catch(err => toast.error(err.response.data.error));
+  };
+
+  sortHandler = data => {
+    this.setState({
+      sort: data
+    });
+    this.fetchData(this.state.groupVal);
+  };
+
+  //OpenToggle
+  toggleCollapse = () => {
+    this.setState({ isOpen: !this.state.isOpen });
+  };
+  handleClickOpen = () => {
+    this.setState({ toggleModal: true });
+  };
+  clickOpen = rowInfo => {
+    this.setState({ toggleModal1: true, rowData: rowInfo });
+  };
+  clickOpen1 = rowInfo => {
+    this.setState({ toggleModal2: true, rowData: rowInfo });
+  };
+  clickOpen2 = groupData => {
+    this.setState({ toggleModal3: true, x: groupData });
+  };
+  clickOpen3 = rowInfo => {
+    this.setState({ toggleModal4: true, rowData: rowInfo });
+  };
+  clickOpen4 = rowInfo => {
+    this.setState({ toggleModal5: true, rowData: rowInfo });
+  };
+  clickBottomToggle = rowInfo => {
+    this.setState({ bottomToggle: true, rowData: rowInfo });
+  };
+  //CloseToggle
+  handleClose = () => {
+    this.setState({ toggleModal: false });
+  };
+  clickClose = () => {
+    this.setState({ toggleModal1: false });
+  };
+  clickClose1 = () => {
+    this.setState({ toggleModal2: false });
+  };
+  clickClose2 = () => {
+    this.setState({ toggleModal3: false });
+  };
+  clickClose3 = () => {
+    this.setState({ toggleModal4: false });
+  };
+  clickClose4 = () => {
+    this.setState({ toggleModal5: false });
+  };
+  closeBottomToggle = () => {
+    this.setState({ bottomToggle: false });
+  };
+
+  myChangeHandler1 = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
   render() {
     return (
       <div>
         <ToastContainer />
+        <Dialog
+          open={this.state.toggleModal5}
+          onClose={this.clickClose4}
+          maxWidth={"xs"}
+          fullWidth
+        >
+          <DialogTitle id="alert-dialog-title">{"Contact Details"}</DialogTitle>
+          <DialogContent dividers>
+            <Box>
+              <Item>
+                <span
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <AccountBox />
+                  {"  "}
+                  {this.state.rowData
+                    ? this.state.rowData.fname + " " + this.state.rowData.lname
+                    : ""}
+                </span>
+              </Item>
+              <Item>
+                <span
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <Work />
+                  {"  "}
+                  {this.state.rowData ? this.state.rowData.work_phone : ""}
+                </span>
+              </Item>
+            </Box>
+            <Box>
+              <Item>
+                <span
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <Home />
+                  {"  "}
+                  {this.state.rowData ? this.state.rowData.home_phone : ""}
+                </span>
+              </Item>
+              <Item>
+                <span
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <FaMobileAlt size={25} />
+                  {"  "}
+                  {this.state.rowData ? this.state.rowData.mobile_phone : ""}
+                </span>
+              </Item>
+            </Box>
+            <Box>
+              <Item>
+                <span
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <MdEmail size={25} />
+                  {"  "}
+                  {this.state.rowData ? this.state.rowData.email : ""}
+                </span>
+              </Item>
+              <Item>
+                <span
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <FaCity size={25} />
+                  {"  "}
+                  {this.state.rowData ? this.state.rowData.city : ""}
+                </span>
+              </Item>
+            </Box>
+            <Box>
+              <Item>
+                <span
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <LocationOn />
+                  {"  "}
+                  {this.state.rowData
+                    ? this.state.rowData.state_or_province
+                    : ""}
+                </span>
+              </Item>
+              <Item>
+                <span
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <LocationOn />
+                  {"  "}
+                  {this.state.rowData ? this.state.rowData.country : ""}
+                </span>
+              </Item>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.clickClose4} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
         <header>
           <MDBNavbar
             color="primary-color-dark"
@@ -402,14 +607,17 @@ export default class Users extends React.Component {
                     color: "black"
                   }}
                 >
-                  Groups
+                  Show Contact by:
                 </MDBDropdownToggle>
                 <MDBDropdownMenu className="dropdown-default" right>
+                  <MDBDropdownItem onClick={() => this.fetchData(undefined)}>
+                    All Contacts
+                  </MDBDropdownItem>
                   {this.state.groupData
                     ? this.state.groupData.map(x => (
                         <MDBDropdownItem
                           key={x.id}
-                          onClick={() => this.clickOpen2(x)}
+                          onClick={() => this.fetchData(x)}
                         >
                           {x.group_name}
                         </MDBDropdownItem>
@@ -428,7 +636,32 @@ export default class Users extends React.Component {
                     <Button onClick={this.clickClose2} color="primary">
                       No
                     </Button>
-                    <Button onClick={this.groupName} color="primary" autoFocus>
+                    <Button
+                      onClick={this.deleteGroup}
+                      color="primary"
+                      autoFocus
+                    >
+                      Yes
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                <Dialog
+                  open={this.state.toggleModal4}
+                  onClose={this.clickClose3}
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {"Are you sure you want to delete this contact?"}
+                  </DialogTitle>
+                  <DialogContent></DialogContent>
+                  <DialogActions>
+                    <Button onClick={this.clickClose3} color="primary">
+                      No
+                    </Button>
+                    <Button
+                      onClick={this.deleteHandler}
+                      color="primary"
+                      autoFocus
+                    >
                       Yes
                     </Button>
                   </DialogActions>
@@ -445,64 +678,62 @@ export default class Users extends React.Component {
                   Sort by:
                 </MDBDropdownToggle>
                 <MDBDropdownMenu className="dropdown-default" right>
-                  <MDBDropdownItem>Ascending</MDBDropdownItem>
+                  <MDBDropdownItem onClick={() => this.sortHandler("asc")}>
+                    Ascending
+                  </MDBDropdownItem>
                   <MDBDropdownItem divider />
-                  <MDBDropdownItem>Descending</MDBDropdownItem>
+                  <MDBDropdownItem onClick={() => this.sortHandler("desc")}>
+                    Descending
+                  </MDBDropdownItem>
                 </MDBDropdownMenu>
-                <Dialog
-                  open={this.state.toggleModal3}
-                  onClose={this.clickClose2}
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Are you sure you want to delete this group"}
-                  </DialogTitle>
-                  <DialogContent></DialogContent>
-                  <DialogActions>
-                    <Button onClick={this.clickClose2} color="primary">
-                      No
-                    </Button>
-                    <Button onClick={this.groupName} color="primary" autoFocus>
-                      Yes
-                    </Button>
-                  </DialogActions>
-                </Dialog>
               </MDBDropdown>
             </Grp>
-            <MaterialTable
-              title={
-                <div>
-                  <span
-                    style={{
-                      fontSize: 25,
-                      fontWeight: "bold"
-                    }}
-                  >
-                    Contacts
-                  </span>
-                </div>
-              }
-              columns={this.state.columns}
-              data={this.state.data}
-              actions={[
-                {
-                  icon: "add",
-                  tooltip: "Add User",
-                  isFreeAction: true,
-                  onClick: this.handleClickOpen
-                },
-                {
-                  icon: "group",
-                  tooltip: "Add Group",
-                  isFreeAction: true,
-                  onClick: this.clickOpen1
+            <span>
+              <MaterialTable
+                title={
+                  <div>
+                    <span
+                      style={{
+                        fontSize: 25,
+                        fontWeight: "bold"
+                      }}
+                    >
+                      {this.state.groupVal ? (
+                        <div>
+                          {this.state.groupVal.group_name}{" "}
+                          <AiOutlineUsergroupDelete
+                            cursor="pointer"
+                            onClick={() => this.clickOpen2(this.state.groupVal)}
+                          />
+                        </div>
+                      ) : (
+                        "All Contacts"
+                      )}
+                    </span>
+                  </div>
                 }
-              ]}
-              options={{
-                actionsColumnIndex: -1,
-                search: false,
-                sorting: false
-              }}
-            />
+                columns={this.state.columns}
+                data={this.state.data}
+                actions={[
+                  {
+                    icon: "add",
+                    tooltip: "Add User",
+                    isFreeAction: true,
+                    onClick: this.handleClickOpen
+                  },
+                  {
+                    icon: "group",
+                    tooltip: "Add Group",
+                    isFreeAction: true,
+                    onClick: this.clickOpen1
+                  }
+                ]}
+                options={{
+                  actionsColumnIndex: -1,
+                  sorting: false
+                }}
+              />
+            </span>
           </Div>
           <Modal
             handleClickOpen={this.state.toggleModal}

@@ -14,8 +14,7 @@ export default class Routes extends React.Component {
       token,
       redirect,
       redirectHandler,
-      myChangeHandler,
-      deleteHandler
+      myChangeHandler
     } = this.props;
     return (
       <Switch>
@@ -29,10 +28,7 @@ export default class Routes extends React.Component {
                 redirectHandler={redirectHandler}
               />
             ) : (
-              <Users
-                handleLogout={handleLogout}
-                deleteHandler={deleteHandler}
-              />
+              <Users handleLogout={handleLogout} />
             )
           }
           path="/"

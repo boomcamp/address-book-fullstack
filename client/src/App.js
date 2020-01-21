@@ -69,19 +69,6 @@ export default class App extends React.Component {
       .catch(err => toast.error(err.response.data.error));
   };
 
-  deleteHandler = rowData => {
-    axios
-      .delete(`http://localhost:5009/api/contacts/${rowData.id}/delete`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("user")}`
-        }
-      })
-      .then(() => {
-        toast.info("Successfully Deleted");
-      })
-      .catch(err => toast.error(err.response.data.error));
-  };
-
   redirectHandler = () => {
     this.setState({ redirect: false });
   };
@@ -100,12 +87,9 @@ export default class App extends React.Component {
             mySubmitHandler={this.mySubmitHandler}
             registerHandler={this.registerHandler}
             redirectHandler={this.redirectHandler}
-            addGroupHandler={this.addGroupHandler}
-            deleteHandler={this.deleteHandler}
             handleLogout={this.handleLogout}
             redirect={this.state.redirect}
             token={this.state.token}
-            error={this.state.error}
           />
         </HashRouter>
         <ToastContainer />

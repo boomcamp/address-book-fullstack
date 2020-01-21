@@ -133,7 +133,7 @@ export default class Registration extends React.Component {
                     </MDBBtn>
                   </div>
                   <div className="text-center register">
-                    Already have an account yet?
+                    Already have an account?
                     <br />
                     <MDBBtn
                       className="btn-login"

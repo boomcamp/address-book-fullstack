@@ -2,8 +2,15 @@ module.exports = {
   contacts: (req, res) => {
     const db = req.app.get("db");
 
-    db.contacts
-      .find({ user_id: req.params.id })
+    const { id } = req.params;
+    const { sort } = req.query;
+    let query = `select * from contacts where user_id=${id}`;
+    if (sort) {
+      query += ` order by lname ${sort} `;
+    }
+    db.query(query, {
+      id: id
+    })
       .then(contacts => res.status(200).json(contacts))
       .catch(err => {
         console.error(err);

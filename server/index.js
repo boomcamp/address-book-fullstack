@@ -38,15 +38,16 @@ massive({
     app.get("/api/users", users.list);
     app.post("/api/login", users.login);
     //Contact endpoints
-    app.post("/api/contacts/add", contacts.addContact);
-    app.get("/api/contacts/:id", contacts.contacts);
-    app.patch("/api/contacts/:id/edit", contacts.editContact);
-    app.delete("/api/contacts/:id/delete", contacts.deleteContact);
+    app.post("/api/contacts/add", auth, contacts.addContact);
+    app.get("/api/contacts/:id", auth, contacts.contacts);
+    app.patch("/api/contacts/:id/edit", auth, contacts.editContact);
+    app.delete("/api/contacts/:id/delete", auth, contacts.deleteContact);
     //Group endpoints
-    app.post("/api/groups/add", groups.addGroups);
-    app.get("/api/groups", groups.listGroups);
-    app.delete("/api/groups/:id/delete", groups.deleteGroup);
-    app.patch("/api/groups/:id/edit", groups.editGroup);
+    app.post("/api/groups/add", auth, groups.addGroups);
+    app.get("/api/groups/:id", auth, groups.listGroups);
+    app.delete("/api/groups/:id/delete", auth, groups.deleteGroup);
+    app.patch("/api/groups/:id/edit", auth, groups.editGroup);
+    app.get("/api/groups/:id/list", auth, groups.groupByContact);
 
     const PORT = 5009;
     app.listen(PORT, () => {
