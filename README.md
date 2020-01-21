@@ -1,21 +1,11 @@
 # Project Summary - Fullstack Address Book
 
-For this project you'll be crafting an Address Book application. You'll be
-responsible for the user interface and its functionality, along with
-implementing a backend API to persist the data to a database and authorize
-users.
-
 The set of technologies you'll be required to use are as follows
 
 - Web application and UI - [React.js](https://reactjs.org/)
 - Backend Server / API - [Node.js](https://nodejs.org) using the
   [express](https://expressjs.com/) server framework
 - Database - [PostgreSQL](https://www.postgresql.org/)
-
-This is a comprehensive test of all of you skills as a software developer,
-you'll be expected to implement each specified feature to the best of your
-abilities. Along with working features, attention will be paid to how you
-organize your application code.
 
 ## Getting Started
 

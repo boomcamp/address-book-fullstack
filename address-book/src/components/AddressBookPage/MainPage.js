@@ -32,6 +32,8 @@ export default function MainPage() {
   };
 
   const groupReference = e => {
+    setInit(true);
+    setState(null)
     setGroupRef(e);
   };
 

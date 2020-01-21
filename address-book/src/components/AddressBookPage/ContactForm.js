@@ -32,13 +32,7 @@ export default function ContactForm(highprops) {
     },
     groupList: [
       {
-        title: "work"
-      },
-      {
-        title: "home"
-      },
-      {
-        title: "crew"
+        title: "Defualt"
       }
     ]
   });
@@ -129,17 +123,6 @@ export default function ContactForm(highprops) {
     return null;
   };
 
-  const grpStateUpdate = (event, value, reason) => {
-    setgrpState(prevState => {
-      return {
-        ...prevState,
-        selectedGroupName: {
-          title: value
-        }
-      };
-    });
-  };
-
   function EditData(newdata, olddata) {
     axios
       .put(
@@ -207,7 +190,7 @@ export default function ContactForm(highprops) {
   };
 
   const cancel = () => {
-    console.log(highprops.contactData);    
+    console.log(highprops.contactData);
 
     if (highprops.prepareNewData) {
       setState({
@@ -423,13 +406,14 @@ export default function ContactForm(highprops) {
                 className={classes.textfields_dual}
               />
             </div>
-
-            <GroupForm
-              reference_contact={
-                highprops.contactData ? highprops.contactData.id : null
-              }
-              newContactData={upContactData}
-            />
+            <div className={classes.textfields_uno}>
+              <GroupForm
+                reference_contact={
+                  highprops.contactData ? highprops.contactData.id : null
+                }
+                newContactData={upContactData}
+              />
+            </div>
 
             <div className={classes.btnContainer}>
               <button className={classes.SubmitButton} type="submit">
@@ -484,6 +468,11 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       width: "350px",
       marginBottom: "10px"
+    }
+  },
+  textfields_uno: {
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: "-14px"
     }
   },
   groupContainer: {

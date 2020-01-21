@@ -2,7 +2,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import Login from "../Login/Login";
 import Signup from "../SignUp/Signup";
-import MainPage from "../../AddressBookPage/MainPage";
+import MainPage from "../AddressBookPage/MainPage";
 
 export default function Pages() {
   return (

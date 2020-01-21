@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import MaterialTable, { MTableBodyRow } from "material-table";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
-import "../App.css";
+import "../../App.css";
 import { makeStyles } from "@material-ui/core/styles";
 
 export default function ContactsTable(highprops) {
@@ -56,10 +56,6 @@ export default function ContactsTable(highprops) {
         )}`,
         headers: { Authorization: sessionStorage.getItem("token") }
       })
-        // .get("http://localhost:5000/api/contacts", {
-        //   data: { userid: sessionStorage.getItem("userid") },
-        //   headers: { Authorization: sessionStorage.getItem("token") }
-        // })
         .then(contacts => {
           console.log(contacts.data);
 
@@ -106,7 +102,6 @@ export default function ContactsTable(highprops) {
     <div className={classes.tableContainer}>
       <MuiThemeProvider theme={theme}>
         <MaterialTable
-          
           title="Contacts"
           columns={state.columns}
           components={state.components}

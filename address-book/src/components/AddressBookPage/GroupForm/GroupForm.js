@@ -40,15 +40,12 @@ export default function GroupForm(highprops) {
     if (highprops.reference_contact) {
       setGroup(highprops.reference_contact);
     } else if (highprops.reference_contact === null) {
-      console.log("new group create");
+      // console.log("new group create");
     }
 
     if (highprops.newContactData) {
       getNewDataDetails(highprops.newContactData);
     }
-
-    console.log(highprops.reference_contact);
-    console.log(highprops.newContactData);
   }, [highprops.reference_contact, highprops.newContactData]);
 
   const grpStateUpdate = (event, value, reason) => {
@@ -86,25 +83,6 @@ export default function GroupForm(highprops) {
         }
       })
       .catch(e => console.log(e));
-  };
-
-  const checkRemovedGroups = () => {
-    let chips = [];
-    let removed = [];
-
-    chipState.map(chip => {
-      chips.push(chip.group_name);
-    });
-
-    initChip.map((chip, index) => {
-      return chips.indexOf(chip.group_name) > -1
-        ? ""
-        : removed.push(chip.group_name);
-    });
-
-    console.log("deleting", chipState);
-
-    deleteGroups(removed);
   };
 
   const getNewDataDetails = data => {
@@ -195,10 +173,17 @@ export default function GroupForm(highprops) {
 
   const addToGroup = () => {
     let rechip = Object.assign([], chipState);
-    rechip.push({ group_name: grpState.selectedGroupName.title });
+    if (
+      grpState.selectedGroupName.title !== " " ||
+      grpState.selectedGroupName.title !== ""
+    ) {
+      rechip.push({ group_name: grpState.selectedGroupName.title });
+    }
+
     setgrpState(prevState => {
-      return { ...prevState, selectedGroupName:{title:''}};
+      return { ...prevState, selectedGroupName: { title: "" } };
     });
+
     setChipState(rechip);
   };
 
@@ -213,13 +198,13 @@ export default function GroupForm(highprops) {
     <div>
       <div className="group-form-container">
         <Autocomplete
-          freeSolo
+          // freeSolo
           id="group-box"
-          value={grpState.selectedGroupName}
           options={grpState.groupList}
           getOptionLabel={option => option.title}
           onInputChange={grpStateUpdate}
           className={classes.textfields}
+          value={grpState.selectedGroupName}
           renderInput={params => (
             <TextField
               {...params}
@@ -234,15 +219,33 @@ export default function GroupForm(highprops) {
         </p>
       </div>
 
-      <div className={classes.chip} style={{ width: "400px" }}>
+      <p
+        style={{
+          fontSize: "0.6em",
+          color: "#b7b7b7",
+          position: "relative",
+          top: "-18px",
+          left: "-56px"
+        }}
+      >
+        click + button to confirm action
+      </p>
+
+      <div className={classes.chip}>
         {chipState
           ? chipState.map(data => {
               return (
                 <Chip
                   value={data}
-                  style={{ margin: "0 3px 0 0" }}
+                  style={{
+                    margin: "0 3px 0 0",
+                    background: "#03A9F4",
+                    color: "white",
+                    borderColor: "#58b2fb"
+                  }}
                   label={data.group_name}
                   onDelete={handleDelete(data)}
+                  variant="outlined"
                 />
               );
             })
@@ -253,17 +256,14 @@ export default function GroupForm(highprops) {
 }
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    "& > *": {
-      // margin: theme.spacing(1),
-      // width: 500
-    }
-  },
   textfields: {
     width: "2000px",
     margin: "10px"
   },
   chip: {
-    margin: "20px"
+    width: "353px",
+    position: "relative",
+    left: "-68px",
+    top: "-13px"
   }
 }));

@@ -29,7 +29,6 @@ export default function GroupContacts(highprops) {
   };
 
   const normalizeGroup = data => {
-    console.log(data);
 
     let unique = [];
 
@@ -54,7 +53,6 @@ export default function GroupContacts(highprops) {
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
-        // console.log(data.data)
         return highprops.setDataGroup(data);
       })
       .catch(err => {
