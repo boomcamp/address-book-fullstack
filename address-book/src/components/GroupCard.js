@@ -21,6 +21,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import AddGroupModal from "./AddGroupModal";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 
 export default function GroupCard({ willEdit, userId }) {
   const classes = useStyles();
@@ -34,7 +35,7 @@ export default function GroupCard({ willEdit, userId }) {
   const [groupLs, setGroupLs] = useState([]);
   const [groupName, setGroupName] = useState("");
   const [groupId, setGroupId] = useState(0);
-
+  let history = useHistory();
   useEffect(() => {
     async function result() {
       await axios
@@ -51,7 +52,7 @@ export default function GroupCard({ willEdit, userId }) {
         });
     }
     result();
-  }, [userId]);
+  }, [userId, groupLs]);
 
   const handleEditGroup = groupData => {
     setGroupName(groupData.groupname);
@@ -72,13 +73,11 @@ export default function GroupCard({ willEdit, userId }) {
       if (result.value) {
         axios
           .delete(`http://localhost:3004/group/${groupData.id}`)
-          .then(response => {
+          .then(() => {
             Swal.fire({
               title: "Group Successfully Deleted",
               icon: "success"
-            }).then(() => {
-              window.location = "/addressbook";
-            });
+            }).then(() => history.push("/addressbook"));
           })
           .catch(err => {
             Swal.fire({

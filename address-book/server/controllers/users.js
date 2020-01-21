@@ -51,14 +51,21 @@ login = (req, res) => {
         username
       },
       {
-        fields: ["id", "username", "email", "password"]
+        fields: ["id", "username", "email", "password", "firstname"]
       }
     )
     .then(user => {
       if (!user) throw new Error("Invalid username!");
       return argon2.verify(user.password, password).then(valid => {
         if (!valid) throw new Error("Incorrect Password!");
-        const token = jwt.sign({ userId: user.id }, secret);
+        const token = jwt.sign(
+          {
+            userId: user.id,
+            username: user.username,
+            firstname: user.firstname
+          },
+          secret
+        );
         delete user.password;
         res.status(200).json({ ...user, token });
       });

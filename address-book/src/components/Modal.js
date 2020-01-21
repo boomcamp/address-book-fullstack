@@ -15,6 +15,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
 import Swal from "sweetalert2";
 import AddToGroupList from "./AddToGroupList";
+import { useHistory } from "react-router-dom";
 
 export default function Alert({
   open,
@@ -28,6 +29,7 @@ export default function Alert({
   userId
 }) {
   const classes = useStyles();
+  let history = useHistory();
   const [errorMsgFirstName, setErrorMsgFirstName] = useState("");
   const axiosThen = (willPost, isPatch) => {
     willPost
@@ -38,9 +40,7 @@ export default function Alert({
             ? "Contact Successfully Edited"
             : "Contact Added Successfully",
           icon: "success"
-        }).then(() => {
-          window.location = "/addressbook";
-        });
+        }).then(() => history.push("/addressbook"));
       })
       .catch(e => {
         Swal.fire({
@@ -84,9 +84,8 @@ export default function Alert({
             Swal.fire({
               title: "Contact Added Successfully",
               icon: "success"
-            }).then(() => {
-              window.location = "/addressbook";
-            });
+            }).then(() => history.push("/addressbook"));
+
             handleClose();
           })
           .catch(e => {
@@ -135,7 +134,7 @@ export default function Alert({
         <form>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
-              <AddToGroupList setIds={setIds} ids={ids} />
+              <AddToGroupList setIds={setIds} ids={ids} userId={userId} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField

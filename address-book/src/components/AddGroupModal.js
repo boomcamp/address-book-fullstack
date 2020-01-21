@@ -19,6 +19,7 @@ import GroupIcon from "@material-ui/icons/Group";
 import PersonIcon from "@material-ui/icons/Person";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 
 export default function AddGroupModal({
   openGroupModal,
@@ -32,6 +33,7 @@ export default function AddGroupModal({
 }) {
   const [errorMsgGroupName, setErrorMsgGroupName] = useState("");
   const [value, setValue] = useState("female");
+  let history = useHistory();
   const handleChange = event => {
     setValue(event.target.value);
   };
@@ -48,9 +50,7 @@ export default function AddGroupModal({
               Swal.fire({
                 title: "Group Name Successfully Edited",
                 icon: "success"
-              }).then(() => {
-                window.location = "/addressbook";
-              });
+              }).then(() => history.push("/addressbook"));
             })
             .catch(e => {
               Swal.fire({
@@ -68,9 +68,7 @@ export default function AddGroupModal({
               Swal.fire({
                 title: "Group Added Successfully",
                 icon: "success"
-              }).then(() => {
-                window.location = "/addressbook";
-              });
+              }).then(() => history.push("/addressbook"));
             })
             .catch(e => {
               Swal.fire({

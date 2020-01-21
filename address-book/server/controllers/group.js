@@ -29,7 +29,16 @@ function deleteGroup(req, res) {
   const { groupid } = req.params;
   db.groupcontacts
     .destroy({ id: groupid })
-    .then(group => res.status(200).json(group))
+    .then(group => {
+      res.status(200).json(group);
+      db.groupmember
+        .destroy({ groupid })
+        .then(group => res.status(201).json(group))
+        .catch(err => {
+          console.error(err);
+          res.status(500).end();
+        });
+    })
     .catch(err => {
       console.error(err);
       res.status(500).end();
@@ -44,9 +53,7 @@ function updateGroupName(req, res) {
       id: groupid,
       groupname
     })
-    .then(group => {
-      res.status(200).json(group);
-    })
+    .then(group => res.status(200).json(group))
     .catch(err => {
       console.error(err);
       res.status(500).end();

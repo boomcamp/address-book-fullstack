@@ -3,6 +3,7 @@ import MaterialTable from "material-table";
 import { Button, Avatar } from "@material-ui/core";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 
 export default function AddressBookTable({
   handleClickOpen,
@@ -16,6 +17,7 @@ export default function AddressBookTable({
   userId
 }) {
   const [data, setData] = useState([]);
+  let history = useHistory();
   const handleClickDetails = id => {
     axios
       .get(`http://localhost:3004/contacts/${userId}/${id}`)
@@ -53,7 +55,7 @@ export default function AddressBookTable({
   const handleClickDelete = rowData => {
     setWillEdit(true);
     Swal.fire({
-      title: `Are you sure you want to delete from ${rowData.firstname} ${rowData.lastname} your contacts?`,
+      title: `Are you sure you want to delete ${rowData.firstname} ${rowData.lastname} from your contacts?`,
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -71,9 +73,7 @@ export default function AddressBookTable({
             Swal.fire({
               title: "Contact Successfully Deleted",
               icon: "success"
-            }).then(() => {
-              window.location = "/addressbook";
-            });
+            }).then(() => history.push("/addressbook"));
           })
           .catch(err => {
             Swal.fire({
@@ -87,11 +87,11 @@ export default function AddressBookTable({
   };
   useEffect(() => {
     async function result() {
-      await axios({
-        method: "get",
-        url: `http://localhost:3004/contacts/${userId}`
-      })
-        .then(res => setData(res.data))
+      await axios
+        .get(`http://localhost:3004/contacts/${userId}`)
+        .then(res => {
+          setData(res.data);
+        })
         .catch(err => {
           Swal.fire({
             icon: "error",
@@ -101,11 +101,8 @@ export default function AddressBookTable({
         });
     }
     result();
-  }, [userId]);
-  if (!data) {
-    localStorage.clear();
-    return null;
-  }
+  }, [userId, data]);
+  if (!data) return localStorage.clear();
   return (
     <MaterialTable
       title="Users Data"
@@ -117,9 +114,13 @@ export default function AddressBookTable({
             <Avatar className={avatar}>
               {`${String(rowData.firstname)
                 .charAt(0)
-                .toUpperCase()}${String(rowData.lastname)
-                .charAt(0)
-                .toUpperCase()}`}
+                .toUpperCase()}${
+                rowData.lastname
+                  ? String(rowData.lastname)
+                      .charAt(0)
+                      .toUpperCase()
+                  : ""
+              }`}
             </Avatar>
           )
         },
@@ -237,7 +238,7 @@ export default function AddressBookTable({
       //           `http://localhost:3000/users/${newData.id}`,
       //           {
       //             email: newData.email,
-      //             username: newData.username,
+      //             username: newData.username,setData
       //             firstName: newData.firstName,
       //             lastName: newData.lastName,
       //             active: newData.active
@@ -253,10 +254,7 @@ export default function AddressBookTable({
       //             title: "Account has been edited!",
       //             icon: "success",
       //             button: true
-      //           })
-      //         );
-      //     }),
-      //   onRowDelete: oldData =>
+      //           })setData
       //     new Promise(resolve => {
       //       setTimeout(() => {
       //         resolve();

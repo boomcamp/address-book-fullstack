@@ -7,9 +7,11 @@ import Viewer from "./Viewer";
 import AddressBookTable from "./AddressBookTable";
 import GroupCard from "./GroupCard";
 import jwt from "jsonwebtoken";
+import { useHistory } from "react-router-dom";
 
 export default function AddressBook() {
   var userId = "";
+  let history = useHistory();
   if (!localStorage.getItem("Token")) {
     Swal.fire({
       title: "You must login first!",
@@ -20,13 +22,11 @@ export default function AddressBook() {
     rgba(0,0,123,0.4)
     url("https://sweetalert2.github.io/images/nyan-cat.gif")
     left top
+  
     no-repeat`
-    }).then(function() {
-      window.location = "/";
-    });
-  } else {
-    const { userId } = jwt.decode(localStorage.getItem("Token"));
-  }
+    }).then(() => history.push("/"));
+  } else userId = jwt.decode(localStorage.getItem("Token")).userId;
+
   const [open, setOpen] = React.useState(false);
   const [willEdit, setWillEdit] = useState(false);
   const [willOpenViewer, setWillOpenViewer] = useState(false);
@@ -93,7 +93,7 @@ const useStyles = makeStyles(theme => ({
     transform: "translate(-50%, -50%)",
     zIndex: "2",
     height: "calc(100vh - 64px)",
-    overflowY: "auto"
+    overflowY: "inherit"
   },
   paper: {
     display: "flex",

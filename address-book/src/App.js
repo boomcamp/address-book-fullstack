@@ -23,24 +23,23 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Swal from "sweetalert2";
 import "./App.css";
+import jwt from "jsonwebtoken";
+import { useHistory } from "react-router-dom";
 
-export default function SignIn() {
+const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+
+export default function App() {
   const classes = useStyles();
-  const [redirect, setRedirect] = useState(false);
-  const [token, setToken] = useState("");
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // let history = useHistory();
+  const [anchorEl, setAnchorEl] = useState(null);
   const logout = () => {
     setAnchorEl(null);
     Swal.fire(
       `Logged out Successfully!`,
-      `Goodbye, ${localStorage.getItem("Name")}!`
-    ).then(function() {
+      `Goodbye, ${capitalize(
+        String(jwt.decode(localStorage.getItem("Token")).firstname)
+      )}!`
+    ).then(() => {
       window.location = "/";
       localStorage.clear();
     });
@@ -87,7 +86,7 @@ export default function SignIn() {
                           className={classes.white}
                           aria-controls="simple-menu"
                           aria-haspopup="true"
-                          onClick={handleClick}
+                          onClick={e => setAnchorEl(e.currentTarget)}
                         >
                           My account
                         </Button>
@@ -96,9 +95,11 @@ export default function SignIn() {
                           anchorEl={anchorEl}
                           keepMounted
                           open={Boolean(anchorEl)}
-                          onClose={handleClose}
+                          onClose={() => setAnchorEl(null)}
                         >
-                          <MenuItem onClick={logout}>Logout</MenuItem>
+                          <BrowserRouter>
+                            <MenuItem onClick={() => logout()}>Logout</MenuItem>
+                          </BrowserRouter>
                         </Menu>
                       </div>
                     )}
@@ -106,25 +107,17 @@ export default function SignIn() {
                 </Switch>
               </Toolbar>
             </AppBar>
-            {redirect || localStorage.getItem("Token") ? (
+            {localStorage.getItem("Token") ? (
               <Redirect to="/addressbook" />
             ) : null}
             <Switch>
               <Route
                 exact
                 path="/"
-                render={props => (
-                  <Login setRedirect={setRedirect} setToken={setToken} />
-                )}
+                component={() => <Login capitalize={capitalize} />}
               />
-              <Route
-                path="/register"
-                render={props => <SignUp {...props} setToken={setToken} />}
-              />
-              <Route
-                path="/addressbook"
-                render={props => <AddressBook {...props} token={token} />}
-              />
+              <Route path="/register" component={SignUp} />
+              <Route path="/addressbook" component={AddressBook} />
             </Switch>
           </React.Fragment>
         </BrowserRouter>

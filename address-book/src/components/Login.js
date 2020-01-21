@@ -4,73 +4,59 @@ import {
   Button,
   TextField,
   Typography,
-  Container
+  Container,
+  InputAdornment,
+  IconButton
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import PersonPinIcon from "@material-ui/icons/PersonPin";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import LockOutlined from "@material-ui/icons/Lock";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 
-export default function Login(props) {
+export default function Login({ capitalize }) {
   const classes = useStyles();
+  let history = useHistory();
   const [values, setValues] = useState({
-    password: ""
+    password: "",
+    username: "",
+    errorUsername: ""
   });
-  const [username, setUsername] = useState("");
-  const [ErrorUsername, setErrorUsername] = useState("");
   const [ErrorPass, setErrorPass] = useState("");
-  const handleChangePassword = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
   const handleSubmit = e => {
     e.preventDefault();
     values.password === ""
       ? setErrorPass("This field is required")
       : setErrorPass("");
-    if (username === "") setErrorUsername("This field is required");
-    else setErrorUsername("");
-    if (username && values.password.length >= 8) {
-      // Login
+    if (values.username === "")
+      setValues({ ...values, errorUsername: "This field is required" });
+    else setValues({ ...values, errorUsername: "" });
+    if (values.username && values.password.length >= 8) {
       axios
         .post("http://localhost:3004/signin", {
-          username: username,
+          username: values.username,
           password: values.password
         })
         .then(response => {
           localStorage.setItem("Token", response.data.token);
-          localStorage.setItem("username", username);
-          localStorage.setItem("userid", response.data.id);
           Swal.fire({
             icon: "success",
-            title: "Logged In Successfully!"
-          }).then(() => {
-            window.location = "/addressbook";
-          });
+            title: "Logged In Successfully!",
+            text: `Welcome ${capitalize(String(response.data.firstname))}`
+          }).then(() => history.push("/addressbook"));
         })
         .catch(response => {
-          // console.log(response);
           setErrorPass("Email and Password did not match");
           Swal.fire({
-            title: response.data,
+            title: "Failed to Login",
             icon: "error",
-            button: true
+            button: true,
+            text: response.data
           });
-          // Swal.fire({
-          //   icon: "error",
-          //   title: "Failed to Login",
-          //   text: "Please check your email and password"
-          // });
         });
-      // Login End
     } else if (values.password.length < 8 && values.password.length > 0) {
       setErrorPass("Email and Password did not match");
       Swal.fire({
@@ -97,8 +83,8 @@ export default function Login(props) {
           </Grid>
           <Grid item xs={11}>
             <TextField
-              error={ErrorUsername === "" ? false : true}
-              helperText={ErrorUsername ? ErrorUsername : ""}
+              error={values.errorUsername === "" ? false : true}
+              helperText={values.errorUsername ? values.errorUsername : ""}
               variant="standard"
               margin="normal"
               required={true}
@@ -109,7 +95,7 @@ export default function Login(props) {
               style={{ margin: 8 }}
               fullWidth
               type="username"
-              onChange={e => setUsername(e.target.value)}
+              onChange={e => setValues({ ...values, username: e.target.value })}
               InputLabelProps={{ required: false }}
             />
           </Grid>
@@ -133,14 +119,19 @@ export default function Login(props) {
               fullWidth
               type={values.showPassword ? "text" : "password"}
               value={values.password}
-              onChange={handleChangePassword("password")}
+              onChange={e => setValues({ ...values, password: e.target.value })}
               InputLabelProps={{ required: false }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
+                      onClick={() =>
+                        setValues({
+                          ...values,
+                          showPassword: !values.showPassword
+                        })
+                      }
                       onMouseDown={e => e.preventDefault()}
                     >
                       {values.showPassword ? <Visibility /> : <VisibilityOff />}

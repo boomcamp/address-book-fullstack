@@ -16,9 +16,13 @@ export default function Viewer({ values }) {
               <Avatar className={classes.avatar}>
                 {`${String(values.firstname)
                   .charAt(0)
-                  .toUpperCase()}${String(values.lastname)
-                  .charAt(0)
-                  .toUpperCase()}`}
+                  .toUpperCase()} ${
+                  values.lastname
+                    ? String(values.lastname)
+                        .charAt(0)
+                        .toUpperCase()
+                    : ""
+                }`}
               </Avatar>
             </figure>
             <h3 className="title has-text-black">
@@ -136,7 +140,7 @@ export default function Viewer({ values }) {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   card: {
     width: "32.5%",
     background: "transparent",

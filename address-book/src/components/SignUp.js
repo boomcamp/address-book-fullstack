@@ -4,71 +4,27 @@ import {
   TextField,
   Grid,
   Typography,
-  Container
+  Container,
+  InputAdornment,
+  IconButton
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import PersonOutlined from "@material-ui/icons/PersonOutlined";
-import Create from "@material-ui/icons/Create";
-import EmailOutlined from "@material-ui/icons/EmailOutlined";
+import {
+  PersonOutlined,
+  Create,
+  EmailOutlined,
+  Visibility,
+  VisibilityOff
+} from "@material-ui/icons";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
-  rooot: {
-    background: "#FFF",
-    borderRadius: "8px",
-    boxShadow: "0 8px 17px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);",
-    left: "50%",
-    top: "45%",
-    position: "absolute",
-    msTransform: "translate(-50%, -50%)",
-    webkitTransform: "translate(-50%, -50%)",
-    transform: "translate(-50%, -50%)",
-    zIndex: "2"
-  },
-  paper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    margin: "0 auto"
-  },
-  avatar: {
-    fontSize: "50px",
-    marginTop: 10
-  },
-  form: {
-    width: "100%",
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-    backgroundColor: "#009688"
-  },
-  toolbar: {
-    display: "flex",
-    justifyContent: "space-between"
-  },
-  noPad: {
-    padding: "0"
-  },
-  white: {
-    color: "white"
-  }
-}));
-
-export default function SignUp(props) {
+export default function SignUp() {
   const classes = useStyles();
+  let history = useHistory();
   const [values, setValues] = useState({
     password: ""
   });
@@ -100,7 +56,7 @@ export default function SignUp(props) {
       ...confirmValues,
       showPassword: !confirmValues.showPassword
     });
-  const handleMouseDownPassword = event => event.preventDefault();
+  const handleMouseDownPassword = e => e.preventDefault();
   const handleSubmit = e => {
     e.preventDefault();
     fname === ""
@@ -125,9 +81,9 @@ export default function SignUp(props) {
 
     if (email === "") setErrorEmail("This field is required");
     else {
-      if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+      if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email))
         setErrorEmail("");
-      } else setErrorEmail("Please Enter a valid Email");
+      else setErrorEmail("Please Enter a valid Email");
     }
     if (
       email &&
@@ -148,31 +104,19 @@ export default function SignUp(props) {
         })
         .then(token => {
           localStorage.setItem("Token", token.data.token);
-          props.setToken(token.data.accessToken);
-          localStorage.setItem("Name", token.data.firstName);
           Swal.fire({
             title: "Signed Up Successfully",
             text: "Please Sign In to your account",
             icon: "success",
             button: true
-          }).then(() => {
-            window.location = "/";
-          });
+          }).then(() => history.push("/"));
         })
         .catch(error => {
-          try {
-            Swal.fire({
-              title: error.response.data,
-              icon: "error",
-              button: true
-            });
-          } catch {
-            Swal.fire({
-              title: error,
-              icon: "error",
-              button: true
-            });
-          }
+          Swal.fire({
+            title: error,
+            icon: "error",
+            button: true
+          });
         });
     } else {
       Swal.fire({
@@ -381,3 +325,51 @@ export default function SignUp(props) {
     </Container>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  "@global": {
+    body: {
+      backgroundColor: theme.palette.common.white
+    }
+  },
+  rooot: {
+    background: "#FFF",
+    borderRadius: "8px",
+    boxShadow: "0 8px 17px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);",
+    left: "50%",
+    top: "45%",
+    position: "absolute",
+    msTransform: "translate(-50%, -50%)",
+    webkitTransform: "translate(-50%, -50%)",
+    transform: "translate(-50%, -50%)",
+    zIndex: "2"
+  },
+  paper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    margin: "0 auto"
+  },
+  avatar: {
+    fontSize: "50px",
+    marginTop: 10
+  },
+  form: {
+    width: "100%",
+    marginTop: theme.spacing(1)
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    backgroundColor: "#009688"
+  },
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between"
+  },
+  noPad: {
+    padding: "0"
+  },
+  white: {
+    color: "white"
+  }
+}));
