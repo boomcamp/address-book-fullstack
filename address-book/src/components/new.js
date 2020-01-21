@@ -29,11 +29,12 @@ export default class New extends Component {
           group_name: this.state.groupName
         })
         .then(res => {
+          window.location.reload();
           this.setState({
             groupName: ""
           });
         });
-      window.location.reload();
+    
       this.props.handleCloseModal();
     }
   };

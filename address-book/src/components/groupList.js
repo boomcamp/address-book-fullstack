@@ -28,6 +28,7 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Confrimation from "./modal/confirmation";
+import CancelIcon from '@material-ui/icons/Cancel';
 import {
   Dialog,
   DialogActions,
@@ -35,6 +36,7 @@ import {
   TextField,
   DialogContent
 } from "@material-ui/core";
+import EditGroup from "./modal/editGroup";
 
 export default class GroupList extends Component {
   constructor(props) {
@@ -51,10 +53,56 @@ export default class GroupList extends Component {
       query: "ASC",
       bygroups: [],
       open: false,
-      openMods: false
+      openMods: false,
+      openEdit: false,
+      disabled: true,
+      editButton: true,
+      saveButton: "none",
+      groupEdit: ""
     };
   }
-
+  handleCancelGroups = () => {
+    this.setState({
+      disabled: true,
+      editButton: true,
+      saveButton: "none"
+    });
+    this.handleCloseEditGroup();
+  };
+  handleSave = () => {
+    const name = localStorage.getItem("name");
+    if (name === this.state.groupEdit) {
+      alert("pair");
+      this.setState({
+        groupEdit: "",
+        disabled: false,
+        saveDisabled: false,
+        editButton: "none",
+        saveButton: "flex"
+      });
+      localStorage.removeItem("idGroup");
+      localStorage.removeItem("name");
+    } else {
+      const idGroup = localStorage.getItem("idGroup");
+      const id = localStorage.getItem("id");
+      axios.patch(`/editgroup/${id}/${idGroup}`,{
+        group_name: this.state.groupEdit
+      }).then(res => {
+        localStorage.removeItem("idGroup");
+        localStorage.removeItem("name");
+      });
+      this.handleSelect()
+    }
+  };
+  handleEditGroup = () => {
+    console.log(this.setFields);
+    this.setState({
+      disabled: false,
+      saveDisabled: false,
+      editButton: "none",
+      saveButton: "flex"
+    });
+  };
   componentDidMount() {
     this.handleSelect();
   }
@@ -77,28 +125,27 @@ export default class GroupList extends Component {
   };
 
   handleGetByGroups = id => {
+    localStorage.setItem("idGroups", id);
     const userid = localStorage.getItem("id");
     axios.get(`/addressbook/${userid}?groups=${id}`).then(res => {
       this.setState({
         bygroups: res.data,
         open: true
       });
-      // this.state.bygroups.map(item =>{
-      //   console.log(item)
-      // })
     });
   };
 
   handleOpenModal = id => {
-    console.log(id);
     this.handleGetContacts();
     this.setState({ openModal: true, currentGroupId: id });
   };
 
   handleCloseModal = () => {
-    this.setState({ openModal: false,openMods:false });
+    localStorage.removeItem("idGroups");
+    this.setState({ openModal: false, openMods: false });
   };
   handleClose = () => {
+    localStorage.removeItem("idGroups");
     this.setState({ open: false });
   };
 
@@ -106,56 +153,87 @@ export default class GroupList extends Component {
     console.log(e.target.value);
   };
   setValue = e => {
-    // console.log(e);
+    console.log(e);
 
     this.setState({
       selectValue: e
     });
-    e.map(row => {
-      // console.log(row.id);
-      this.state.idArray.push(e);
+
+    this.setState({
+      ...this.state,
+      idArray: [...e]
     });
   };
 
   handleAdd = () => {
-    // console.log('sadasd')
+    console.log(this.state.idArray);
+
     if (this.state.idArray.length <= 0) {
       console.log("No selected");
     } else {
-      this.state.idArray.forEach(x => {
-        x.forEach(element => {
-          const idLocal = localStorage.getItem("id");
-          axios
-            .patch(`/addressbook/addtogroup/${idLocal}/${element.id}`, {
-              groupid: this.state.currentGroupId
-            })
-            .then(res => {});
-        });
+      this.state.idArray.map(item => {
+        const idLocal = localStorage.getItem("id");
+        axios
+          .patch(`/addressbook/addtogroup/${idLocal}/${item.id}`, {
+            groupid: this.state.currentGroupId
+          })
+          .then(() => this.handleCloseModal())
+          .catch(err => {
+            console.log(err);
+          });
       });
     }
-    this.handleCloseModal();
   };
   handleRemove = idRemove => {
     localStorage.setItem("idRemove", idRemove.idRemove.list.id);
     this.setState({
       openMods: true
     });
-    console.log("a")
-    
-    // axios.patch(`/addressbook/removeToGroup/${iD}`).then(res => {
-    //   console.log("success");
-    // });
   };
   handleCloseMods = () => {
-    
+    localStorage.removeItem("idRemove");
     this.setState({
       openMods: false
     });
-    console.log(this.state.openMods)
   };
-
+  handleRemoveYes = () => {
+    const id = localStorage.getItem("idGroups");
+    const userid = localStorage.getItem("id");
+    const iD = localStorage.getItem("idRemove");
+    axios.patch(`/addressbook/removeToGroup/${iD}`).then(res => {
+      axios.get(`/addressbook/${userid}?groups=${id}`).then(resdata => {
+        this.setState({
+          bygroups: resdata.data
+        });
+        this.handleCloseMods();
+      });
+    });
+  };
+  handleOpenEditGroup = id => {
+    localStorage.setItem("idGroup", id.id);
+    localStorage.setItem("name", id.group_name);
+    this.setState({
+      openEdit: true,
+      groupEdit: id.group_name
+    });
+  };
+  handleCloseEditGroup = () => {
+    localStorage.removeItem("idGroup");
+    localStorage.removeItem("name");
+    this.setState({
+      openEdit: false
+    });
+  };
+  setFields = event => {
+    console.log(event);
+    var fieldname = event.target.name;
+    var value = event.target.value;
+    this.setState({
+      groupEdit: value
+    });
+  };
   render() {
-    console.log(this.state.openMods)
+    // console.log(this.state.list);
     return (
       <React.Fragment>
         <div
@@ -205,9 +283,18 @@ export default class GroupList extends Component {
                         </VisibilityIcon>
                       </Tooltip>
                     </IconButton>
-                    <IconButton edge="end" aria-label="Edit">
+                    <IconButton
+                      edge="end"
+                      aria-label="Edit"
+                      onClick={() => this.handleOpenEditGroup(group)}
+                    >
                       <Tooltip title="Edit Group">
-                        <EditIcon />
+                        <EditIcon>
+                          <EditGroup
+                            handleCloseEditGroup={this.handleCloseEditGroup}
+                            openEdit={this.state.openEdit}
+                          />
+                        </EditIcon>
                       </Tooltip>
                     </IconButton>
 
@@ -265,8 +352,7 @@ export default class GroupList extends Component {
           </DialogActions>
         </Dialog>
 
-
-              {/* Displaying Members */}
+        {/* Displaying Members */}
 
         <Dialog
           style={{
@@ -287,6 +373,7 @@ export default class GroupList extends Component {
             }}
           >
             List of Group
+            <CancelIcon onClick={this.handleClose}style={{float:"right"}}/>
           </DialogTitle>
           <DialogContent style={{ height: "600px  " }}>
             <Grid
@@ -319,13 +406,8 @@ export default class GroupList extends Component {
                             this.handleRemove({ idRemove: { list } })
                           }
                         >
-                          
                           Remove from Group
                         </Button>
-                        <Confrimation
-                            openMods={this.state.openMods}
-                            handleCloseMods={this.handleCloseMods}
-                          />
                       </CardActions>
                     </Card>
                   </Grid>
@@ -333,6 +415,41 @@ export default class GroupList extends Component {
               })}
             </Grid>
           </DialogContent>
+        </Dialog>
+
+        <div>
+          <Dialog
+            maxWidth="xs"
+            open={this.state.openMods}
+            onClose={this.handleCloseMods}
+            aria-labelledby="form-dialog-title"
+            placement="top"
+          >
+            <Confrimation
+              handleCloseMods={this.handleCloseMods}
+              handleRemoveYes={this.handleRemoveYes}
+            />
+          </Dialog>
+        </div>
+        {/* modal in edit */}
+        <Dialog
+          maxWidth="sm"
+          open={this.state.openEdit}
+          onClose={this.handleCloseEditGroup}
+          aria-labelledby="form-dialog-title"
+          placement="top"
+        >
+          <DialogTitle>Edit Group Name</DialogTitle>
+          <EditGroup
+            saveButton={this.state.saveButton}
+            editButton={this.state.editButton}
+            disabled={this.state.disabled}
+            handleEditGroup={this.handleEditGroup}
+            handleCancelGroups={this.handleCancelGroups}
+            groupEdit={this.state.groupEdit}
+            setFields={this.setFields}
+            handleSave={this.handleSave}
+          />
         </Dialog>
       </React.Fragment>
     );

@@ -42,19 +42,14 @@ export default class EditContacts extends Component {
     const { openModal, handleCloseModal, dataEdit } = this.props;
     return (
       <React.Fragment>
-        <Dialog
-          fullWidth
-          maxWidth="sm"
-          open={openModal}
-          onClose={handleCloseModal}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Edit Contact</DialogTitle>
-
+     
           <form
             noValidate
             autoComplete="off"
             onSubmit={e => this.handleUpdateContacts(e)}
+            style={{
+              padding:10
+            }}
           >
             <DialogContent>
               <Grid
@@ -355,7 +350,7 @@ export default class EditContacts extends Component {
               </Button>
             </DialogActions>
           </form>
-        </Dialog>
+     
       </React.Fragment>
     );
   }

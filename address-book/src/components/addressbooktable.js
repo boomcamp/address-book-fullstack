@@ -107,29 +107,7 @@ class Addressbooktable extends Component {
                     onClick={() => this.handleOpenModal({ item: { rowData } })}
                   />
                 </Tooltip>
-                <EditContacts
-                  handleCloseModal={this.handleCloseModal}
-                  openModal={this.state.openModal}
-                  dataEdit={this.state.dataEdit}
-                  setFields={this.setFields}
-                  fname={this.state.fname}
-                  lname={this.state.lname}
-                  email={this.state.email}
-                  postal={this.state.postal}
-                  city={this.state.city}
-                  prov={this.state.prov}
-                  mobilephone={this.state.mobilephone}
-                  homephone={this.state.homephone}
-                  workphone={this.state.workphone}
-                  country={this.state.country}
-                  disabled={this.state.disabled}
-                  buttonChange={this.state.buttonChange}
-                  saveDisabled={this.state.saveDisabled}
-                  editButton={this.state.editButton}
-                  saveButton={this.state.saveButton}
-                  handleCancel={this.handleCancel}
-                  handleEdit={this.handleEdit}
-                />
+              
               </span>
 
               <span
@@ -205,7 +183,6 @@ class Addressbooktable extends Component {
   };
 
   handleCloseModal = () => {
-    console.log("lll");
     localStorage.removeItem("idEdit");
     this.setState({
       openModal: false
@@ -278,12 +255,13 @@ class Addressbooktable extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
+            <Button onClick={this.handleClose} color="primary" autoFocus>
+                No
+              </Button>
               <Button onClick={() => this.handleYes()} color="primary">
                 Yes
               </Button>
-              <Button onClick={this.handleClose} color="primary" autoFocus>
-                No
-              </Button>
+          
             </DialogActions>
           </Dialog>
         </div>
@@ -354,6 +332,40 @@ class Addressbooktable extends Component {
             </Grid>
           </Typography>
         </Container>
+
+        <Dialog
+          fullWidth
+          maxWidth="sm"
+          open={this.state.openModal}
+          onClose={this.handleCloseModal}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="form-dialog-title">Edit Contact</DialogTitle>
+          <EditContacts
+                  handleCloseModal={this.handleCloseModal}
+                  openModal={this.state.openModal}
+                  dataEdit={this.state.dataEdit}
+                  setFields={this.setFields}
+                  fname={this.state.fname}
+                  lname={this.state.lname}
+                  email={this.state.email}
+                  postal={this.state.postal}
+                  city={this.state.city}
+                  prov={this.state.prov}
+                  mobilephone={this.state.mobilephone}
+                  homephone={this.state.homephone}
+                  workphone={this.state.workphone}
+                  country={this.state.country}
+                  disabled={this.state.disabled}
+                  buttonChange={this.state.buttonChange}
+                  saveDisabled={this.state.saveDisabled}
+                  editButton={this.state.editButton}
+                  saveButton={this.state.saveButton}
+                  handleCancel={this.handleCancel}
+                  handleEdit={this.handleEdit}
+                />
+        </Dialog>
       </React.Fragment>
     );
   }
