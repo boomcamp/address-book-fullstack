@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -19,22 +19,31 @@ export default function GroupedContact({
   setRows,
   all,
   groups,
-  setGroups
+  setGroups,
+  setPage,
+  getGroup,
+  setGetGroup,
+  setStatus
 }) {
   const classes = useStyles();
-  const [state, setState] = useState("");
 
   const groupList = e => {
-    setState(e.target.value);
+    setGetGroup(e.target.value);
+
     if (e.target.value === "all") {
       setRows(all);
+      setStatus(false);
     } else {
       axios
         .get(
           `http://localhost:3001/contacts/group/list/${match.params.id}/${e.target.value}`,
           headers
         )
-        .then(res => setRows(res.data));
+        .then(res => {
+          setPage(0);
+          setStatus(true);
+          setRows(res.data);
+        });
     }
   };
 
@@ -43,6 +52,13 @@ export default function GroupedContact({
       .get(`http://localhost:3001/group/list/${match.params.id}`, headers)
       .then(res => {
         setGroups(res.data.groups);
+      })
+      .catch(error => {
+        try {
+          alert(error.response.data.error);
+        } catch {
+          console.log(error);
+        }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -54,7 +70,7 @@ export default function GroupedContact({
         <Select
           labelId="grouped-select"
           id="select"
-          value={state}
+          value={getGroup}
           onChange={groupList}
         >
           <MenuItem value="all">

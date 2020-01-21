@@ -37,17 +37,40 @@ module.exports = {
   },
   add: (req, res) => {
     const db = req.app.get("db");
-    const { groupid } = req.body;
-    db.contacts
-      .findOne({ id: req.params.id })
+    const { groupid, contactid } = req.body;
+    db.grouplist
+      .findOne({ contactid })
       .then(data => {
+        if (data) {
+          throw new Error("Contacts already added");
+        }
         return db.grouplist
           .insert({
             groupid,
-            contactid: data.id
+            contactid
           })
-          .then(grouplist => res.status(200).json(grouplist))
+          .then(list => res.status(200).json(list))
           .catch(() => res.status(500).end());
+      })
+      .catch(err => {
+        if ("Contacts already added".includes(err.message)) {
+          res.status(400).json({ error: err.message });
+        } else {
+          res.status(500).end();
+        }
+      });
+  },
+  delete: (req, res) => {
+    const db = req.app.get("db");
+    const { groupid, contactid } = req.params;
+    db.grouplist
+      .find({ groupid })
+      .then(() => {
+        return db
+          .query(
+            `delete from grouplist where groupid = ${groupid} and contactid = ${contactid}`
+          )
+          .then(data => res.status(200).json(data));
       })
       .catch(() => res.status(500).end());
   }

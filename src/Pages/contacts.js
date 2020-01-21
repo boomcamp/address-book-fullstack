@@ -12,6 +12,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
 import Delete from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import Remove from "@material-ui/icons/HighlightOff";
 import Axios from "axios";
 import * as ls from "local-storage";
 import Layout from "../Layout/layout";
@@ -52,6 +53,8 @@ export default function Contacts({ match, history }) {
   const [filter, setFilter] = useState([]);
   const [all, setAll] = useState([]);
   const [groups, setGroups] = useState([]);
+  const [getGroup, setGetGroup] = useState("");
+  const [status, setStatus] = useState(false);
   const auth = ls.get("auth");
   const [open, setOpen] = useState(false);
   const [getContact, setGetContact] = useState({});
@@ -66,7 +69,7 @@ export default function Contacts({ match, history }) {
   };
   const handleOpen = () => setOpen(true);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(7);
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -81,7 +84,7 @@ export default function Contacts({ match, history }) {
 
   const sortItems = value => {
     Axios.get(
-      `http://localhost:3001/contacts/list/${match.params.id}?sort=${value}`,
+      `http://localhost:3001/contacts/list/${match.params.id}?sort=${value}&group=${getGroup}`,
       headers
     ).then(res => setRows(res.data));
   };
@@ -125,6 +128,10 @@ export default function Contacts({ match, history }) {
           all={all}
           setGroups={setGroups}
           groups={groups}
+          setPage={setPage}
+          getGroup={getGroup}
+          setGetGroup={setGetGroup}
+          setStatus={setStatus}
         />
         <Table className={classes.table} aria-label="customized table">
           <TableHead>
@@ -152,58 +159,95 @@ export default function Contacts({ match, history }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {(rowsPerPage > 0
-              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows
-            ).map((row, i) => (
-              <StyledTableRow key={i}>
-                <StyledTableCell align="center" style={{ cursor: "pointer" }}>
-                  {row.first_name}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {row.last_name}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {row.mobile_phone}
-                </StyledTableCell>
-                <StyledTableCell
-                  align="center"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}
-                >
-                  <Tooltip title="Edit" arrow>
-                    <EditIcon
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        handleOpen();
-                        setGetContact(row);
-                      }}
-                    />
-                  </Tooltip>
-                  <AddToGroup
-                    style={{ cursor: "pointer" }}
-                    match={match}
-                    headers={headers}
-                    idContact={row.id}
-                  />
-                  <Tooltip title="Delete" arrow>
-                    <Delete
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setOpenDelete({ status: true, id: row.id });
-                      }}
-                    />
-                  </Tooltip>
-                </StyledTableCell>
+            {rows.length === 0 ? (
+              <StyledTableRow style={{ height: 567 }}>
+                <TableCell colSpan={6} align="center">
+                  No Contacts
+                </TableCell>
               </StyledTableRow>
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
-              </TableRow>
+            ) : (
+              <>
+                {(rowsPerPage > 0
+                  ? rows.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : rows
+                ).map((row, i) => (
+                  <StyledTableRow key={i}>
+                    <StyledTableCell
+                      align="center"
+                      style={{ cursor: "pointer" }}
+                    >
+                      {row.first_name}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.last_name}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.mobile_phone}
+                    </StyledTableCell>
+                    <StyledTableCell
+                      align="center"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                    >
+                      {status === false ? (
+                        <Tooltip title="Edit" arrow>
+                          <EditIcon
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              handleOpen();
+                              setGetContact(row);
+                            }}
+                          />
+                        </Tooltip>
+                      ) : null}
+
+                      <AddToGroup
+                        style={{ cursor: "pointer" }}
+                        match={match}
+                        headers={headers}
+                        idContact={row.id}
+                        groups={groups}
+                      />
+                      {status === true ? (
+                        <Tooltip title="Remove" arrow>
+                          <Remove
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              setOpenDelete({
+                                status: true,
+                                id: row.id
+                              })
+                            }
+                          />
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title="Delete" arrow>
+                          <Delete
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setOpenDelete({
+                                status: true,
+                                id: row.id
+                              });
+                            }}
+                          />
+                        </Tooltip>
+                      )}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+                {emptyRows > 0 && (
+                  <StyledTableRow style={{ height: 81 * emptyRows }}>
+                    <StyledTableCell colSpan={6} />
+                  </StyledTableRow>
+                )}
+              </>
             )}
           </TableBody>
           <TableFooter>
@@ -231,12 +275,14 @@ export default function Contacts({ match, history }) {
       />
       <DeleteContactModal
         open={openDelete.status}
+        status={status}
         setOpen={setOpenDelete}
         contactId={openDelete.id}
         rows={rows}
         setRows={setRows}
         headers={headers}
         setAll={setAll}
+        getGroup={getGroup}
       />
     </Layout>
   );

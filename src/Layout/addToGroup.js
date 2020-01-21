@@ -7,10 +7,9 @@ import axios from "axios";
 
 const ITEM_HEIGHT = 48;
 
-export default function AddToGroup({ headers, match, idContact }) {
+export default function AddToGroup({ headers, match, idContact, groups }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [groups, setGroups] = useState([]);
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -22,25 +21,17 @@ export default function AddToGroup({ headers, match, idContact }) {
 
   const handleAdd = id => {
     setAnchorEl(null);
-    console.log(id);
     axios
       .post(
         `http://localhost:3001/group/add/${idContact}`,
         {
-          groupid: id
+          groupid: id,
+          contactid: idContact
         },
         headers
       )
       .then(() => alert("Added"));
   };
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3001/group/list/${match.params.id}`, headers)
-      .then(res => {
-        setGroups(res.data.groups);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div>
@@ -65,11 +56,15 @@ export default function AddToGroup({ headers, match, idContact }) {
           }
         }}
       >
-        {groups.map((group, i) => (
-          <MenuItem key={i} onClick={() => handleAdd(group.id)}>
-            {group.groupname}
-          </MenuItem>
-        ))}
+        {groups.length === 0 ? (
+          <MenuItem key={groups.length}>No Group/s Added</MenuItem>
+        ) : (
+          groups.map((group, i) => (
+            <MenuItem key={i} onClick={() => handleAdd(group.id)}>
+              {group.groupname}
+            </MenuItem>
+          ))
+        )}
       </Menu>
     </div>
   );

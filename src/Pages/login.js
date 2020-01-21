@@ -66,7 +66,7 @@ export default function Login(props) {
       })
       .catch(error => {
         try {
-          alert(error.response.data);
+          alert(error.response.data.error);
         } catch {
           console.log(error);
         }

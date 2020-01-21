@@ -25,24 +25,36 @@ const useStyles = makeStyles(theme => ({
 
 export default function DeleteContactModal({
   open,
+  status,
   setOpen,
   contactId,
   rows,
   setRows,
   headers,
-  setAll
+  setAll,
+  getGroup
 }) {
   const classes = useStyles();
 
   const deleteContact = () => {
-    Axios.delete(
-      `http://localhost:3001/contacts/delete/${contactId}`,
-      headers
-    ).then(() => {
-      setRows(rows.filter(row => row.id !== contactId));
-      setAll(rows.filter(row => row.id !== contactId));
-      setOpen({ ...open, status: false });
-    });
+    if (status === false) {
+      Axios.delete(
+        `http://localhost:3001/contacts/delete/${contactId}`,
+        headers
+      ).then(() => {
+        setRows(rows.filter(row => row.id !== contactId));
+        setAll(rows.filter(row => row.id !== contactId));
+        setOpen({ ...open, status: false });
+      });
+    } else {
+      Axios.delete(
+        `http://localhost:3001/group/delete/${getGroup}/${contactId}`,
+        headers
+      ).then(() => {
+        setRows(rows.filter(row => row.id !== contactId));
+        setOpen({ ...open, status: false });
+      });
+    }
   };
 
   const handleClose = () => {
@@ -64,19 +76,36 @@ export default function DeleteContactModal({
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="flex-start"
-              item
-              xs={12}
-              sm={12}
-            >
-              <Typography style={{ marginBottom: 40 }}>
-                Delete Contact?
-              </Typography>
-            </Grid>
+            {status === false ? (
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="flex-start"
+                item
+                xs={12}
+                sm={12}
+              >
+                <Typography style={{ marginBottom: 40 }}>
+                  Delete Contact?
+                </Typography>
+              </Grid>
+            ) : (
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="flex-start"
+                item
+                xs={12}
+                sm={12}
+              >
+                <Typography style={{ marginBottom: 40 }}>
+                  Delete From Group?
+                </Typography>
+              </Grid>
+            )}
+
             <Grid container spacing={5}>
               <Grid item xs={3} sm={6}>
                 <Button
@@ -95,7 +124,7 @@ export default function DeleteContactModal({
                   variant="contained"
                   onClick={handleClose}
                 >
-                  Cancel{" "}
+                  Cancel
                 </Button>
               </Grid>
             </Grid>
