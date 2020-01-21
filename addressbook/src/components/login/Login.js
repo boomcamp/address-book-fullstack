@@ -16,6 +16,7 @@ import Axios from "axios";
 import { url } from "../../url";
 import { toast } from "react-toastify";
 import { getUserData } from "../customHooks/getUserData";
+import { useForm } from "react-hook-form";
 
 export const Login = props => {
   const {
@@ -27,9 +28,9 @@ export const Login = props => {
     setUserData
   } = props.data;
   const [error, setError] = useState(false);
+  const { register, handleSubmit, errors } = useForm();
 
-  const handleLogin = e => {
-    e.preventDefault();
+  const handleLogin = () => {
     Axios.post(`${url}/login`, loginData)
       .then(res => {
         setUser(res.data);
@@ -45,12 +46,12 @@ export const Login = props => {
   return (
     <Div>
       <LoginCont>
-        <form onSubmit={e => handleLogin(e)}>
+        <form onSubmit={handleSubmit(handleLogin)}>
           <ContTitle style={blue}>Address Book</ContTitle>
           <ContTitle>Sign In</ContTitle>
           <Text>Sign in using your Email</Text>
           <TextField
-            error={error}
+            error={!!errors.username || error}
             onChange={e => handleOnChange("login", e.target)}
             style={marginBot}
             name="username"
@@ -58,10 +59,13 @@ export const Login = props => {
             type="username"
             label="Username"
             fullWidth
-            required
+            inputRef={register({
+              required: "Username is required"
+            })}
+            helperText={errors.username ? `${errors.username.message}` : ""}
           />
           <TextField
-            error={error}
+            error={!!errors.password || error}
             onChange={e => handleOnChange("login", e.target)}
             style={marginBot}
             variant="outlined"
@@ -69,8 +73,16 @@ export const Login = props => {
             type="password"
             label="Password"
             fullWidth
-            required
-            helperText={error ? "Incorrect email or password!" : ""}
+            inputRef={register({
+              required: "Password is required"
+            })}
+            helperText={
+              errors.password
+                ? errors.password.message
+                : error
+                ? "Invalid username or password!"
+                : ""
+            }
           />
           <Box>
             <Link

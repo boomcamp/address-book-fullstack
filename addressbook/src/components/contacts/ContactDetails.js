@@ -2,12 +2,13 @@ import React, { Fragment } from "react";
 import styled from "styled-components";
 import EditIcon from "@material-ui/icons/Edit";
 import { GroupName } from "../data/groupName";
+import { Phone, AlternateEmail, LocationOn, Group } from "@material-ui/icons";
 
 const Div = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 30px;
+  padding: 10px 30px 30px 30px;
   width: 100%;
   @media screen and (max-width: 600px) {
     flex-direction: column;
@@ -18,7 +19,9 @@ const Div = styled.div`
 const Span = styled.span`
   border: 2px solid #3f51b5;
   border-radius: 5px;
-  padding: 5px 10px 5px 10px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
 `;
 const Label = styled.label`
   padding: 3px;
@@ -40,21 +43,21 @@ const Title = styled.div`
   justify-content: space-between;
 `;
 export const ContactDetails = props => {
-  const {
-    rowData,
-    setContact,
-    setAction,
-    setDialog,
-    user,
-    windowWidth
-  } = props;
+  const { rowData, setContact, setAction, setDialog, user } = props;
   return (
     <Fragment>
-      <div style={{ padding: "10px 10px 0 10px" }}>
+      <div style={{ padding: "10px 30px 0 30px" }}>
         <Title>
-          <span style={{ fontSize: "22px" }}>Contact Details</span>
+          <span style={{ fontSize: "22px", ...capitalize }}>
+            {rowData.first_name + " " + rowData.last_name}
+          </span>
           <EditIcon
-            style={{ fontSize: "26px", color: "#3f51b5", padding: "0 5px 0 0" }}
+            style={{
+              fontSize: "26px",
+              color: "#3f51b5",
+              padding: "0 5px 0 0",
+              cursor: "pointer"
+            }}
             onClick={() => {
               setContact(rowData);
               setAction("edit");
@@ -65,44 +68,65 @@ export const ContactDetails = props => {
       </div>
       <Div>
         <Row>
-          <Label>Name:</Label>
-          <Span>{rowData.first_name + " " + rowData.last_name}</Span>
-        </Row>
-        <Row>
           <Label>Home Phone:</Label>
-          <Span>{rowData.homme_phone ? rowData.homme_phone : "N/A"}</Span>
+          <Span>
+            <Phone style={icon} />
+            {rowData.homme_phone ? rowData.homme_phone : "N/A"}
+          </Span>
         </Row>
         <Row>
           <Label>Mobile Phone:</Label>
-          <Span>{rowData.mobile_phone}</Span>
+          <Span>
+            <Phone style={icon} />
+            {rowData.mobile_phone}
+          </Span>
         </Row>
         <Row>
           <Label>Work Phone:</Label>
-          <Span>{rowData.work_phone ? rowData.work_phone : "N/A"}</Span>
+          <Span>
+            <Phone style={icon} />
+            {rowData.work_phone ? rowData.work_phone : "N/A"}
+          </Span>
         </Row>
         <Row>
           <Label>Email Address:</Label>
-          <Span>{rowData.email}</Span>
+          <Span>
+            <AlternateEmail style={icon} />
+            {rowData.email}
+          </Span>
         </Row>
         <Row>
           <Label>City:</Label>
-          <Span>{rowData.city}</Span>
+          <Span style={capitalize}>
+            <LocationOn style={icon} />
+            {rowData.city}
+          </Span>
         </Row>
         <Row>
           <Label>State or Province:</Label>
-          <Span>{rowData.state_or_province}</Span>
+          <Span style={capitalize}>
+            <LocationOn style={icon} />
+            {rowData.state_or_province}
+          </Span>
         </Row>
         <Row>
           <Label>Postal Code:</Label>
-          <Span>{rowData.postal_code}</Span>
+          <Span style={capitalize}>
+            <LocationOn style={icon} />
+            {rowData.postal_code}
+          </Span>
         </Row>
         <Row>
           <Label>Country:</Label>
-          <Span>{rowData.country}</Span>
+          <Span style={capitalize}>
+            <LocationOn style={icon} />
+            {rowData.country}
+          </Span>
         </Row>
         <Row>
           <Label>Group:</Label>
           <Span>
+            <Group style={icon} />
             {rowData.group_id ? (
               <GroupName group_id={rowData.group_id} user={user} />
             ) : (
@@ -113,4 +137,15 @@ export const ContactDetails = props => {
       </Div>
     </Fragment>
   );
+};
+
+const icon = {
+  margin: "0 5px 0 0",
+  padding: "0 5px 0 0",
+  color: "#3f51b5",
+  borderRight: "2px solid gray"
+};
+
+const capitalize = {
+  textTransform: "capitalize"
 };
