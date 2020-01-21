@@ -58,6 +58,21 @@ const getGroupsByUser = (req, res) => {
 		});
 };
 
+const getGroupsByContactId = (req, res) => {
+	const db = req.app.get("db");
+	const { contactid, userid } = req.params;
+	db.query(
+		`SELECT * FROM groupcontacts t1 WHERE NOT EXISTS (SELECT * FROM groupmembers t2 WHERE t1.id = t2.groupid AND t2.contactid = ${contactid} )`
+	)
+		.then(results => {
+			res.status(200).send(results);
+		})
+		.catch(err => {
+			console.error(err);
+			res.status(500).end();
+		});
+};
+
 const editGroup = (req, res) => {
 	const db = req.app.get("db");
 	const { groupid } = req.params;
@@ -126,10 +141,17 @@ const getMembersByGroup = (req, res) => {
 
 const deleteContactFromGroup = (req, res) => {
 	const db = req.app.get("db");
-	const { contactid } = req.params;
+	const { contactid, groupid } = req.params;
 
 	db.groupmembers
-		.destroy({ contactid: contactid })
+		.destroy({
+			contactid: contactid,
+			and: [
+				{
+					groupid
+				}
+			]
+		})
 		.then(contacts => res.status(200).json(contacts))
 		.catch(err => {
 			console.error(err);
@@ -175,5 +197,6 @@ module.exports = {
 	getMembersByGroup,
 	deleteContactFromGroup,
 	getMembersGroup,
-	deleteMembersGroup
+	deleteMembersGroup,
+	getGroupsByContactId
 };

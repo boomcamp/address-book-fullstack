@@ -6,7 +6,6 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
-import AddMember from "../assets/images/add.png";
 import DeleteOutlineTwoToneIcon from "@material-ui/icons/DeleteOutlineTwoTone";
 import Tooltip from "@material-ui/core/Tooltip";
 import jwt from "jsonwebtoken";
@@ -102,18 +101,28 @@ const useStyles = makeStyles(theme => ({
 			borderRadius: "50%",
 			padding: "2px"
 		}
+	},
+	textButton: {
+		"@media (max-width: 1024px)": {
+			display: "flex",
+			alignItems: "center",
+			flexDirection: "column",
+			justifyContent: "center"
+		}
 	}
 }));
 
 export default function ButtonAppBar(props) {
 	const classes = useStyles();
-	const { contactId } = props;
 	const [setOpen] = useState(false);
 	const [setOpenEdit] = useState(false);
 	const [state, setState] = useState([]);
 	const [members, setMembers] = useState([]);
 	const [groupname, setGroupName] = useState("");
-	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+
+	var userId;
+	userId = jwt.decode(localStorage.getItem("Token")).userId;
+
 	let history = useHistory();
 
 	const handleClose = () => {
@@ -127,7 +136,7 @@ export default function ButtonAppBar(props) {
 	const handleAddGroup = () => {
 		axios
 			.post(`http://localhost:3006/group-contacts/`, {
-				userid: `${tokenDecoded.userId}`,
+				userid: `${userId}`,
 				groupname: groupname
 			})
 			.then(res => {
@@ -143,7 +152,7 @@ export default function ButtonAppBar(props) {
 	const handleShow = () => {
 		axios({
 			method: "get",
-			url: `http://localhost:3006/group-contacts/${tokenDecoded.userId}`
+			url: `http://localhost:3006/group-contacts/${userId}`
 		}).then(res => {
 			setState(res.data);
 		});
@@ -171,6 +180,11 @@ export default function ButtonAppBar(props) {
 							url: `http://localhost:3006/group-contacts/${groupid}`
 						}).then(() => {
 							handleShow();
+							swal({
+								title: "Group Successfully Deleted!",
+								icon: "success",
+								button: true
+							});
 						});
 					}
 				},
@@ -188,13 +202,13 @@ export default function ButtonAppBar(props) {
 		async function result() {
 			await axios({
 				method: "get",
-				url: `http://localhost:3006/group-contacts/${tokenDecoded.userId}`
+				url: `http://localhost:3006/group-contacts/${userId}`
 			}).then(res => {
 				setState(res.data);
 			});
 		}
 		result();
-	}, [tokenDecoded.userId]);
+	}, [userId]);
 
 	return (
 		<React.Fragment>
@@ -203,21 +217,23 @@ export default function ButtonAppBar(props) {
 					<GroupAddIcon style={{ paddingRight: "10px" }} />{" "}
 					<span>Add Group</span>
 				</Typography>
-				<TextField
-					id="outlined-basic"
-					label="Group name"
-					variant="outlined"
-					className={classes.groupField}
-					onChange={e => setGroupName(e.target.value)}
-				/>
-				<Button
-					variant="contained"
-					color="primary"
-					className={classes.addButton}
-					onClick={handleAddGroup}
-				>
-					Add Group
-				</Button>
+				<div className={classes.textButton}>
+					<TextField
+						id="outlined-basic"
+						label="Group name"
+						variant="outlined"
+						className={classes.groupField}
+						onChange={e => setGroupName(e.target.value)}
+					/>
+					<Button
+						variant="contained"
+						color="primary"
+						className={classes.addButton}
+						onClick={handleAddGroup}
+					>
+						Add Group
+					</Button>
+				</div>
 			</Paper>
 
 			<Paper className={classes.paper1} style={{ borderColor: "#beacda" }}>

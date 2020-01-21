@@ -16,6 +16,7 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import AddToGroup from "./AddToGroup";
 import jwt from "jsonwebtoken";
+import swal from "sweetalert";
 
 const useStyles = makeStyles({
 	table: {
@@ -32,7 +33,8 @@ const useStyles = makeStyles({
 		width: "1vw"
 	},
 	view: {
-		width: "25px",
+		width: "20px",
+		height: "20px",
 		cursor: "pointer"
 	},
 	action: {
@@ -44,7 +46,9 @@ const useStyles = makeStyles({
 export default function SimpleTable(props) {
 	const classes = useStyles();
 	const { handleViewDetails, state, id, getData } = props;
-	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+
+	var userId;
+	userId = jwt.decode(localStorage.getItem("Token")).userId;
 
 	let history = useHistory();
 
@@ -66,7 +70,12 @@ export default function SimpleTable(props) {
 							method: "delete",
 							url: `http://localhost:3006/contacts/${contactId}`
 						}).then(() => {
-							getData(tokenDecoded, "asc");
+							getData(userId, "asc");
+							swal({
+								title: `Contact Successfully Deleted!`,
+								icon: "success",
+								button: true
+							});
 						});
 					}
 				},
@@ -118,7 +127,11 @@ export default function SimpleTable(props) {
 										onClick={() => handleViewDetails(row.id)}
 									/>
 								</Tooltip>
-								<AddToGroup handleClose={handleClose} userId={id} />
+								<AddToGroup
+									handleClose={handleClose}
+									userId={id}
+									contactId={row.id}
+								/>
 								<Tooltip title="Delete">
 									<img
 										src={trash}

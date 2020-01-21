@@ -67,7 +67,12 @@ const useStyles = makeStyles(theme => ({
 	byLN: {
 		fontSize: "12px",
 		color: "#7c7cca",
-		"@media (max-width: 767px)": {
+		"@media (max-width: 1220px)": {
+			display: "none"
+		}
+	},
+	sIcon: {
+		"@media (max-width: 768px)": {
 			display: "none"
 		}
 	}
@@ -92,7 +97,7 @@ export default function ButtonAppBar(props) {
 			<Paper className={classes.paper}>
 				<div className={classes.search}>
 					<div className={classes.searchIcon}>
-						<SearchIcon />
+						<SearchIcon className={classes.sIcon} />
 					</div>
 					<InputBase
 						placeholder="Search…"

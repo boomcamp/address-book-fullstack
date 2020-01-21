@@ -43,7 +43,9 @@ export default function ViewGroup(props) {
 	const { groupname, id, handleShow } = props;
 	const [open, setOpen] = React.useState(false);
 	const [editGroupName, setEditGroup] = React.useState("");
-	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+
+	var userId;
+	userId = jwt.decode(localStorage.getItem("Token")).userId;
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -56,7 +58,7 @@ export default function ViewGroup(props) {
 	const handleEditGroupName = editGroupName => {
 		axios
 			.patch(`http://localhost:3006/group-contacts/${id}`, {
-				userid: `${tokenDecoded.userId}`,
+				userid: `${userId}`,
 				editGroupName
 			})
 			.then(() => {

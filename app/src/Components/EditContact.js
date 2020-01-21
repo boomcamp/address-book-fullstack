@@ -105,7 +105,8 @@ export default function ResponsiveDialog(props) {
 		setRequired(false);
 	};
 
-	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+	var userId;
+	userId = jwt.decode(localStorage.getItem("Token")).userId;
 
 	const pass = editFirstname => {
 		if (editFirstname) {
@@ -124,11 +125,11 @@ export default function ResponsiveDialog(props) {
 				})
 				.then(() => {
 					handleShow();
-					getData(tokenDecoded, "asc");
+					getData(userId, "asc");
 					setOpen(false);
 					swal({
 						icon: "success",
-						title: "Edit Successful"
+						title: "Edit Successful!"
 					});
 				});
 		}

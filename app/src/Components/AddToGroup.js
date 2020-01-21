@@ -14,8 +14,10 @@ import jwt from "jsonwebtoken";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-// import swal from "sweetalert";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import { Typography } from "@material-ui/core";
+import swal from "sweetalert";
 
 const useStyles = makeStyles(theme => ({
 	view: {
@@ -29,26 +31,37 @@ const useStyles = makeStyles(theme => ({
 	},
 	bottomLabel: {
 		background: "#7c7cca"
+	},
+	choose: {
+		fontSize: "14px",
+		color: "gray"
 	}
 }));
 
 export default function ViewGroup(props) {
 	const classes = useStyles();
+	const { contactId } = props;
 	const theme = useTheme();
 	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
 	const [open, setOpen] = React.useState(false);
 	const [state, setState] = React.useState([]);
+	const [value, setValue] = React.useState("");
+	const [select, setSelect] = React.useState(null);
 
-	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+	var userId;
+	userId = jwt.decode(localStorage.getItem("Token")).userId;
 
 	useEffect(() => {
-		axios
-			.get(`http://localhost:3006/group-contacts/${tokenDecoded.userId}`)
-			.then(res => {
-				setState(res.data);
-			});
-	}, [setState, tokenDecoded.userId]);
+		handleFetch(contactId);
+	}, [contactId]);
+
+	const handleFetch = () => {
+		axios.get(`http://localhost:3006/groupcontacts/${contactId}`).then(res => {
+			setState(res.data);
+			handleFetch();
+		});
+	};
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -56,6 +69,30 @@ export default function ViewGroup(props) {
 
 	const handleClose = () => {
 		setOpen(false);
+	};
+
+	const handleChange = event => {
+		setValue(event.target.value);
+	};
+
+	const handleChoose = groupId => {
+		setSelect(groupId);
+	};
+
+	const handleAddContactsGroup = () => {
+		axios
+			.post(`http://localhost:3006/groupmembers`, {
+				groupid: select,
+				contactid: contactId
+			})
+			.then(res => {
+				handleClose();
+				swal({
+					title: `Contact Successfully Added to ${value}!`,
+					icon: "success",
+					button: true
+				});
+			});
 	};
 
 	return (
@@ -78,24 +115,48 @@ export default function ViewGroup(props) {
 					{"Add to Group"}
 				</DialogTitle>
 				<DialogContent>
-					<FormControl component="fieldset">
-						{state.map((name, i) => {
-							return (
-								<FormGroup key={i}>
-									<FormControlLabel
-										control={<Checkbox value={name.groupname} />}
-										label={name.groupname}
-									/>
-								</FormGroup>
-							);
-						})}
-					</FormControl>
+					<Typography className={classes.choose}>
+						Choose ONE of the following:
+					</Typography>
+					<RadioGroup
+						aria-label="groups"
+						name="choose a group"
+						value={value}
+						onChange={handleChange}
+					>
+						<FormControl component="fieldset">
+							{state.map((name, i) => {
+								return (
+									<FormGroup key={i}>
+										<FormControlLabel
+											control={
+												<Radio
+													value={name.groupname}
+													color="primary"
+													onClick={() => {
+														handleChoose(name.id);
+													}}
+												/>
+											}
+											label={name.groupname}
+										/>
+									</FormGroup>
+								);
+							})}
+						</FormControl>
+					</RadioGroup>
 				</DialogContent>
 				<DialogActions className={classes.bottomLabel}>
 					<Button autoFocus onClick={handleClose} style={{ color: "white" }}>
 						Close
 					</Button>
-					<Button onClick={handleClose} autoFocus style={{ color: "white" }}>
+					<Button
+						autoFocus
+						style={{ color: "white" }}
+						onClick={() => {
+							handleAddContactsGroup(select, contactId);
+						}}
+					>
 						Add
 					</Button>
 				</DialogActions>

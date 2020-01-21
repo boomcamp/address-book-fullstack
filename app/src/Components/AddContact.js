@@ -29,6 +29,10 @@ export default function ResponsiveDialog(props) {
 	const [openModal, setOpenModal] = React.useState(false);
 	const [firstname, setFirstName] = useState("");
 
+	var userId;
+
+	userId = jwt.decode(localStorage.getItem("Token")).userId;
+
 	const handleClose = firstName => {
 		setOpenModal(false);
 	};
@@ -55,7 +59,6 @@ export default function ResponsiveDialog(props) {
 
 	const theme = useTheme();
 	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
-	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
 
 	const pass = firstname => {
 		if (firstname) {
@@ -78,7 +81,7 @@ export default function ResponsiveDialog(props) {
 						icon: "success",
 						title: "Successful Added New Contact"
 					}).then(() => {
-						getData(tokenDecoded, "asc");
+						getData(userId, "asc");
 					});
 				});
 		} else {

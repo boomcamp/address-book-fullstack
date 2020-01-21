@@ -5,7 +5,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import swal from "sweetalert";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -17,6 +16,9 @@ import AddContact from "./AddContact";
 import SearchSort from "./SearchSort";
 import axios from "axios";
 import jwt from "jsonwebtoken";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -29,6 +31,7 @@ const useStyles = makeStyles(theme => ({
 		flexGrow: 1,
 		textAlign: "left",
 		display: "flex",
+		alignItems: "center",
 		"@media (max-width: 768px)": {
 			display: "none"
 		}
@@ -48,7 +51,9 @@ const useStyles = makeStyles(theme => ({
 		background: "#7c7cca"
 	},
 	abLogo: {
-		width: "30px"
+		width: "20px",
+		height: "20px",
+		marginRight: "10px"
 	},
 	compress: {
 		display: "flex"
@@ -75,6 +80,10 @@ const useStyles = makeStyles(theme => ({
 		"@media (max-width: 767px)": {
 			width: "100%",
 			marginBottom: "5vh"
+		},
+		"@media (max-width: 1024px)": {
+			marginLeft: "1.5vw",
+			marginBottom: "3vh"
 		}
 	},
 	contacts: {
@@ -89,6 +98,9 @@ const useStyles = makeStyles(theme => ({
 			fontSize: "18px",
 			width: "90%",
 			marginTop: "0"
+		},
+		"@media (max-width: 1024px)": {
+			marginLeft: "1.5vw"
 		}
 	},
 	add: {
@@ -131,7 +143,8 @@ export default function ButtonAppBar() {
 	const [order, setOrder] = useState("asc");
 	const [state, setState] = useState([]);
 
-	const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+	let history = useHistory();
+	var userId;
 
 	if (!localStorage.getItem("Token")) {
 		swal({
@@ -141,7 +154,7 @@ export default function ButtonAppBar() {
 			window.location = "/";
 		});
 	} else {
-		const { userId } = jwt.decode(localStorage.getItem("Token"));
+		userId = jwt.decode(localStorage.getItem("Token")).userId;
 	}
 
 	const handleClose = () => {
@@ -155,21 +168,38 @@ export default function ButtonAppBar() {
 
 	const handleSort = val => {
 		setOrder(val);
-		getData(tokenDecoded, order);
+		getData(userId, order);
 	};
 
 	const handleSearch = v => {
-		getData(tokenDecoded, order, v);
+		getData(userId, order, v);
 	};
 
 	const logout = () => {
-		swal({
-			title: "Logged Out Successfully!",
-			icon: "success",
-			button: true
-		}).then(function() {
-			window.location = "/";
-			localStorage.clear();
+		confirmAlert({
+			title: "Are you sure?",
+			message: "You want to Logout?",
+			buttons: [
+				{
+					label: "Yes",
+					onClick: () => {
+						swal({
+							title: "Logged Out Successfully!",
+							icon: "success",
+							button: true
+						}).then(function() {
+							window.location = "/";
+							localStorage.clear();
+						});
+					}
+				},
+				{
+					label: "No",
+					onClick: () => {
+						history.push("/home");
+					}
+				}
+			]
 		});
 	};
 
@@ -177,7 +207,7 @@ export default function ButtonAppBar() {
 		setContactId(e);
 		axios({
 			method: "get",
-			url: `http://localhost:3006/contacts/${tokenDecoded.userId}/${e}`
+			url: `http://localhost:3006/contacts/${userId}/${e}`
 		}).then(res => {
 			const data = res.data[0];
 
@@ -201,13 +231,13 @@ export default function ButtonAppBar() {
 	};
 
 	useEffect(() => {
-		getData(tokenDecoded, order);
-	}, [tokenDecoded.userId]);
+		getData(userId, order);
+	}, [userId, order]);
 
-	const getData = (tokenDecoded, order, search = "") => {
+	const getData = (userId, order, search = "") => {
 		axios
 			.get(
-				`http://localhost:3006/contacts/${tokenDecoded.userId}?order=${order}&search=${search}`
+				`http://localhost:3006/contacts/${userId}?order=${order}&search=${search}`
 			)
 			.then(res => {
 				setState(res.data);
@@ -245,16 +275,11 @@ export default function ButtonAppBar() {
 							className={classes.menuButton}
 							color="inherit"
 							aria-label="menu"
-						>
-							<MenuIcon />
-						</IconButton>
+						></IconButton>
 						<Typography variant="h6" className={classes.title}>
-							<span style={{ marginRight: "10px" }}>
-								Welcome to Address Book!
-							</span>
 							<img src={ablogo} alt="addressbook" className={classes.abLogo} />
+							<span>Welcome to Address Book!</span>
 						</Typography>
-
 						<div className={classes.buttons}>
 							<Button className={classes.nameColor}>
 								<span style={{ paddingRight: "5px" }}>
@@ -270,14 +295,14 @@ export default function ButtonAppBar() {
 				</AppBar>
 				<Container maxWidth="xl">
 					<Grid container>
-						<Grid item sm={3} xs={12}>
+						<Grid item sm={12} xs={12} md={12} lg={3}>
 							<SearchSort
 								userInfo={userInfo}
 								handleSort={handleSort}
 								handleSearch={handleSearch}
 							/>
 						</Grid>
-						<Grid item sm={9} xs={12}>
+						<Grid item sm={12} xs={12} md={12} lg={9}>
 							<div style={{ display: "flex" }}>
 								<Typography className={classes.contacts}>
 									Contact List

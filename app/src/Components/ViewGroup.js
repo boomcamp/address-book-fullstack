@@ -6,13 +6,16 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { useTheme } from "@material-ui/core/styles";
 import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
 import Tooltip from "@material-ui/core/Tooltip";
 import { Typography } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import CloseTwoToneIcon from "@material-ui/icons/CloseTwoTone";
 import Slide from "@material-ui/core/Slide";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import { useHistory } from "react-router-dom";
+import swal from "sweetalert";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -52,7 +55,8 @@ export default function ViewGroup(props) {
 	const classes = useStyles();
 	const { handleGroupMembersList, groupId, members } = props;
 	const [open, setOpen] = React.useState(false);
-	const theme = useTheme();
+
+	let history = useHistory();
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -63,12 +67,40 @@ export default function ViewGroup(props) {
 		setOpen(false);
 	};
 
-	const handleRemoveMember = (groupId, contactId) => {
+	const handleRemoveMember = (groupId, contactid) => {
 		axios({
 			method: "delete",
-			url: `http://localhost:3006/groupmembers/${groupId}/${contactId}`
+			url: `http://localhost:3006/groupmembers/${groupId}/${contactid}`
 		}).then(() => {
 			handleGroupMembersList(groupId);
+			handleClose();
+			confirmAlert({
+				title: "Are you sure?",
+				message: "You want to delete?",
+				buttons: [
+					{
+						label: "Yes",
+						onClick: () => {
+							axios({
+								method: "delete",
+								url: `http://localhost:3006/groupmembers/${groupId}/${contactid}`
+							}).then(() => {
+								handleGroupMembersList(groupId);
+								swal({
+									icon: "success",
+									title: "Contact Successfully Deleted from the Group!"
+								});
+							});
+						}
+					},
+					{
+						label: "No",
+						onClick: () => {
+							history.push("/home");
+						}
+					}
+				]
+			});
 		});
 	};
 
@@ -91,7 +123,7 @@ export default function ViewGroup(props) {
 				aria-describedby="alert-dialog-slide-description"
 			>
 				<DialogTitle id="responsive-dialog-title" className={classes.headTitle}>
-					{"Group Members"}
+					{`Contacts`}
 				</DialogTitle>
 				{members.map((data, i) => {
 					return (
@@ -107,7 +139,7 @@ export default function ViewGroup(props) {
 							>
 								<AccountCircleIcon
 									fontSize="small"
-									style={{ marginRight: "15px" }}
+									style={{ marginRight: "15px", color: "#7c7cca" }}
 								/>
 								<Typography
 									style={{ textTransform: "capitalize", marginRight: "30px" }}
@@ -120,7 +152,7 @@ export default function ViewGroup(props) {
 								<CloseTwoToneIcon
 									className={classes.iconStyle}
 									onClick={() => {
-										handleRemoveMember(data.groupid, data.contactid);
+										handleRemoveMember(groupId, data.contactid);
 									}}
 								/>
 							</Tooltip>

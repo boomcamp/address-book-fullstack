@@ -36,6 +36,7 @@ massive({
 	app.post("/group-contacts/", group.create);
 	app.get("/group-contacts/", group.getList);
 	app.get("/group-contacts/:userid", group.getGroupsByUser);
+	app.get("/groupcontacts/:contactid", group.getGroupsByContactId);
 	app.delete("/group-contacts/:groupid", group.deleteGroup);
 	app.patch("/group-contacts/:groupid", group.editGroup);
 

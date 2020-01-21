@@ -23,6 +23,13 @@ code {
 	}
 }
 
+@media screen and (max-height: 1366px) {
+	body {
+		background-size: auto;
+		background-repeat: repeat;
+	}
+}
+
 @media screen and (max-width: 1366px) {
 	body {
 		background-size: auto;
