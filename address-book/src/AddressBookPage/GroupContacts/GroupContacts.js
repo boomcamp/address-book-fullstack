@@ -64,8 +64,6 @@ export default function GroupContacts(highprops) {
 
   const getAllContacts = () => {
     highprops.passGroupRef(null);
-
-    // here
     axios({
       method: "get",
       url: `http://localhost:5000/api/contacts/${sessionStorage.getItem(
@@ -74,7 +72,6 @@ export default function GroupContacts(highprops) {
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
-        // console.log(data.data)
         return highprops.setDataGroup(data);
       })
       .catch(err => {

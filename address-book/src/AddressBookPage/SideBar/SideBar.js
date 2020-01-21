@@ -38,7 +38,6 @@ export default function SideBar(highprops) {
   }, [highprops.contactData, highprops.prepareNewData]);
 
   const change = control => {
-    // console.log(control)
     if (control === "open_groups") {
       setState(prevState => {
         return { addContact_tab: false, contactGroups_tab: true };

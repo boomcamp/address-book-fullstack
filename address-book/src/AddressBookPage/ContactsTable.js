@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import MaterialTable, { MTableBodyRow } from "material-table";
-import { Chip, createMuiTheme, MuiThemeProvider } from "@material-ui/core";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import "../App.css";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -94,59 +94,10 @@ export default function ContactsTable(highprops) {
   }, [highprops.tableData]);
 
   function DeleteData(data) {
-    console.log(data);
-
     axios
       .delete(`http://localhost:5000/api/contact/delete/${data}`, {
         headers: { Authorization: sessionStorage.getItem("token") }
       })
-      .then(data => console.log(data))
-      .catch(e => console.log(e));
-  }
-
-  function AddData(data) {
-    axios({
-      method: "post",
-      url: "http://localhost:5000/api/contact/save",
-      data: {
-        userid: data.key,
-        first_name: data.first_name,
-        last_name: data.last_name,
-        home_phone: data.home_phone,
-        mobile_phone: data.mobile_phone,
-        work_phone: data.work_phone,
-        email: data.email,
-        city: data.city,
-        state_or_province: data.state_or_province,
-        postal_code: data.postal_code,
-        country: data.country
-      },
-      headers: { Authorization: sessionStorage.getItem("token") }
-    })
-      .then(data => console.log(data))
-      .catch(e => console.log(e));
-  }
-
-  function EditData(newdata, olddata) {
-    axios
-      .put(
-        `http://localhost:5000/api/contact/update/${olddata.id}`,
-        {
-          first_name: newdata.first_name,
-          last_name: newdata.last_name,
-          home_phone: newdata.home_phone,
-          mobile_phone: newdata.mobile_phone,
-          work_phone: newdata.work_phone,
-          email: newdata.email,
-          city: newdata.city,
-          state_or_province: newdata.state_or_province,
-          postal_code: newdata.postal_code,
-          country: newdata.country
-        },
-        {
-          headers: { Authorization: sessionStorage.getItem("token") }
-        }
-      )
       .then(data => console.log(data))
       .catch(e => console.log(e));
   }
@@ -189,32 +140,6 @@ export default function ContactsTable(highprops) {
             }
           ]}
           editable={{
-            // onRowAdd: newData =>
-            //   new Promise(resolve => {
-            //     setTimeout(() => {
-            //       resolve();
-            //       setState(prevState => {
-            //         const data = [...prevState.data];
-            //         data.push(newData);
-            //         return { ...prevState, data };
-            //       });
-            //     }, 600);
-            //   }).then(AddData(newData)),
-
-            // onRowUpdate: (newData, oldData) =>
-            //   new Promise(resolve => {
-            //     setTimeout(() => {
-            //       resolve();
-            //       if (oldData) {
-            //         setState(prevState => {
-            //           const data = [...prevState.data];
-            //           data[data.indexOf(oldData)] = newData;
-            //           return { ...prevState, data };
-            //         });
-            //       }
-            //     }, 600);
-            //   }).then(EditData(newData, oldData)),
-
             onRowDelete: oldData =>
               new Promise(resolve => {
                 setTimeout(() => {
@@ -241,9 +166,3 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }));
-
-const styles = {
-  tableContainer: {
-    margin: "50px 40px 0 40px"
-  }
-};

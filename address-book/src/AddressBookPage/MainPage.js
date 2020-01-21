@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import ContactsTable from "./ContactsTable";
 import Header from "./Header";
 import { Redirect } from "react-router-dom";
-import ContactForm from "./ContactForm";
 import SideBar from "./SideBar/SideBar";
-import { refreshMaterializedView } from "node-pg-migrate/dist/operations/viewsMaterialized";
 import SelectSort from "./SelectSort/SelectSort";
 
 export default function MainPage() {
@@ -17,20 +15,13 @@ export default function MainPage() {
     return <Redirect to="/" />;
   }
 
-  // useEffect(() => {
-
-  // }, [state]);
-
   const tranferData = data => {
     console.log(data);
-    // setInit(true);
     setState(data.data);
-    // console.log(data.data)
   };
 
   const prepareNewData = () => {
     setInit(false);
-    // console.log('call for prepare')
     setState(null);
   };
 
@@ -43,8 +34,6 @@ export default function MainPage() {
   const groupReference = e => {
     setGroupRef(e);
   };
-
-  console.log(initial)
 
   return (
     <>

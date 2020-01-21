@@ -5,7 +5,6 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-// import Chip from "@material-ui/core/Chip";
 import { Chip } from "@material-ui/core";
 import "./groupForm.css";
 

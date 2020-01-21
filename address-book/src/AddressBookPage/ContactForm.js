@@ -1,10 +1,7 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import axios from "axios";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
 
 import GroupForm from "./GroupForm/GroupForm";
 
@@ -73,14 +70,9 @@ export default function ContactForm(highprops) {
       setGroup(highprops.contactData.id);
     }
     getGroup();
-    console.log("hp", highprops.contactData);
   }, [highprops.contactData]);
 
   const setGroup = id => {
-    // here
-
-    console.log("settting group", id);
-
     axios({
       method: "get",
       url: `http://localhost:5000/api/contacts/groups/reference/retrieve/${id}`,
@@ -122,10 +114,7 @@ export default function ContactForm(highprops) {
   };
 
   const stateUpdate = e => {
-    // e.persist();
     const { name, value } = e.target;
-    // let property = e.target.name;
-    console.log(e.target);
 
     setState(prevState => {
       if (value === null) {
@@ -136,7 +125,6 @@ export default function ContactForm(highprops) {
 
       return { ...prevState };
     });
-    console.log(datatransfered);
 
     return null;
   };
@@ -527,7 +515,6 @@ const useStyles = makeStyles(theme => ({
     background: "rgb(202, 202, 202)",
     color: "white",
     border: "none",
-    // marginTop: "25px",
     marginBottom: "10px",
     borderRadius: "4px",
     cursor: "pointer",

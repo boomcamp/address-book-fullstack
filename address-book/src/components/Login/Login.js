@@ -103,7 +103,6 @@ export default function Login() {
             ) : (
               ""
             )}
-            {/* <Button type="submit">Submit</Button> */}
 
             <button style={styles.submitBtn} type="submit">
               Submit

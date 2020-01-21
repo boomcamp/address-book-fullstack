@@ -1,8 +1,6 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import Button from "@material-ui/core/Button";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -11,10 +9,7 @@ export default function Signup() {
   const classes = useStyles();
 
   const [state, setState] = useState({
-    //   email: "",
     username: "",
-    //   firstname: "",
-    //   lastname: "",
     password: "",
     repassword: ""
   });
@@ -84,7 +79,7 @@ export default function Signup() {
     sessionStorage.removeItem("token");
     return <Redirect to="/" />;
   } else {
-    console.log("checking for token");
+    // console.log("checking for token");
   }
 
   return (
@@ -94,7 +89,6 @@ export default function Signup() {
         <div className="input-fields">
           <ValidatorForm
             className={classes.root}
-            // autoComplete="off"
             onError={errors => console.log(errors)}
             style={styles.inputfields}
             onSubmit={SignUp}

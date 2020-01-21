@@ -2,7 +2,6 @@ import React from "react";
 
 export default function Header(props) {
   const logout = () => {
-    console.log("logging out");
     sessionStorage.removeItem("token");
     window.location.reload();
   };
@@ -50,10 +49,3 @@ const style = {
     fontSize: "0.89em"
   }
 };
-
-// /* Color Theme Swatches in Hex */
-// .mother-and-son-travel-in-mountains-at-sunset,-panorama-1-hex { color: #025159; }
-// .mother-and-son-travel-in-mountains-at-sunset,-panorama-2-hex { color: #03A696; }
-// .mother-and-son-travel-in-mountains-at-sunset,-panorama-3-hex { color: #F28705; }
-// .mother-and-son-travel-in-mountains-at-sunset,-panorama-4-hex { color: #F25D27; }
-// .mother-and-son-travel-in-mountains-at-sunset,-panorama-5-hex { color: #F20505; }

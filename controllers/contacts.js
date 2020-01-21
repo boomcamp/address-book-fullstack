@@ -97,15 +97,6 @@ module.exports = {
         .catch(err => {
           res.status(500).end();
         });
-
-      // db.contacts
-      //   .find()
-      //   .then(post => {
-      //     res.status(200).json(post);
-      //   })
-      //   .catch(err => {
-      //     res.status(500).end();
-      //   });
     } catch (err) {
       console.error(err);
       res.status(401).end();
@@ -208,8 +199,6 @@ module.exports = {
   },
   sort: (req, res) => {
     const db = req.app.get("db");
-
-    // const { sortType } = db.body;
 
     console.log(req.params.order)
 
