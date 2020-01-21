@@ -30,9 +30,10 @@ const style = {
     alignItems: "center",
     height: "50px",
     width: "100%",
-    background: "#0277bd",
+    background: "#03A9F4",
     color: "#ffffff",
-    // boxShadow: '5px 10px #888888'
+    fontWeight: "1000",
+    borderBottom: "1px solid #ffffff",
   },
   logout: {
     background: "#0277bd",

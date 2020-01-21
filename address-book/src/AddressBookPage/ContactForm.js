@@ -24,6 +24,8 @@ export default function ContactForm(highprops) {
     country: "Default"
   });
 
+  const [datatransfered, setDataTranfered] = useState();
+
   const [grpState, setgrpState] = useState({
     selectedGroupName: {
       title: "Default"
@@ -64,17 +66,14 @@ export default function ContactForm(highprops) {
     }
 
     if (highprops.contactData) {
-      let datatransfer = Object.assign({}, highprops.contactData);
-
-      setState(prevState => {
-        return { ...datatransfer };
-      });
-
-      console.log(highprops.contactData.id);
+      const data = highprops.contactData;
+      setDataTranfered(data);
+      setState(data);
 
       setGroup(highprops.contactData.id);
     }
     getGroup();
+    console.log("hp", highprops.contactData);
   }, [highprops.contactData]);
 
   const setGroup = id => {
@@ -88,7 +87,6 @@ export default function ContactForm(highprops) {
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
-        // console.log(data.data[0].group_name)
         try {
           if (data.data[0].group_name) {
             setgrpState(prevState => {
@@ -120,58 +118,27 @@ export default function ContactForm(highprops) {
   const [upContactData, setUpContactData] = useState();
 
   const addtoGroup = data => {
-    console.log("contact datapass", data);
     setUpContactData(data);
-
-    // try {
-    //   if (grpState.selectedGroupName) {
-    //     let id;
-
-    //     try {
-    //       if (data.data[0].id) {
-    //         id = data.data[0].id;
-    //       }
-    //     } catch (error) {
-    //       id = data.data.id;
-    //     }
-
-    //     console.log("contact id is " + id);
-
-    //     axios({
-    //       method: "post",
-    //       url: "http://localhost:5000/api/contacts/groups/reference",
-    //       data: {
-    //         group_name: grpState.selectedGroupName.title,
-    //         contactid: id,
-    //         past_group: grpState.recentGroupState
-    //           ? grpState.recentGroupState.title
-    //           : ""
-    //       },
-    //       headers: { Authorization: sessionStorage.getItem("token") }
-    //     })
-    //       .then(data => console.log(data))
-    //       .catch(e => console.log(e));
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
   };
 
   const stateUpdate = e => {
-    e.persist();
-
-    let property = e.target.name;
+    // e.persist();
+    const { name, value } = e.target;
+    // let property = e.target.name;
+    console.log(e.target);
 
     setState(prevState => {
-      if (e.target.value === null) {
-        prevState[property] = "";
+      if (value === null) {
+        prevState[name] = "";
       } else {
-        prevState[property] = e.target.value;
+        prevState[name] = value;
       }
 
       return { ...prevState };
     });
-    console.log(state);
+    console.log(datatransfered);
+
+    return null;
   };
 
   const grpStateUpdate = (event, value, reason) => {
@@ -183,12 +150,9 @@ export default function ContactForm(highprops) {
         }
       };
     });
-
-    console.log(grpState);
   };
 
   function EditData(newdata, olddata) {
-    console.log(newdata.city);
     axios
       .put(
         `http://localhost:5000/api/contact/update/${olddata.id}`,
@@ -216,9 +180,6 @@ export default function ContactForm(highprops) {
   }
 
   function AddData(data) {
-    let new_contact_reference;
-
-    // for contacts table reference
     axios({
       method: "post",
       url: "/api/contact/save",
@@ -241,7 +202,6 @@ export default function ContactForm(highprops) {
         return data;
       })
       .then(addtoGroup)
-      // .then(GroupForm.getNewDataDetails)
       .catch(e => console.log(e));
   }
 
@@ -251,10 +211,16 @@ export default function ContactForm(highprops) {
     } else {
       EditData(state, highprops.contactData);
     }
-    // window.location.reload();
+    alert("Registering data, please wait");
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
   };
 
   const cancel = () => {
+    console.log(highprops.contactData);    
+
     if (highprops.prepareNewData) {
       setState({
         first_name: "",
@@ -272,9 +238,11 @@ export default function ContactForm(highprops) {
       setgrpState(prevState => {
         return { ...prevState, selectedGroupName: "" };
       });
-    } else {
+    } else if (highprops.contactData) {
       setState(highprops.contactData);
     }
+
+    window.location.reload();
   };
 
   const getGroup = () => {
@@ -284,8 +252,6 @@ export default function ContactForm(highprops) {
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
-        console.log(grpState);
-
         let groupContainer = [];
 
         data.data.map(gdata => {
@@ -298,8 +264,6 @@ export default function ContactForm(highprops) {
             groupList: groupContainer
           };
         });
-
-        console.log(grpState);
       })
       .catch(e => console.log(e));
   };
@@ -309,10 +273,8 @@ export default function ContactForm(highprops) {
       <div
         style={{
           padding: "30px",
-          // border: "1px solid lightgrey",
-          // margin: "0 0 10px 0",
-          // width: "100%"
-          background: "white"
+          background: "white",
+          marginTop: "25px"
         }}
       >
         <div className="input-fields">
@@ -324,9 +286,12 @@ export default function ContactForm(highprops) {
             onSubmit={saveData}
             autoComplete
           >
-            <div className="name-group-container" style={styles.groupContainer}>
+            <div
+              className={classes.groupContainer}
+              style={styles.groupContainer}
+            >
               <TextValidator
-                className={classes.textfields}
+                className={classes.textfields_dual}
                 id="outlined-required"
                 name="first_name"
                 value={state.first_name}
@@ -334,7 +299,7 @@ export default function ContactForm(highprops) {
                 errorMessages={["this field is required"]}
                 label="First Name"
                 variant="outlined"
-                onChange={stateUpdate}
+                onChange={e => stateUpdate(e)}
               />
               <TextValidator
                 id="outlined-required"
@@ -345,11 +310,11 @@ export default function ContactForm(highprops) {
                 label="Last Name"
                 variant="outlined"
                 onChange={stateUpdate}
-                className={classes.textfields}
+                className={classes.textfields_dual}
               />
             </div>
             <div
-              className="phone-group-container"
+              className={classes.groupContainer}
               style={styles.groupContainer}
             >
               <TextValidator
@@ -367,7 +332,7 @@ export default function ContactForm(highprops) {
                 label="Home Phone"
                 variant="outlined"
                 onChange={stateUpdate}
-                className={classes.textfields}
+                className={classes.textfields_tres}
               />
               <TextValidator
                 id="outlined-required"
@@ -384,7 +349,7 @@ export default function ContactForm(highprops) {
                 label="Mobile Phone"
                 variant="outlined"
                 onChange={stateUpdate}
-                className={classes.textfields}
+                className={classes.textfields_tres}
               />
               <TextValidator
                 id="outlined-required"
@@ -401,13 +366,8 @@ export default function ContactForm(highprops) {
                 label="Work Phone"
                 variant="outlined"
                 onChange={stateUpdate}
-                className={classes.textfields}
+                className={classes.textfields_tres}
               />
-            </div>
-            <div
-              className="address-group-container"
-              style={styles.groupContainer}
-            >
               <TextValidator
                 id="outlined-required"
                 name="email"
@@ -420,8 +380,13 @@ export default function ContactForm(highprops) {
                 label="Email"
                 variant="outlined"
                 onChange={stateUpdate}
-                className={classes.textfields}
+                className={classes.textfields_tres}
               />
+            </div>
+            <div
+              className="address-group-container"
+              style={styles.groupContainer}
+            >
               <TextValidator
                 id="outlined-required"
                 name="city"
@@ -431,7 +396,7 @@ export default function ContactForm(highprops) {
                 label="City"
                 variant="outlined"
                 onChange={stateUpdate}
-                className={classes.textfields}
+                className={classes.textfields_dual}
               />
               <TextValidator
                 id="outlined-required"
@@ -442,7 +407,7 @@ export default function ContactForm(highprops) {
                 label="State/Province"
                 variant="outlined"
                 onChange={stateUpdate}
-                className={classes.textfields}
+                className={classes.textfields_dual}
               />
               <TextValidator
                 id="outlined-required"
@@ -456,7 +421,7 @@ export default function ContactForm(highprops) {
                 label="Postal Code"
                 variant="outlined"
                 onChange={stateUpdate}
-                className={classes.textfields}
+                className={classes.textfields_dual}
               />
               <TextValidator
                 id="outlined-required"
@@ -467,29 +432,9 @@ export default function ContactForm(highprops) {
                 label="Country"
                 variant="outlined"
                 onChange={stateUpdate}
-                className={classes.textfields}
+                className={classes.textfields_dual}
               />
             </div>
-
-            {/* <Autocomplete
-              freeSolo
-              id="group-box"
-              value={grpState.selectedGroupName}
-              options={grpState.groupList}
-              getOptionLabel={option => option.title}
-              // style={{ width: 300 }}
-              onInputChange={grpStateUpdate}
-              className={classes.textfields}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  // onChange={grpStateUpdate}
-                  label="Add to a group"
-                  variant="outlined"
-                  fullWidth
-                />
-              )}
-            /> */}
 
             <GroupForm
               reference_contact={
@@ -498,13 +443,15 @@ export default function ContactForm(highprops) {
               newContactData={upContactData}
             />
 
-            <button style={styles.submitBtn} type="submit">
-              Save
-            </button>
+            <div className={classes.btnContainer}>
+              <button className={classes.SubmitButton} type="submit">
+                Save
+              </button>
 
-            <button style={styles.cancelBtn} onClick={() => cancel()}>
-              Cancel
-            </button>
+              <p className={classes.CancelButton} onClick={() => cancel()}>
+                Cancel
+              </p>
+            </div>
           </ValidatorForm>
         </div>
       </div>
@@ -520,8 +467,75 @@ const useStyles = makeStyles(theme => ({
     }
   },
   textfields: {
-    width: "250px",
-    margin: "0 10px 10px 0"
+    width: "350px",
+    margin: "0 10px 10px 25px"
+  },
+  textfields_dual: {
+    marginRight: "10px",
+    width: "290px",
+    marginBottom: "10px",
+    [theme.breakpoints.down("md")]: {
+      marginRight: "10px",
+      width: "290px",
+      marginBottom: "10px"
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "350px",
+      marginBottom: "10px"
+    }
+  },
+  textfields_tres: {
+    marginRight: "10px",
+    width: "590px",
+    marginBottom: "10px",
+    [theme.breakpoints.down("md")]: {
+      marginRight: "10px",
+      width: "590px",
+      marginBottom: "10px"
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: "350px",
+      marginBottom: "10px"
+    }
+  },
+  groupContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  btnContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    width: "1000px"
+  },
+  SubmitButton: {
+    width: "186px",
+    height: "50px",
+    background: "#2196F3",
+    color: "white",
+    border: "none",
+    marginBottom: "10px",
+    borderRadius: "4px",
+    cursor: "pointer",
+    marginRight: "30px"
+  },
+  CancelButton: {
+    width: "186px",
+    height: "50px",
+    background: "rgb(202, 202, 202)",
+    color: "white",
+    border: "none",
+    // marginTop: "25px",
+    marginBottom: "10px",
+    borderRadius: "4px",
+    cursor: "pointer",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: "0.8em",
+    marginTop: "0px"
   }
 }));
 
@@ -552,7 +566,6 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    // flexDirection: "row",
     flexWrap: "wrap",
     width: "100%",
     maxWidth: "900px"
@@ -575,6 +588,10 @@ const styles = {
     color: "white",
     border: "none",
     borderRadius: "4px",
-    cursor: "pointer"
+    cursor: "pointer",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: "0.8em"
   }
 };

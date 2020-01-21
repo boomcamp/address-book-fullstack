@@ -7,7 +7,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 // import Chip from "@material-ui/core/Chip";
 import { Chip } from "@material-ui/core";
-import './groupForm.css'
+import "./groupForm.css";
 
 export default function GroupForm(highprops) {
   const classes = useStyles();
@@ -64,10 +64,6 @@ export default function GroupForm(highprops) {
   };
 
   const setGroup = id => {
-    // here
-
-    console.log("settting group", id);
-
     axios({
       method: "get",
       url: `http://localhost:5000/api/contacts/groups/reference/retrieve/${id}`,
@@ -93,17 +89,6 @@ export default function GroupForm(highprops) {
       .catch(e => console.log(e));
   };
 
-  const updateGroups = () => {
-    if (highprops.reference_contact) {
-      //for removed items
-      checkRemovedGroups();
-      // for added items
-      checkAddedGroups(highprops.reference_contact);
-    } else if (highprops.reference_contact === null) {
-      // checkAddedGroups();
-    }
-  };
-
   const checkRemovedGroups = () => {
     let chips = [];
     let removed = [];
@@ -124,15 +109,10 @@ export default function GroupForm(highprops) {
   };
 
   const getNewDataDetails = data => {
-    console.log("recieving new data details 1902");
-    console.log(data);
     checkAddedGroups(data.data.id);
   };
 
   const checkAddedGroups = (id = highprops.reference_contact) => {
-    console.log("adding new group to ", id);
-
-    // let chips = [];
     let init = [];
     let added = [];
 
@@ -148,8 +128,6 @@ export default function GroupForm(highprops) {
   };
 
   const newGroups = (added, id) => {
-    console.log("new groups", added);
-
     added.map(data => {
       axios({
         method: "post",
@@ -200,8 +178,6 @@ export default function GroupForm(highprops) {
       headers: { Authorization: sessionStorage.getItem("token") }
     })
       .then(data => {
-        console.log(grpState);
-
         let groupContainer = [];
 
         data.data.map(gdata => {
@@ -214,8 +190,6 @@ export default function GroupForm(highprops) {
             groupList: groupContainer
           };
         });
-
-        console.log(grpState);
       })
       .catch(e => console.log(e));
   };
@@ -223,43 +197,33 @@ export default function GroupForm(highprops) {
   const addToGroup = () => {
     let rechip = Object.assign([], chipState);
     rechip.push({ group_name: grpState.selectedGroupName.title });
+    setgrpState(prevState => {
+      return { ...prevState, selectedGroupName:{title:''}};
+    });
     setChipState(rechip);
-    console.log(chipState);
   };
 
   const handleDelete = chipToDelete => e => {
-    console.log(chipToDelete);
-
-    console.info("You clicked the delete icon.");
-
     setChipState(rechip =>
       rechip.filter(chip => chip.group_name !== chipToDelete.group_name)
     );
-    // here
     deleteGroups([chipToDelete.group_name]);
-    // checkRemovedGroups();
-  };
-
-  const handleClick = () => {
-    console.info("You clicked the Chip.");
   };
 
   return (
-    <div  style={{ margin: "20px" }}>
-      <div className="group-form-container" style={styles.addToGroup}>
+    <div>
+      <div className="group-form-container">
         <Autocomplete
           freeSolo
           id="group-box"
           value={grpState.selectedGroupName}
           options={grpState.groupList}
           getOptionLabel={option => option.title}
-          // style={{ width: 300 }}
           onInputChange={grpStateUpdate}
           className={classes.textfields}
           renderInput={params => (
             <TextField
               {...params}
-              // onChange={grpStateUpdate}
               label="Add to a group"
               variant="outlined"
               fullWidth
@@ -269,10 +233,6 @@ export default function GroupForm(highprops) {
         <p className="add-group-btn" onClick={addToGroup}>
           +
         </p>
-
-        {/* <button type="submit" style={styles.submitBtn} onClick={updateGroups}>
-          Check
-        </button> */}
       </div>
 
       <div className={classes.chip} style={{ width: "400px" }}>
@@ -283,7 +243,6 @@ export default function GroupForm(highprops) {
                   value={data}
                   style={{ margin: "0 3px 0 0" }}
                   label={data.group_name}
-                  // label="Custom delete icon"
                   onDelete={handleDelete(data)}
                 />
               );
@@ -297,40 +256,15 @@ export default function GroupForm(highprops) {
 const useStyles = makeStyles(theme => ({
   root: {
     "& > *": {
-      margin: theme.spacing(1),
-      width: 200
+      // margin: theme.spacing(1),
+      // width: 500
     }
   },
   textfields: {
-    width: '1000px',
+    width: "2000px",
     margin: "10px"
   },
   chip: {
     margin: "20px"
   }
 }));
-
-const styles = {
-  // submitBtn: {
-  //   width: "50px",
-  //   height: "32px",
-  //   background: "#2196F3",
-  //   color: "white",
-  //   border: "none",
-  //   marginTop: "25px",
-  //   marginBottom: "20px",
-  //   borderRadius: "4px",
-  //   cursor: "pointer",
-  //   height: "43px",
-  //   position: "relative",
-  //   top: "-7px"
-  // },
-  addToGroup: {
-    width: "250px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-
-    // flexDirection: "column"
-  }
-};

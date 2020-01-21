@@ -145,7 +145,8 @@ const styles = {
     margin: "0 auto",
     marginTop: "190px",
     boxShadow: "rgb(214, 214, 214) 1px 1px 5px 0px",
-    borderRadius: "9px"
+    borderRadius: "9px",
+    background:'white'
   },
   inputfields: {
     display: "flex",

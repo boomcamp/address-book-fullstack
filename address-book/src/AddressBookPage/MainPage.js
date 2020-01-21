@@ -11,6 +11,7 @@ export default function MainPage() {
   const [state, setState] = useState(null);
   const [tableState, setTableState] = useState(null);
   const [groupid, setGroupRef] = useState();
+  const [initial, setInit] = useState(true);
 
   if (!sessionStorage.getItem("token")) {
     return <Redirect to="/" />;
@@ -22,16 +23,19 @@ export default function MainPage() {
 
   const tranferData = data => {
     console.log(data);
+    // setInit(true);
     setState(data.data);
     // console.log(data.data)
   };
 
   const prepareNewData = () => {
+    setInit(false);
     // console.log('call for prepare')
     setState(null);
   };
 
   const setTableData = data => {
+    setInit(true);
     console.log(data.data);
     setTableState(data.data);
   };
@@ -40,14 +44,15 @@ export default function MainPage() {
     setGroupRef(e);
   };
 
+  console.log(initial)
+
   return (
     <>
-      {/* <div className="black-overlay" /> */}
       <Header title="Address Book" />
       <SideBar
         setTableData={setTableData}
         contactData={state}
-        prepareNewData={state === null ? true : false}
+        prepareNewData={[state === null ? true : false, initial]}
         passGroupRef={groupReference}
       />
       <ContactsTable

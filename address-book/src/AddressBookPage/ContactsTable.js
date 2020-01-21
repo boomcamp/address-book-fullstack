@@ -1,10 +1,13 @@
 import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import MaterialTable, { MTableBodyRow } from "material-table";
-import { Chip } from "@material-ui/core";
+import { Chip, createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import "../App.css";
+import { makeStyles } from "@material-ui/core/styles";
 
 export default function ContactsTable(highprops) {
+  const classes = useStyles();
+
   const [state, setState] = useState({
     columns: [
       { title: "First Name", field: "first_name", filtering: false },
@@ -12,11 +15,6 @@ export default function ContactsTable(highprops) {
       { title: "Home Phone", field: "home_phone", filtering: false },
       { title: "Mobile Phone", field: "mobile_phone", filtering: false },
       { title: "Work Phone", field: "work_phone", filtering: false }
-      // { title: "Email", field: "email", filtering: false },
-      // { title: "City", field: "city", filtering: false },
-      // { title: "State/Province", field: "state_or_province", filtering: false },
-      // { title: "Postal Code", field: "postal_code", filtering: false },
-      // { title: "Country", field: "country", filtering: false }
     ],
     components: {
       Row: props => {
@@ -31,6 +29,17 @@ export default function ContactsTable(highprops) {
     }
   });
 
+  const theme = createMuiTheme({
+    palette: {
+      primary: {
+        main: "#ff3300"
+      },
+      secondary: {
+        main: "#00aeff"
+      }
+    }
+  });
+
   useEffect(() => {
     if (highprops.tableData) {
       console.log(highprops.tableData);
@@ -38,12 +47,13 @@ export default function ContactsTable(highprops) {
         return { ...state, data: highprops.tableData };
       });
     } else {
-
-      console.log(sessionStorage.getItem("userid"))
+      console.log(sessionStorage.getItem("userid"));
 
       axios({
         method: "get",
-        url: `http://localhost:5000/api/contacts/${sessionStorage.getItem("userid")}`,
+        url: `http://localhost:5000/api/contacts/${sessionStorage.getItem(
+          "userid"
+        )}`,
         headers: { Authorization: sessionStorage.getItem("token") }
       })
         // .get("http://localhost:5000/api/contacts", {
@@ -118,8 +128,6 @@ export default function ContactsTable(highprops) {
   }
 
   function EditData(newdata, olddata) {
-    // console.log("old data : " + olddata.active);
-
     axios
       .put(
         `http://localhost:5000/api/contact/update/${olddata.id}`,
@@ -144,79 +152,98 @@ export default function ContactsTable(highprops) {
   }
 
   return (
-    <MaterialTable
-      // style={{ borderRadius: 0, width: '50%'}}
-      title="Contact List"
-      columns={state.columns}
-      components={state.components}
-      data={state.data}
-      options={{
-        actionsColumnIndex: -1,
-        selection: true
-      }}
-      actions={[
-        {
-          tooltip: "Remove All Selected Users",
-          icon: "delete",
-          onClick: (evt, data) => {
-            data.map(udata => {
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.splice(data.indexOf(udata), 1);
-                return { ...prevState, data };
-              });
-              DeleteData(udata.id);
-            });
-          }
-        },
-        {
-          icon: "add",
-          tooltip: "Add User",
-          isFreeAction: true,
-          onClick: event => {
-            highprops.prepareNewData();
-          }
-        }
-      ]}
-      editable={{
-        // onRowAdd: newData =>
-        //   new Promise(resolve => {
-        //     setTimeout(() => {
-        //       resolve();
-        //       setState(prevState => {
-        //         const data = [...prevState.data];
-        //         data.push(newData);
-        //         return { ...prevState, data };
-        //       });
-        //     }, 600);
-        //   }).then(AddData(newData)),
+    <div className={classes.tableContainer}>
+      <MuiThemeProvider theme={theme}>
+        <MaterialTable
+          
+          title="Contacts"
+          columns={state.columns}
+          components={state.components}
+          data={state.data}
+          options={{
+            actionsColumnIndex: -1,
+            selection: true
+          }}
+          actions={[
+            {
+              tooltip: "Remove All Selected Users",
+              icon: "delete",
+              onClick: (evt, data) => {
+                data.map(udata => {
+                  setState(prevState => {
+                    const data = [...prevState.data];
+                    data.splice(data.indexOf(udata), 1);
+                    return { ...prevState, data };
+                  });
+                  DeleteData(udata.id);
+                });
+              }
+            },
+            {
+              icon: "add",
+              tooltip: "Add User",
+              isFreeAction: true,
+              onClick: event => {
+                highprops.prepareNewData();
+              }
+            }
+          ]}
+          editable={{
+            // onRowAdd: newData =>
+            //   new Promise(resolve => {
+            //     setTimeout(() => {
+            //       resolve();
+            //       setState(prevState => {
+            //         const data = [...prevState.data];
+            //         data.push(newData);
+            //         return { ...prevState, data };
+            //       });
+            //     }, 600);
+            //   }).then(AddData(newData)),
 
-        // onRowUpdate: (newData, oldData) =>
-        //   new Promise(resolve => {
-        //     setTimeout(() => {
-        //       resolve();
-        //       if (oldData) {
-        //         setState(prevState => {
-        //           const data = [...prevState.data];
-        //           data[data.indexOf(oldData)] = newData;
-        //           return { ...prevState, data };
-        //         });
-        //       }
-        //     }, 600);
-        //   }).then(EditData(newData, oldData)),
+            // onRowUpdate: (newData, oldData) =>
+            //   new Promise(resolve => {
+            //     setTimeout(() => {
+            //       resolve();
+            //       if (oldData) {
+            //         setState(prevState => {
+            //           const data = [...prevState.data];
+            //           data[data.indexOf(oldData)] = newData;
+            //           return { ...prevState, data };
+            //         });
+            //       }
+            //     }, 600);
+            //   }).then(EditData(newData, oldData)),
 
-        onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.splice(data.indexOf(oldData), 1);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }).then(DeleteData(oldData.id))
-      }}
-    />
+            onRowDelete: oldData =>
+              new Promise(resolve => {
+                setTimeout(() => {
+                  resolve();
+                  setState(prevState => {
+                    const data = [...prevState.data];
+                    data.splice(data.indexOf(oldData), 1);
+                    return { ...prevState, data };
+                  });
+                }, 600);
+              }).then(DeleteData(oldData.id))
+          }}
+        />
+      </MuiThemeProvider>
+    </div>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  tableContainer: {
+    margin: "50px 40px 0 40px",
+    [theme.breakpoints.down("sm")]: {
+      margin: "50px 0"
+    }
+  }
+}));
+
+const styles = {
+  tableContainer: {
+    margin: "50px 40px 0 40px"
+  }
+};

@@ -36,9 +36,9 @@ export default function SelectSort(highprops) {
       <div className="select-sort-container">
         <select className="select-sort" onChange={selectSort}>
           <option value="0" default>
-            SORT BY
+            SORT LAST NAME BY
           </option>
-          <option value="1">LastName</option>
+          {/* <option value="1">LastName</option> */}
           <option value="ASC">Ascendling</option>
           <option value="DESc">Descending</option>
         </select>

@@ -20,10 +20,11 @@
   align-items: center;
   color: white;
   cursor: pointer;
+  height: 28px;
 }
 
 .tabs-container:hover {
-  background: #2296cc;
+  background: #44c4ff;
 }
 
 .active-tab {
@@ -31,20 +32,27 @@
 }
 
 .container-close {
+  height: 100vh;
+  width: 15px;
+  background: #ffffff;
   position: absolute;
-  left: 96%;
-  /* top: 8px; */
+  right: 0%;
   cursor: pointer;
   color: rgb(155, 155, 155);
   z-index: 51;
+  border-left: 1px solid rgb(218, 218, 218);
 }
 
-/* .tabs-body-container {
-  position: absolute;
-  z-index: 30;
-  background: rgb(255, 255, 255);
-  width: 100%;
-} */
+.container-close:hover {
+  color: rgb(87, 87, 87);
+  background: #fff8f8;
+}
+
+.close-icon {
+  position: relative;
+  top: 45%;
+  padding: 4px;
+}
 
 .form-contact-container {
   position: absolute;
@@ -54,27 +62,41 @@
   z-index: 100;
 }
 
+.header-add-fx {
+  width: 100%;
+  height: 20px;
+  background: #03a9f4;
+  z-index: 50;
+  position: absolute;
+}
+
+.groups-contact {
+  position: absolute;
+  width: 100%;
+  background: white;
+  z-index: 100;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
+}
+
 /* tablets */
 @media only screen and (min-width: 600px) {
   .form-contact-container {
     position: absolute;
     width: 500px;
-    height: 90vh;
+    height: 100vh;
     background: white;
     z-index: 100;
     overflow-y: scroll;
     overflow-x: hidden;
   }
-  /* .tabs-body-container {
-    position: absolute;
-    z-index: 30;
-    background: rgb(255, 255, 255);
-    width: 500px;
-    height: 100vh;
-  } */
+  .groups-contact {
+    width: 350px;
+  }
 }
 
-
+/* Desktop */
 @media only screen and (min-width: 768px) {
   .form-contact-container {
     position: absolute;
@@ -84,5 +106,11 @@
     z-index: 100;
     overflow-y: scroll;
     overflow-x: hidden;
+  }
+  .groups-contact {
+    width: 500px;
+  }
+
+  .container-close {
   }
 }

@@ -39,7 +39,7 @@ export default function Signup() {
 
   const inUserName = e => {
     e.persist();
-    
+
     setState(prevState => {
       return { ...prevState, username: e.target.value };
     });
@@ -180,7 +180,8 @@ const styles = {
     marginTop: "190px",
     boxShadow: "rgb(214, 214, 214) 1px 1px 5px 0px",
     borderRadius: "9px",
-    padding: "15px 0"
+    padding: "15px 0",
+    background: "white"
   },
   inputfields: {
     display: "flex",
