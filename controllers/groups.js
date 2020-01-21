@@ -6,7 +6,7 @@ module.exports = {
     const { id } = req.params;
     let request = `select * from contacts where group_id=${id}`;
     if (sort) {
-      request += `order by last_name ${sort}`;
+      request += ` order by last_name ${sort}`;
     }
     db.query(request, { id: id }).then(contacts => {
       res.status(200).send({
