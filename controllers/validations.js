@@ -68,5 +68,16 @@ module.exports = {
           res.status(500).end();
         }
       });
+  },
+  fetchUser: (req, res) => {
+    const db = req.app.get("db");
+
+    db.users
+      .find({ id: req.params.id })
+      .then(users => res.status(200).json(users))
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
   }
 };

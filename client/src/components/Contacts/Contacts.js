@@ -16,6 +16,7 @@ export default class Contacts extends React.Component {
         />
         <Modal
           isModal={this.props.isModal}
+          viewContact={this.props.viewContact}
           currentData={this.props.currentData}
           createContactHandler={this.props.createContactHandler}
           editContactHandler={this.props.editContactHandler}

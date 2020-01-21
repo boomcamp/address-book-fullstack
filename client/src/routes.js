@@ -37,7 +37,10 @@ export default class Routes extends React.Component {
       selectHandler,
       addAGroup,
       addAGroupHandler,
-      groupData
+      groupData,
+      viewContact,
+      editContact,
+      pName
     } = this.props;
     return (
       <Switch>
@@ -46,6 +49,7 @@ export default class Routes extends React.Component {
           render={() =>
             accessToken ? (
               <Sidenav
+                pName={pName}
                 handleLogout={handleLogout}
                 createContactHandler={createContactHandler}
                 changeHandler={changeHandler}
@@ -54,7 +58,9 @@ export default class Routes extends React.Component {
                 handleModalClose={handleModalClose}
                 handleModalOpen={handleModalOpen}
                 isModal={isModal}
+                viewContact={viewContact}
                 currentData={currentData}
+                editContact={editContact}
                 editContactHandler={editContactHandler}
                 deleteContactHandler={deleteContactHandler}
                 deleteContact={deleteContact}

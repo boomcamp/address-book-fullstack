@@ -50,6 +50,15 @@ export default class Table extends React.Component {
     window.removeEventListener("resize", this.updateDimensions);
   }
 
+  getRandomColor = () => {
+    var letters = "0123456789ABCDEF";
+    var color = "#";
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+
+    return color;
+  };
   render() {
     const { search } = this.props;
     const tableColumns =
@@ -68,7 +77,12 @@ export default class Table extends React.Component {
                     <div>
                       <Avatar>{rowData.first_name.charAt(0)}</Avatar>
                     </div>
-                    <div style={{ paddingTop: "10px", paddingLeft: "10px" }}>
+                    <div
+                      style={{ paddingTop: "10px", paddingLeft: "10px" }}
+                      onClick={() =>
+                        this.props.handleModalOpen(rowData, "viewContact")
+                      }
+                    >
                       {" "}
                       {" " + rowData.first_name + " " + rowData.last_name}
                     </div>
@@ -121,7 +135,12 @@ export default class Table extends React.Component {
                     <div>
                       <Avatar>{rowData.first_name.charAt(0)}</Avatar>
                     </div>
-                    <div style={{ paddingTop: "10px", paddingLeft: "10px" }}>
+                    <div
+                      style={{ paddingTop: "10px", paddingLeft: "10px" }}
+                      onClick={() =>
+                        this.props.handleModalOpen(rowData, "viewContact")
+                      }
+                    >
                       {" "}
                       {" " + rowData.first_name + " " + rowData.last_name}
                     </div>

@@ -18,11 +18,13 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
+import Box from "@material-ui/core/Box";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import Collapse from "@material-ui/core/Collapse";
+import Avatar from "@material-ui/core/Avatar";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
@@ -81,6 +83,7 @@ function ResponsiveDrawer(props) {
     groups,
     search,
     groupData,
+    viewContact,
     contact,
     addToGroup,
     addToGroupHandler,
@@ -89,7 +92,8 @@ function ResponsiveDrawer(props) {
     editGroup,
     editGroupHandler,
     deleteGroup,
-    deleteGroupHandler
+    deleteGroupHandler,
+    editContact
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -108,7 +112,43 @@ function ResponsiveDrawer(props) {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar}></div>
+      <div className={classes.toolbar}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignContent="center"
+          flexWrap="wrap"
+          style={{
+            paddingTop: "20px",
+            paddingBottom: "20px",
+            marginLeft: "20px",
+            marginRight: "20px"
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center"
+            }}
+          >
+            <Avatar style={{ height: "80px", width: "80px" }} />
+          </div>
+          <div
+            style={{
+              paddingTop: "15px",
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center"
+            }}
+          >
+            <Typography align={"center"}>
+              {props.pName ? props.pName : ""}
+            </Typography>
+          </div>
+        </Box>
+      </div>
       <Divider />
       <div style={{ padding: "10px" }}>
         <MDBBtn
@@ -175,6 +215,13 @@ function ResponsiveDrawer(props) {
               : ""}
           </List>
         </Collapse>
+        <Divider />
+        <ListItem button key={"logout"} onClick={handleLogout}>
+          <ListItemIcon>
+            <PersonIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Logout"} />
+        </ListItem>
       </List>
       <Divider />
     </div>
@@ -268,7 +315,7 @@ function ResponsiveDrawer(props) {
         </Hidden>
       </nav>
       <main className={classes.content}>
-        <div className={classes.toolbar} />
+        <div className={classes.toolbar}></div>
         <Routes
           createContactHandler={createContactHandler}
           editContactHandler={editContactHandler}
@@ -285,6 +332,7 @@ function ResponsiveDrawer(props) {
           addToGroup={addToGroup}
           addToGroupHandler={addToGroupHandler}
           addAGroup={addAGroup}
+          editContact={editContact}
           addAGroupHandler={addAGroupHandler}
           editGroup={editGroup}
           editGroupHandler={editGroupHandler}
@@ -292,6 +340,7 @@ function ResponsiveDrawer(props) {
           deleteGroupHandler={deleteGroupHandler}
           groups={groups}
           search={search}
+          viewContact={viewContact}
           groupData={groupData}
         />
       </main>

@@ -31,7 +31,9 @@ export default class Routes extends React.Component {
       searchHandler,
       groups,
       search,
-      groupData
+      groupData,
+      viewContact,
+      editContact
     } = this.props;
     return (
       <Switch>
@@ -41,6 +43,7 @@ export default class Routes extends React.Component {
             <Contacts
               handleLogout={handleLogout}
               accessToken={accessToken}
+              viewContact={viewContact}
               createContactHandler={createContactHandler}
               changeHandler={changeHandler}
               selectHandler={selectHandler}
@@ -49,6 +52,7 @@ export default class Routes extends React.Component {
               handleModalOpen={handleModalOpen}
               isModal={isModal}
               currentData={currentData}
+              editContact={editContact}
               editContactHandler={editContactHandler}
               deleteContactHandler={deleteContactHandler}
               deleteContact={deleteContact}

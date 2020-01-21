@@ -49,6 +49,13 @@ export default class App extends Component {
             isLoading: false
           });
         });
+      axios
+        .get(`http://localhost:4001/fetch/${localStorage.getItem("userId")}`)
+        .then(res => {
+          this.setState({
+            pName: res.data[0].firstName + " " + res.data[0].lastName
+          });
+        });
     }
   };
 
@@ -101,19 +108,26 @@ export default class App extends Component {
       firstName: this.state.fname,
       lastName: this.state.lname
     };
-    axios
-      .post("http://localhost:4001/register", Obj)
-      .then(() => {
-        this.setState({ regSuccess: true });
-        toast.success("User has been Successfully Added!");
-      })
-      .catch(errors => {
-        try {
-          toast.error(errors.response.data.error);
-        } catch {
-          console.log(errors);
-        }
-      });
+
+    return this.state.email &&
+      this.state.username &&
+      this.state.password &&
+      this.state.fname &&
+      this.state.lname
+      ? axios
+          .post("http://localhost:4001/register", Obj)
+          .then(() => {
+            this.setState({ regSuccess: true });
+            toast.success("User has been Successfully Added!");
+          })
+          .catch(errors => {
+            try {
+              toast.error(errors.response.data.error);
+            } catch {
+              console.log(errors);
+            }
+          })
+      : "";
   };
 
   handleLogout = () => {
@@ -121,7 +135,8 @@ export default class App extends Component {
     this.setState({
       accessToken: "",
       username: "",
-      password: ""
+      password: "",
+      groupData: null
     });
     toast("Successfully Logout!");
   };
@@ -134,7 +149,7 @@ export default class App extends Component {
       password: this.state.password
     };
 
-    return this.state.username && this.state.password
+    return this.state.username || this.state.password
       ? axios
           .post("http://localhost:4001/login", Obj)
           .then(response => {
@@ -230,8 +245,9 @@ export default class App extends Component {
       .patch(`http://localhost:4001/groups/${data.id}/edit`, Obj, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
-      .then(() => {
+      .then(res => {
         this.setState({
+          groupData: res.data[0],
           isLoading: true,
           isModal: false
         });
@@ -335,7 +351,7 @@ export default class App extends Component {
     event.target.className += " was-validated";
     const Obj = {
       user_id: localStorage.getItem("userId"),
-      group_id: this.state.groupData.id,
+      group_id: this.state.groupData ? this.state.groupData.id : null,
       first_name: this.state.fname,
       last_name: this.state.lname,
       email: this.state.email,
@@ -347,22 +363,33 @@ export default class App extends Component {
       postal_code: this.state.zip,
       country: this.state.country
     };
-    axios
-      .post("http://localhost:4001/contacts/create", Obj)
-      .then(() => {
-        this.setState({
-          isLoading: true,
-          isModal: false
-        });
-        toast.success(`Contact has been Successfully Added`);
-      })
-      .catch(errors => {
-        try {
-          toast.error(errors.response.data.error);
-        } catch {
-          console.log(errors);
-        }
-      });
+    return this.state.fname &&
+      this.state.lname &&
+      this.state.email &&
+      this.state.hphone &&
+      this.state.mphone &&
+      this.state.wphone &&
+      this.state.city &&
+      this.state.state_province &&
+      this.state.zip &&
+      this.state.country
+      ? axios
+          .post("http://localhost:4001/contacts/create", Obj)
+          .then(() => {
+            this.setState({
+              isLoading: true,
+              isModal: false
+            });
+            toast.success(`Contact has been Successfully Added`);
+          })
+          .catch(errors => {
+            try {
+              toast.error(errors.response.data.error);
+            } catch {
+              console.log(errors);
+            }
+          })
+      : "";
   };
 
   changeHandler = event => {
@@ -371,6 +398,11 @@ export default class App extends Component {
     });
     if (event.target.name === "sort") {
       this.setState({ isLoading: true });
+    }
+    if (event.target.name === "cpassword") {
+      this.state.password === event.target.value
+        ? (event.target.className = "form-control is-valid")
+        : (event.target.className = "form-control is-invalid");
     }
   };
 
@@ -381,8 +413,23 @@ export default class App extends Component {
   };
 
   handleModalOpen = (val, option) => {
-    option === "deleteGroup"
+    return option === "viewContact"
       ? this.setState({
+          viewContact: true,
+          editContact: false,
+          deleteGroup: false,
+          editGroup: false,
+          addAGroup: false,
+          addToGroup: false,
+          addContact: false,
+          deleteContact: false,
+          currentData: val,
+          isModal: true
+        })
+      : option === "deleteGroup"
+      ? this.setState({
+          editContact: false,
+          viewContact: false,
           deleteGroup: true,
           editGroup: false,
           addAGroup: false,
@@ -394,6 +441,8 @@ export default class App extends Component {
         })
       : option === "editGroup"
       ? this.setState({
+          editContact: false,
+          viewContact: false,
           editGroup: true,
           deleteGroup: false,
           addAGroup: false,
@@ -406,6 +455,8 @@ export default class App extends Component {
         })
       : option === "addAGroup"
       ? this.setState({
+          editContact: false,
+          viewContact: false,
           currentData: null,
           deleteGroup: false,
           editGroup: false,
@@ -417,6 +468,8 @@ export default class App extends Component {
         })
       : option === "addContact"
       ? this.setState({
+          editContact: false,
+          viewContact: false,
           addContact: true,
           addAGroup: false,
           currentData: null,
@@ -428,6 +481,8 @@ export default class App extends Component {
         })
       : option === "addGroup"
       ? this.setState({
+          editContact: false,
+          viewContact: false,
           addAGroup: false,
           editGroup: false,
           deleteGroup: false,
@@ -439,6 +494,8 @@ export default class App extends Component {
         })
       : option === "delete"
       ? this.setState({
+          editContact: false,
+          viewContact: false,
           editGroup: false,
           addToGroup: false,
           deleteGroup: false,
@@ -447,7 +504,10 @@ export default class App extends Component {
           isModal: true,
           currentData: val
         })
-      : this.setState({
+      : option === "edit"
+      ? this.setState({
+          editContact: true,
+          viewContact: false,
           editGroup: false,
           addContact: false,
           addToGroup: false,
@@ -466,7 +526,8 @@ export default class App extends Component {
           state_province: val.state_or_province,
           zip: val.postal_code,
           country: val.country
-        });
+        })
+      : "";
   };
 
   handleModalClose = () => {
@@ -505,8 +566,11 @@ export default class App extends Component {
           contact={this.state.contacts}
           groups={this.state.groups}
           search={this.state.search}
+          editContact={this.state.editContact}
+          viewContact={this.state.viewContact}
           groupData={this.state.groupData}
           fetchContact={this.fetchContact}
+          pName={this.state.pName}
         />
       </HashRouter>
     );

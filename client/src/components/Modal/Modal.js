@@ -6,8 +6,25 @@ import DialogContent from "@material-ui/core/DialogContent";
 import { MDBCol, MDBRow } from "mdbreact";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "react-select";
+import Avatar from "@material-ui/core/Avatar";
+import Box from "@material-ui/core/Box";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import PhoneIcon from "@material-ui/icons/Phone";
+import HomeIcon from "@material-ui/icons/Home";
+import BusinessIcon from "@material-ui/icons/Business";
+import { Typography, Divider } from "@material-ui/core";
 
 export default class Modal extends React.Component {
+  getRandomColor = () => {
+    var letters = "0123456789ABCDEF";
+    var color = "#";
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+
+    return color;
+  };
+
   render() {
     const {
       handleModalClose,
@@ -27,7 +44,8 @@ export default class Modal extends React.Component {
       editGroupHandler,
       deleteGroup,
       deleteGroupHandler,
-      groups
+      groups,
+      viewContact
     } = this.props;
 
     const options = groups
@@ -41,7 +59,100 @@ export default class Modal extends React.Component {
 
     return (
       <div>
-        {deleteGroup ? (
+        {viewContact ? (
+          <Dialog
+            open={isModal}
+            onClose={handleModalClose}
+            maxWidth="sm"
+            fullWidth={true}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {
+                <Box
+                  display="flex"
+                  justifyContent="flex-start"
+                  alignContent="flex-start"
+                >
+                  <div>
+                    <Avatar
+                      style={{
+                        width: "80px",
+                        height: "80px",
+                        backgroundColor: this.getRandomColor()
+                      }}
+                    >
+                      {currentData.first_name.charAt(0)}
+                    </Avatar>
+                  </div>
+                  <div style={{ paddingTop: "25px", paddingLeft: "10px" }}>
+                    {" " + currentData.first_name + " " + currentData.last_name}
+                  </div>
+                </Box>
+              }
+            </DialogTitle>
+
+            <DialogContent>
+              <Divider className="mb-3" />
+              <MDBRow>
+                <MDBCol md="12" className="mb-3">
+                  <Typography variant="h6">Contact Details</Typography>
+                </MDBCol>
+              </MDBRow>
+              <MDBRow center>
+                <MDBCol md="5" className="mb-3">
+                  <Typography>
+                    <MailOutlineIcon /> {":  " + currentData.email}
+                  </Typography>
+                </MDBCol>
+                <MDBCol md="5" className="mb-3">
+                  <Typography>
+                    <PhoneIcon /> {":  " + currentData.mobile_phone}
+                  </Typography>
+                </MDBCol>
+                <MDBCol md="5" className="mb-3">
+                  <Typography>
+                    <HomeIcon /> {":  " + currentData.home_phone}
+                  </Typography>
+                </MDBCol>
+                <MDBCol md="5" className="mb-3">
+                  <Typography>
+                    <BusinessIcon /> {":  " + currentData.work_phone}
+                  </Typography>
+                </MDBCol>
+              </MDBRow>
+              <Divider className="mb-3" />
+              <MDBRow>
+                <MDBCol md="12" className="mb-3">
+                  <Typography variant="h6">Address Details</Typography>
+                </MDBCol>
+              </MDBRow>
+              <MDBRow center>
+                <MDBCol md="5" className="mb-3">
+                  <Typography>
+                    <MailOutlineIcon /> {":  " + currentData.city}
+                  </Typography>
+                </MDBCol>
+                <MDBCol md="5" className="mb-3">
+                  <Typography>
+                    <PhoneIcon /> {":  " + currentData.state_or_province}
+                  </Typography>
+                </MDBCol>
+                <MDBCol md="5" className="mb-3">
+                  <Typography>
+                    <HomeIcon /> {":  " + currentData.postal_code}
+                  </Typography>
+                </MDBCol>
+                <MDBCol md="5" className="mb-3">
+                  <Typography>
+                    <BusinessIcon /> {":  " + currentData.country}
+                  </Typography>
+                </MDBCol>
+              </MDBRow>
+            </DialogContent>
+          </Dialog>
+        ) : deleteGroup ? (
           <Dialog
             open={isModal}
             onClose={handleModalClose}

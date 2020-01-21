@@ -39,6 +39,7 @@ massive({
   //USER'S ENDPOINT
   app.post("/register", validate.register);
   app.post("/login", validate.login);
+  app.get("/fetch/:id", validate.fetchUser);
 
   //CONTACT'S ENDPOINT
   app.get("/contacts/:id/all", auth, contact.allContacts);

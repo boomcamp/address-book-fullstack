@@ -10,6 +10,8 @@ const FilterDiv = styled.div`
 `;
 const Search = styled.div`
   width: 40%;
+  @media screen and (max-width: 600px) {
+  }
 `;
 const Options = styled.div``;
 
@@ -32,7 +34,7 @@ export default class Filter extends React.Component {
             onChange={this.props.changeHandler}
             className="browser-default custom-select"
           >
-            <option>Sort by</option>
+            <option value="asc">Sort by</option>
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
           </select>
