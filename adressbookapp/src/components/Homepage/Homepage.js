@@ -22,7 +22,6 @@ import Groups from "./Groups/Groups";
 const { confirm } = Modal;
 const { Content } = Layout;
 const TabPane = Tabs.TabPane;
-let arr = [];
 export default class Homepage extends Component {
   constructor(props) {
     super(props);
@@ -34,6 +33,7 @@ export default class Homepage extends Component {
       contactId: null,
       groups: [],
       search: [],
+      newGroups: [],
       info: [],
       arr: [],
       visible: false,
@@ -102,9 +102,7 @@ export default class Homepage extends Component {
           message.success("Sucessfully deleted");
         });
       },
-      onCancel() {
-        // console.log("Cancel");
-      }
+      onCancel() {}
     });
   };
 
@@ -158,36 +156,52 @@ export default class Homepage extends Component {
   };
 
   viewGroups = e => {
-    let current = this;
+    this.setState({ newGroups: [] });
     let x = e.contactid;
-
     const id = localStorage.getItem("id");
-    axios.get(`http://localhost:4000/api/groupContact/${x}`).then(res => {
-      if (res.data.length) {
-        res.data.map(res => {
-          // console.log(res);
-          // arr.push(res.groupid);
-          axios
-            .get(`http://localhost:4000/api/selectedGroup/${res.groupid}`)
-            .then(res => {
-              console.log(res.data);
-              // res.data.map(item => {
-              //   arr.filter(num => num.match(item.id));
-              // });
+    axios
+      .get(`http://localhost:4000/api/groupContact/${x}`)
+      .then(req => {
+        axios
+          .get(`http://localhost:4000/api/selectedGroups/${id}`)
+          .then(res => {
+            // console.log(req.data, res.data);
+            const a = req.data;
+            const b = res.data;
+            let valuesA = a.reduce(
+              (a, { id }) => Object.assign(a, { [id]: id }),
+              {}
+            );
+            let valuesB = b.reduce(
+              (a, { id }) => Object.assign(a, { [id]: id }),
+              {}
+            );
+            let result = [
+              ...a.filter(({ id }) => !valuesB[id]),
+              ...b.filter(({ id }) => !valuesA[id])
+            ];
+            result.map(i => {
+              // console.log(i);
+              return axios
+                .get(`http://localhost:4000/api/newGroups/${i.id}`)
+                .then(b => {
+                  //
+                  b.data.map(item =>
+                    this.setState({
+                      newGroups: this.state.newGroups.concat(item),
+                      contactId: x
+                    })
+                  );
+                })
+                .catch(err => console.log(err));
             });
-        });
-      } else {
-        axios.get(`http://localhost:4000/api/groups/${id}`).then(res => {
-          console.log(res.data);
-          current.setState({
-            groups: res.data,
-            visiblee: true,
-            contactId: x
           });
+        this.setState({
+          visiblee: true
         });
-      }
-    });
-    this.setState({ arr: arr });
+      })
+
+      .catch(err => console.log(err));
   };
   getGroups = e => {
     const id = localStorage.getItem("id");
@@ -213,7 +227,7 @@ export default class Homepage extends Component {
     });
   };
   render() {
-    console.log(this.state.arr);
+    // console.log(this.state.newGroups);
     return (
       <div>
         <Layout>
@@ -235,22 +249,25 @@ export default class Homepage extends Component {
               <MDBNavbarNav right>
                 <MDBNavItem>
                   <MDBDropdown style={{ color: "white" }}>
+                    {/* LOGGED IN USER: CLARK */}
                     <div
                       style={{
                         color: "white",
                         float: "right",
                         cursor: "pointer",
-                        fontSize: "15px"
+                        fontSize: "12px",
+                        marginLeft: "15px"
                       }}
                     >
-                      <Icon type="logout" />{" "}
+                      <Icon type="logout" />
+                      &nbsp;
                       <Popconfirm
                         title="Are you sure want to logout?"
                         onConfirm={this.logout}
                         onCancel={this.cancel}
                         style={{ width: "100px;" }}
                       >
-                        Logout
+                        LOGOUT
                       </Popconfirm>
                     </div>
                   </MDBDropdown>
@@ -300,10 +317,11 @@ export default class Homepage extends Component {
                     onSave={this.onSave}
                   />
                   <AddtoGroup
+                    getAll={this.getAll}
                     visible={this.state.visiblee}
                     onClickCancel={this.onClickCancel}
                     getGroups={this.getGroups}
-                    groups={this.state.groups}
+                    groups={this.state.newGroups}
                     onCancel={this.onCancel}
                     contactId={this.state.contactId}
                   />

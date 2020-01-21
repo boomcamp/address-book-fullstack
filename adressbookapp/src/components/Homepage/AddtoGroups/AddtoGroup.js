@@ -31,7 +31,7 @@ export default class AddtoGroup extends Component {
     const c_id = this.props.contactId;
     const id = localStorage.getItem("id");
     if (this.state.groupid == null) {
-      message.error("Select group first");
+      message.error("Select group first or Create group first! ^_^");
     } else
       axios
         .post("http://localhost:4000/api/addtogroups", {
@@ -40,7 +40,8 @@ export default class AddtoGroup extends Component {
           contactid: c_id
         })
         .then(res => {
-          console.log(res.data);
+          this.props.getAll();
+          this.props.onClickCancel();
           message.loading({ content: "Adding to the group...", key });
           setTimeout(() => {
             message.success({
@@ -51,7 +52,7 @@ export default class AddtoGroup extends Component {
           }, 1000);
         })
         .catch(err => {
-          message.error("You should create a group first! ^_^");
+          message.error("Select group first or Create groupfirst");
         });
   };
   render() {

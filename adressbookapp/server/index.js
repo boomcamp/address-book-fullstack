@@ -34,9 +34,11 @@ massive({
     app.post("/api/groups", groups.group);
     app.get("/api/groups/:id", groups.getGroupById);
     app.post("/api/addtogroups/", groups.addtoGroup);
-    app.get("/api/selectedGroup/:id", groups.getSelectedGroups);
+    app.get("/api/selectedGroups/:id", groups.getSelectedGroups);
+    app.get("/api/newGroups/:id", groups.newGroups);
     app.get("/api/groupContact/:id", groups.getGroupContact);
-    // app.patch("/api/groups/:id", groups.updateGroupById);
+    app.get("/api/getGroupMemberById/:id", groups.getGroupMemberById);
+    app.patch("/api/editGroups/:id", groups.updateGroupById);
     //protected-data
     app.get("/api/protected/data", (req, res) => {
       if (!req.headers.authorization) {

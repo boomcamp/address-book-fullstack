@@ -61,15 +61,20 @@ function getContactById(req, res) {
 function deleteContactById(req, res) {
   const db = req.app.get("db");
   const id = req.params.id;
-  db.query(`DELETE from addressbook where contactid = ${id}`)
+  console.log(id);
+  db.query(`DELETE from groupcontacts where contactid = ${id}`)
+    .then(() => {
+      db.query(`DELETE from addressbook where contactid = ${id}`);
+    })
     .then(() => {
       db.query(`DELETE from contacts where id = ${id}`);
     })
+
     .then(response => {
       res.status(200).json(response);
     })
     .catch(err => {
-      res.status(500).end();
+      console.log(err);
     });
 }
 function updateContactById(req, res) {

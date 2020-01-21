@@ -1,20 +1,90 @@
 import React, { Component } from "react";
 import { Card, Icon, Tooltip, Avatar } from "antd";
+import { Modal, Button } from "antd";
+import { Form, Input, message } from "antd";
+import axios from "axios";
+import ViewMembers from "../ViewMembers/ViewMembers";
 const { Meta } = Card;
-export default class Groups extends Component {
+class Groups extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      visible: false,
+      visiblee: false,
+      editGroup: "",
+      info: [],
+      groupname: "",
+      members: []
+    };
   }
   componentDidMount() {
     this.props.getGroups();
+    // this.props.form.setFieldsValue({
+    //   firstname: contact.firstname
+    // });
   }
+  handleCancel = () => {
+    this.setState({ visible: false });
+  };
+  cancel = () => {
+    this.setState({ visiblee: false });
+  };
+  editGroup = e => {
+    this.props.form.setFieldsValue({ group: e.groupname });
+    this.setState({
+      visible: true,
+      info: e
+    });
+  };
+  viewMembers = e => {
+    const id = e.id;
+    axios
+      .get(`http://localhost:4000/api/getGroupMemberById/${id}`)
+      .then(res => {
+        this.setState({
+          members: res.data
+        });
+      });
+    this.setState({
+      visiblee: true,
+      groupname: e.groupname
+    });
+  };
+  changeHandler = e => {
+    const val = e.value;
+    this.setState({
+      editGroup: val
+    });
+  };
+  handleSubmit = e => {
+    const id = e.id;
+    axios
+      .patch(`http://localhost:4000/api/editGroups/${id}`, {
+        groupname: this.state.editGroup
+      })
+      .then(res => {
+        this.props.getGroups();
+        message.success("Updated successfully");
+        this.setState({
+          visible: false
+        });
+        // res.data.map(item => {
+        //   return this.props.form.setFieldsValue({
+        //     groupname: item.groupname
+        //   });
+        // });
+      });
+  };
+
   render() {
-    // console.log(this.props.groups);
+    const info = this.state.info;
+    const { visible } = this.state;
+    const { getFieldDecorator } = this.props.form;
     return (
       <div className="card">
         {this.props.groups.map(res => {
+          const id = res;
           return (
             <Card
               style={{ width: 240, marginRight: 10, marginBottom: 10 }}
@@ -23,8 +93,8 @@ export default class Groups extends Component {
                   <Icon
                     type="eye"
                     key="view"
-                    style={{ fontSize: "22px", color: "#08c" }}
-                    // onClick={() => this.props.viewHandler(a)}
+                    style={{ fontSize: "22px", color: "green" }}
+                    onClick={() => this.viewMembers(id)}
                   />
                 </Tooltip>,
                 <Tooltip title="edit group" placement="bottom">
@@ -32,15 +102,7 @@ export default class Groups extends Component {
                     type="edit"
                     key="view"
                     style={{ fontSize: "22px", color: "#08c" }}
-                    // onClick={() => this.props.viewHandler(a)}
-                  />
-                </Tooltip>,
-                <Tooltip title="delete group" placement="bottom">
-                  <Icon
-                    type="delete"
-                    key="view"
-                    // onClick={() => this.props.deleteHandler(e)}
-                    style={{ fontSize: "22px", color: "red" }}
+                    onClick={() => this.editGroup(id)}
                   />
                 </Tooltip>
               ]}
@@ -56,7 +118,49 @@ export default class Groups extends Component {
             </Card>
           );
         })}
+        <Modal
+          visible={visible}
+          title="Edit Group"
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          footer={null}
+        >
+          <Form>
+            <Form.Item>
+              {getFieldDecorator("group", {
+                rules: [{ required: true, message: "Please input groupname!" }]
+              })(
+                <Input
+                  prefix={
+                    <Icon type="team" style={{ color: "rgba(0,0,0,.25)" }} />
+                  }
+                  type="text"
+                  placeholder="group name"
+                  name="group"
+                  onChange={e => this.changeHandler(e.target)}
+                />
+              )}
+            </Form.Item>
+            <Button onClick={this.handleCancel}>cancel</Button>&nbsp;&nbsp;
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={() => this.handleSubmit(info)}
+            >
+              save
+            </Button>
+          </Form>
+        </Modal>
+        <ViewMembers
+          visible={this.state.visiblee}
+          viewMembers={this.viewMebers}
+          cancel={this.cancel}
+          groupname={this.state.groupname}
+          members={this.state.members}
+        />
       </div>
     );
   }
 }
+
+export default Form.create()(Groups);
