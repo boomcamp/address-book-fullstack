@@ -33,7 +33,11 @@ massive({
     app.patch('/api/contact/:id', contacts.updateContact);
     //delete contact 
     app.delete('/api/contact/:id', contacts.deleteContact);
-    //list all group
+    //list all contacts not in group
+    app.get('/api/group/:id/not_in_group', groups.listContactsNotInGroup);
+    //list all contacts in group
+    app.get('/api/group/:id/contacts', groups.listContacts);
+    //list all groups
     app.get('/api/groups/:userID/:order', groups.listGroups);
     //add group
     app.post('/api/group/:userID', groups.addGroup);

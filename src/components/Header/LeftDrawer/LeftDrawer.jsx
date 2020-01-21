@@ -64,7 +64,7 @@ function LeftDrawer({ name, displayContacts, displayGroups }) {
       <SwipeableDrawer anchor="left" open={openDrawer} onOpen={toggleDrawer(true)} onClose={toggleDrawer(false)}>
         <Avatar variant="rounded" style={{background: generator(), width: '95%'}} className={classes.avatarText}>{nameAcronym(name)}</Avatar>
         <Divider />
-        <List className={classes.list} role="presentation" onKeyDown={toggleDrawer(false)}>
+        <List className={classes.list} role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
           <ListItem className={classes.listItem} button onClick={displayContacts}>
             <ListItemIcon><ContactsIcon /></ListItemIcon>
             <ListItemText primary="Contacts" />

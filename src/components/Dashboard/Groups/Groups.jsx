@@ -4,6 +4,12 @@ import axios from 'axios';
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, TableSortLabel, TablePagination } from '@material-ui/core';
+import { Chip, Avatar } from '@material-ui/core';
+import { TextField, InputAdornment } from '@material-ui/core';
+import { Search as SearchIcon } from '@material-ui/icons';
+
+import ViewGroup from './ViewGroup/ViewGroup';
+import AddGroup from './AddGroup/AddGroup';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,6 +26,15 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     border: "none"
   },
+  searchDiv: {
+    margin: '10px 2.5% 0 0',
+  },
+  addGroupDiv: {
+    margin: '10px 1.5% 0 auto',
+    padding: 0,
+    display: 'flex',
+    justifyContent: 'flex-end',
+  }
 }));
 
 function Groups({sessionid}) {
@@ -33,7 +48,7 @@ function Groups({sessionid}) {
   const fetchGroupsFn = () => {
     axios({
       method: 'get',
-      url: `http://localhost:3002/api/groups/${sessionid}/ASC` //${(sortDirection === 'asc') ? 'DESC' : 'ASC'}
+      url: `http://localhost:3002/api/groups/${sessionid}/${(sortDirection === 'asc') ? 'DESC' : 'ASC'}`
     })
     .then(response => {
       setGroupList(response.data);
@@ -47,7 +62,7 @@ function Groups({sessionid}) {
   useEffect(() => {
     fetchGroupsFn();
     // eslint-disable-next-line
-  }, [])
+  }, [sortDirection])
 
   const classes = useStyles();
   
@@ -63,8 +78,40 @@ function Groups({sessionid}) {
     setPage(0);
   };
 
+  const onChangeHandle = e => {
+    const filteredGroups = groupList.filter(el => el.groupName.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
+    setSearchData(filteredGroups); 
+  }
+
+  const sortByGroupName = () => {
+    (activeSort) || setActiveSort(true);
+    ( sortDirection === 'desc') ? setSortDirection('asc') : setSortDirection('desc');
+  }
+
   return (
     <Grid container direction="row" justify="center" alignItems="center">
+      <Grid container direction="row" justify="flex-end" alignItems="center">
+        <Grid item xs={5} sm={3} md={2} lg={1} xl={1} className={classes.addGroupDiv}>
+          <AddGroup fetchGroupsFn={fetchGroupsFn} />
+        </Grid>
+        <Grid item xs={6} sm={4} md={4} lg={2} xl={2} className={classes.searchDiv}>
+          <Grid container direction="row" justify="flex-end" alignItems="center">
+            <TextField
+              fullWidth
+              className={classes.searchField}
+              placeholder="Search"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={onChangeHandle}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
       <Grid container justify="center">
         <Grid item xs={12} sm={12} md={12} lg={12} xl={11}>
           <Paper className={classes.paper}>
@@ -76,7 +123,7 @@ function Groups({sessionid}) {
                       <TableHead>
                         <TableRow>
                           <TableCell align="inherit" key="Name" style={{minWidth: 30}}>
-                              <TableSortLabel active={activeSort} direction={sortDirection}>
+                              <TableSortLabel onClick={sortByGroupName} active={activeSort} direction={sortDirection}>
                                 Group
                               </TableSortLabel>
                             </TableCell>
@@ -84,11 +131,16 @@ function Groups({sessionid}) {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {groupList
+                        {searchData
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
                             return (
                               <TableRow hover tabIndex={-1} key={row.groupID}>
-                                
+                                <TableCell>
+                                  <Chip variant="outlined" color="primary" avatar={<Avatar>{row.groupName.substring(0,1).toUpperCase()}</Avatar>} label={row.groupName}/>
+                                </TableCell>
+                                <TableCell align="right" className={classes.actionBtn}>
+                                  <ViewGroup fetchGroupsFn={fetchGroupsFn} data={row}/>
+                                </TableCell>
                               </TableRow>
                             );
                           })}
