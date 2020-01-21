@@ -4,7 +4,7 @@ import Axios from "axios";
 
 export const GroupName = props => {
   const { user } = props;
-  const [groupName, setGroupName] = useState("");
+  const [groupName, setGroupName] = useState("Not assigned");
   useEffect(() => {
     if (props.group_id) {
       const getData = async () => {
@@ -14,6 +14,9 @@ export const GroupName = props => {
         setGroupName(response.data[0].group_name);
       };
       getData();
+    }
+    if (!props.group_id) {
+      setGroupName("Not assigned");
     }
   }, [props, groupName, user]);
   return <span>{groupName}</span>;

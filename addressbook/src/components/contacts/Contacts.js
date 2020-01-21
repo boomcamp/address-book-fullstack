@@ -151,7 +151,8 @@ export const Contacts = props => {
     });
     setGroupDialog(false);
   };
-  const handleDeleteGroup = async () => {
+  const handleDeleteGroup = async e => {
+    e.preventDefault();
     try {
       const response = await Axios.delete(`${url}/groups/${group}`, {
         headers: { Authorization: `Bearer ${user.token}` }
@@ -160,19 +161,18 @@ export const Contacts = props => {
         position: toast.POSITION.TOP_CENTER
       });
       setGroup(null);
-      setGroupName("Contacts");
-      getUserData(user, sort).then(user => setUserData(user));
     } catch (err) {
       console.error(err);
     }
   };
-
   React.useEffect(() => {
     if (group === null) {
+      console.log("try");
+      getUserData(user, sort).then(user => setUserData(user));
       return setGroupName("Contacts");
     }
     if (group) {
-      getGroupName(group, user, setGroupName);
+      return () => getGroupName(group, user, setGroupName);
     }
   }, [group, user]);
   return (
@@ -312,7 +312,7 @@ export const Contacts = props => {
         groupDialog={groupDialog}
         setGroupDialog={setGroupDialog}
         handleMovetoGroup={handleMovetoGroup}
-        options={[{ value: "null", label: "Remove Group" }, ...options]}
+        options={options}
         setSelectedGroup={setSelectedGroup}
       />
     </div>

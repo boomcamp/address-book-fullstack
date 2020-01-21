@@ -51,7 +51,8 @@ export const NestedList = props => {
     userData,
     handleFilterByGroup,
     group,
-    setUserData
+    setUserData,
+    sort
   } = props.data;
   const groups = userData ? (userData.groups ? userData.groups : []) : [];
   const classes = useStyles();
@@ -76,9 +77,11 @@ export const NestedList = props => {
         position: toast.POSITION.TOP_CENTER
       });
       setDialog(false);
-      getUserData(user).then(user => {
-        setUserData(user);
-      });
+
+      if (!group) {
+        return getUserData(user, sort).then(user => setUserData(user));
+      }
+      fetch(user, group, userData, setUserData, sort);
     } catch (err) {
       console.error(err);
     }

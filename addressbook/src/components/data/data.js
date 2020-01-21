@@ -74,7 +74,7 @@ export const action2 = (
     tooltip: "Delete Group",
     isFreeAction: true,
     disabled: group ? false : true,
-    onClick: () => handleDeleteGroup()
+    onClick: e => handleDeleteGroup(e)
   },
   {
     tooltip: "Move seleted to Group ...",
@@ -124,6 +124,6 @@ export const action1 = (
     tooltip: "Delete Group",
     isFreeAction: true,
     disabled: group ? false : true,
-    onClick: () => handleDeleteGroup()
+    onClick: e => handleDeleteGroup(e)
   }
 ];

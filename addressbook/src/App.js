@@ -29,7 +29,6 @@ function App() {
       getUserData(user, sort).then(user => setUserData(user));
     }
   }, []);
-
   const handleOnChange = (key, data) => {
     const { name, value } = data;
 
