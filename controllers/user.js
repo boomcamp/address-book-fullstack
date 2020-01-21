@@ -82,5 +82,35 @@ module.exports = {
           res.status(500).end();
         }
       });
+  },
+  getUser: (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(401).end();
+    }
+
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+
+      jwt.verify(token, secret);
+
+      console.log(req.params.userid);
+
+      const { userid } = req.params;
+
+      const db = req.app.get("db");
+
+      db.users
+        .findOne({ userid })
+        .then(data => {
+          res.status(200).json(data);
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(401).end();
+        });
+    } catch (error) {
+      console.error(err);
+      res.status(401).end();
+    }
   }
 };

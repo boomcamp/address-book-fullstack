@@ -1,10 +1,21 @@
-import React from "react";
+import React,{useEffect} from "react";
+import axios from "axios";
 
 export default function Header(props) {
+
+  // useEffect(() => {
+  //   axios({
+  //     method:"get",
+  //     url:"http://localhost:5000/api/user/get",
+  //     headers: { Authorization: sessionStorage.getItem("token") }
+  //   })
+  // }, [])
+
   const logout = () => {
     sessionStorage.removeItem("token");
     window.location.reload();
   };
+  
 
   return (
     <>

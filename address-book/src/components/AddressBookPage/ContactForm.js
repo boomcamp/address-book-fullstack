@@ -190,9 +190,9 @@ export default function ContactForm(highprops) {
 
     alert("Registering data, please wait");
 
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 200);
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
   };
 
   const cancel = () => {

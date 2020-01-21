@@ -200,7 +200,7 @@ module.exports = {
   sort: (req, res) => {
     const db = req.app.get("db");
 
-    console.log(req.params.order)
+    console.log(req.params.order);
 
     db.query(
       `SELECT contacts.id, first_name, last_name, home_phone, mobile_phone, work_phone, email, city, state_or_province, postal_code, country 
@@ -210,12 +210,12 @@ module.exports = {
       WHERE address_book.userid = ${req.params.id} 
       ORDER BY last_name ${req.params.order}`
     )
-    .then(post => {
-      res.status(200).json(post);
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).end();
-    });
+      .then(post => {
+        res.status(200).json(post);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).end();
+      });
   }
 };

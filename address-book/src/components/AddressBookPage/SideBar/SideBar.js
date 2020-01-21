@@ -29,7 +29,7 @@ export default function SideBar(highprops) {
     if (highprops.prepareNewData[0] && !highprops.prepareNewData[1]) {
       setDataPass(null);
       change("open_add");
-      console.log('opening add')
+      console.log("opening add");
     }
   }, [highprops.contactData, highprops.prepareNewData]);
 
@@ -98,7 +98,6 @@ export default function SideBar(highprops) {
         </div>
 
         <div className="tabs-body-container">
-          
           {state.contactGroups_tab ? (
             <div className="groups-contact">
               <div className="header-add-fx" />

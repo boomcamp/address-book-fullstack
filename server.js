@@ -23,6 +23,8 @@ massive({
     // users endpoints
     app.post("/api/signup", users.signup);
     app.post("/api/login", users.login);
+    app.get("/api/user/get", users.getUser)
+    
 
     // contacts endpoints
     app.post("/api/contact/save", contacts.save);
