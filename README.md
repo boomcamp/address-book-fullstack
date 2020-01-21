@@ -36,3 +36,5 @@ to run the react app and the backend concurrently use the following command
 
   #### Sort
   - Click the sort select button to sort by `last_name`, either ascending or descending in order
+
+  **Creator/Jeffrey R. Molleno**
