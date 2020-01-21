@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Swal from "sweetalert2";
@@ -8,6 +8,7 @@ import AddressBookTable from "./AddressBookTable";
 import GroupCard from "./GroupCard";
 import jwt from "jsonwebtoken";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 export default function AddressBook() {
   var userId = "";
@@ -27,6 +28,7 @@ export default function AddressBook() {
     }).then(() => history.push("/"));
   } else userId = jwt.decode(localStorage.getItem("Token")).userId;
 
+  const [data, setData] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [willEdit, setWillEdit] = useState(false);
   const [willOpenViewer, setWillOpenViewer] = useState(false);
@@ -42,6 +44,23 @@ export default function AddressBook() {
   };
   const [values, setValues] = useState({});
   const classes = useStyles();
+  useEffect(() => {
+    async function result() {
+      await axios
+        .get(`http://localhost:3004/contacts/${userId}`)
+        .then(res => {
+          setData(res.data);
+        })
+        .catch(err => {
+          Swal.fire({
+            icon: "error",
+            title: "Failed to Fetch the Data",
+            text: err
+          });
+        });
+    }
+    result();
+  }, [userId]);
   return localStorage.getItem("Token") ? (
     <React.Fragment>
       <Modal
@@ -65,7 +84,7 @@ export default function AddressBook() {
           className={classes.table}
           style={{ width: willOpenViewer ? "65%" : "100%" }}
         >
-          <GroupCard willEdit={willEdit} userId={userId} />
+          <GroupCard userId={userId} />
           <AddressBookTable
             handleClickOpen={handleClickOpen}
             teal={classes.teal}
@@ -76,6 +95,8 @@ export default function AddressBook() {
             setWillOpenViewer={setWillOpenViewer}
             setIds={setIds}
             userId={userId}
+            data={data}
+            setData={setData}
           />
         </div>
       </Container>
@@ -111,9 +132,12 @@ const useStyles = makeStyles(theme => ({
     marginTop: "1%!important"
   },
   "@media (max-width: 992px)": {
+    paper: {
+      width: "80%!important"
+    },
     table: {
       width: "100%!important",
-      marginTop: "30%!important"
+      marginTop: "5%!important"
     }
   },
   teal: {

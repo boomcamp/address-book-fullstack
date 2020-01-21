@@ -8,21 +8,21 @@ import Swal from "sweetalert2";
 
 export default function AddToGroupList({ setIds, ids, userId }) {
   const [groups, setGroups] = useState([]);
-  useEffect(() => {
-    async function result() {
-      await axios
-        .get(`http://localhost:3004/group/${userId}`)
-        .then(res => setGroups(res.data))
-        .catch(err => {
-          Swal.fire({
-            icon: "error",
-            title: "Failed to Retrieve Groups",
-            text: err
-          });
-        });
-    }
-    result();
-  }, [userId, groups]);
+  // useEffect(() => {
+  //   async function result() {
+  //     await axios
+  //       .get(`http://localhost:3004/group/${userId}`)
+  //       .then(res => setGroups(res.data))
+  //       .catch(err => {
+  //         Swal.fire({
+  //           icon: "error",
+  //           title: "Failed to Retrieve Groups",
+  //           text: err
+  //         });
+  //       });
+  //   }
+  //   result();
+  // }, [userId, groups]);
   return (
     <Autocomplete
       multiple

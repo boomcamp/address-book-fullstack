@@ -14,9 +14,10 @@ export default function AddressBookTable({
   setWillEdit,
   setWillOpenViewer,
   setIds,
-  userId
+  userId,
+  setData,
+  data
 }) {
-  const [data, setData] = useState([]);
   let history = useHistory();
   const handleClickDetails = id => {
     axios
@@ -85,23 +86,6 @@ export default function AddressBookTable({
       }
     });
   };
-  useEffect(() => {
-    async function result() {
-      await axios
-        .get(`http://localhost:3004/contacts/${userId}`)
-        .then(res => {
-          setData(res.data);
-        })
-        .catch(err => {
-          Swal.fire({
-            icon: "error",
-            title: "Failed to Fetch the Data",
-            text: err
-          });
-        });
-    }
-    result();
-  }, [userId, data]);
   if (!data) return localStorage.clear();
   return (
     <MaterialTable

@@ -6,7 +6,7 @@ function addGroupMember(req, res) {
       groupid,
       contactid
     })
-    .then(group => res.status(201).json(group))
+    .then(group => res.status(201).send(group))
     .catch(err => {
       console.error(err);
       res.status(500).end();
@@ -17,7 +17,7 @@ function getAllGroupMember(req, res) {
 
   db.groupmember
     .find()
-    .then(group => res.status(200).json(group))
+    .then(group => res.status(200).send(group))
     .catch(err => {
       console.error(err);
       res.status(500).end();
@@ -31,7 +31,7 @@ function getContactGroups(req, res) {
   db.query(
     `select groupcontacts.id, userid, groupname from groupmember INNER JOIN groupcontacts ON groupmember.groupid = groupcontacts.id where contactid=${contactid};`
   )
-    .then(group => res.status(201).json(group))
+    .then(group => res.status(201).send(group))
     .catch(err => {
       console.error(err);
       res.status(500).end();
@@ -44,7 +44,7 @@ function deleteGroupMember(req, res) {
 
   db.groupmember
     .destroy({ contactid })
-    .then(group => res.status(201).json(group))
+    .then(group => res.status(201).send(group))
     .catch(err => {
       console.error(err);
       res.status(500).end();

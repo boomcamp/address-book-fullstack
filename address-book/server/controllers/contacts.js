@@ -27,7 +27,7 @@ function create(req, res) {
       postal_code,
       country
     })
-    .then(contact => res.status(200).json(contact))
+    .then(contact => res.status(200).send(contact))
     .catch(err => {
       console.error(err);
       res.status(500).end();
@@ -39,7 +39,7 @@ function getContactByUser(req, res) {
 
   db.contacts
     .find({ userid: userid })
-    .then(contacts => res.status(200).json(contacts))
+    .then(contacts => res.status(200).send(contacts))
     .catch(err => {
       console.error(err);
       res.status(500).end();
@@ -51,7 +51,7 @@ function getContactByContactId(req, res) {
 
   db.contacts
     .find({ id: contactid, userid: userid })
-    .then(contacts => res.status(200).json(contacts))
+    .then(contacts => res.status(200).send(contacts))
     .catch(err => {
       console.error(err);
       res.status(500).end();
@@ -87,7 +87,7 @@ function updateContact(req, res) {
       country
     })
     .then(contact => {
-      res.status(200).json(contact);
+      res.status(200).send(contact);
     })
     .catch(err => {
       console.error(err);
@@ -99,7 +99,7 @@ function deleteContact(req, res) {
   const { contactid } = req.params;
   db.contacts
     .destroy({ id: contactid })
-    .then(contacts => res.status(200).json(contacts))
+    .then(contacts => res.status(200).send(contacts))
     .catch(err => {
       console.error(err);
       res.status(500).end();

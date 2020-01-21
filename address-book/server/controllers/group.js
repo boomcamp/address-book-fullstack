@@ -1,15 +1,17 @@
 function addGroup(req, res) {
   const db = req.app.get("db");
-  const { groupname } = req.body;
+  const { groupname, icon } = req.body;
   const { userid } = req.params;
   db.groupcontacts
     .insert({
       userid,
-      groupname
+      groupname,
+      icon
     })
-    .then(group => res.status(200).json(group))
+    .then(group => res.status(200).send(group))
     .catch(err => {
       console.error(err);
+      res.status(500).end();
     });
 }
 function getGroupsByUser(req, res) {
@@ -18,7 +20,7 @@ function getGroupsByUser(req, res) {
 
   db.groupcontacts
     .find({ userid: userid })
-    .then(group => res.status(200).json(group))
+    .then(group => res.status(200).send(group))
     .catch(err => {
       console.error(err);
       res.status(500).end();
@@ -33,7 +35,7 @@ function deleteGroup(req, res) {
       res.status(200).json(group);
       db.groupmember
         .destroy({ groupid })
-        .then(group => res.status(201).json(group))
+        .then(group => res.status(201).send(group))
         .catch(err => {
           console.error(err);
           res.status(500).end();
@@ -47,13 +49,14 @@ function deleteGroup(req, res) {
 function updateGroupName(req, res) {
   const db = req.app.get("db");
   const { groupid } = req.params;
-  const { groupname } = req.body;
+  const { groupname, icon } = req.body;
   db.groupcontacts
     .save({
       id: groupid,
-      groupname
+      groupname,
+      icon
     })
-    .then(group => res.status(200).json(group))
+    .then(group => res.status(200).send(group))
     .catch(err => {
       console.error(err);
       res.status(500).end();

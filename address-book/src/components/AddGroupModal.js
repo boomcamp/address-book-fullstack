@@ -11,7 +11,8 @@ import {
   RadioGroup,
   FormControlLabel,
   FormControl,
-  FormLabel
+  FormLabel,
+  Grid
 } from "@material-ui/core";
 import WorkIcon from "@material-ui/icons/Work";
 import HomeIcon from "@material-ui/icons/Home";
@@ -25,25 +26,22 @@ export default function AddGroupModal({
   openGroupModal,
   handleCloseGroup,
   editGroup,
-  groupName,
-  setGroupName,
-  groupId,
+  setSelectedGroup,
+  selectedGroup,
   chooseIcon,
   userId
 }) {
   const [errorMsgGroupName, setErrorMsgGroupName] = useState("");
-  const [value, setValue] = useState("female");
+
   let history = useHistory();
-  const handleChange = event => {
-    setValue(event.target.value);
-  };
   const handleSaveGroup = () => {
-    if (groupName !== "") {
+    if (selectedGroup.groupname !== "") {
       setErrorMsgGroupName("");
       editGroup
         ? axios
-            .patch(`http://localhost:3004/group/${groupId}`, {
-              groupname: groupName
+            .patch(`http://localhost:3004/group/${selectedGroup.id}`, {
+              groupname: selectedGroup.groupname,
+              icon: selectedGroup.icon
             })
             .then(() => {
               handleCloseGroup();
@@ -61,7 +59,8 @@ export default function AddGroupModal({
             })
         : axios
             .post(`http://localhost:3004/group/${userId}`, {
-              groupname: groupName
+              groupname: selectedGroup.groupname,
+              icon: selectedGroup.icon
             })
             .then(() => {
               handleCloseGroup();
@@ -105,48 +104,96 @@ export default function AddGroupModal({
           required
           error={errorMsgGroupName === "" ? false : true}
           helperText={errorMsgGroupName ? errorMsgGroupName : ""}
-          defaultValue={editGroup ? groupName : ""}
+          defaultValue={editGroup ? selectedGroup.groupname : ""}
           autoFocus
           margin="dense"
           id="name"
           label="Group Name"
           type="text"
           fullWidth
-          onChange={e => setGroupName(e.target.value)}
+          onChange={e =>
+            setSelectedGroup({ ...selectedGroup, groupname: e.target.value })
+          }
         />
         <FormControl component="fieldset" className={chooseIcon}>
-          <FormLabel component="legend">Please choose an icon</FormLabel>
+          <FormLabel component="legend">
+            Please choose an icon category
+          </FormLabel>
           <RadioGroup
             aria-label="position"
             name="position"
-            value={value}
-            onChange={handleChange}
+            value={selectedGroup.icon}
+            onChange={e =>
+              setSelectedGroup({ ...selectedGroup, icon: e.target.value })
+            }
             row
           >
-            <FormControlLabel
-              value="work"
-              control={<Radio color="primary" />}
-              label={<WorkIcon style={{ fontSize: "2em" }} />}
-              labelPlacement="end"
-            />
-            <FormControlLabel
-              value="home"
-              control={<Radio color="primary" />}
-              label={<HomeIcon style={{ fontSize: "2em" }} />}
-              labelPlacement="end"
-            />
-            <FormControlLabel
-              value="acquintance"
-              control={<Radio color="primary" />}
-              label={<GroupIcon style={{ fontSize: "2em" }} />}
-              labelPlacement="end"
-            />
-            <FormControlLabel
-              value="personal"
-              control={<Radio color="primary" />}
-              label={<PersonIcon />}
-              labelPlacement="end"
-            />
+            <Grid container spacing={1}>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  value="HomeIcon"
+                  control={<Radio color="primary" />}
+                  label={
+                    <Grid container direction="row" alignItems="center">
+                      <Grid item>
+                        <HomeIcon style={{ fontSize: "2em", marginRight: 6 }} />
+                      </Grid>
+                      <Grid item>Home</Grid>
+                    </Grid>
+                  }
+                  labelPlacement="end"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  value="WorkIcon"
+                  control={<Radio color="primary" />}
+                  label={
+                    <Grid container direction="row" alignItems="center">
+                      <Grid item>
+                        <WorkIcon style={{ fontSize: "2em", marginRight: 6 }} />
+                      </Grid>
+                      <Grid item>Work</Grid>
+                    </Grid>
+                  }
+                  labelPlacement="end"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  value="PersonIcon"
+                  control={<Radio color="primary" />}
+                  label={
+                    <Grid container direction="row" alignItems="center">
+                      <Grid item>
+                        <PersonIcon
+                          style={{ fontSize: "2em", marginRight: 6 }}
+                        />
+                      </Grid>
+                      <Grid item>Personal</Grid>
+                    </Grid>
+                  }
+                  labelPlacement="end"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  value="GroupIcon"
+                  control={<Radio color="primary" />}
+                  label={
+                    <Grid container direction="row" alignItems="center">
+                      <Grid item>
+                        <GroupIcon
+                          style={{ fontSize: "2em", marginRight: 6 }}
+                        />
+                      </Grid>
+                      <Grid item>Acquintance</Grid>
+                    </Grid>
+                  }
+                  labelPlacement="end"
+                />
+              </Grid>
+            </Grid>
           </RadioGroup>
         </FormControl>
       </DialogContent>
