@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import { DialogContentText } from "@material-ui/core";
 import styled from "styled-components";
 import Select from "react-select";
+import { useForm } from "react-hook-form";
 
 const Box = styled.div`
   display: flex;
@@ -22,43 +23,57 @@ const Item = styled.div`
   width: 100%;
 `;
 export const DialogCont = props => {
-  const { buttons } = props.data;
   const { title, dialog, setDialog, rowData, passedFn, handleOnChange } = props;
+  const { register, handleSubmit, errors } = useForm();
+
   return (
     <Dialog open={dialog} maxWidth={"lg"} onClose={() => setDialog(false)}>
-      <form onSubmit={e => passedFn(e)}>
+      <form onSubmit={handleSubmit(passedFn)}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2}>
             <Box>
               <Item>
                 <TextField
+                  error={!!errors.first_name}
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.first_name : ""}
                   name="first_name"
                   type="first_name"
                   label="First Name"
                   fullWidth
-                  required
                   variant="outlined"
+                  inputRef={register({
+                    required: "First name is required"
+                  })}
+                  helperText={
+                    errors.first_name ? `${errors.first_name.message}` : ""
+                  }
                 />
               </Item>
               <Item>
                 <TextField
+                  error={!!errors.last_name}
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.last_name : ""}
                   name="last_name"
                   type="last_name"
                   label="Last Name"
                   fullWidth
-                  required
                   variant="outlined"
+                  inputRef={register({
+                    required: "Last name is required"
+                  })}
+                  helperText={
+                    errors.last_name ? `${errors.last_name.message}` : ""
+                  }
                 />
               </Item>
             </Box>
             <Box>
               <Item>
                 <TextField
+                  error={!!errors.home_phone}
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.home_phone : ""}
                   name="home_phone"
@@ -66,22 +81,35 @@ export const DialogCont = props => {
                   label="Home Phone"
                   fullWidth
                   variant="outlined"
+                  inputRef={register({
+                    required: "Home phone is required"
+                  })}
+                  helperText={
+                    errors.home_phone ? `${errors.home_phone.message}` : ""
+                  }
                 />
               </Item>
               <Item>
                 <TextField
+                  error={!!errors.mobile_phone}
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.mobile_phone : ""}
                   name="mobile_phone"
                   type="mobile_phone"
                   label="Mobile Phone"
                   fullWidth
-                  required
                   variant="outlined"
+                  inputRef={register({
+                    required: "Mobile phone is required"
+                  })}
+                  helperText={
+                    errors.mobile_phone ? `${errors.mobile_phone.message}` : ""
+                  }
                 />
               </Item>
               <Item>
                 <TextField
+                  error={!!errors.work_phone}
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.work_phone : ""}
                   name="work_phone"
@@ -89,72 +117,104 @@ export const DialogCont = props => {
                   label="Work Phone"
                   fullWidth
                   variant="outlined"
+                  inputRef={register({
+                    required: "Work phone is required"
+                  })}
+                  helperText={
+                    errors.work_phone ? `${errors.work_phone.message}` : ""
+                  }
                 />
               </Item>
             </Box>
             <Box>
               <Item>
                 <TextField
+                  error={!!errors.email}
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.email : ""}
                   name="email"
                   type="email"
                   label="Email"
                   fullWidth
-                  required
                   variant="outlined"
+                  inputRef={register({
+                    required: "Email is required"
+                  })}
+                  helperText={errors.email ? `${errors.email.message}` : ""}
                 />
               </Item>
             </Box>
             <Box>
               <Item>
                 <TextField
+                  error={!!errors.city}
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.city : ""}
                   name="city"
                   type="city"
                   label="City"
                   fullWidth
-                  required
                   variant="outlined"
+                  inputRef={register({
+                    required: "City is required"
+                  })}
+                  helperText={errors.city ? `${errors.city.message}` : ""}
                 />
               </Item>
               <Item>
                 <TextField
+                  error={!!errors.state_or_province}
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.state_or_province : ""}
                   name="state_or_province"
                   type="state_or_province"
                   label="State or Province"
                   fullWidth
-                  required
                   variant="outlined"
+                  inputRef={register({
+                    required: "State or Province is required"
+                  })}
+                  helperText={
+                    errors.state_or_province
+                      ? `${errors.state_or_province.message}`
+                      : ""
+                  }
                 />
               </Item>
               <Item>
                 <TextField
+                  error={!!errors.postal_code}
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.postal_code : ""}
                   name="postal_code"
                   type="postal_code"
                   label="Postal Code"
                   fullWidth
-                  required
                   variant="outlined"
+                  inputRef={register({
+                    required: "Postal Code is required"
+                  })}
+                  helperText={
+                    errors.postal_code ? `${errors.postal_code.message}` : ""
+                  }
                 />
               </Item>
             </Box>
             <Box>
               <Item>
                 <TextField
+                  error={!!errors.country}
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.country : ""}
                   name="country"
                   type="country"
                   label="Country"
                   fullWidth
-                  required
                   variant="outlined"
+                  inputRef={register({
+                    required: "Country is required"
+                  })}
+                  helperText={errors.country ? `${errors.country.message}` : ""}
                 />
               </Item>
             </Box>
@@ -164,12 +224,7 @@ export const DialogCont = props => {
           <Button onClick={() => setDialog(false)} color="primary">
             Close
           </Button>
-          <Button
-            type="submit"
-            color="primary"
-            autoFocus
-            disabled={buttons ? buttons.addEditContactBtn : []}
-          >
+          <Button type="submit" color="primary" autoFocus>
             Submit
           </Button>
         </DialogActions>

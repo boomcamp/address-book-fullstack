@@ -64,9 +64,7 @@ export const Contacts = props => {
   const [selectedGroup, setSelectedGroup] = useState();
   const [search, setSearch] = useState("");
 
-  const addContact = async e => {
-    e.preventDefault();
-
+  const addContact = async () => {
     try {
       const response = await Axios.post(
         `${url}/contacts`,
@@ -89,8 +87,7 @@ export const Contacts = props => {
       console.error(err);
     }
   };
-  const editContact = async e => {
-    e.preventDefault();
+  const editContact = async () => {
     const id = contact.id;
     delete contact.id;
     try {
