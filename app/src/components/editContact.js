@@ -92,7 +92,7 @@ class editContact extends Component {
     const { getFieldDecorator } = this.props.form;
     const { loading } = this.state;
     const prefixSelector = getFieldDecorator("prefix", {
-      initialValue: ""
+      initialValue: "63"
     })(
       <Select style={{ width: 70 }}>
         <Option value="63">+63</Option>

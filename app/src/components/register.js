@@ -49,23 +49,30 @@ class register extends Component {
   };
 
   handleSubmit = e => {
-    axios({
-      method: "post",
-      url: "/users/register",
-      data: {
-        first_name: this.state.first_name,
-        last_name: this.state.last_name,
-        email: this.state.email,
-        username: this.state.username,
-        password: this.state.password
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log("Received values of form: ", values);
       }
-    }).then(response => {
-      console.log(response);
-      localStorage.setItem("id", response.data.id);
-      localStorage.setItem("username", response.data.first_name);
-      message.success({ content: "Successfully Register", duration: 2 });
-      this.props.history.replace("/user");
     });
+    if (e) {
+      axios({
+        method: "post",
+        url: "/users/register",
+        data: {
+          first_name: this.state.first_name,
+          last_name: this.state.last_name,
+          email: this.state.email,
+          username: this.state.username,
+          password: this.state.password
+        }
+      }).then(response => {
+        console.log(response);
+        localStorage.setItem("id", response.data.id);
+        localStorage.setItem("username", response.data.first_name);
+        message.success({ content: "Successfully Register", duration: 2 });
+        this.props.history.replace("/user");
+      });
+    }
   };
 
   render() {

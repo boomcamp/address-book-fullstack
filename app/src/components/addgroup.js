@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Modal, Button, Input } from "antd";
+import { Modal, Button, Input, Icon } from "antd";
 import axios from "axios";
 export default class addgroup extends Component {
   constructor() {
     super();
     this.state = {
       visible: false,
+      loading: false,
       group_name: ""
     };
   }
@@ -23,9 +24,11 @@ export default class addgroup extends Component {
   };
 
   handleOk = e => {
-    this.setState({
-      visible: false
-    });
+    this.setState({ loading: true, visible: false });
+    setTimeout(() => {
+      this.setState({ loading: false, visible: false });
+    }, 3000);
+
     console.log("");
     axios({
       method: "post",
@@ -33,9 +36,7 @@ export default class addgroup extends Component {
       data: {
         group_name: this.state.group_name
       }
-    }).then(res => {
-      console.log(res.data);
-    });
+    }).then(res => {});
   };
 
   handleCancel = e => {
@@ -50,7 +51,7 @@ export default class addgroup extends Component {
       <React.Fragment>
         <div>
           <Button type="link" onClick={this.showModal}>
-            Add Group
+            <Icon type="usergroup-add" /> Add Group
           </Button>
           <Modal
             title="Add Group"

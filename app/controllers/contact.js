@@ -122,7 +122,6 @@ function contactlist(req, res) {
 
 function search(req, res) {
   const db = req.app.get("db");
-  console.log(req.query.val);
   db.query(
     `select * from contacts where( userid=${req.params.id}) AND (first_name ilike '%${req.query.val}%' OR last_name ilike '%${req.query.val}%') `
   )

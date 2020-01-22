@@ -44,7 +44,6 @@ class addcontact extends Component {
 
   handleInput = input => e => {
     this.setState({ [input]: e.target.value });
-    console.log(input);
   };
   handleSubmit = e => {
     e.preventDefault();

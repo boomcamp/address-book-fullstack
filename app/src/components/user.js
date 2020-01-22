@@ -1,29 +1,75 @@
 import React, { Component } from "react";
-import {
-  Layout,
-  message,
-  Typography,
-  Button,
-  Menu,
-  Icon,
-  Avatar,
-  Card
-} from "antd";
+import { Layout, message, Button, Avatar, Card, Icon } from "antd";
 import Contact from "./contactTable";
 import Addcontact from "./addcontact";
 import Addgroup from "./addgroup";
+import { withStyles } from "@material-ui/core/styles";
 
-const header = {
-  display: "flex",
-  backgroundColor: "#607C98",
-  color: "#fff"
-};
-const logout = {
-  display: "flex",
-  alignContent: "center",
-  justifyContent: "flex-end"
-};
-export default class user extends Component {
+const useStyles = theme => ({
+  root: {
+    height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    "@media (maxWidth: 320px)": {
+      display: "flex",
+      height: "100vh"
+    },
+    "@media (maxWidth: 768px)": {
+      display: "flex",
+      height: "100%"
+    }
+  },
+  logout: {
+    marginTop: "10px"
+  },
+  header: {
+    display: "flex",
+    backgroundColor: "#607C98",
+    color: "#fff",
+    justifyContent: "flex-end"
+  },
+  sider: {
+    background: "#fff",
+    display: "flex",
+    justifyContent: "column",
+    "@media (max-width: 920px)": {
+      width: "100%"
+    }
+  },
+  cardContainer: {
+    height: "100%",
+    "@media (max-width: 920px)": {
+      width: "100%"
+    }
+  },
+  gridStyle: {
+    width: "100%",
+    textAlign: "center"
+  },
+  container: {
+    height: "100vh",
+    display: "flex",
+    justifyContent: "space-between",
+    padding: " 15px 24px 24px",
+    flexFlow: "row wrap",
+    "@media (maxWidth: 780px)": {
+      backgroundColor: "red",
+      flexDirection: "column"
+    }
+  },
+  table: {
+    background: "#fff",
+    height: "auto",
+    width: "60%",
+    padding: 24,
+    margin: 0,
+    "@media (maxWidth: 768px)": {
+      display: "flex"
+    }
+  }
+});
+
+class User extends Component {
   constructor() {
     super();
     this.state = {
@@ -62,27 +108,21 @@ export default class user extends Component {
   };
 
   render() {
-    const { Title } = Typography;
-    const { Header, Content, Sider } = Layout;
+    const { Header, Content } = Layout;
     const { Meta } = Card;
-    const { SubMenu } = Menu;
+    const { classes } = this.props;
     return (
-      <Layout>
-        <Header style={header}>
-          <div> Address Book</div>
-          <div>
-            <Button ghost style={logout} onClick={this.handleLogout}>
-              Logout
-            </Button>
-          </div>
+      <div className={classes.root}>
+        <Header className={classes.header}>
+          <Button ghost className={classes.logout} onClick={this.handleLogout}>
+            Logout
+          </Button>
         </Header>
 
-        <Content>
-          <Layout style={{ padding: "20px 50px" }}>
-            <Sider width={350} style={{ background: "#fff" }}>
-              <div className="logo" />
+        <div className={classes.container}>
+          <div className={classes.sider}>
+            <Layout className={classes.cardContainer}>
               <Card
-                style={{ width: 350 }}
                 cover={
                   <img
                     alt="example"
@@ -91,53 +131,37 @@ export default class user extends Component {
                     }
                   />
                 }
-                actions={[<Addcontact load={this.handleLoad} />, <Addgroup />]}
+                actions={[
+                  <Icon type="setting" key="setting" />,
+                  <Icon type="edit" key="edit" />,
+                  <Icon type="ellipsis" key="ellipsis" />
+                ]}
               >
                 <Meta
                   avatar={<Avatar size="large" icon="user" />}
-                  description=""
+                  description="Boom Address Book  "
                   title={this.state.username}
                 />
               </Card>
-
-              <Title></Title>
-              <Menu
-                onClick={this.handleClick}
-                style={{ width: 350, padding: 20 }}
-                defaultSelectedKeys={["1"]}
-                defaultOpenKeys={["sub1"]}
-                mode="inline"
-              >
-                <SubMenu
-                  key="sub1"
-                  title={
-                    <span>
-                      <Icon type="usergroup-add" /> <span>Group</span>
-                    </span>
-                  }
-                ></SubMenu>
-              </Menu>
-            </Sider>
-
-            <Layout
-              style={{
-                padding: "0 24px 24px",
-                height: "100vh"
-              }}
-            >
-              <Content
-                style={{
-                  background: "#fff",
-                  padding: 24,
-                  margin: 0
-                }}
-              >
-                {<Contact user={this.state.handleLoad} />}
-              </Content>
+              <Card>
+                <Card.Grid className={classes.gridStyle}>
+                  {" "}
+                  <Addcontact load={this.handleLoad} />
+                </Card.Grid>
+                <Card.Grid className={classes.gridStyle}>
+                  {" "}
+                  <Addgroup load={this.handleLoad} />
+                </Card.Grid>
+              </Card>
             </Layout>
-          </Layout>
-        </Content>
-      </Layout>
+          </div>
+
+          <Content className={classes.table}>
+            {<Contact user={this.state.handleLoad} />}
+          </Content>
+        </div>
+      </div>
     );
   }
 }
+export default withStyles(useStyles)(User);

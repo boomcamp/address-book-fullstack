@@ -54,31 +54,36 @@ export default class grouplist extends Component {
   };
 
   allmember = e => {
-    var selectmem = [];
-    console.log(e);
-    axios.get(`/member/${localStorage.getItem("id")}?gr_id=${e}`).then(res => {
-      res.data.map(data => {
-        axios
-          .get(
-            `/selected/contact/${localStorage.getItem("id")}?contact_id=${
-              data.contactid
-            }`
-          )
-          .then(res => {
-            res.data.map(datas => {
-              console.log(datas);
-              selectmem.push({
-                id: datas.id,
-                first_name: datas.first_name,
-                last_name: datas.last_name
+    console.log("my", e);
+    if (e) {
+      var selectmem = [];
+
+      axios
+        .get(`/member/${localStorage.getItem("id")}?gr_id=${e}`)
+        .then(res => {
+          res.data.forEach(data => {
+            axios
+              .get(
+                `/selected/contact/${localStorage.getItem("id")}?contact_id=${
+                  data.contactid
+                }`
+              )
+              .then(res => {
+                res.data.forEach(datas => {
+                  console.log("ffg", datas);
+                  selectmem.push({
+                    id: datas.id,
+                    first_name: datas.first_name,
+                    last_name: datas.last_name
+                  });
+                });
+                this.setState({
+                  members: selectmem
+                });
               });
-            });
-            this.setState({
-              members: selectmem
-            });
           });
-      });
-    });
+        });
+    }
   };
 
   showModal = e => {
@@ -121,7 +126,7 @@ export default class grouplist extends Component {
     });
     setTimeout(() => {
       message.success({ content: "Successfully Deleted", duration: 2 });
-    }, 2000);
+    }, 1000);
   };
 
   render() {
@@ -129,67 +134,65 @@ export default class grouplist extends Component {
     const { Option } = Select;
     return (
       <div>
-        {this.state.data.map(data => {
-          return (
-            <Collapse accordion key={data.id} onChange={this.allmember}>
-              <Panel
-                header={data.group_name}
-                key={data.id}
-                extra={
-                  <Icon type="plus" onClick={e => this.showModal(data.id)} />
-                }
+        <Collapse accordion onChange={this.allmember}>
+          {this.state.data.map(data => (
+            <Panel
+              header={data.group_name}
+              key={data.id}
+              extra={
+                <Icon type="plus" onClick={e => this.showModal(data.id)} />
+              }
+            >
+              <Modal
+                title="Select Member"
+                visible={this.state.visible}
+                onOk={this.handleSubmit}
+                onCancel={this.handleCancel}
               >
-                <Modal
-                  title="Select Member"
-                  visible={this.state.visible}
-                  onOk={this.handleSubmit}
-                  onCancel={this.handleCancel}
-                >
-                  <div>
-                    <Select
-                      showSearch
-                      style={{ width: 450 }}
-                      placeholder="Select member"
-                      optionFilterProp="children"
-                      onChange={this.onChange}
-                      onFocus={this.onFocus}
-                      onBlur={this.onBlur}
-                      onSearch={this.onSearch}
-                      filterOption={(input, option) =>
-                        option.props.children
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      }
-                    >
-                      {this.state.contacts.map(cont => (
-                        <Option value={cont.id} key={cont.id}>
-                          {cont.first_name}, {cont.last_name}
-                        </Option>
-                      ))}
-                    </Select>
-                  </div>
-                </Modal>
-                {this.state.members
-                  ? this.state.members.map(item => (
-                      <List key={item.id} itemLayout="horizontal">
-                        <List.Item
-                          actions={[
-                            <Icon
-                              type="delete"
-                              onClick={e => this.handleDelete(item.id)}
-                            />
-                          ]}
-                        >
-                          {" "}
-                          {item.first_name} {item.last_name}
-                        </List.Item>
-                      </List>
-                    ))
-                  : null}
-              </Panel>
-            </Collapse>
-          );
-        })}
+                <div>
+                  <Select
+                    showSearch
+                    style={{ width: 450 }}
+                    placeholder="Select member"
+                    optionFilterProp="children"
+                    onChange={this.onChange}
+                    onFocus={this.onFocus}
+                    onBlur={this.onBlur}
+                    onSearch={this.onSearch}
+                    filterOption={(input, option) =>
+                      option.props.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    {this.state.contacts.map(cont => (
+                      <Option value={cont.id} key={cont.id}>
+                        {cont.first_name}, {cont.last_name}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+              </Modal>
+              {this.state.members
+                ? this.state.members.map(item => (
+                    <List key={item.id} itemLayout="horizontal">
+                      <List.Item
+                        actions={[
+                          <Icon
+                            type="delete"
+                            onClick={e => this.handleDelete(item.id)}
+                          />
+                        ]}
+                      >
+                        {" "}
+                        {item.first_name} {item.last_name}
+                      </List.Item>
+                    </List>
+                  ))
+                : null}
+            </Panel>
+          ))}
+        </Collapse>
       </div>
     );
   }

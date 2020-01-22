@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table, Icon, Tabs, message, Modal, Layout } from "antd";
+import { Table, Icon, Tabs, message, Modal, Layout, Divider } from "antd";
 import axios from "axios";
 import Edit from "./editContact";
 import Search from "./search";
@@ -33,10 +33,10 @@ export default class addressTable extends Component {
   };
 
   componentDidUpdate(nextProps) {
-    if (nextProps !== this.props) {
+    if (nextProps !== this.props || this.state.deleted) {
       setTimeout(() => {
         this.loadAgain();
-      }, 4000);
+      }, 2000);
     }
   }
 
@@ -70,6 +70,8 @@ export default class addressTable extends Component {
   };
   handleDelete = id => {
     const { confirm } = Modal;
+    const these = this;
+    // console.log(this);
     confirm({
       title: "Do you want to delete these contact?",
       okType: "danger",
@@ -81,8 +83,9 @@ export default class addressTable extends Component {
         }).then(res => {
           setTimeout(() => {
             message.success({ content: "Successfully Deleted", duration: 2 });
+            these.setState({ deleted: true });
           }, 1000);
-          console.log("deleted");
+          // console.log("deleted");
         });
       },
       onCancel() {}
@@ -166,6 +169,7 @@ export default class addressTable extends Component {
                 key="delete"
                 render={(record, text) => (
                   <span>
+                    <Divider type="vertical" />
                     <Icon
                       type="delete"
                       onClick={e => this.handleDelete(record.key)}

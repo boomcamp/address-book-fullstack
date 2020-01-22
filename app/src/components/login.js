@@ -10,15 +10,7 @@ const container = {
   alignContent: "center",
   width: "100%",
   height: "100vh",
-  padding: "2%",
-  "@media (max-width: 768px)": {
-    display: "flex",
-    flexDirection: "column"
-  },
-  "@media (max-width: 425px)": {
-    display: "flex",
-    flexDirection: "column"
-  }
+  padding: "2%"
 };
 
 const formholder = {
