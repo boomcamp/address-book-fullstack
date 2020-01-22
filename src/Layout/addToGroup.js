@@ -30,15 +30,10 @@ export default function AddToGroup({ headers, groups, idContact }) {
         },
         headers
       )
-      .then(() =>
-        alert(`Added to Group ${name[0].toUpperCase() + name.slice(1)}`)
-      )
-      .catch(error => {
-        try {
-          alert(error.response.data.error);
-        } catch {
-          console.log(error);
-        }
+      .then(res => {
+        if (res.data.error) {
+          alert(res.data.error);
+        } else alert(`Added to Group ${name[0].toUpperCase() + name.slice(1)}`);
       });
   };
 

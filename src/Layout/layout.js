@@ -21,16 +21,6 @@ import AddContactModal from "../Modal/addContact";
 import Search from "./search";
 import AddGroupModal from "../Modal/addGroup";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      Your Website {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1
@@ -59,12 +49,7 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8)
   },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
-    position: "fixed",
-    bottom: 0
-  },
+
   icon: {
     marginRight: theme.spacing(2)
   }
@@ -79,19 +64,20 @@ export default function Layout(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [open, setOpen] = useState({ contact: false, group: false });
+  const [contactOpen, setContactOpen] = useState(false);
+  const [groupOpen, setGroupOpen] = useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleOpen = () => {
-    setOpen({ ...open, contact: true });
+    setContactOpen(true);
     setAnchorEl(null);
     handleMobileMenuClose();
   };
 
   const handleOpenGroup = () => {
-    setOpen({ ...open, group: true });
+    setGroupOpen(true);
     setAnchorEl(null);
     handleMobileMenuClose();
   };
@@ -117,7 +103,7 @@ export default function Layout(props) {
     setMobileMoreAnchorEl(null);
   };
 
-  const menuId = "primary-search-account-menu";
+  const menuId = "add";
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -143,7 +129,7 @@ export default function Layout(props) {
     </Menu>
   );
 
-  const mobileMenuId = "primary-search-account-menu-mobile";
+  const mobileMenuId = "add-menu-mobile";
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -195,9 +181,13 @@ export default function Layout(props) {
             >
               <AccountCircleIcon />
             </Tooltip>
-            <Typography className={classes.title} variant="h6" noWrap>
-              Welcome {props.user.firstname} {props.user.lastname}
-            </Typography>
+            {props.auth ? (
+              <Typography className={classes.title} variant="h6" noWrap>
+                Welcome {props.user.firstname} {props.user.lastname}
+              </Typography>
+            ) : (
+              props.history.push("/")
+            )}
             <Search
               rows={props.rows}
               setRows={props.setRows}
@@ -245,12 +235,10 @@ export default function Layout(props) {
           <div>{props.children}</div>
         </Container>
       </main>
-      <footer className={classes.footer}>
-        <Copyright />
-      </footer>
+
       <AddContactModal
-        open={open.contact}
-        setOpen={setOpen}
+        open={contactOpen}
+        setOpen={setContactOpen}
         headers={props.headers}
         match={props.match}
         setRows={props.setRows}
@@ -259,8 +247,8 @@ export default function Layout(props) {
         all={props.all}
       />
       <AddGroupModal
-        open={open.group}
-        setOpen={setOpen}
+        open={groupOpen}
+        setOpen={setGroupOpen}
         match={props.match}
         headers={props.headers}
         setGroups={props.setGroups}

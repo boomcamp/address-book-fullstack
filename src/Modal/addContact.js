@@ -58,7 +58,6 @@ export default function AddContactModal({
     city: "",
     postal_code: ""
   });
-
   const [error, setError] = useState({
     first_name: {
       required: false
@@ -98,7 +97,7 @@ export default function AddContactModal({
   }
 
   const handleClose = e => {
-    setOpen({ ...open, contact: false });
+    setOpen(false);
     setError({
       ...error,
       [`${e.target.name}`]: {
@@ -120,7 +119,7 @@ export default function AddContactModal({
       )
       .then(res => {
         alert("Contact Added");
-        setOpen({ ...open, contact: false });
+        setOpen(false);
         setRows([...rows, res.data]);
         setAll([...all, res.data]);
         setContact({

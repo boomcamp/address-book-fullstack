@@ -51,7 +51,7 @@ export default function AddGroupModal({
   }
 
   const handleClose = e => {
-    setOpen({ ...open, group: false });
+    setOpen(false);
   };
 
   const addGroup = e => {
@@ -67,7 +67,7 @@ export default function AddGroupModal({
       )
       .then(res => {
         alert("Group Created");
-        setOpen({ ...open, group: false });
+        setOpen(false);
         setGroups([...groups, res.data]);
         setGroup("");
       })

@@ -13,7 +13,6 @@ import Paper from "@material-ui/core/Paper";
 import Delete from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Remove from "@material-ui/icons/HighlightOff";
-import Grid from "@material-ui/core/Grid";
 
 import Axios from "axios";
 import * as ls from "local-storage";
@@ -91,21 +90,24 @@ export default function Contacts({ match, history }) {
     ).then(res => setRows(res.data));
   };
 
-  if (!auth) {
-    history.push("/");
-  } else {
-    if (!stat) {
-      Axios.get(
-        `http://localhost:3001/contacts/list/${match.params.id}?sort=first_name`,
-        headers
-      ).then(res => {
-        setRows(res.data);
-        setFilter(res.data);
-        setAll(res.data);
-      });
-      setStat(true);
+  React.useEffect(() => {
+    if (!auth) {
+      history.push("/");
+    } else {
+      if (!stat) {
+        Axios.get(
+          `http://localhost:3001/contacts/list/${match.params.id}?sort=first_name`,
+          headers
+        ).then(res => {
+          setRows(res.data);
+          setFilter(res.data);
+          setAll(res.data);
+        });
+        setStat(true);
+      }
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Layout

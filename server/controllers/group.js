@@ -54,7 +54,7 @@ module.exports = {
       })
       .catch(err => {
         if ("Already added to Group".includes(err.message)) {
-          res.status(400).json({ error: err.message });
+          res.status(200).json({ error: err.message });
         } else {
           console.error(err);
           res.status(500).end();
