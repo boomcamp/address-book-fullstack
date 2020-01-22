@@ -236,14 +236,15 @@ export const DeleteDialog = props => {
   const {
     deleteDialog,
     setDeleteDialog,
-    handleDelete,
+    passedFn,
     confirm,
-    setConfirm
+    setConfirm,
+    title
   } = props;
   return (
     <Dialog open={deleteDialog} onClose={() => setDeleteDialog(false)}>
-      <form onSubmit={e => handleDelete(e)}>
-        <DialogTitle>Are you sure?</DialogTitle>
+      <form onSubmit={e => passedFn(e)}>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>Type "CONFIRM" to delete.</DialogContentText>
           <TextField

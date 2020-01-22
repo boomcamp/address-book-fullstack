@@ -70,6 +70,8 @@ export const Contacts = props => {
   const [selectedGroup, setSelectedGroup] = useState();
   const [search, setSearch] = useState("");
   const [edit, setEdit] = useState(false);
+  const [del, setDel] = useState(false);
+
   const addContact = async () => {
     try {
       const response = await Axios.post(
@@ -159,6 +161,10 @@ export const Contacts = props => {
   };
   const handleDeleteGroup = async e => {
     e.preventDefault();
+    if (confirm.text !== "CONFIRM") {
+      return setConfirm({ ...confirm, status: true });
+    }
+
     try {
       const response = await Axios.delete(`${url}/groups/${group}`, {
         headers: { Authorization: `Bearer ${user.token}` }
@@ -167,6 +173,7 @@ export const Contacts = props => {
         position: toast.POSITION.TOP_CENTER
       });
       setGroup(null);
+      setDeleteDialog(false);
     } catch (err) {
       console.error(err);
     }
@@ -290,23 +297,24 @@ export const Contacts = props => {
                   setDialog,
                   setContact,
                   setMultiSelect,
-                  handleDeleteGroup,
                   contact,
                   user,
-                  group
+                  group,
+                  setDel,
+                  setDeleteDialog
                 )
               : action2(
                   setAction,
                   setDialog,
                   setContact,
                   setMultiSelect,
-                  handleDeleteGroup,
                   setData,
                   setGroupDialog,
                   setDeleteDialog,
                   contact,
                   user,
-                  group
+                  group,
+                  setDel
                 )
           }
           detailPanel={[
@@ -350,13 +358,27 @@ export const Contacts = props => {
       ) : (
         ""
       )}
-      <DeleteDialog
-        deleteDialog={deleteDialog}
-        setDeleteDialog={setDeleteDialog}
-        handleDelete={handleDelete}
-        confirm={confirm}
-        setConfirm={setConfirm}
-      />
+      {del === "contacts" ? (
+        <DeleteDialog
+          deleteDialog={deleteDialog}
+          setDeleteDialog={setDeleteDialog}
+          passedFn={handleDelete}
+          confirm={confirm}
+          setConfirm={setConfirm}
+          title={"Delete Contact"}
+        />
+      ) : del === "group" ? (
+        <DeleteDialog
+          deleteDialog={deleteDialog}
+          setDeleteDialog={setDeleteDialog}
+          passedFn={handleDeleteGroup}
+          confirm={confirm}
+          setConfirm={setConfirm}
+          title={"Delete Group"}
+        />
+      ) : (
+        ""
+      )}
       <Group
         groupDialog={groupDialog}
         setGroupDialog={setGroupDialog}

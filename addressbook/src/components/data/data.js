@@ -105,13 +105,13 @@ export const action2 = (
   setDialog,
   setContact,
   setMultiSelect,
-  handleDeleteGroup,
   setData,
   setGroupDialog,
   setDeleteDialog,
   contact,
   user,
-  group
+  group,
+  setDel
 ) => [
   {
     icon: "add",
@@ -134,7 +134,10 @@ export const action2 = (
     tooltip: "Delete Group",
     isFreeAction: true,
     disabled: group ? false : true,
-    onClick: e => handleDeleteGroup(e)
+    onClick: () => {
+      setDel("group");
+      setDeleteDialog(true);
+    }
   },
   {
     tooltip: "Move seleted to Group ...",
@@ -149,6 +152,7 @@ export const action2 = (
     icon: "delete",
     onClick: (e, data) => {
       setData(data);
+      setDel("contacts");
       setDeleteDialog(true);
     }
   }
@@ -158,10 +162,11 @@ export const action1 = (
   setDialog,
   setContact,
   setMultiSelect,
-  handleDeleteGroup,
   contact,
   user,
-  group
+  group,
+  setDel,
+  setDeleteDialog
 ) => [
   {
     icon: "add",
@@ -184,6 +189,9 @@ export const action1 = (
     tooltip: "Delete Group",
     isFreeAction: true,
     disabled: group ? false : true,
-    onClick: e => handleDeleteGroup(e)
+    onClick: () => {
+      setDel("group");
+      setDeleteDialog(true);
+    }
   }
 ];
