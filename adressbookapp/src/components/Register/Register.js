@@ -75,17 +75,22 @@ class Register extends Component {
           password: this.state.password
         })
         .then(res => {
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("id", res.data.id);
-          localStorage.setItem(
-            "name",
-            res.data.firstname + " " + res.data.lastname
-          );
-          message.success(
-            `Sucessfully registered, Welcome ${res.data.firstname} &nbsp; ${res.data.lastname}`
-          );
-          console.log(res);
-          this.props.history.push("/homepage");
+          if (res.data.message === undefined) {
+            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("id", res.data.id);
+            localStorage.setItem(
+              "name",
+              res.data.firstname + " " + res.data.lastname
+            );
+            message.success(
+              `Sucessfully registered, Welcome ${res.data.firstname} ${" "} ${
+                res.data.lastname
+              }`
+            );
+            this.props.history.push("/homepage");
+          } else {
+            message.error(res.data.message);
+          }
         });
   };
 

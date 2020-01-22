@@ -39,6 +39,7 @@ export default class Homepage extends Component {
       visible: false,
       visiblee: false,
       disabled: true,
+      selectValue: "ASC",
       firstname: "",
       lastname: "",
       home_phone: "",
@@ -74,11 +75,15 @@ export default class Homepage extends Component {
   };
   getAll = () => {
     const id = localStorage.getItem("id");
-    axios.get(`http://localhost:4000/api/contacts/${id}`).then(res => {
-      this.setState({
-        contacts: res.data
+    axios
+      .get(
+        `http://localhost:4000/api/contacts/${id}?sort=${this.state.selectValue}`
+      )
+      .then(res => {
+        this.setState({
+          contacts: res.data
+        });
       });
-    });
   };
 
   onUpdate = e => {
@@ -91,11 +96,11 @@ export default class Homepage extends Component {
 
   deleteHandler = e => {
     let current = this;
-    // console.log(this);
+    const x = e.contactid;
     confirm({
       title: "Do you want to delete these person?",
       onOk() {
-        const id = e;
+        const id = x;
         axios.delete(`http://localhost:4000/api/contacts/${id}`).then(res => {
           // console.log(this);
           current.getAll();
@@ -226,6 +231,16 @@ export default class Homepage extends Component {
       search: search
     });
   };
+  onChange = e => {
+    this.setState(
+      {
+        selectValue: e
+      },
+      () => {
+        this.getAll();
+      }
+    );
+  };
   render() {
     // console.log(this.state.newGroups);
     return (
@@ -241,6 +256,7 @@ export default class Homepage extends Component {
                     style={{ height: "40px" }}
                   />
                   &nbsp; Adress Book App
+                  {/* {localStorage.getItem("name")} */}
                 </div>
               </strong>
             </MDBNavbarBrand>
@@ -294,6 +310,8 @@ export default class Homepage extends Component {
                     getAll={this.getAll}
                     contacts={this.state.contacts}
                     handleSearch={this.handleSearch}
+                    onChange={this.onChange}
+                    selectValue={this.state.selectValue}
                   />
                   <br></br>
                   <Contacts

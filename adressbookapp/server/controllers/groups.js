@@ -69,7 +69,7 @@ function getGroupContact(req, res) {
     .then(grc => res.status(201).json(grc))
     .catch(err => console.log(err));
 }
-
+//deleteToGroups
 function addtoGroup(req, res) {
   const db = req.app.get("db");
   const { groupid, contactid, userid } = req.body;
@@ -90,6 +90,21 @@ function newGroups(req, res) {
     .then(gr => res.status(201).json(gr))
     .catch(err => console.log(err));
 }
+function deleteToGroups(req, res) {
+  const db = req.app.get("db");
+  const contact = req.params.contactid;
+  const group = req.params.groupid;
+  console.log(contact);
+  db.query(
+    `delete from groupcontacts where contactid = ${contact} and groupid = ${group}`
+  )
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
 module.exports = {
   addtoGroup,
   updateGroupById,
@@ -98,5 +113,6 @@ module.exports = {
   getGroupContact,
   getSelectedGroups,
   newGroups,
-  getGroupMemberById
+  getGroupMemberById,
+  deleteToGroups
 };

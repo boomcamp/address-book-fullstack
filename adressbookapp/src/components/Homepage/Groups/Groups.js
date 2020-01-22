@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Card, Icon, Tooltip, Avatar } from "antd";
 import { Modal, Button } from "antd";
 import { Form, Input, message } from "antd";
+import "./group.css";
 import axios from "axios";
 import ViewMembers from "../ViewMembers/ViewMembers";
 const { Meta } = Card;
@@ -15,7 +16,8 @@ class Groups extends Component {
       editGroup: "",
       info: [],
       groupname: "",
-      members: []
+      members: [],
+      groupId: null
     };
   }
   componentDidMount() {
@@ -48,7 +50,8 @@ class Groups extends Component {
       });
     this.setState({
       visiblee: true,
-      groupname: e.groupname
+      groupname: e.groupname,
+      groupId: e.id
     });
   };
   changeHandler = e => {
@@ -69,11 +72,6 @@ class Groups extends Component {
         this.setState({
           visible: false
         });
-        // res.data.map(item => {
-        //   return this.props.form.setFieldsValue({
-        //     groupname: item.groupname
-        //   });
-        // });
       });
   };
 
@@ -82,12 +80,11 @@ class Groups extends Component {
     const { visible } = this.state;
     const { getFieldDecorator } = this.props.form;
     return (
-      <div className="card">
+      <div className="cardGroups">
         {this.props.groups.map(res => {
           const id = res;
           return (
             <Card
-              style={{ width: 240, marginRight: 10, marginBottom: 10 }}
               actions={[
                 <Tooltip title="view members" placement="bottom">
                   <Icon
@@ -107,6 +104,7 @@ class Groups extends Component {
                 </Tooltip>
               ]}
               key={res.id}
+              className="displayCard"
             >
               <Meta
                 avatar={
@@ -152,6 +150,7 @@ class Groups extends Component {
           </Form>
         </Modal>
         <ViewMembers
+          groupId={this.state.groupId}
           visible={this.state.visiblee}
           viewMembers={this.viewMebers}
           cancel={this.cancel}

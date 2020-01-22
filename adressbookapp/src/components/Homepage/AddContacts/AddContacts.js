@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Icon, Tooltip } from "antd";
 import { Modal, Button } from "antd";
-import { Form, Input, message } from "antd";
+import { Form, Input, message, Select } from "antd";
 import axios from "axios";
 import "./addcontact.css";
 const key = "updatable";
 const { Search } = Input;
+
 class AddContacts extends Component {
   constructor(props) {
     super(props);
@@ -131,6 +132,7 @@ class AddContacts extends Component {
   };
 
   render() {
+    const { Option } = Select;
     const { visible } = this.state;
     const { getFieldDecorator } = this.props.form;
 
@@ -143,11 +145,27 @@ class AddContacts extends Component {
             onClick={this.showModal}
           />
         </Tooltip>
+
         <Search
           placeholder="search names"
-          style={{ width: 200, float: "right" }}
           onChange={e => this.props.handleSearch(e)}
+          className="searchContacts"
         />
+        <Select
+          showSearch
+          // style={{  }}
+          defaultValue={this.props.selectValue}
+          optionFilterProp="children"
+          onChange={e => this.props.onChange(e)}
+          filterOption={(input, option) =>
+            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+            0
+          }
+          className="selectContacts"
+        >
+          <Option value="ASC">A-Z</Option>
+          <Option value="DESC">Z-A</Option>
+        </Select>
         <Modal
           visible={visible}
           title="Contacts information"

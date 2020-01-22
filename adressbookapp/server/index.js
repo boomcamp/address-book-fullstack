@@ -39,6 +39,10 @@ massive({
     app.get("/api/groupContact/:id", groups.getGroupContact);
     app.get("/api/getGroupMemberById/:id", groups.getGroupMemberById);
     app.patch("/api/editGroups/:id", groups.updateGroupById);
+    app.delete(
+      "/api/deleteToGroups/:contactid/:groupid",
+      groups.deleteToGroups
+    );
     //protected-data
     app.get("/api/protected/data", (req, res) => {
       if (!req.headers.authorization) {
