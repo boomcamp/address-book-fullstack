@@ -7,20 +7,18 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-// import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles(theme =>({
     box: {
-        // margin: theme.spacing(1),
-        textAlign: 'center', width: '20%', height: '10%', margin: 'auto'
+        display: 'flex'
     },
-    // details: {
-    //     minWidth: '100%',
-    // }
+    content: {
+        textAlign: 'center', minWidth: '27%', height: '10%', margin: 'auto'
+    },
 }));
 export default function ViewGroupContacts(props) {
     const classes = useStyles();
-    const {rowData} = props;
+    const {rowData, setMemId } = props;
     const [open, setOpen] = useState(false)
     const [open1, setOpen1] = useState(false)
     const [detailsId, setDetailsId] = useState()
@@ -57,12 +55,14 @@ export default function ViewGroupContacts(props) {
         .then(res=>{
             var reserve = []
             res.data.map(x=>{
-                reserve.push({id:x.contactid})
+                reserve.push({cid:x.contactid})
                 return reserve
             })
             setId(reserve)
+            setMemId(reserve)
         })
-    },[rowData.id])
+    },[rowData.id, setMemId])
+
     const removeContact = () => {
         axios
         .delete(`http://localhost:5001/api/members/${localStorage.getItem('id')}/${contactId}`)
@@ -88,10 +88,10 @@ export default function ViewGroupContacts(props) {
     }
     return(
         <React.Fragment>
-            <div>
+            <div className={classes.box}>
                 {member.map((x,i)=>{
                     return id.map(y=>{
-                        if (x.id === y.id){
+                        if (x.id === y.cid){
                             return (
                                 <List key={i}>
                                     <ListItem>
@@ -99,10 +99,10 @@ export default function ViewGroupContacts(props) {
                                             boxShadow={3}
                                             m={1}
                                             p={1}
-                                            className={classes.box}
+                                            className={classes.content}
                                         >
                                             <AccountCircleIcon/>
-                                            <ListItemText secondary={`+63${x.mphone}`}>{x.fname} {x.lname}</ListItemText>
+                                            <ListItemText secondary={`+63${x.mphone}`} primary={`${x.fname} ${x.lname}`}/>
                                             <Button color="primary" onClick={() => handleClickOpen(x.id)}>
                                                 <RemoveCircleOutlineIcon/>
                                             </Button>
@@ -113,7 +113,7 @@ export default function ViewGroupContacts(props) {
                                     </ListItem>
                                 </List>
                             )
-                        }
+                        } return null
                     })
                 })}
                 <Dialog
@@ -122,7 +122,7 @@ export default function ViewGroupContacts(props) {
                 >
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            Are you sure you want te remove this contact from this Group?
+                            Are you sure you want to remove this contact from this Group?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -163,7 +163,7 @@ export default function ViewGroupContacts(props) {
                                         <ListItemText primary='Address:' secondary={`${x.city} City, ${x.s_p}, ${x.country}, ${x.p_code}`}/>
                                     </ListItem>
                                 </List>)
-                            }
+                            } return null
                         })}
                     </DialogContent>
                     <DialogActions>

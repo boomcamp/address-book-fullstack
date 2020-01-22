@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -18,8 +18,33 @@ const useStyles = makeStyles(theme =>({
 }));
 export default function AddGroupContact(props){
     const classes = useStyles();
-    const {setModal, modal, data, id} = props
+    const {setModal, modal, id, memId} = props
+    const [data, setData] = useState([])
 
+    useEffect(()=>{
+        axios
+        .get(`http://localhost:5001/api/contact/${localStorage.getItem('id')}`)
+        .then(res => {
+            var temp = []
+            var memArr = []
+            var contArr = []
+
+            memId.map(y=>{
+                return(memArr.push(y.cid))
+            })
+
+            res.data.map(x=>{
+                if(memArr.indexOf(x.id) === -1){
+                    if(!contArr.includes(x.id)){
+                        contArr.push(x.id)
+                        temp.push({fname:x.f_name, lname:x.l_name, mobile_phone:x.mobile_phone, id:x.id})
+                    }
+                }
+                return temp 
+            })
+            setData(temp)
+        })
+    },[id, memId])
     const addMember = (e) =>{
         axios
         .post('http://localhost:5001/api/member', {
@@ -35,7 +60,6 @@ export default function AddGroupContact(props){
     }
 
     const closeModal = () => {
-        // console.log(id)
         setModal(false)
     }
     return(

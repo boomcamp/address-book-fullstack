@@ -12,24 +12,13 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme =>({
-    table: {
-        width: '40%',
-        margin: 'auto',
-        marginTop: '5%',
-    },
     titleHeader:{
-        // backgroundColor: 'rgba(0,0,0,0.05)',
         width: '100%',
         display: 'flex'
     },
     title: {
         paddingTop: '20px',
         width: '100%'
-        // marginRight: '50px',
-        // float: 'right',
-    },
-    actions: {
-        display: 'flex',
     },
     form: {
         width: '100%',
@@ -149,8 +138,8 @@ export default function EditContacts(props) {
                                 InputProps={{
                                     startAdornment: <InputAdornment position="start">+63</InputAdornment>,
                                 }}
-                                validators={['required']}
-                                errorMessages={['This field is required']}
+                                validators={['required', 'maxStringLength: 10']}
+                                errorMessages={['This field is required', 'Invalid Phone Number.']}
                                 onChange={eventhandler}
                                 value={data.mobile_phone}
                             />
@@ -163,8 +152,11 @@ export default function EditContacts(props) {
                                 fullWidth
                                 label="Home Phone"
                                 autoFocus
-                                validators={['required']}
-                                errorMessages={['This field is required']}
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">+63</InputAdornment>,
+                                }}
+                                validators={['required', 'maxStringLength: 10']}
+                                errorMessages={['This field is required', 'Invalid Home Number.']}
                                 onChange={eventhandler}
                                 value={data.home_phone}
                             />
@@ -177,8 +169,11 @@ export default function EditContacts(props) {
                                 fullWidth
                                 label="Work Phone"
                                 autoFocus
-                                validators={['required']}
-                                errorMessages={['This field is required']}
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">+63</InputAdornment>,
+                                }}
+                                validators={['required', 'maxStringLength: 10']}
+                                errorMessages={['This field is required', 'Invalid Work Number.']}
                                 onChange={eventhandler}
                                 value={data.work_phone}
                             />

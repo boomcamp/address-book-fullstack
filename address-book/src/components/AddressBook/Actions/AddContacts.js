@@ -18,15 +18,12 @@ const useStyles = makeStyles(theme =>({
         marginTop: '5%',
     },
     titleHeader:{
-        // backgroundColor: 'rgba(0,0,0,0.05)',
         width: '100%',
         display: 'flex'
     },
     title: {
         paddingTop: '20px',
         width: '100%'
-        // marginRight: '50px',
-        // float: 'right',
     },
     actions: {
         display: 'flex',
@@ -93,7 +90,6 @@ export default function AddContacts(props){
     const closeModal = () => {
         setAddModal(false)
     }
-    // var RegExp = '^(09|\+639)\d{9}$'
     return(
         <Dialog aria-labelledby="simple-dialog-title" open={addmodal}>
             <Container component="main" maxWidth="sm">
@@ -149,7 +145,7 @@ export default function AddContacts(props){
                                 label="Email"
                                 autoFocus
                                 validators={['required', 'isEmail']}
-                                errorMessages={['This field is required', 'Email is not Valid']}
+                                errorMessages={['This field is required', 'Email is not Valid.']}
                                 onChange={eventhandler}
                                 value={data.email}
                             />
@@ -165,8 +161,8 @@ export default function AddContacts(props){
                                 InputProps={{
                                     startAdornment: <InputAdornment position="start">+63</InputAdornment>,
                                 }}
-                                validators={['required']}
-                                errorMessages={['This field is required']}
+                                validators={['required', 'maxStringLength: 10']}
+                                errorMessages={['This field is required', 'Invalid Phone Number.']}
                                 onChange={eventhandler}
                                 value={data.mobile_phone}
                             />
@@ -179,8 +175,11 @@ export default function AddContacts(props){
                                 fullWidth
                                 label="Home Phone"
                                 autoFocus
-                                validators={['required']}
-                                errorMessages={['This field is required']}
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">+63</InputAdornment>,
+                                }}
+                                validators={['required', 'maxStringLength: 10']}
+                                errorMessages={['This field is required', 'Invalid Home Number.']}
                                 onChange={eventhandler}
                                 value={data.home_phone}
                             />
@@ -193,8 +192,11 @@ export default function AddContacts(props){
                                 fullWidth
                                 label="Work Phone"
                                 autoFocus
-                                validators={['required']}
-                                errorMessages={['This field is required']}
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">+63</InputAdornment>,
+                                }}
+                                validators={['required', 'maxStringLength: 10']}
+                                errorMessages={['This field is required', 'Invalid Work Number.']}
                                 onChange={eventhandler}
                                 value={data.work_phone}
                             />
@@ -235,8 +237,8 @@ export default function AddContacts(props){
                                 fullWidth
                                 label="Postal Code"
                                 autoFocus
-                                validators={['required']}
-                                errorMessages={['This field is required']}
+                                validators={['required', 'isNumber']}
+                                errorMessages={['This field is required', 'Postal Code must be a number.']}
                                 onChange={eventhandler}
                                 value={data.postal_code}
                             />

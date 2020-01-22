@@ -4,7 +4,6 @@ import axios from 'axios';
 import EditContacts from './Actions/EditContacts';
 import AddContacts from './Actions/AddContacts';
 import { TextField } from '@material-ui/core';
-// import SearchIcon from '@material-ui/icons/Search';
 import SortByAlphaIcon from '@material-ui/icons/SortByAlpha';
 import Button from '@material-ui/core/Button';
 
@@ -52,11 +51,13 @@ export default function Contacts(){
         axios
         .delete(`http://localhost:5001/api/contact/${e.id}`)
         .then(res=>{
-            console.log(res)
+            console.log('Successfully Deleted')
+        })
+        .catch(err=>{
+            console.log(err)
         })
     }
     const eventHandler = (e) => {
-        // console.log(e.target.value)
         axios
         .get(`http://localhost:5001/api/search/${localStorage.getItem('id')}?value=${e.target.value}`)
         .then(res=>{
@@ -95,7 +96,6 @@ export default function Contacts(){
                     <SortByAlphaIcon  onClick={sortTableAsc}/>
                 </Button>
                 <TextField label='Search...' onChange={eventHandler}/>
-                {/* <SearchIcon /> */}
             </div>
 
             <MaterialTable
@@ -147,8 +147,6 @@ export default function Contacts(){
             <AddContacts
                 addmodal={addmodal}
                 setAddModal={setAddModal}
-                // setData={setContact}
-                // data={contact}
             />
         </React.Fragment>
     )

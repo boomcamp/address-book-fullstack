@@ -7,7 +7,8 @@ import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import AddGroupContact from './Actions/AddGroupContact';
 
-export default function Groups(props){
+export default function Groups(){
+    const [memId, setMemId] = useState([])
     const [addContactModal, setAddContactModal] = useState(false);
     const [addModal, setAddModal] = useState(false);
     const [groupId, setGroupId] = useState({g_id: ''})
@@ -17,7 +18,6 @@ export default function Groups(props){
             {title: 'Date Created', field: 'date_created'}
         ]
     })
-    const [contacts, setContacts] = useState([])
 
     useEffect(()=>{
         axios
@@ -26,28 +26,6 @@ export default function Groups(props){
             setData(groups =>{
                 return{...groups, data:res.data}
             })
-        })
-
-        axios
-        .get(`http://localhost:5001/api/contact/${localStorage.getItem('id')}`)
-        .then(res => {
-            // var memArr = []
-
-            // contacts.map(x=>{
-            //     return memArr.push(x.id)
-            // })
-
-
-            var temp = []
-            res.data.map(x=>{
-                // if(temp.indexOf(x.id) === -1) {
-                    // if(memArr.includes(x.id)){
-                        temp.push({fname:x.f_name, lname:x.l_name, mobile_phone:x.mobile_phone, id:x.id})
-                    // }
-                // }
-                return temp
-            })
-            setContacts(temp)
         })
     },[])
     
@@ -74,7 +52,7 @@ export default function Groups(props){
     return(
         <React.Fragment>
             <MaterialTable
-                style={{width: '70%', margin: '70px auto'}}
+                style={{width: '65%', margin: 'auto'}}
                 options={{
                     filtering: false, 
                     headerStyle: {backgroundColor: '#f5f5f5'}, 
@@ -103,8 +81,8 @@ export default function Groups(props){
                                 <PersonAddIcon/>
                             </Button>
                             <ViewGroupContacts
-                                contacts={contacts}
                                 rowData={rowData}
+                                setMemId={setMemId}
                             /> 
                         </div>
                     )
@@ -145,7 +123,7 @@ export default function Groups(props){
             <AddGroupContact
                 setModal={setAddContactModal}
                 modal={addContactModal}
-                data={contacts}
+                memId={memId}
                 id={groupId}
             />
         </React.Fragment>

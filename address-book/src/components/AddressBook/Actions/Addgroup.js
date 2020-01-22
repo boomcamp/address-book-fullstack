@@ -11,11 +11,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme =>({
-    table: {
-        width: '40%',
-        margin: 'auto',
-        marginTop: '5%',
-    },
     titleHeader:{
         width: '100%',
         display: 'flex'
@@ -23,9 +18,6 @@ const useStyles = makeStyles(theme =>({
     title: {
         paddingTop: '20px',
         width: '100%'
-    },
-    actions: {
-        display: 'flex',
     },
     form: {
         width: '100%',

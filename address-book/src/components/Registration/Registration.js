@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
     const classes = useStyles();
-    // const [email, setEmail] = useState([])
+    const [email, setEmail] = useState([])
     const [values, setValues] = useState({
       fname: '',
       lname: '',
@@ -55,23 +55,28 @@ export default function SignUp() {
       error: false,
     });
 
-    // useEffect(() => {
-    //   axios
-    //   .get('http://localhost:5001/api/users')
-    //   .then(res=>{
-    //     var temp = []
-    //     // console.log(res.data)
-    //     res.data.map((x)=>{
-    //       temp.push({email: x.email})
-    //       return temp
-    //     })
-    //     setEmail(temp)
-    //   })
-    // },[])
+    useEffect(() => {
+      axios
+      .get('http://localhost:5001/api/users')
+      .then(res=>{
+        var temp = []
+        res.data.map((x)=>{
+          temp.push({email: x.email})
+          return temp
+        })
+        setEmail(temp)
+      })
+    },[])
     
     const signthis = () =>{
-      // email.map(x =>{
-        // if(x.email !== values.email){
+      var memArr = []
+      var exist = []
+      email.map(x=>{
+        return(memArr.push(x.email))
+      })
+      if(memArr.indexOf(values.email) === -1){
+        if(!exist.includes(values.email)){
+          exist.push(values.email)
           axios
           .post('http://localhost:5001/api/users', {
             "fname": values.fname,
@@ -83,14 +88,11 @@ export default function SignUp() {
             alert('Success!');
             setValues({...values, success: true});
           }).catch(err => setValues({...values, error: true}))
-        // }else{
-        //   return (
-        //     alert('Email has already been taken. Try a different one')
-        //   )
-        //   // setValues({...values, error: true})
-        //   // window.location.reload(true)
-        // }
-      // })
+        }
+      }else{
+        alert('Email already Exist')
+        window.location.reload(true)
+      }
     }
     if(values.success){
       return (<Redirect to='/login'/>)
