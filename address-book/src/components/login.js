@@ -78,34 +78,29 @@ class Login extends Component {
         password: this.state.pword
       })
       .then(res => {
-        
         if (res.data.error === undefined) {
           localStorage.setItem("auth", "logged in");
           localStorage.setItem("token", res.data.token);
-          localStorage.setItem("id", res.data.id)
+          localStorage.setItem("id", res.data.id);
           this.props.history.push("/register");
-        } else if(res.data.error === 'Incorrect Password'){
-            console.log(res.data.error)
-            this.handleOpenSnackbar("Incorrect password ", "#9a0707");
-            this.setState({
-               
-                icon:"error"
-            })
-        }
-        else if(res.data.error === 'Incorrect Password'){
-            this.handleOpenSnackbar("Incorrect password ", "#9a0707");
-            console.log(res.data.error)
-            this.setState({
-                icon:"error"
-
-            })
-        }
-        else {
-            this.handleOpenSnackbar("Incorrect Username ", "#9a0707");
-            console.log(res.data.error)
-            this.setState({
-                icon:"error"
-            })
+        } else if (res.data.error === "Incorrect Password") {
+          // console.log(res.data.error)
+          this.handleOpenSnackbar("Incorrect password ", "#9a0707");
+          this.setState({
+            icon: "error"
+          });
+        } else if (res.data.error === "Incorrect Password") {
+          this.handleOpenSnackbar("Incorrect password ", "#9a0707");
+          console.log(res.data.error);
+          this.setState({
+            icon: "error"
+          });
+        } else {
+          this.handleOpenSnackbar("Incorrect Username ", "#9a0707");
+          console.log(res.data.error);
+          this.setState({
+            icon: "error"
+          });
         }
       });
   };
@@ -134,9 +129,7 @@ class Login extends Component {
           autoHideDuration={2000}
           onClose={this.handleCloseSnackbar}
         />
-        <form className={classes.container}
-         onSubmit={(e) => this.handleLogin(e)}
-        >
+        <form className={classes.container} onSubmit={e => this.handleLogin(e)}>
           <div
             style={{
               display: "flex",
@@ -208,9 +201,7 @@ class Login extends Component {
                   variant="contained"
                   color="primary"
                   type="submit"
-                 
                   fullWidth
-                
                 >
                   Sign In
                 </Button>

@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import Box from "@material-ui/core/Box";
 import Tooltip from "@material-ui/core/Tooltip";
-import { IconButton, TextField, Grid, Button } from "@material-ui/core";
+import {
+  IconButton,
+  TextField,
+  Grid,
+  Button,
+  Snackbar
+} from "@material-ui/core";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import Icon from "@material-ui/core/Icon";
@@ -38,10 +44,22 @@ export default class NewContacts extends Component {
       city: "",
       stateOrProvince: "",
       postalcode: "",
-      country: ""
+      country: "",
+      snackbarState: false,
+      snackbarMessage: "",
+      icon: ""
     };
   }
-
+  handleCloseSnackbar = () => {
+    this.setState({ snackbarState: false, snackbarMessage: "" });
+  };
+  handleOpenSnackbar = (message, color) => {
+    this.setState({
+      snackbarState: true,
+      snackbarMessage: message,
+      backgroundColor: color ? color : ""
+    });
+  };
   handleCancel = () => {
     this.props.handleCloseModal();
     this.setState({
@@ -62,7 +80,20 @@ export default class NewContacts extends Component {
     e.preventDefault();
     const id = localStorage.getItem("id");
     if (this.state.fname === "" && this.state.lname === "") {
-      alert("empty");
+      this.handleOpenSnackbar("Pls Fill up FirstName and LastName", "#9a0707");
+      this.setState({
+        icon: "error"
+      });
+    } else if (this.state.fname === "") {
+      this.handleOpenSnackbar("Pls Fill up FirstName", "#9a0707");
+      this.setState({
+        icon: "error"
+      });
+    } else if (this.state.lname === "") {
+      this.handleOpenSnackbar("Pls Fill up LastName", "#9a0707");
+      this.setState({
+        icon: "error"
+      });
     } else {
       axios
         .post(`/createcontact`, {
@@ -80,6 +111,12 @@ export default class NewContacts extends Component {
         })
         .then(res => {
           window.location.reload();
+
+          this.handleOpenSnackbar("Successfully Add", "Darkgreen");
+          this.setState({
+            icon: "check"
+          });
+
           this.props.handleCloseModal();
         });
     }
@@ -100,6 +137,26 @@ export default class NewContacts extends Component {
     // console.log(this.props);
     return (
       <React.Fragment>
+        <Snackbar
+          ContentProps={{
+            style: {
+              backgroundColor: this.state.backgroundColor
+            }
+          }}
+          open={this.state.snackbarState}
+          message={
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <Icon style={{ marginRight: 5 }}>{this.state.icon}</Icon>
+              {this.state.snackbarMessage}
+            </span>
+          }
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right"
+          }}
+          autoHideDuration={2000}
+          onClose={this.handleCloseSnackbar}
+        />
         <Dialog
           fullWidth
           maxWidth="sm"

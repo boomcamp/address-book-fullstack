@@ -34,7 +34,8 @@ massive({
     app.get("/getGroups/:id", groups.getGroups);
     app.patch("/addressbook/addtogroup/:userid/:id", groups.addToGroup);
     app.patch("/editgroup/:userid/:id", groups.updateGroupById);
-
+    app.patch("/updateToNull/:userid/:groupid", groups.updateGroupIdToNull);
+    app.delete("/deleteGroups/:userid/:groupid", groups.deleteGroups);
     const PORT = 5000;
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);

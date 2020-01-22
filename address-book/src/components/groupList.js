@@ -2,23 +2,16 @@ import React, { Component } from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import FolderIcon from "@material-ui/icons/Folder";
 import DeleteIcon from "@material-ui/icons/Delete";
 import GroupIcon from "@material-ui/icons/Group";
-import { height } from "@material-ui/system";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
-import NewGroups from "./modal/newGroups";
 import EditIcon from "@material-ui/icons/Edit";
 import Tooltip from "@material-ui/core/Tooltip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -28,15 +21,18 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Confrimation from "./modal/confirmation";
-import CancelIcon from '@material-ui/icons/Cancel';
+import Icon from "@material-ui/core/Icon";
+import CancelIcon from "@material-ui/icons/Cancel";
 import {
   Dialog,
   DialogActions,
   DialogTitle,
   TextField,
-  DialogContent
+  DialogContent,
+  Snackbar
 } from "@material-ui/core";
 import EditGroup from "./modal/editGroup";
+import DeleteGroups from "./modal/deletegroups";
 
 export default class GroupList extends Component {
   constructor(props) {
@@ -58,9 +54,23 @@ export default class GroupList extends Component {
       disabled: true,
       editButton: true,
       saveButton: "none",
-      groupEdit: ""
+      groupEdit: "",
+      openDelete: false,
+      snackbarState: false,
+      snackbarMessage: "",
+      icon: ""
     };
   }
+  handleCloseSnackbar = () => {
+    this.setState({ snackbarState: false, snackbarMessage: "" });
+  };
+  handleOpenSnackbar = (message, color) => {
+    this.setState({
+      snackbarState: true,
+      snackbarMessage: message,
+      backgroundColor: color ? color : ""
+    });
+  };
   handleCancelGroups = () => {
     this.setState({
       disabled: true,
@@ -69,10 +79,14 @@ export default class GroupList extends Component {
     });
     this.handleCloseEditGroup();
   };
-  handleSave = () => {
+  handleSave = (e) => {
+    e.preventDefault()
     const name = localStorage.getItem("name");
     if (name === this.state.groupEdit) {
-      alert("pair");
+      this.handleOpenSnackbar("The Same Group Name", "#9a0707");
+      this.setState({
+        icon: "error"
+      });
       this.setState({
         groupEdit: "",
         disabled: false,
@@ -85,17 +99,30 @@ export default class GroupList extends Component {
     } else {
       const idGroup = localStorage.getItem("idGroup");
       const id = localStorage.getItem("id");
-      axios.patch(`/editgroup/${id}/${idGroup}`,{
+      axios.patch(`/editgroup/${id}/${idGroup}`, {
         group_name: this.state.groupEdit
-      }).then(res => {
+      })
+     .then(res => {
         localStorage.removeItem("idGroup");
         localStorage.removeItem("name");
+        this.handleOpenSnackbar("Successfully Edit", "Darkgreen");
+        this.handleCancelGroups()
+        this.setState({
+          icon: "check",
+          groupEdit: "",
+          disabled: false,
+          saveDisabled: false,
+          editButton: "none",
+          saveButton: "flex",
+          
+        })
       });
-      this.handleSelect()
+      
+      this.handleSelect();
     }
   };
   handleEditGroup = () => {
-    console.log(this.setFields);
+ 
     this.setState({
       disabled: false,
       saveDisabled: false,
@@ -123,15 +150,20 @@ export default class GroupList extends Component {
       });
     });
   };
-
-  handleGetByGroups = id => {
+  getGroupById = id => {
     localStorage.setItem("idGroups", id);
     const userid = localStorage.getItem("id");
     axios.get(`/addressbook/${userid}?groups=${id}`).then(res => {
       this.setState({
-        bygroups: res.data,
-        open: true
+        bygroups: res.data
       });
+    });
+  };
+
+  handleGetByGroups = id => {
+    this.getGroupById(id);
+    this.setState({
+      open: true
     });
   };
 
@@ -232,10 +264,58 @@ export default class GroupList extends Component {
       groupEdit: value
     });
   };
+  handleOpenDelete = group => {
+    localStorage.setItem("delete", group.id);
+    this.setState({
+      openDelete: true
+    });
+  };
+  handleCloseDelete = () => {
+    this.setState({
+      openDelete: false
+    });
+    localStorage.removeItem("delete");
+  };
+  handleYesDelete = () => {
+    const id = localStorage.getItem("id");
+    const groupid = localStorage.getItem("delete");
+    if (this.state.bygroups.length === 0) {
+      axios.delete(`/deleteGroups/${id}/${groupid}`).then(res => {
+        window.location.reload();
+        this.handleCloseDelete();
+      });
+    } else {
+      axios.patch(`/updateToNull/${id}/${groupid}`).then(res => {
+        axios.delete(`/deleteGroups/${id}/${groupid}`).then(resdata => {
+          window.location.reload();
+          this.handleCloseDelete();
+        });
+      });
+    }
+  };
   render() {
-    // console.log(this.state.list);
     return (
       <React.Fragment>
+        <Snackbar
+          ContentProps={{
+            style: {
+              backgroundColor: this.state.backgroundColor
+            }
+          }}
+          open={this.state.snackbarState}
+          message={
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <Icon style={{ marginRight: 5 }}>{this.state.icon}</Icon>
+              {this.state.snackbarMessage}
+            </span>
+          }
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right"
+          }}
+          autoHideDuration={2000}
+          onClose={this.handleCloseSnackbar}
+        />
         <div
           stye={{
             margin: "theme.spacing(4, 0, 2)"
@@ -298,7 +378,11 @@ export default class GroupList extends Component {
                       </Tooltip>
                     </IconButton>
 
-                    <IconButton edge="end" aria-label="delete">
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => this.handleOpenDelete(group)}
+                    >
                       <Tooltip title="Delete Group">
                         <DeleteIcon />
                       </Tooltip>
@@ -373,7 +457,7 @@ export default class GroupList extends Component {
             }}
           >
             List of Group
-            <CancelIcon onClick={this.handleClose}style={{float:"right"}}/>
+            <CancelIcon onClick={this.handleClose} style={{ float: "right" }} />
           </DialogTitle>
           <DialogContent style={{ height: "600px  " }}>
             <Grid
@@ -449,6 +533,19 @@ export default class GroupList extends Component {
             groupEdit={this.state.groupEdit}
             setFields={this.setFields}
             handleSave={this.handleSave}
+          />
+        </Dialog>
+
+        <Dialog
+          open={this.state.openDelete}
+          onClose={this.handleCloseDelete}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Confirmation"}</DialogTitle>
+          <DeleteGroups
+            handleCloseDelete={this.handleCloseDelete}
+            handleYesDelete={this.handleYesDelete}
           />
         </Dialog>
       </React.Fragment>

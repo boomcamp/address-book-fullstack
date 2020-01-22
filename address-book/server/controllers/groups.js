@@ -54,9 +54,31 @@ function updateGroupById(req, res) {
     `Update groups set group_name = '${group_name}' where id = ${id} and userid = ${userId}`
   ).then(item => res.status(200).json(item));
 }
+
+function updateGroupIdToNull(req, res) {
+  const db = req.app.get("db");
+  const userId = req.params.userid;
+  const groupId =req.params.groupid
+  console.log(req.body);
+  db.query(
+    `Update address_book set groupid = null where userid = ${userId} and groupid = ${groupId}`
+  ).then(item => res.status(200).json(item));
+}
+function deleteGroups(req, res) {
+  const db = req.app.get("db");
+  const userId = req.params.userid;
+  const id =req.params.groupid
+  db.query(
+    `Delete From groups where userid=${userId} and id =${id}  `
+  ).then(item => res.status(200).json(item));
+}
+
+
 module.exports = {
   createGroup,
   getGroups,
   addToGroup,
-  updateGroupById
+  updateGroupById,
+  updateGroupIdToNull,
+  deleteGroups
 };

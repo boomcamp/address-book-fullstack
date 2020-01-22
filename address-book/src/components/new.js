@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import Box from "@material-ui/core/Box";
 import Tooltip from "@material-ui/core/Tooltip";
-import { IconButton, TextField, Grid, Button } from "@material-ui/core";
+import { IconButton, TextField, Grid, Button,Snackbar } from "@material-ui/core";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import axios from "axios";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Groups from "./modal/newGroups";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import Contacts from "./modal/newContacts";
+import Icon from "@material-ui/core/Icon";
 export default class New extends Component {
   constructor(props) {
     super(props);
@@ -15,13 +16,30 @@ export default class New extends Component {
     this.state = {
       open: false,
       openModal: false,
-      groupName: ""
+      groupName: "",
+      snackbarState: false,
+      snackbarMessage: "",
+      icon: ""
     };
   }
+  
+  handleCloseSnackbar = () => {
+    this.setState({ snackbarState: false, snackbarMessage: "" });
+  };
+  handleOpenSnackbar = (message, color) => {
+    this.setState({
+      snackbarState: true,
+      snackbarMessage: message,
+      backgroundColor: color ? color : ""
+    });
+  };
   handleCreateGroups = () => {
     const id = localStorage.getItem("id");
     if (this.state.groupName === "") {
-      alert("error");
+      this.handleOpenSnackbar("Pls Fill up Group Name", "#9a0707");
+      this.setState({
+        icon: "error"
+      });
     } else {
       axios
         .post(`/createGroup`, {
@@ -30,8 +48,11 @@ export default class New extends Component {
         })
         .then(res => {
           window.location.reload();
+          this.handleOpenSnackbar("Successfully Add New Group", "Darkgreen");
           this.setState({
-            groupName: ""
+            groupName: "",
+            icon: "check"
+
           });
         });
     
@@ -66,6 +87,26 @@ export default class New extends Component {
     const { classes } = this.props;
     return (
       <React.Fragment>
+         <Snackbar
+          ContentProps={{
+            style: {
+              backgroundColor: this.state.backgroundColor
+            }
+          }}
+          open={this.state.snackbarState}
+          message={
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <Icon style={{ marginRight: 5 }}>{this.state.icon}</Icon>
+              {this.state.snackbarMessage}
+            </span>
+          }
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right"
+          }}
+          autoHideDuration={2000}
+          onClose={this.handleCloseSnackbar}
+        />
         <div
           style={{
             display: "flex",
