@@ -1,0 +1,21 @@
+exports.shorthands = undefined;
+
+exports.up = pgm => {
+  pgm.createTable("grouplist", {
+    id: {
+      type: "serial",
+      primaryKey: true
+    },
+    userid: {
+      type: "integer",
+      notNull: true,
+      references: '"users"'
+    },
+    group_name: {
+      type: "text",
+      notNull: true
+    }
+  });
+};
+
+exports.down = pgm => {};
