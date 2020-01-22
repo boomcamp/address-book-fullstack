@@ -61,31 +61,31 @@ export default function Group() {
 								const { group_name } = newData;
 								if (group_name) {
 									resolve();
-									setState(prevState => {
-										const data = [...prevState.data];
-										data.push({ group_name, date_created: today });
-										axios({
-											method: 'post',
-											url: '/api/groups/create',
-											data: {
-												userid: localStorage.getItem('id'),
-												group_name,
-												date_created: today
-											},
-											headers: {
-												Authorization: `Bearer ${JSON.parse(
-													localStorage.getItem('token')
-												)}`
-											}
+									axios({
+										method: 'post',
+										url: '/api/groups/create',
+										data: {
+											userid: localStorage.getItem('id'),
+											group_name,
+											date_created: today
+										},
+										headers: {
+											Authorization: `Bearer ${JSON.parse(
+												localStorage.getItem('token')
+											)}`
+										}
+									})
+										.then(res => {
+											setNotif('Successfully created');
+											setError(false);
+											setOpen(true);
+											setState(prevState => {
+												const data = [...prevState.data];
+												data.push(res.data);
+												return { ...prevState, data };
+											});
 										})
-											.then(res => {
-												setNotif('Successfully created');
-												setError(false);
-												setOpen(true);
-											})
-											.catch(err => console.log(err));
-										return { ...prevState, data };
-									});
+										.catch(err => console.log(err));
 								} else {
 									setNotif('Please fill up the required field');
 									setError(true);

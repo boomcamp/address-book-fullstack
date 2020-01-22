@@ -60,7 +60,7 @@ const DialogActions = withStyles(theme => ({
 }))(MuiDialogActions);
 
 export default function ViewAndEditContact(props) {
-	const { data, setData, modal, setModal } = props;
+	const { data, setData, modal } = props;
 	const [edit, setEdit] = useState(true);
 	const [errors, setErrors] = useState({});
 
@@ -69,7 +69,7 @@ export default function ViewAndEditContact(props) {
 		setData({ ...data, [name]: value });
 	};
 	const handleClose = () => {
-		setModal(false);
+		window.location.reload(true);
 	};
 	const handleEdit = () => {
 		setEdit(!edit);
@@ -90,7 +90,7 @@ export default function ViewAndEditContact(props) {
 					setEdit(!edit);
 					setTimeout(() => {
 						window.location.reload(true);
-					}, 1000);
+					}, 100);
 				})
 				.catch(err => console.log(err));
 		}

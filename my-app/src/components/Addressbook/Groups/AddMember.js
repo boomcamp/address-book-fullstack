@@ -21,7 +21,6 @@ export default function AddMembers(props) {
 		setModal(false);
 		setNotif(false);
 	};
-	console.log(rowData.id);
 	const handleAddMembers = data => {
 		let memberArr = [];
 		let contactArr = [];

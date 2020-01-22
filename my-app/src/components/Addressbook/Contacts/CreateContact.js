@@ -26,25 +26,31 @@ export default function CreateContact(props) {
 		state_or_province: '',
 		postal_code: '',
 		country: '',
+		name: '',
 		date_created: today
 	});
 	const [errors, setErrors] = useState({});
 
 	const handleChange = e => {
 		const { name, value } = e.target;
-		setValues({ ...values, [name]: value });
+		setValues({
+			...values,
+			[name]: value,
+			name: `${values.lastname}, ${values.firstname}`
+		});
 	};
 	const handleClose = () => {
 		window.location.reload(true);
 	};
 	const handleSubmit = () => {
 		setErrors(Validate(values));
+		props.setState(prevState => {
+			const data = [...prevState.data];
+			data.push(values);
+			return { ...prevState, data };
+		});
+
 		if (Object.keys(Validate(values)).length === 0) {
-			props.setState(prevState => {
-				const data = [...prevState.data];
-				data.push(values);
-				return { ...prevState, data };
-			});
 			axios({
 				method: 'post',
 				url: '/api/contacts/create',
