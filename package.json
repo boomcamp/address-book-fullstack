@@ -1,0 +1,57 @@
+{
+  "name": "address-book-fullstack",
+  "version": "1.0.0",
+  "description": "For this project you'll be crafting an Address Book application. You'll be responsible for the user interface and its functionality, along with implementing a backend API to persist the data to a database and authorize users.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:start": "docker-compose up -d db",
+    "db:stop": "docker-compose down",
+    "migrate": "node-pg-migrate",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EricA102/address-book-fullstack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EricA102/address-book-fullstack/issues"
+  },
+  "homepage": "https://github.com/EricA102/address-book-fullstack#readme",
+  "dependencies": {
+    "@material-ui/core": "^4.8.3",
+    "@material-ui/icons": "^4.5.1",
+    "@types/react-transition-group": "^4.2.3",
+    "argon2": "^0.25.1",
+    "axios": "^0.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "local-storage": "^2.0.0",
+    "massive": "^6.1.4",
+    "node-pg-migrate": "^3.21.1",
+    "pg": "^7.11.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.2.0",
+    "styled-components": "^4.4.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
