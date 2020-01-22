@@ -16,10 +16,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import Register from '../Register';
 
-export default function LoginPage({ nextStep, handleChange }) {
+export default function LoginPage({ nextStep, handleChange, warning, helper, warningUpdate, ToastContainer }) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -39,6 +40,7 @@ export default function LoginPage({ nextStep, handleChange }) {
     return (
         <React.Fragment>
             <Grid container className={classes.root}>
+                <ToastContainer enableMulticontainer />
                 <Grid item xs={12} sm={6} md={4} lg={3}>
                     <Card className={classes.card}>
                         <CardHeader
@@ -58,6 +60,8 @@ export default function LoginPage({ nextStep, handleChange }) {
                                         id="username"
                                         name="username"
                                         type="username"
+                                        error={warning}
+                                        onBlur={warningUpdate}
                                         onChange={handleChange}
                                         endAdornment={
                                             <InputAdornment position="end">
@@ -66,6 +70,7 @@ export default function LoginPage({ nextStep, handleChange }) {
                                         }
                                         labelWidth={70}
                                     />
+                                    <FormHelperText id="username">{helper}</FormHelperText>
                                 </FormControl>
                             </CardContent>
                             <div className={classes.link}>

@@ -16,7 +16,9 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import Divider from '@material-ui/core/Divider';
-// import FormHelperText from '@material-ui/core/FormHelperText';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Register({ handleClose }) {
     const classes = useStyles();
@@ -31,6 +33,21 @@ export default function Register({ handleClose }) {
         firstname: '',
         lastname: ''
     });
+
+    const [warn, setWarn] = React.useState({
+        email: false,
+        username: false,
+        password: false,
+        firstname: false,
+        lastname: false
+    });
+
+    const [help, setHelp] = React.useState({
+        firstname: "",
+        lastname: "",
+        username: "",
+        password: ""
+    });
     // const [confirm, setConfirm] = React.useState('');
     // const [validate, setValidate] = React.useState(null);
 
@@ -44,42 +61,117 @@ export default function Register({ handleClose }) {
 
     const handleSubmit = e => {
         e.preventDefault();
-        axios({
-            method: "post",
-            url: 'http://localhost:3001/api/register',
-            data: state
-        })
-            .then(e => {
-                localStorage.setItem('token', e.data.token);
-                localStorage.setItem('id', e.data.user_id);
-                localStorage.setItem('user', e.data.username);
-                window.location.href = "#/";
+        if (
+            state.email === "" ||
+            state.username === "" ||
+            state.password === "" ||
+            state.firstname === "" ||
+            state.lastname === ""
+        ) {
+            toast.error("Fill-up all fields!", {
+                position: 'top-right',
+                hideProgressBar: true,
+                autoClose: 3000,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+            });
+        } else {
+            axios({
+                method: "post",
+                url: "http://localhost:3001/api/register",
+                data: state
             })
-            .catch(e => console.log(e))
+                .then(e => {
+                    localStorage.setItem("token", e.data.token)
+                })
+                .then(() => {
+                    toast.success("Registered Successfully", {
+                        position: "top-right",
+                        hideProgressBar: true,
+                        autoClose: 3000,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true
+                    })
+                })
+                .then(() => {
+                    window.location.href = "#/addressbook"
+                })
+                .catch(e => {
+                    toast.error("Email and/or Username already Exist!", {
+                        position: "top-right",
+                        hideProgressBar: true,
+                        autoClose: 3000,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true
+                    });
+                });
+        }
     };
 
     const handleChange = e => {
         setState({
             ...state,
             [e.target.name]: e.target.value
-        })
+        });
+        if (e.target.value.length > 0) {
+            setWarn({
+                ...warn,
+                [e.target.name]: false
+            });
+            setHelp({
+                ...help,
+                [e.target.name]: ""
+            });
+        } else {
+            setWarn({
+                ...warn,
+                [e.target.name]: true
+            });
+            setHelp({
+                ...help,
+                [e.target.name]: `${e.target.name.charAt(0).toUpperCase() +
+                    e.target.name.slice(1)} field is required`
+            });
+        }
     };
 
-    // const passValidation = e => {
-    //     const { password } = state.data
-    //     if (confirm.length > 1 || password.length > 1) {
-    //         setValidate(true)
-    //     }
-    // };
-
-    // const onChangeConfirm = e => {
-    //     setConfirm(e.target.value);
-    // };
+    const warningUpdate = e => {
+        if (e.target.value.length === 0) {
+            setWarn({
+                ...warn,
+                [e.target.name]: true
+            });
+            setHelp({
+                ...help,
+                [e.target.name]: `${e.target.name.charAt(0).toUpperCase() +
+                    e.target.name.slice(1)} field is required`
+            });
+        } else if (e.target.value.length === 1) {
+            setWarn({
+                ...warn,
+                [e.target.name]: true
+            });
+            setHelp({
+                ...help,
+                [e.target.name]: `${e.target.name.charAt(0).toUpperCase() +
+                    e.target.name.slice(1)} must be 2 characters and above`
+            })
+        } else {
+            setHelp({
+                ...help,
+                [e.target.name]: ""
+            });
+        }
+    };
 
     return (
         <React.Fragment>
             <div className={classes.root}>
-                <div item className={classes.content} >
+                <div className={classes.content} >
+                    <ToastContainer enableMulticontainer />
                     <form className={classes.input} autoComplete="off" onSubmit={handleSubmit}>
                         <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                             <InputLabel htmlFor="email">Email</InputLabel>
@@ -88,6 +180,8 @@ export default function Register({ handleClose }) {
                                 id="email"
                                 name="email"
                                 type="email"
+                                error={warn.email}
+                                onBlur={warningUpdate}
                                 onChange={handleChange}
                                 defaultValue={state.email}
                                 endAdornment={
@@ -97,6 +191,7 @@ export default function Register({ handleClose }) {
                                 }
                                 labelWidth={50}
                             />
+                            <FormHelperText id="email">{help.email}</FormHelperText>
                         </FormControl>
                         <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                             <InputLabel htmlFor="username">Username</InputLabel>
@@ -105,6 +200,8 @@ export default function Register({ handleClose }) {
                                 id="username"
                                 name="username"
                                 type="username"
+                                error={warn.username}
+                                onBlur={warningUpdate}
                                 onChange={handleChange}
                                 defaultValue={state.username}
                                 endAdornment={
@@ -114,14 +211,16 @@ export default function Register({ handleClose }) {
                                 }
                                 labelWidth={80}
                             />
+                            <FormHelperText id="username">{help.username}</FormHelperText>
                         </FormControl>
                         <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                             <InputLabel htmlFor="password">Password</InputLabel>
                             <OutlinedInput
                                 required
-                                // color={validate ? 'primary' : 'secondary'}
                                 id="password"
                                 name="password"
+                                error={warn.password}
+                                onBlur={warningUpdate}
                                 type={values.showPassword ? 'text' : 'password'}
                                 onChange={handleChange}
                                 endAdornment={
@@ -138,14 +237,17 @@ export default function Register({ handleClose }) {
                                 }
                                 labelWidth={80}
                             />
+                            <FormHelperText id="password">{help.password}</FormHelperText>
                         </FormControl>
                         <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                             <InputLabel htmlFor="firstname">First Name</InputLabel>
                             <OutlinedInput
+                                required
                                 id="firstname"
                                 name="firstname"
                                 type="firstname"
-                                autoFocus
+                                error={warn.firstname}
+                                onBlur={warningUpdate}
                                 onChange={handleChange}
                                 defaultValue={state.firstname}
                                 endAdornment={
@@ -155,13 +257,17 @@ export default function Register({ handleClose }) {
                                 }
                                 labelWidth={85}
                             />
+                            <FormHelperText id="firstname">{help.firstname}</FormHelperText>
                         </FormControl>
                         <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                             <InputLabel htmlFor="lastname">Last Name</InputLabel>
                             <OutlinedInput
+                                required
                                 id="lastname"
                                 name="lastname"
                                 type="lastname"
+                                error={warn.lastname}
+                                onBlur={warningUpdate}
                                 onChange={handleChange}
                                 defaultValue={state.lastname}
                                 endAdornment={
@@ -171,35 +277,8 @@ export default function Register({ handleClose }) {
                                 }
                                 labelWidth={80}
                             />
+                            <FormHelperText id="lastname">{help.lastname}</FormHelperText>
                         </FormControl>
-                        {/* <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                                <InputLabel htmlFor="confirmpassword">Confirm Password</InputLabel>
-                                <OutlinedInput
-                                    required
-                                    color={validate ? 'primary' : 'secondary'}
-                                    id="confirmpassword"
-                                    name="confirmpassword"
-                                    type={values.showPassword ? 'text' : 'confirmpassword'}
-                                    onChange={e => {
-                                        passValidation(e);
-                                        onChangeConfirm(e);
-                                    }}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={handleMouseDownPassword}
-                                                edge="end"
-                                            >
-                                                {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                    labelWidth={140}
-                                />
-                                <FormHelperText id="confirmpassword">{validate ? null : "Password does not match"}</FormHelperText>
-                            </FormControl> */}
                         <div className={classes.bottom}>
                             <Divider />
                         </div>
@@ -226,7 +305,7 @@ export default function Register({ handleClose }) {
                     </form>
                 </div>
             </div >
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 

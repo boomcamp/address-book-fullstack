@@ -12,8 +12,9 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
-export default function LoginPage({ handleLogin, prevStep, handleChange }) {
+export default function LoginPage({ handleLogin, prevStep, handleChange, warning, helper, warningUpdate, ToastContainer }) {
     const classes = useStyles();
     const [values, setValues] = React.useState({
         password: '',
@@ -30,6 +31,7 @@ export default function LoginPage({ handleLogin, prevStep, handleChange }) {
 
     return (
         <Grid container className={classes.root}>
+            <ToastContainer enableMulticontainer />
             <Grid item xs={12} sm={6} md={4} lg={3}>
                 <Card className={classes.card}>
                     <CardHeader
@@ -48,6 +50,8 @@ export default function LoginPage({ handleLogin, prevStep, handleChange }) {
                                     required
                                     id="password"
                                     name="password"
+                                    error={warning}
+                                    onBlur={warningUpdate}
                                     onChange={handleChange}
                                     type={values.showPassword ? 'text' : 'password'}
                                     endAdornment={
@@ -64,6 +68,7 @@ export default function LoginPage({ handleLogin, prevStep, handleChange }) {
                                     }
                                     labelWidth={70}
                                 />
+                                <FormHelperText id="username">{helper}</FormHelperText>
                             </FormControl>
                         </CardContent>
                         <CardContent className={classes.link2}>
