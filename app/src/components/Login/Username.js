@@ -20,7 +20,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 
 import Register from '../Register';
 
-export default function LoginPage({ nextStep, handleChange, warn, help, warningUpdate, ToastContainer }) {
+export default function LoginPage({ nextStep, handleChange, warn, help, warningUpdate, ToastContainer, data }) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -63,6 +63,7 @@ export default function LoginPage({ nextStep, handleChange, warn, help, warningU
                                         error={warn.username}
                                         onBlur={warningUpdate}
                                         onChange={handleChange}
+                                        defaultValue={data.username}
                                         endAdornment={
                                             <InputAdornment position="end">
                                                 <AccountBoxIcon />

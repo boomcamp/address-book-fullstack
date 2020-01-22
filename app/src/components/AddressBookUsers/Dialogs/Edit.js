@@ -1,9 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Dialog from '@material-ui/core/Dialog';
-import Typography from '@material-ui/core/Typography';
 import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 
@@ -14,13 +11,16 @@ import clsx from 'clsx';
 import FormControl from '@material-ui/core/FormControl';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Edit({
     openEdit,
     editClose,
     Transition,
+    fullScreen,
     fname,
     lname,
     home_phone,
@@ -64,31 +64,33 @@ export default function Edit({
             .then(() => (
                 editClose()
             ))
-            .catch(e => console.log(e))
+            .catch(e => {
+                toast.error("Fill-up all fields!", {
+                    position: 'top-right',
+                    hideProgressBar: true,
+                    autoClose: 3000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true
+                });
+            })
     }
 
     return (
         <React.Fragment>
             <div className={classes.root}>
+                <ToastContainer enableMulticontainer />
                 <Dialog
-                    fullScreen
                     open={openEdit}
-                    onClose={editClose}
                     TransitionComponent={Transition}
+                    fullScreen={fullScreen}
+                    keepMounted
+                    onClose={editClose}
+                    aria-labelledby="contact"
+                    aria-describedby="contact"
                 >
-                    <AppBar className={classes.appBar}>
-                        <Toolbar>
-                            <IconButton edge="start" color="inherit" onClick={editClose} aria-label="close">
-                                <CloseIcon />
-                            </IconButton>
-                            <Typography variant="h6" className={classes.title}>
-                                Edit User
-                            </Typography>
-                            <Button autoFocus color="inherit" type="submit" >
-                                Save
-                            </Button>
-                        </Toolbar>
-                    </AppBar>
+                    <DialogTitle id="contact">{`Edit Contact`}</DialogTitle>
+                    <Divider />
                     <DialogContent>
                         <div className={classes.display}>
                             <form className={classes.input} onSubmit={() => onSave()}>
@@ -104,7 +106,6 @@ export default function Edit({
                                                 defaultValue={fname}
                                                 onChange={handleEditChange}
                                                 labelWidth={85}
-
                                             />
                                         </FormControl>
                                         <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
@@ -218,6 +219,11 @@ export default function Edit({
                                         <div className={classes.bottom}>
                                             <Divider />
                                         </div>
+                                        <DialogActions>
+                                            <Button type='submit' color="primary" autoFocus>
+                                                SAVE
+                                                </Button>
+                                        </DialogActions>
                                     </Grid>
                                 </Grid>
                             </form>
@@ -225,20 +231,21 @@ export default function Edit({
                     </DialogContent>
                 </Dialog >
             </div>
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 
 const useStyles = makeStyles(theme => ({
     root: {
-        display: 'flex'
-    },
-    appBar: {
-        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column'
     },
     title: {
         marginLeft: theme.spacing(2),
         flex: 1,
+    },
+    textField: {
+        width: '97%'
     },
     bottom: {
         marginBottom: 10,
@@ -248,6 +255,10 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
     },
     display: {
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    form: {
         display: 'flex',
         flexDirection: 'column'
     }

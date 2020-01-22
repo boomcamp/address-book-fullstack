@@ -99,7 +99,6 @@ export default function Navbar() {
             .then(res => {
                 setUsers(res.data);
             })
-        handleSearch("")
             .catch(e => console.log(e))
     }
 
@@ -144,8 +143,6 @@ export default function Navbar() {
             -1 ||
             name.lname.toLowerCase().indexOf(e.target.value) !== -1
         );
-        console.log(filteredSearch)
-
         return setSearchData(filteredSearch);
     }
 
@@ -172,7 +169,7 @@ export default function Navbar() {
                             </IconButton>
                         </Tooltip>
                         <Typography variant="h6" className={classes.title}>
-                            Address Book
+                            {`Welcome to your Address Book`}
                         </Typography>
                         <div className={classes.search}>
                             <div className={classes.searchIcon}>

@@ -48,8 +48,6 @@ export default function Register({ handleClose }) {
         username: "",
         password: ""
     });
-    // const [confirm, setConfirm] = React.useState('');
-    // const [validate, setValidate] = React.useState(null);
 
     const handleClickShowPassword = () => {
         setValues({ ...values, showPassword: !values.showPassword });

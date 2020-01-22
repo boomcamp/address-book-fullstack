@@ -130,6 +130,7 @@ export default function Login() {
                     help={help.user}
                     warningUpdate={warningUpdate}
                     ToastContainer={ToastContainer}
+                    data={data}
                 />
             )
         case 2:
