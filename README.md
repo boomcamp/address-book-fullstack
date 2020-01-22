@@ -129,7 +129,6 @@ related to this project. -->
 
 This project is a simple address book application that has the following feature:
 
-
 ### Login / Registration Page:
 
 - Login / Registration is the landing page of the application.
