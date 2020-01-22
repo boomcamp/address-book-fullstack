@@ -133,7 +133,6 @@ export const DialogCont = props => {
                   onChange={e => handleOnChange(title, e.target)}
                   defaultValue={rowData ? rowData.email : ""}
                   name="email"
-                  type="email"
                   label="Email"
                   fullWidth
                   variant="outlined"

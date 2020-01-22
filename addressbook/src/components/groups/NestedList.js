@@ -17,7 +17,7 @@ import { Divider } from "@material-ui/core";
 import { AddGroup } from "./AddGroup";
 import { url } from "../../url";
 import { toast } from "react-toastify";
-import { getUserData } from "../customHooks/getUserData";
+import { getUserData, fetch } from "../customHooks/getUserData";
 import Axios from "axios";
 
 const AddButton = styled.div`
@@ -63,8 +63,7 @@ export const NestedList = props => {
     setOpen(!open);
   };
 
-  const handleAddGroup = async e => {
-    e.preventDefault();
+  const handleAddGroup = async () => {
     try {
       const response = await Axios.post(
         `${url}/groups`,

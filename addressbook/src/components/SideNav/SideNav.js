@@ -10,12 +10,14 @@ import Typography from "@material-ui/core/Typography";
 import { useTheme } from "@material-ui/core/styles";
 import { useStyles, DrawerCont } from "./useStyles";
 import { NestedRoutes } from "../routes/NestedRoutes";
+import { useWindowSize } from "../customHooks/useWindowSize";
 
 export const SideNav = props => {
   const { container } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [windowWidth] = useWindowSize();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);

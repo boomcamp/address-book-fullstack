@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import MaterialTable from "material-table";
-import { columnData, columnDataMobile, action2, action1 } from "../data/data";
+import {
+  columnData,
+  columnDataMobile,
+  action2,
+  action1,
+  columnData1080
+} from "../data/data";
 import { DialogCont, DeleteDialog, Group } from "./Dialog";
 import Axios from "axios";
 import { url } from "../../url";
@@ -63,7 +69,7 @@ export const Contacts = props => {
   const [groupName, setGroupName] = useState("Contacts");
   const [selectedGroup, setSelectedGroup] = useState();
   const [search, setSearch] = useState("");
-
+  const [edit, setEdit] = useState(false);
   const addContact = async () => {
     try {
       const response = await Axios.post(
@@ -165,6 +171,7 @@ export const Contacts = props => {
       console.error(err);
     }
   };
+
   React.useEffect(() => {
     if (group === null) {
       getUserData(user, sort).then(user => setUserData(user));
@@ -208,9 +215,52 @@ export const Contacts = props => {
         <MaterialTable
           style={{ width: "100%" }}
           fullWidth
-          title={groupName}
+          title={
+            edit && groupName !== "Contacts" ? (
+              <form
+                onSubmit={async e => {
+                  e.preventDefault();
+                  const response = await Axios.patch(
+                    `${url}/groups/${group}`,
+                    { group_name: groupName },
+                    {
+                      headers: { Authorization: `Bearer ${user.token}` }
+                    }
+                  );
+                  toast.info(response.data.message, {
+                    position: toast.POSITION.TOP_CENTER
+                  });
+                  getUserData(user, sort).then(user => setUserData(user));
+                  setEdit(false);
+                }}
+              >
+                <TextField
+                  autoFocus
+                  onBlur={() => setEdit(false)}
+                  onChange={e => setGroupName(e.target.value)}
+                  value={groupName}
+                />
+                <button type="submit" style={{ visibility: "hidden" }}></button>
+              </form>
+            ) : (
+              <Span
+                onClick={() => {
+                  if (groupName === "Contacts") {
+                    return setEdit(false);
+                  }
+                  setEdit(true);
+                }}
+              >
+                {groupName}
+              </Span>
+            )
+          }
           columns={
-            windowWidth >= 700 ? columnData(user) : columnDataMobile(user)
+            windowWidth > 1080
+              ? columnData(user)
+              : windowWidth > 800
+              ? columnData1080(user)
+              : columnDataMobile(user)
           }
           data={
             userData
@@ -321,4 +371,10 @@ const Div = styled.div`
   display: flex;
   flex-direction: row-reverse;
   padding: 0 10px 15px 10px;
+`;
+const Span = styled.span`
+  font-size: 20px;
+  font-weight: bold;
+  color: #54749d;
+  font-style: italic;
 `;

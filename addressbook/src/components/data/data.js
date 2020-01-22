@@ -52,6 +52,32 @@ export const columnData = user => [
       )
   }
 ];
+export const columnData1080 = user => [
+  {
+    title: "Name",
+    render: rowData => (
+      <Span>{rowData.first_name + " " + rowData.last_name}</Span>
+    )
+  },
+  {
+    title: "Mobile Phone",
+    field: "mobile_phone"
+  },
+  {
+    title: "Group",
+    field: "group_id",
+    render: rowData =>
+      rowData.group_id ? (
+        <GroupSpan>
+          <GroupName group_id={rowData.group_id} user={user} />
+        </GroupSpan>
+      ) : (
+        <None>
+          <GroupName group_id={rowData.group_id} user={user} />
+        </None>
+      )
+  }
+];
 export const columnDataMobile = user => [
   {
     title: "Name",

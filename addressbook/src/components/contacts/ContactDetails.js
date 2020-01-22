@@ -10,7 +10,7 @@ const Div = styled.div`
   justify-content: space-between;
   padding: 10px 30px 30px 30px;
   width: 100%;
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 750px) {
     flex-direction: column;
     padding: 10px;
     width: 100%;
@@ -34,7 +34,10 @@ const Row = styled.div`
   flex-direction: column;
   width: 33%;
   justify-content: space-around;
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 1080px) {
+    width: 49%;
+  }
+  @media screen and (max-width: 750px) {
     width: 100%;
   }
 `;
