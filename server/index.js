@@ -41,9 +41,11 @@ massive({
   app.patch("/update-contact/:id", contact.editContact);
   app.delete("/delete-contact/:id", contact.deleteContact);
 
-  app.post("/create-group", group.addgroup);
+  app.post("/create-group", auth, group.addgroup);
   app.get("/group-list/:id", group.groupList);
-  app.patch("/add-to-group/:id", group.addToGroup);
+  app.patch("/add-to-group/:id", auth, group.addToGroup);
+  app.patch("/edit-group/:id", auth, group.editGroup);
+  app.delete("/delete-group/:id", auth, group.deleteGroup);
 
   const PORT = 4005;
   app.listen(PORT, () => {

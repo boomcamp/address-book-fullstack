@@ -1,5 +1,13 @@
 import React from "react";
-import { MDBNavbar, MDBNavbarBrand, MDBCol } from "mdbreact";
+import {
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBCol,
+  MDBDropdown,
+  MDBDropdownToggle,
+  MDBDropdownMenu,
+  MDBDropdownItem
+} from "mdbreact";
 import MaterialTable from "material-table";
 import { Tooltip } from "@material-ui/core";
 import Zoom from "@material-ui/core/Zoom";
@@ -28,6 +36,7 @@ import Edit from "../Edit/Edit";
 import Delete from "../Delete/Delete";
 import Group from "../Group/Group";
 import SideDrawer from "../SideDrawer/SideDrawer";
+import ContactDetail from "../ContactDetail/ContactDetail";
 
 export default class User extends React.Component {
   constructor() {
@@ -39,7 +48,12 @@ export default class User extends React.Component {
           field: "last_name",
           render: rowData => (
             <React.Fragment>
-              <AccountBoxIcon style={{ fontSize: 40 }} />
+              <Tooltip title="View full detail">
+                <AccountBoxIcon
+                  style={{ fontSize: 40 }}
+                  onClick={() => this.handleDetailOpen(rowData)}
+                />
+              </Tooltip>
               <span>
                 {rowData.first_name} {rowData.last_name}
               </span>
@@ -53,9 +67,25 @@ export default class User extends React.Component {
           field: "",
           render: rowData => (
             <React.Fragment>
-              <Tooltip TransitionComponent={Zoom} title="Add to Group">
-                <AddBoxIcon />
-              </Tooltip>
+              <MDBDropdown>
+                <MDBDropdownToggle nav>
+                  <Tooltip title="Add to group">
+                    <AddBoxIcon></AddBoxIcon>
+                  </Tooltip>
+                </MDBDropdownToggle>
+                <MDBDropdownMenu className="dropdown-default">
+                  {this.state.groupData
+                    ? this.state.groupData.map(x => (
+                        <MDBDropdownItem
+                          key={x.group_id}
+                          onClick={() => this.selectGroup(x)}
+                        >
+                          {x.group_name}
+                        </MDBDropdownItem>
+                      ))
+                    : ""}
+                </MDBDropdownMenu>
+              </MDBDropdown>
             </React.Fragment>
           )
         },
@@ -86,6 +116,7 @@ export default class User extends React.Component {
       rowValue: {},
       toggleG: false,
       left: false,
+      detail: false,
       sort: "asc"
     };
   }
@@ -174,7 +205,7 @@ export default class User extends React.Component {
       });
   };
 
-  addGroup = () => {
+  createGroup = () => {
     const inputs = {
       user_id: localStorage.getItem("userId"),
       group_name: this.state.group_name
@@ -182,7 +213,7 @@ export default class User extends React.Component {
     axios
       .post("http://localhost:4005/create-group", inputs)
       .then(() => {
-        message.success("Group contact successfully created");
+        message.success("Group successfully created");
         this.fetchData(this.state.sort);
       })
       .catch(err => {
@@ -226,7 +257,6 @@ export default class User extends React.Component {
       country: rowValue.country
     });
     this.setState({ rowData: rowValue, toggleEdit: true });
-    console.log(rowValue);
   };
 
   handleCloseEdit = () => {
@@ -257,6 +287,23 @@ export default class User extends React.Component {
     this.setState({ left: false });
   };
 
+  handleDetailOpen = value => {
+    this.setState({ rowData: value, detail: true });
+  };
+
+  handleDetailClose = () => {
+    this.setState({ detail: false });
+  };
+
+  selectGroup = sel => {
+    this.setState({ sel: this.state.groupData });
+    axios
+      .patch(`http://localhost:4005/add-to-group/${sel.group_id}`)
+      .then(response => {
+        console.log(response.data);
+      });
+  };
+
   render() {
     const { myhandleLogout } = this.props;
     return (
@@ -271,59 +318,57 @@ export default class User extends React.Component {
             <strong className="white-text">Address Book</strong>
           </MDBNavbarBrand>
         </MDBNavbar>
-
-        <span>
-          <TableSize>
-            <Right>
-              <MDBCol sm="3">
-                <select
-                  name="sort"
-                  className="browser-default custom-select"
-                  onChange={this.handleSort}
-                >
-                  <option value="asc">Sort by</option>
-                  <option value="asc">Ascending</option>
-                  <option value="desc">Descending</option>
-                </select>
-              </MDBCol>
-            </Right>
-            <BtnCont>
-              <ButtonGroup
-                size="large"
-                color="primary"
-                aria-label="large button group"
+        <TableSize>
+          <Right>
+            <MDBCol sm="3">
+              <select
+                name="sort"
+                className="browser-default custom-select"
+                onChange={this.handleSort}
               >
-                <Tooltip title="Create a Group">
-                  <Button onClick={this.handleOpenGroup}>
-                    <Add />
-                  </Button>
-                </Tooltip>
+                <option value="asc">Sort by</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </MDBCol>
+          </Right>
+          <BtnCont>
+            <ButtonGroup
+              size="large"
+              color="primary"
+              aria-label="large button group"
+            >
+              <Tooltip title="Create a Group">
+                <Button onClick={this.handleOpenGroup}>
+                  <Add />
+                </Button>
+              </Tooltip>
 
-                <Tooltip title="Add Contact">
-                  <Button onClick={this.handleOpenAdd}>
-                    <AddIcon />
-                  </Button>
-                </Tooltip>
-              </ButtonGroup>
-            </BtnCont>
-            <MaterialTable
-              title={
-                <TitleCont>
-                  <H4>All Contact</H4>
-                </TitleCont>
-              }
-              columns={this.state.columns}
-              data={this.state.contactData}
-              options={{
-                pageSize: 10,
-                sorting: false,
-                pageSizeOptions: [10, 15, 20],
-                actionsColumnIndex: -1,
-                selection: false
-              }}
-            />
-          </TableSize>
-        </span>
+              <Tooltip title="Add Contact">
+                <Button onClick={this.handleOpenAdd}>
+                  <AddIcon />
+                </Button>
+              </Tooltip>
+            </ButtonGroup>
+          </BtnCont>
+          <MaterialTable
+            title={
+              <TitleCont>
+                <H4>All Contact</H4>
+              </TitleCont>
+            }
+            columns={this.state.columns}
+            data={this.state.contactData}
+            options={{
+              pageSize: 10,
+              sorting: false,
+              pageSizeOptions: [10, 15, 20],
+              actionsColumnIndex: -1,
+              selection: false,
+              paginationType: "stepped"
+            }}
+          />
+        </TableSize>
         <Modal
           handleOpenAdd={this.state.toggleAdd}
           handleCloseAdd={this.handleCloseAdd}
@@ -345,7 +390,7 @@ export default class User extends React.Component {
         />
         <Group
           handleChange={this.handleChange}
-          addGroup={this.addGroup}
+          createGroup={this.createGroup}
           handleOpenGroup={this.state.toggleG}
           handleCloseGroup={this.handleCloseGroup}
         />
@@ -354,6 +399,11 @@ export default class User extends React.Component {
           handleOpenSide={this.state.left}
           myhandleLogout={myhandleLogout}
           groupData={this.state.groupData}
+        />
+        <ContactDetail
+          handleDetailOpen={this.state.detail}
+          handleDetailClose={this.handleDetailClose}
+          rowValue={this.state.rowData}
         />
       </div>
     );

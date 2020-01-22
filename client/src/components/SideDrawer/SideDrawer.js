@@ -23,20 +23,19 @@ export default class Select extends React.Component {
       groupData
     } = this.props;
     return (
-      <div>
+      <React.Fragment>
         <Drawer open={handleOpenSide} onClose={handleCloseSide}>
           <List>
             <List>
-              <ListItemText>Group List</ListItemText>
+              <ListItemText>
+                <GroupIcon />
+                Group List
+              </ListItemText>
             </List>
             <List>
               {groupData
                 ? groupData.map(val => (
-                    <ListItem
-                      button
-                      onClick={() => console.log("hey")}
-                      key={val.group_id}
-                    >
+                    <ListItem button key={val.group_id}>
                       <ListItemIcon>
                         <GroupIcon />
                       </ListItemIcon>
@@ -56,7 +55,7 @@ export default class Select extends React.Component {
             </List>
           </List>
         </Drawer>
-      </div>
+      </React.Fragment>
     );
   }
 }

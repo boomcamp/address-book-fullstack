@@ -62,5 +62,5 @@ export const Right = styled.div`
 
 export const List = styled.div({
   paddingLeft: "15px",
-  width: "250px"
+  width: "200px"
 });
