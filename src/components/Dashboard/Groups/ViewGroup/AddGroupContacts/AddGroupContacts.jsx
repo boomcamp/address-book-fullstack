@@ -69,7 +69,7 @@ function AddGroupContacts({data, fetchGroupMembers}) {
       axios({
         method: 'POST',
         url: `http://localhost:3002/api/group/${data.groupID}/add`,
-        data: {groupMembers: setMembers}
+        data: {groupMembers: members}
       })
       .then(response => {
         toast.success("Success! Members added.", {
@@ -81,6 +81,7 @@ function AddGroupContacts({data, fetchGroupMembers}) {
           draggable: true
         });
         setMembers([]);
+        fetchContactsFn();
         fetchGroupMembers();
         setOpen(false);
       })

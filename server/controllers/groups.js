@@ -74,18 +74,19 @@ module.exports = {
     const { groupMembers } = req.body;
     const { id } = req.params;
     let newContact = [];
-    console.log(req.body)
 
-    // if(groupMembers.length !== 0){
-    //   for(let index in groupMembers){
-    //     db.query(`INSERT INTO groups_members("groupID", "abID") VALUES (${id}, ${groupMembers[index]})`)
-    //     // db.groups_members.insert({ groupID: id, abID: groupMembers[index]})
-    //     // .then(contact => newContact.push(contact))
-    //     if(index+1 === groupMembers.length){
-    //       res.status(201).send(newContact);
-    //     }
-    //   }
-    // }
+    if(groupMembers.length !== 0){
+      for(let index in groupMembers){
+        // db.query(`INSERT INTO groups_members("groupID", "abID") VALUES (${id}, ${groupMembers[index]})`)
+        // newContact.push(groupMembers[index]);
+        db.groups_members.insert({ groupID: id, abID: groupMembers[index]})
+        .then(contact => newContact.push(contact))
+        console.log(index+1)
+        if(groupMembers.length === Number(index)+1){
+          res.status(201).send(newContact);
+        }
+      }
+    }
   },
   deleteMember: (req, res) => {
     const db = req.app.get("db");

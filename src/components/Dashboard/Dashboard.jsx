@@ -108,7 +108,7 @@ function Dashboard() {
     ( sortDirection === 'desc') ? setSortDirection('asc') : setSortDirection('desc');
   }
 
-  const [defaultDisplay, setDefaultDisplay] = useState(false);
+  const [defaultDisplay, setDefaultDisplay] = useState(true);
 
   const displayContacts = () => {
     setDefaultDisplay(true);
