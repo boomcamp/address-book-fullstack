@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBCard, MDBCardBody, MDBIcon } from 'mdbreact';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 export default class register extends Component {
     constructor() {
@@ -41,12 +41,22 @@ export default class register extends Component {
                 }else{
                     if (this.state.password === this.state.confirmpassword) {
                         Axios.post(`http://localhost:4001/addressbook/register`, { "username": this.state.username, "email": this.state.email, "password": this.state.password })
-                            .then(result => {
-                                localStorage.setItem("token", result.data.token);
-                                localStorage.clear();
-                                this.props.history.push('/')
-                                this.notify();
-                            })
+                            // .then(result => {
+                            //     localStorage.setItem("token", result.data.token);
+                            //     localStorage.clear();
+                            //     this.props.history.push('/')
+                            //     this.notify();
+                            // })
+                            .then(res => {
+                                if (res.data.message === undefined) {
+                                    localStorage.setItem("token", res.data.token);
+                                    localStorage.clear();
+                                    this.props.history.push('/')
+                                    this.notify();
+                                } else {
+                                  this.UsernameTAken(res.data.message);
+                                }
+                              })
                             .catch(err => {
                                 console.error(err)
                             })
@@ -72,10 +82,12 @@ export default class register extends Component {
             passwordgreater5: true
         });
     };
+    UsernameTAken = (data) => toast.error(data)
     notify = () => toast.success("Registration Success");
     render() {
         return (
             <MDBContainer>
+                <ToastContainer />
                 <MDBRow>
                     <MDBCol md="12">
                         <br /><br /><br /><br />
