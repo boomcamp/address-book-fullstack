@@ -40,11 +40,10 @@ export class addmember extends Component {
                 <MDBBtn onClick={this.toggle} color="primary" className="rounded"><MDBIcon icon="plus" /></MDBBtn>
                 <MDBModal isOpen={this.state.modal} toggle={this.toggle}>
                     <MDBModalHeader toggle={this.toggle}>Add Members</MDBModalHeader>
-                    <MDBModalBody className="MaxHieght" style={{ minHeight: "300px", maxHeight: "300px" }}>
+                    <MDBModalBody>
                         <MDBTable>
                             <MDBTableHead>
                                 <tr>
-                                    <th>Id</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Action</th>
@@ -54,7 +53,6 @@ export class addmember extends Component {
                                 {this.state.MembertoAdd.map(res => (
                                     res.userId === parseInt(userId) ?
                                         <tr key={res.id}>
-                                            <td>{res.id}</td>
                                             <td>{res.first_name}</td>
                                             <td>{res.last_name}</td>
                                             <td><button onClick={() => this.onAdd({ "GroupId": this.props.groupId, "contactId": res.id, "first_name": res.first_name, "last_name": res.last_name, "mobile_number": res.mobile_phone })}>Add</button></td>

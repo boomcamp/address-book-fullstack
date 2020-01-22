@@ -17,7 +17,7 @@ export class ViewContact extends Component {
         postal_code: "",
         country: "",
         inputDisabled: true,
-        edit: false
+        edit: false,
     }
     toggle = () => {
         this.props.ViewData.map(res => {
@@ -41,29 +41,33 @@ export class ViewContact extends Component {
         })
     }
     OnsaveEdit = () => {
-        Axios({
-            method: 'patch',
-            url: `http://localhost:4001/addressbook/getcontact/${this.props.id}/update`,
-            headers: { Authorization: `Bearer ${localStorage.token}` },
-            data: {
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                home_phone: this.state.home_phone,
-                mobile_phone: this.state.mobile_phone,
-                work_phone: this.state.work_phone,
-                email: this.state.email,
-                city: this.state.city,
-                state_or_province: this.state.state_or_province,
-                postal_code: this.state.postal_code,
-                country: this.state.country
-            }
-        }).then(res => {
-            console.log("success")
-            this.props.refreshData();
-            this.props.Editnotify()
-        }).catch(error => {
-            console.log("edit Failed")
-        })
+        if (this.state.first_name && this.state.mobile_phone !== "") {
+            Axios({
+                method: 'patch',
+                url: `http://localhost:4001/addressbook/getcontact/${this.props.id}/update`,
+                headers: { Authorization: `Bearer ${localStorage.token}` },
+                data: {
+                    first_name: this.state.first_name,
+                    last_name: this.state.last_name,
+                    home_phone: this.state.home_phone,
+                    mobile_phone: this.state.mobile_phone,
+                    work_phone: this.state.work_phone,
+                    email: this.state.email,
+                    city: this.state.city,
+                    state_or_province: this.state.state_or_province,
+                    postal_code: this.state.postal_code,
+                    country: this.state.country
+                }
+            }).then(res => {
+                this.props.refreshData();
+                this.props.Editnotify()
+                this.inputDisabled();
+            }).catch(error => {
+                console.log("edit Failed")
+            })
+        }else{
+            this.props.ErrorNotify()
+        }
     }
     inputDisabled = () => {
         this.setState({
@@ -78,14 +82,14 @@ export class ViewContact extends Component {
             <React.Fragment>
                 <MDBBtn onClick={this.toggle} className="rounded" color="primary"><MDBIcon icon="eye" /> View</MDBBtn>
                 <MDBModal isOpen={this.state.modal} toggle={this.toggle} size="lg">
-                    <MDBModalHeader toggle={this.toggle}>Contact info</MDBModalHeader>
+                    <MDBModalHeader toggle={this.toggle}><MDBIcon icon="info-circle" size="1x" /> <b>Contact info</b></MDBModalHeader>
                     <MDBModalBody className="text-left">
                         <MDBRow>
                             <MDBCol sm="6">
                                 <label>First Name</label>
-                                <input type="text" className="form-control" value={this.state.first_name} name="first_name" onChange={(e) => this.setState({
+                                <input type="text" value={this.state.first_name} name="first_name" onChange={(e) => this.setState({
                                     first_name: e.target.value
-                                })} disabled={this.state.inputDisabled} />
+                                })} disabled={this.state.inputDisabled} className={this.state.first_name !== "" ? "form-control" : "form-control is-invalid"}/>
                                 <label>Last Name</label>
                                 <input type="text" className="form-control" value={this.state.last_name} name="last_name" onChange={(e) => this.setState({
                                     last_name: e.target.value
@@ -95,9 +99,9 @@ export class ViewContact extends Component {
                                     home_phone: e.target.value
                                 })} disabled={this.state.inputDisabled} />
                                 <label>Mobile Phone</label>
-                                <input type="text" className="form-control" value={this.state.mobile_phone} name="mobile_phone" onChange={(e) => this.setState({
+                                <input type="text" value={this.state.mobile_phone} name="mobile_phone" onChange={(e) => this.setState({
                                     mobile_phone: e.target.value
-                                })} disabled={this.state.inputDisabled} />
+                                })} disabled={this.state.inputDisabled} className={this.state.mobile_phone !== "" ? "form-control" : "form-control is-invalid"}/>
                                 <label>Work Phone</label>
                                 <input type="text" className="form-control" value={this.state.work_phone} name="work_phone" onChange={(e) => this.setState({
                                     work_phone: e.target.value
@@ -131,12 +135,11 @@ export class ViewContact extends Component {
                         <MDBBtn color="danger" onClick={this.toggle}>Close</MDBBtn>
                         <MDBBtn color="primary" onClick={this.inputDisabled} hidden={this.state.edit}>Edit</MDBBtn>
                         <MDBBtn color="danger" onClick={this.inputDisabled} hidden={this.state.inputDisabled}>Cancel Edit</MDBBtn>
-                        <MDBBtn color="primary" onClick={this.OnsaveEdit && this.inputDisabled} hidden={this.state.inputDisabled}>Save changes</MDBBtn>
+                        <MDBBtn color="primary" onClick={this.OnsaveEdit} hidden={this.state.inputDisabled}>Save changes</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
             </React.Fragment>
         )
     }
 }
-
 export default ViewContact

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MDBIcon, MDBContainer, MDBBtn, MDBBtnGroup } from 'mdbreact';
+import { MDBIcon, MDBContainer, MDBBtn } from 'mdbreact';
 
 export class Sort extends Component {
     sortASC = () => {
@@ -11,10 +11,8 @@ export class Sort extends Component {
     render() {
         return (
             <MDBContainer>
-                <MDBBtnGroup>
-                    <MDBBtn color="primary" onClick={this.sortASC}><MDBIcon icon="sort-alpha-down" size="sm" /> </MDBBtn>
-                    <MDBBtn color="primary" onClick={this.sortDESC}><MDBIcon icon="sort-alpha-down-alt" size="sm" /> </MDBBtn>
-                </MDBBtnGroup>
+                <MDBBtn color="primary"  className="width-button" onClick={this.sortASC}><MDBIcon icon="sort-alpha-down" size="sm" /> <b className="d-none d-xl-block">ASC</b></MDBBtn>
+                <MDBBtn color="primary"  className="width-button" onClick={this.sortDESC}><MDBIcon icon="sort-alpha-down-alt" size="sm" /> <b className="d-none d-xl-block">DESC</b></MDBBtn>
             </MDBContainer>
         )
     }

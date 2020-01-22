@@ -143,6 +143,7 @@ export default class accessbook extends Component {
     newgroupcreated = () => toast.success("New Group Created");
     deleteNotify = () => toast.error("Contact Deleted");
     Editnotify = () => toast.success("Edit Saved")
+    ErrorNotify = () => toast.error("Fill Required Field")
     render() {
         return (
             <React.Fragment>
@@ -154,7 +155,7 @@ export default class accessbook extends Component {
                             <UserAction sortASC={this.sortASC} sortDESC={this.sortDESC} first_nameisRequired={this.state.first_nameisRequired} mobile_phoneisRequired={this.state.mobile_phoneisRequired} getSearchedValue={this.onSearch} notify={this.newgroupcreated} Toastify={this.notify} handlelogout={this.onLogout} handleAddcontact={this.setContactVAlue} onSave={this.onSaveContact} toggle={this.toggle} modal={this.state.modal} Refreshed={this.getData} ChangView={this.onChangeViewMode} ViewGroup={this.state.ViewGroup} ViewContact={this.state.ViewContact} />
                         </MDBCol>
                         <MDBCol lg="10" hidden={this.state.ContactList}>
-                            <ContactList data={this.state.data} Editnotify={this.Editnotify} searched={this.state.Searched} searchInput={this.state.searchInput} Refreshed={this.getData} deleteNotify={this.deleteNotify} />
+                            <ContactList ErrorNotify={this.ErrorNotify} data={this.state.data} Editnotify={this.Editnotify} searched={this.state.Searched} searchInput={this.state.searchInput} Refreshed={this.getData} deleteNotify={this.deleteNotify} />
                         </MDBCol>
                         <MDBCol lg="10" hidden={this.state.GroupList}>
                             <GroupList getData={this.getData} MembertoAdd={this.state.MembertoAdd} groupMember={this.state.groupMember} group={this.state.group} data={this.state.data} />

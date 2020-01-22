@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalFooter } from 'mdbreact';
+import { MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalFooter, MDBIcon } from 'mdbreact';
 export default class Logout extends Component {
     constructor() {
         super();
@@ -19,7 +19,7 @@ export default class Logout extends Component {
         return (
             <div>
                 <MDBContainer>
-                    <MDBBtn onClick={this.toggle} className="width-button" color="primary">Sign Out</MDBBtn>
+                    <MDBBtn onClick={this.toggle} className="width-button" color="primary"><MDBIcon icon="sign-out-alt" /> <b className="d-none d-xl-block">Sign Out</b></MDBBtn>
                     <MDBModal isOpen={this.state.modal} toggle={this.toggle}>
                         <MDBModalBody>
                             <MDBModalBody >

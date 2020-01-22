@@ -75,13 +75,21 @@ function updateContact(req, res) {
 function deleteContact(req, res) {
     const db = req.app.get("db");
     db.query(
-        `DELETE FROM contact where id=${req.params.id}`
-    ).then(del => res.status(201).send(del))
+        `DELETE FROM members WHERE "contactId" IN (SELECT id FROM contact where id=${req.params.id});`
+    ).then(del => {
+        db.query(`DELETE FROM contact WHERE id=${req.params.id}`)
+        .then(dele => res.status(201).json(dele))
+        .catch(err => {
+            console.log(err);
+            res.status(500).end();
+        })
+    })
         .catch(err => {
             console.log(err)
             res.status(500).end();
         })
 }
+
 
 module.exports = {
     createContact,

@@ -50,7 +50,7 @@ export default class login extends Component {
         return (
             <MDBContainer>
                 <ToastContainer />
-                <MDBRow>
+                <MDBRow className="mt-5">
                     <MDBCol md="12">
                         <br /><br /><br /><br />
                     </MDBCol>

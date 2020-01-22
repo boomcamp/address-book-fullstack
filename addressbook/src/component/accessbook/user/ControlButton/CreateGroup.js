@@ -37,7 +37,7 @@ export default class CreateGroup extends Component {
         return (
             <div>
                 <MDBContainer>
-                    <MDBBtn onClick={this.toggle} className="width-button" color="primary">Create Group</MDBBtn>
+                    <MDBBtn onClick={this.toggle} className="width-button" color="primary"><MDBIcon icon="users" /> <b className="d-none d-xl-block">Create Group</b></MDBBtn>
                     <MDBModal isOpen={this.state.modal} toggle={this.toggle}>
                         <MDBModalBody>
                             <form>

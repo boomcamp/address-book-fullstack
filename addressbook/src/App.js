@@ -5,12 +5,12 @@ import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import Login from './component/user/login';
 import Register from './component/user/register';
-import Nav from './component/navigation';
-import AccessBook from './component/accessbook/accessbook'  
+import AccessBook from './component/accessbook/accessbook'
+import Nav from '../src/component/navigation';  
 function App() {
   return (
     <HashRouter>
-      <div>
+      <div> 
         <Nav />
         <Switch>
           <Route exact path="/" component={Login} />

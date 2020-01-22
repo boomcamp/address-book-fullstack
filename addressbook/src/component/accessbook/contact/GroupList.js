@@ -13,11 +13,11 @@ export default class GroupList extends Component {
             <React.Fragment>
                 <MDBRow>
                     <MDBCol sm="12" >
-                        <div className="header z-depth-2 rounded border border-info"><h3 className="blue-text pr-3"> <MDBIcon icon="address-book" /> GROUPS</h3></div>
+                        <div className="header z-depth-2 rounded border border-info"><h3 className="blue-text pr-3"> <MDBIcon icon="address-book" /> <b>GROUPS</b></h3></div>
                     </MDBCol>
                     <br /><br />
                     <MDBCol sm="12">
-                        <MDBRow className="mt-5 mx-auto">
+                        <MDBRow className="mt-1 mx-auto">
                             {this.props.group.map(res => (
                                 res.userId === id ?
                                 <MDBCol sm="3" key={res.groupId} className="mt-3 Box-Contact">

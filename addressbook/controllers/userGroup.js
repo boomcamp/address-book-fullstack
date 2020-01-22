@@ -67,24 +67,8 @@ function DeleteGroup(req, res) {
 function getContacttoAdd(req, res) {
     const db =  req.app.get("db");
     db.query(
-        `SELECT * FROM members WHERE "GroupId"=${req.params.id}`
-    ).then(result => {
-            const d = result.map(data => {
-                const datas = [];
-                for(c = 0; c <= data.contactId; c++){
-                      datas.push(data.contactId)
-                }   
-                let arr = [... new Set(datas)];
-                return arr.join('')
-            })
-            db.query(
-                `SELECT * FROM contact WHERE "id" NOT IN (${d})`
-            ).then(results => res.status(201).json(results)).catch(err => {
-                console.log(err);
-                res.status(500).end();
-            })
-    }
-    ).catch(err => {
+        `SELECT contact.* FROM contact WHERE id NOT IN (select "contactId" from members where "GroupId"=${req.params.id});`
+    ).then(result => res.status(201).json(result)).catch(err => {
         console.log(err);
         res.status(500).end();
     })

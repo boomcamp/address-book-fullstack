@@ -13,9 +13,9 @@ export default class AddContact extends Component {
     render() {
         return (
             <MDBContainer>
-                <MDBBtn onClick={this.openModal} className="width-button" color="primary">Add Contact</MDBBtn>
+                <MDBBtn onClick={this.openModal} className="width-button" color="primary"><MDBIcon icon="user-plus" /><b className="d-none d-xl-block">Add Contact</b></MDBBtn>
                 <MDBModal isOpen={this.props.modal} toggle={this.openModal} size="lg">
-                    <MDBModalHeader toggle={this.openModal}>Add Contact</MDBModalHeader>
+                    <MDBModalHeader toggle={this.openModal}><MDBIcon icon="user-plus" /> <b>Add Contact</b></MDBModalHeader>
                     <MDBModalBody>
 
                         <MDBRow>

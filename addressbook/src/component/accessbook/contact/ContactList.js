@@ -12,6 +12,9 @@ export default class ContactList extends Component {
     Editnotify = () => {
         this.props.Editnotify();
     }
+    ErrorNotify = () => {
+        this.props.ErrorNotify()
+    }
     render() {
         const id = localStorage.getItem('id');
         const userId = parseInt(id)
@@ -19,7 +22,7 @@ export default class ContactList extends Component {
             <React.Fragment>
                 <MDBRow>
                     <MDBCol sm="12" >
-                        <div className="header z-depth-2 rounded border border-info"><h3 className="blue-text pr-3"> <MDBIcon icon="address-book" /> CONTACTS</h3></div>
+                        <div className="header z-depth-2 rounded border border-info"><h3 className="blue-text pr-3"> <MDBIcon icon="address-book" /> <b>CONTACTS</b></h3></div>
                     </MDBCol>
                     <br /><br />
                     <MDBCol sm="12">
@@ -42,7 +45,7 @@ export default class ContactList extends Component {
                                                                     {res.mobile_phone}
                                                                 </MDBCardBody >
                                                                 <div className="border border-info rounded">
-                                                                    <View id={res.id} ViewData={this.props.data} refreshData={this.RefreshData} Editnotify={this.Editnotify} />
+                                                                    <View id={res.id} ErrorNotify={this.ErrorNotify} ViewData={this.props.data} refreshData={this.RefreshData} Editnotify={this.Editnotify} />
                                                                     <Delete id={res.id} refreshData={this.RefreshData} deleteNotify={this.deleteNotify} />
                                                                 </div>
 
@@ -55,25 +58,25 @@ export default class ContactList extends Component {
                                     :
                                     this.props.searched.map((contacts) => (
                                         contacts.userId === userId ?
-                                        <MDBCol sm="3" key={contacts.id} className="mt-3 Box-Contact">
-                                                    <div className="shadow-box-example z-depth-2 rounded block-example border border-info">
-                                                        <MDBRow>
+                                            <MDBCol sm="3" key={contacts.id} className="mt-3 Box-Contact">
+                                                <div className="shadow-box-example z-depth-2 rounded block-example border border-info">
+                                                    <MDBRow>
 
-                                                            <MDBCol sm="12">
+                                                        <MDBCol sm="12">
 
-                                                                <MDBCardBody className="border border-info rounded">
-                                                                    {contacts.first_name} {contacts.last_name}  <br />
-                                                                    {contacts.mobile_phone}
-                                                                </MDBCardBody >
-                                                                <div className="border border-info rounded">
-                                                                    <View id={contacts.id} ViewData={this.props.data} refreshData={this.RefreshData} Editnotify={this.Editnotify} />
-                                                                    <Delete id={contacts.id} refreshData={this.RefreshData} deleteNotify={this.deleteNotify} />
-                                                                </div>
+                                                            <MDBCardBody className="border border-info rounded">
+                                                                {contacts.first_name} {contacts.last_name}  <br />
+                                                                {contacts.mobile_phone}
+                                                            </MDBCardBody >
+                                                            <div className="border border-info rounded">
+                                                                <View id={contacts.id} ViewData={this.props.data} refreshData={this.RefreshData} Editnotify={this.Editnotify} />
+                                                                <Delete id={contacts.id} refreshData={this.RefreshData} deleteNotify={this.deleteNotify} />
+                                                            </div>
 
-                                                            </MDBCol>
-                                                        </MDBRow>
-                                                    </div>
-                                                </MDBCol>
+                                                        </MDBCol>
+                                                    </MDBRow>
+                                                </div>
+                                            </MDBCol>
                                             :
                                             null
                                     ))
