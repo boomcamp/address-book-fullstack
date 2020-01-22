@@ -11,8 +11,6 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 export default function AddressBook() {
-  var userId = "";
-  let history = useHistory();
   if (!localStorage.getItem("Token")) {
     Swal.fire({
       title: "You must login first!",
@@ -26,31 +24,37 @@ export default function AddressBook() {
   
     no-repeat`
     }).then(() => history.push("/"));
-  } else userId = jwt.decode(localStorage.getItem("Token")).userId;
-
+  }
+  const [userId, setUserId] = useState(0);
+  const [loadData, setLoadData] = React.useState(false);
+  const [loadGroupData, setLoadGroupData] = React.useState(false);
   const [data, setData] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [willEdit, setWillEdit] = useState(false);
   const [willOpenViewer, setWillOpenViewer] = useState(false);
   const [ids, setIds] = useState([]);
-  const handleClickOpen = () => {
-    setOpen(true);
-    setWillOpenViewer(false);
-  };
-  const handleClose = () => {
-    setOpen(false);
-    setWillEdit(false);
-    setIds([]);
-  };
+  const [order, setOrder] = useState("");
+  const [groupLs, setGroupLs] = useState([]);
   const [values, setValues] = useState({});
   const classes = useStyles();
+  const alphabetically = ascending => {
+    return (a, b) => {
+      if (a.lastname === b.lastname) return 0;
+      else if (a.lastname === null) return 1;
+      else if (b.lastname === null) return -1;
+      else if (ascending) return a.lastname < b.lastname ? -1 : 1;
+      else return a.lastname < b.lastname ? 1 : -1;
+    };
+  };
   useEffect(() => {
-    async function result() {
+    if (localStorage.getItem("Token"))
+      setUserId(jwt.decode(localStorage.getItem("Token")).userId);
+  }, []);
+  useEffect(() => {
+    (async function result() {
       await axios
         .get(`http://localhost:3004/contacts/${userId}`)
-        .then(res => {
-          setData(res.data);
-        })
+        .then(res => setData(res.data.sort(alphabetically(true))))
         .catch(err => {
           Swal.fire({
             icon: "error",
@@ -58,10 +62,51 @@ export default function AddressBook() {
             text: err
           });
         });
-    }
-    result();
-  }, [userId]);
-  return localStorage.getItem("Token") ? (
+    })();
+    setLoadData(false);
+  }, [loadData, userId]);
+  useEffect(() => {
+    (async function result() {
+      await axios
+        .get(`http://localhost:3004/group/${userId}`)
+        .then(res => setGroupLs(res.data))
+        .catch(err => {
+          Swal.fire({
+            icon: "error",
+            title: "Failed to Retrieve Group List",
+            text: err
+          });
+        });
+    })();
+    setLoadGroupData(false);
+  }, [loadGroupData, userId]);
+  useEffect(() => {
+    const sorted =
+      order === "desc"
+        ? data.sort(alphabetically(true))
+        : data.sort(alphabetically(false));
+    setData(sorted);
+  }, [loadData, order]);
+  let history = useHistory();
+  const handleSortAsc = () => {
+    setOrder("asc");
+    setData(data.sort(alphabetically(true)));
+  };
+  const handleSortDesc = () => {
+    setOrder("desc");
+    setData(data.sort(alphabetically(false)));
+  };
+  const handleClickOpen = () => {
+    setOpen(true);
+    setWillOpenViewer(false);
+  };
+  const handleClose = () => {
+    setValues({});
+    setOpen(false);
+    setWillEdit(false);
+    setIds([]);
+  };
+  return userId ? (
     <React.Fragment>
       <Modal
         handleClose={handleClose}
@@ -73,6 +118,8 @@ export default function AddressBook() {
         ids={ids}
         setIds={setIds}
         userId={userId}
+        setLoadData={setLoadData}
+        groupLs={groupLs}
       />
       <Container
         maxWidth="lg"
@@ -84,7 +131,12 @@ export default function AddressBook() {
           className={classes.table}
           style={{ width: willOpenViewer ? "65%" : "100%" }}
         >
-          <GroupCard userId={userId} />
+          <GroupCard
+            userId={userId}
+            groupLs={groupLs}
+            setLoadGroupData={setLoadGroupData}
+            setData={setData}
+          />
           <AddressBookTable
             handleClickOpen={handleClickOpen}
             teal={classes.teal}
@@ -94,9 +146,11 @@ export default function AddressBook() {
             setWillEdit={setWillEdit}
             setWillOpenViewer={setWillOpenViewer}
             setIds={setIds}
-            userId={userId}
             data={data}
-            setData={setData}
+            userId={userId}
+            setLoadData={setLoadData}
+            handleSortAsc={handleSortAsc}
+            handleSortDesc={handleSortDesc}
           />
         </div>
       </Container>

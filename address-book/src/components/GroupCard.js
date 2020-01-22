@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
@@ -26,8 +26,15 @@ import WorkIcon from "@material-ui/icons/Work";
 import HomeIcon from "@material-ui/icons/Home";
 import GroupIcon from "@material-ui/icons/Group";
 import PersonIcon from "@material-ui/icons/Person";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 
-export default function GroupCard({ userId }) {
+export default function GroupCard({
+  userId,
+  groupLs,
+  setData,
+  setLoadGroupData
+}) {
   const classes = useStyles();
   const [openGroupModal, setOpenGroupModal] = useState(false);
   const [editGroup, setEditGroup] = useState(false);
@@ -41,33 +48,34 @@ export default function GroupCard({ userId }) {
       icon: "HomeIcon"
     });
   };
-  const [groupLs, setGroupLs] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState({
     id: 0,
     groupname: "",
     icon: "HomeIcon"
   });
   let history = useHistory();
-  // useEffect(() => {
-  //   async function result() {
-  //     await axios
-  //       .get(`http://localhost:3004/group/${userId}`)
-  //       .then(res => setGroupLs(res.data))
-  //       .catch(err => {
-  //         Swal.fire({
-  //           icon: "error",
-  //           title: "Failed to Retrieve Group List",
-  //           text: err
-  //         });
-  //       });
-  //   }
-  //   result();
-  // }, [userId, groupLs]);
-
   const handleEditGroup = groupData => {
     setSelectedGroup(groupData);
     setEditGroup(true);
     handleClickOpenGroup();
+  };
+  const handleViewGroup = groupData => {
+    axios
+      .get(
+        `http://localhost:3004/${
+          Object.entries(groupData).length !== 0
+            ? `groupmembers/${groupData.id}`
+            : `contacts/${userId}`
+        }`
+      )
+      .then(res => setData(res.data))
+      .catch(err => {
+        Swal.fire({
+          icon: "error",
+          title: "Failed to Retrieve Group Members",
+          text: err
+        });
+      });
   };
   const handleDeleteGroup = groupData => {
     Swal.fire({
@@ -83,6 +91,7 @@ export default function GroupCard({ userId }) {
         axios
           .delete(`http://localhost:3004/group/${groupData.id}`)
           .then(() => {
+            setLoadGroupData(true);
             Swal.fire({
               title: "Group Successfully Deleted",
               icon: "success"
@@ -120,6 +129,7 @@ export default function GroupCard({ userId }) {
         userId={userId}
         setSelectedGroup={setSelectedGroup}
         selectedGroup={selectedGroup}
+        setLoadGroupData={setLoadGroupData}
       />
       <Card className={classes.card}>
         <Grid container spacing={0} className={classes.cont}>
@@ -142,6 +152,21 @@ export default function GroupCard({ userId }) {
                 }
                 className={classes.root}
               >
+                <ListItem button>
+                  <ListItemIcon>
+                    <WhatsAppIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="View All" />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="view"
+                      onClick={() => handleViewGroup({})}
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
                 {groupLs
                   ? groupLs.map((data, key) => {
                       return (
@@ -149,6 +174,13 @@ export default function GroupCard({ userId }) {
                           <ListItemIcon>{switchIcon(data.icon)}</ListItemIcon>
                           <ListItemText primary={data.groupname} />
                           <ListItemSecondaryAction>
+                            <IconButton
+                              edge="end"
+                              aria-label="view"
+                              onClick={() => handleViewGroup(data)}
+                            >
+                              <VisibilityIcon />
+                            </IconButton>
                             <IconButton
                               edge="end"
                               aria-label="edit"
@@ -191,16 +223,21 @@ const useStyles = makeStyles(theme => ({
     marginTop: "5%!important",
     display: "flex",
     marginBottom: "2.5%!important",
-    height: "300px!important",
+    height: "300px",
+    maxHeight: "300px",
     width: "100%!important",
     padding: "0!important"
+  },
+  one: {
+    height: "100%!important"
   },
   "@media (max-width: 992px)": {
     one: {
       height: "50%!important"
     },
     card: {
-      height: "100%!important"
+      height: "100%!important",
+      maxHeight: "fit-content!important"
     }
   },
   cont: {
@@ -209,7 +246,8 @@ const useStyles = makeStyles(theme => ({
   content: {
     width: "100%!important",
     padding: "0!important",
-    overflowY: "auto"
+    overflowY: "auto",
+    height: "100%!important"
   },
   cover: {
     width: "100%!important",

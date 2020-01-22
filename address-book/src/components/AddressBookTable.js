@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import MaterialTable from "material-table";
-import { Button, Avatar } from "@material-ui/core";
+import React from "react";
+import MaterialTable, { MTableToolbar } from "material-table";
+import { Button, Avatar, Typography, Chip } from "@material-ui/core";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
@@ -15,8 +15,10 @@ export default function AddressBookTable({
   setWillOpenViewer,
   setIds,
   userId,
-  setData,
-  data
+  data,
+  setLoadData,
+  handleSortAsc,
+  handleSortDesc
 }) {
   let history = useHistory();
   const handleClickDetails = id => {
@@ -39,9 +41,9 @@ export default function AddressBookTable({
     axios
       .get(`http://localhost:3004/contacts/${userId}/${id}`)
       .then(res => {
-        axios.get(`http://localhost:3004/groupmember/${id}`).then(res => {
-          setIds(res.data);
-        });
+        axios
+          .get(`http://localhost:3004/groupmember/${id}`)
+          .then(res => setIds(res.data));
         setValues(res.data[0]);
         handleClickOpen();
       })
@@ -71,6 +73,9 @@ export default function AddressBookTable({
             axios.delete(`http://localhost:3004/groupmember/${rowData.id}`)
           ])
           .then(() => {
+            setValues({});
+            setLoadData(true);
+            setWillEdit(false);
             Swal.fire({
               title: "Contact Successfully Deleted",
               icon: "success"
@@ -90,6 +95,34 @@ export default function AddressBookTable({
   return (
     <MaterialTable
       title="Users Data"
+      components={{
+        Toolbar: props => (
+          <div>
+            <MTableToolbar {...props} />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                marginLeft: "2%"
+              }}
+            >
+              <Typography style={{ paddingTop: "0.3%", marginRight: 5 }}>
+                Sort Lastname by:
+              </Typography>
+              <Chip
+                label="ASC"
+                onClick={() => handleSortAsc()}
+                style={{ marginRight: 5 }}
+              />
+              <Chip
+                label="DESC"
+                onClick={() => handleSortDesc()}
+                style={{ marginRight: 5 }}
+              />
+            </div>
+          </div>
+        )
+      }}
       columns={[
         {
           title: "",
@@ -109,54 +142,48 @@ export default function AddressBookTable({
           )
         },
         {
-          title: "First Name",
+          title: "Name",
+          headerStyle: {
+            fontWeight: "bold"
+          },
+          render: rowData =>
+            rowData.firstname +
+            " " +
+            (rowData.lastname ? rowData.lastname : ""),
+          customFilterAndSearch: (term, rowData) =>
+            (
+              rowData.firstname +
+              " " +
+              (rowData.lastname ? rowData.lastname : "")
+            )
+              .toLowerCase()
+              .indexOf(term.toLowerCase()) !== -1,
+          sorting: false
+        },
+        {
+          title: "Home Phone No",
           headerStyle: {
             fontWeight: "bold"
           },
           sorting: false,
-          field: "firstname"
+          field: "home_phone"
         },
         {
-          title: "Last Name",
+          title: "Mobile Phone No",
           headerStyle: {
             fontWeight: "bold"
           },
-          field: "lastname"
+          sorting: false,
+          field: "mobile_phone"
         },
-        // {
-        //   title: "Home Phone Number",
-        //   headerStyle: {
-        //     fontWeight: "bold"
-        //   },
-        //   sorting: false,
-        //   field: "home_phone"
-        // },
-        // {
-        //   title: "Mobile Phone Number",
-        //   headerStyle: {
-        //     fontWeight: "bold"
-        //   },
-        //   sorting: false,
-        //   field: "mobile_phone"
-        // },
-        // {
-        //   title: "Work Phone Number",
-        //   headerStyle: {
-        //     fontWeight: "bold"
-        //   },
-        //   sorting: false,
-        //   field: "work_phone"
-        // },
-        // {
-        //   title: "",
-        //   field: "",
-        //   lookup: {
-        //     true: "Active",
-        //     false: "Inactive"
-        //   },
-        //   // render: rowData => rowData,
-        //   filtering: true
-        // },
+        {
+          title: "Work Phone No",
+          headerStyle: {
+            fontWeight: "bold"
+          },
+          sorting: false,
+          field: "work_phone"
+        },
         {
           title: "Actions",
           headerStyle: {
@@ -199,69 +226,11 @@ export default function AddressBookTable({
           icon: "add",
           tooltip: "Add User",
           isFreeAction: true,
-          onClick: event => {
+          onClick: () => {
             handleClickOpen();
           }
         }
       ]}
-      // editable={{
-      //   onRowUpdate: (newData, oldData) =>
-      //     new Promise(resolve => {
-      //       setTimeout(() => {
-      //         resolve();
-      //         if (oldData) {
-      //           setState(prevState => {
-      //             const data = [...prevState.data];
-      //             data[data.indexOf(oldData)] = newData;
-      //             return { ...prevState, data };
-      //           });
-      //         }
-      //       }, 400);
-      //       axios
-      //         .patch(
-      //           `http://localhost:3000/users/${newData.id}`,
-      //           {
-      //             email: newData.email,
-      //             username: newData.username,setData
-      //             firstName: newData.firstName,
-      //             lastName: newData.lastName,
-      //             active: newData.active
-      //           },
-      //           {
-      //             headers: {
-      //               Authorization: `Bearer ${localStorage.getItem("Token")}`
-      //             }
-      //           }
-      //         )
-      //         .then(
-      //           Swal.fire({
-      //             title: "Account has been edited!",
-      //             icon: "success",
-      //             button: true
-      //           })setData
-      //     new Promise(resolve => {
-      //       setTimeout(() => {
-      //         resolve();
-      //         setState(prevState => {
-      //           const data = [...prevState.data];
-      //           data.splice(data.indexOf(oldData), 1);
-      //           return { ...prevState, data };
-      //         });
-      //       }, 600);
-      //       axios
-      //         .delete(`http://localhost:3000/users/${oldData.id}`, {
-      //           headers: {
-      //             Authorization: `Bearer ${localStorage.getItem("Token")}`
-      //           }
-      //         })
-      //         .then(
-      //           Swal.fire({
-      //             icon: "success",
-      //             title: "Account has been successfully deleted!"
-      //           })
-      //         );
-      //     })
-      // }}
     />
   );
 }

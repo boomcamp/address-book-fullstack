@@ -29,7 +29,8 @@ export default function AddGroupModal({
   setSelectedGroup,
   selectedGroup,
   chooseIcon,
-  userId
+  userId,
+  setLoadGroupData
 }) {
   const [errorMsgGroupName, setErrorMsgGroupName] = useState("");
 
@@ -44,6 +45,7 @@ export default function AddGroupModal({
               icon: selectedGroup.icon
             })
             .then(() => {
+              setLoadGroupData(true);
               handleCloseGroup();
               Swal.fire({
                 title: "Group Name Successfully Edited",
@@ -63,6 +65,7 @@ export default function AddGroupModal({
               icon: selectedGroup.icon
             })
             .then(() => {
+              setLoadGroupData(true);
               handleCloseGroup();
               Swal.fire({
                 title: "Group Added Successfully",

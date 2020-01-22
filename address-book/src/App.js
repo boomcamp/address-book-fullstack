@@ -24,13 +24,11 @@ import Menu from "@material-ui/core/Menu";
 import Swal from "sweetalert2";
 import "./App.css";
 import jwt from "jsonwebtoken";
-import { useHistory } from "react-router-dom";
 
 const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
 
 export default function App() {
   const classes = useStyles();
-  // let history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
   const logout = () => {
     setAnchorEl(null);

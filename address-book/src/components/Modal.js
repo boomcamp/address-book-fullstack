@@ -17,7 +17,7 @@ import Swal from "sweetalert2";
 import AddToGroupList from "./AddToGroupList";
 import { useHistory } from "react-router-dom";
 
-export default function Alert({
+export default function Modal({
   open,
   handleClose,
   teal,
@@ -26,7 +26,9 @@ export default function Alert({
   setValues,
   ids,
   setIds,
-  userId
+  userId,
+  setLoadData,
+  groupLs
 }) {
   const classes = useStyles();
   let history = useHistory();
@@ -40,7 +42,10 @@ export default function Alert({
             ? "Contact Successfully Edited"
             : "Contact Added Successfully",
           icon: "success"
-        }).then(() => history.push("/addressbook"));
+        }).then(() => {
+          setLoadData(true);
+          history.push("/addressbook");
+        });
       })
       .catch(e => {
         Swal.fire({
@@ -84,8 +89,10 @@ export default function Alert({
             Swal.fire({
               title: "Contact Added Successfully",
               icon: "success"
-            }).then(() => history.push("/addressbook"));
-
+            }).then(() => {
+              setLoadData(true);
+              history.push("/addressbook");
+            });
             handleClose();
           })
           .catch(e => {
@@ -134,7 +141,12 @@ export default function Alert({
         <form>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
-              <AddToGroupList setIds={setIds} ids={ids} userId={userId} />
+              <AddToGroupList
+                setIds={setIds}
+                ids={ids}
+                userId={userId}
+                groupLs={groupLs}
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField

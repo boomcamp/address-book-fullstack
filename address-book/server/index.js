@@ -53,7 +53,9 @@ massive({
   app.post("/groupmember", groupMember.addGroupMember);
   app.get("/groupmember", groupMember.getAllGroupMember);
   app.get("/groupmember/:contactid", groupMember.getContactGroups);
+  app.get("/groupmembers/:groupid", groupMember.getGroupMembers);
   app.delete("/groupmember/:contactid", groupMember.deleteGroupMember);
+
   const PORT = 3004;
   app.listen(PORT, () => {
     console.log(`Server is Listening on port ${PORT}`);

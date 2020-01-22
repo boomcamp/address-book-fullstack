@@ -36,9 +36,10 @@ function create(req, res) {
 function getContactByUser(req, res) {
   const db = req.app.get("db");
   const { userid } = req.params;
+  const { order } = req.query;
 
   db.contacts
-    .find({ userid: userid })
+    .find({ userid })
     .then(contacts => res.status(200).send(contacts))
     .catch(err => {
       console.error(err);

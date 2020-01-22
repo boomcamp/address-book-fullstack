@@ -38,6 +38,20 @@ function getContactGroups(req, res) {
     });
 }
 
+function getGroupMembers(req, res) {
+  const db = req.app.get("db");
+  const { groupid } = req.params;
+
+  db.query(
+    `select contacts.* from groupmember INNER JOIN contacts ON groupmember.contactid = contacts.id where groupid=${groupid};`
+  )
+    .then(group => res.status(201).send(group))
+    .catch(err => {
+      console.error(err);
+      res.status(500).end();
+    });
+}
+
 function deleteGroupMember(req, res) {
   const db = req.app.get("db");
   const { contactid } = req.params;
@@ -55,5 +69,6 @@ module.exports = {
   addGroupMember,
   getAllGroupMember,
   getContactGroups,
-  deleteGroupMember
+  deleteGroupMember,
+  getGroupMembers
 };

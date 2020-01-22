@@ -16,7 +16,7 @@ export default function Viewer({ values }) {
               <Avatar className={classes.avatar}>
                 {`${String(values.firstname)
                   .charAt(0)
-                  .toUpperCase()} ${
+                  .toUpperCase()}${
                   values.lastname
                     ? String(values.lastname)
                         .charAt(0)
@@ -80,7 +80,7 @@ export default function Viewer({ values }) {
                   <tr>
                     <td>Mobile Phone No:</td>
                     <td>
-                      <span id="points" className="tag is-light">
+                      <span id="points" className="tag is-info">
                         {values.mobile_phone}
                       </span>
                     </td>

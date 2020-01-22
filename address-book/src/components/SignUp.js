@@ -86,7 +86,7 @@ export default function SignUp() {
       else setErrorEmail("Please Enter a valid Email");
     }
     if (
-      email &&
+      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) &&
       username &&
       lname &&
       fname &&

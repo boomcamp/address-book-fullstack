@@ -131,3 +131,6 @@
 .MuiCardMedia-root.MuiCardMedia-media.MuiCardMedia-img {
   background-color: rgba(0, 127, 128, 0.8) !important;
 }
+.MuiPaper-root.MuiPaper-elevation2.MuiPaper-rounded > div table.MuiTable-root {
+  min-width: 992px;
+}
