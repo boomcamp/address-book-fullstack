@@ -15,9 +15,9 @@
 ## Project Functionalities
 
 - Create contacts
-- Searchable by `first_name` and `last_name`
-- Sortable by `last_name`
-- Display the contact information `first_name`, `last_name` and `phonenumber`
+- Searchable by First name and Last name
+- Sortable by Last name
+- Display the contact information First name, Last name and Phone number
 - Can view the full detail of the contact
 - Edit and save selected contact information
 - Confirmation before deleting a contact
