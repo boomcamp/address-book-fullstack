@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-export default function LoginPage({ handleLogin, prevStep, handleChange, warning, helper, warningUpdate, ToastContainer }) {
+export default function LoginPage({ handleLogin, prevStep, handleChange, warn, help, warningUpdate, ToastContainer }) {
     const classes = useStyles();
     const [values, setValues] = React.useState({
         password: '',
@@ -50,7 +50,7 @@ export default function LoginPage({ handleLogin, prevStep, handleChange, warning
                                     required
                                     id="password"
                                     name="password"
-                                    error={warning}
+                                    error={warn.password}
                                     onBlur={warningUpdate}
                                     onChange={handleChange}
                                     type={values.showPassword ? 'text' : 'password'}
@@ -68,7 +68,7 @@ export default function LoginPage({ handleLogin, prevStep, handleChange, warning
                                     }
                                     labelWidth={70}
                                 />
-                                <FormHelperText id="username">{helper}</FormHelperText>
+                                <FormHelperText id="password">{help}</FormHelperText>
                             </FormControl>
                         </CardContent>
                         <CardContent className={classes.link2}>

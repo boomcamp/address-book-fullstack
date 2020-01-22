@@ -43,10 +43,19 @@ export default function Login() {
                 ...warn,
                 [e.target.name]: ""
             });
+            setHelp({
+                ...help,
+                [e.target.name]: ""
+            });
         } else {
             setWarn({
                 ...warn,
                 [e.target.name]: true
+            });
+            setHelp({
+                ...help,
+                [e.target.name]: `${e.target.name.charAt(0).toUpperCase() +
+                    e.target.name.slice(1)} field is required`
             });
         }
     };
@@ -117,8 +126,8 @@ export default function Login() {
                 <Username
                     nextStep={nextStep}
                     handleChange={handleChange}
-                    warning={warn.username}
-                    helper={help.user}
+                    warn={warn.username}
+                    help={help.user}
                     warningUpdate={warningUpdate}
                     ToastContainer={ToastContainer}
                 />
@@ -130,8 +139,8 @@ export default function Login() {
                     prevStep={prevStep}
                     handleChange={handleChange}
                     handleLogin={handleLogin}
-                    warning={warn.password}
-                    helper={help.pass}
+                    warn={warn.password}
+                    help={help.pass}
                     warningUpdate={warningUpdate}
                     ToastContainer={ToastContainer}
                 />

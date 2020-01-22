@@ -86,6 +86,8 @@ export default function Navbar() {
             .then(res => {
                 setUsers(res.data);
             })
+
+
             .catch(e => console.log(e))
     }, [id]);
 
@@ -97,6 +99,7 @@ export default function Navbar() {
             .then(res => {
                 setUsers(res.data);
             })
+        handleSearch("")
             .catch(e => console.log(e))
     }
 
@@ -141,8 +144,9 @@ export default function Navbar() {
             -1 ||
             name.lname.toLowerCase().indexOf(e.target.value) !== -1
         );
+        console.log(filteredSearch)
 
-        setSearchData(filteredSearch);
+        return setSearchData(filteredSearch);
     }
 
     return (

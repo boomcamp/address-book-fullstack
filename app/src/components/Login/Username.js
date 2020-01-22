@@ -20,7 +20,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 
 import Register from '../Register';
 
-export default function LoginPage({ nextStep, handleChange, warning, helper, warningUpdate, ToastContainer }) {
+export default function LoginPage({ nextStep, handleChange, warn, help, warningUpdate, ToastContainer }) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -60,7 +60,7 @@ export default function LoginPage({ nextStep, handleChange, warning, helper, war
                                         id="username"
                                         name="username"
                                         type="username"
-                                        error={warning}
+                                        error={warn.username}
                                         onBlur={warningUpdate}
                                         onChange={handleChange}
                                         endAdornment={
@@ -70,7 +70,7 @@ export default function LoginPage({ nextStep, handleChange, warning, helper, war
                                         }
                                         labelWidth={70}
                                     />
-                                    <FormHelperText id="username">{helper}</FormHelperText>
+                                    <FormHelperText id="username">{help}</FormHelperText>
                                 </FormControl>
                             </CardContent>
                             <div className={classes.link}>

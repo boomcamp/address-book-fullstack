@@ -50,6 +50,68 @@ export default function Contact({ users, handleClose, handleClickOpen, menuOpen,
         setOpenDelete(false);
     }
 
+    const SearchComponent = () => {
+        const getData = () => {
+            let records = null
+            searchData.length ?
+                records = searchData
+                : records = users
+            return records
+        }
+
+        let searched = getData()
+        return searched.map(i =>
+            (
+                <Grid item key={i.contact_id} xs={12} sm={6} md={4} lg={3} className={classes.cards}>
+                    <Card key={i.contact_id} elevation={5}>
+                        <CardActionArea>
+                            <CardContent>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    {i.fname} {i.lname}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                    Mobile No: {i.mobile_phone}
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                        <div className={classes.action}>
+                            <Tooltip title="Edit Contact">
+                                <IconButton aria-label="edit" onClick={editOpen}>
+                                    <EditTwoToneIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Edit
+                                openEdit={openEdit}
+                                editClose={editClose}
+                                Transition={Transition}
+                                fname={i.fname}
+                                lname={i.lname}
+                                home_phone={i.home_phone}
+                                mobile_phone={i.mobile_phone}
+                                work_phone={i.work_phone}
+                                city={i.city}
+                                state={i.state}
+                                postal_code={i.postal_code}
+                                country={i.country}
+                                user_id={i.user_id}
+                                id={i.contact_id}
+                            />
+                            <Tooltip title="Delete Contact">
+                                <IconButton aria-label="delete" onClick={deleteOpen}>
+                                    <DeleteTwoToneIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Delete
+                                id={i.contact_id}
+                                openDelete={openDelete}
+                                deleteClose={deleteClose}
+                            />
+                        </div>
+                    </Card>
+                </Grid>
+            ))
+    }
+
     return (
         <React.Fragment>
             <div className={classes.root}>
@@ -88,7 +150,6 @@ export default function Contact({ users, handleClose, handleClickOpen, menuOpen,
                             </Grid>
                         </Tooltip>
                     </Grid>
-
                     <div className={classes.height}>
                         <Grid
                             container
@@ -98,161 +159,7 @@ export default function Contact({ users, handleClose, handleClickOpen, menuOpen,
                             alignItems="flex-start"
                             style={{ marginTop: 20 }}
                         >
-
-                            {searchData ? searchData.map(i => (
-                                <Grid item key={i.contact_id} xs={12} sm={6} md={4} lg={3} className={classes.cards}>
-                                    <Card key={i.contact_id} elevation={5}>
-                                        <CardActionArea>
-                                            <CardContent>
-                                                <Typography gutterBottom variant="h5" component="h2">
-                                                    {i.fname} {i.lname}
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    Mobile No: {i.mobile_phone}
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <div className={classes.action}>
-                                            <Tooltip title="Edit Contact">
-                                                <IconButton aria-label="edit" onClick={editOpen}>
-                                                    <EditTwoToneIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Edit
-                                                openEdit={openEdit}
-                                                editClose={editClose}
-                                                Transition={Transition}
-                                                fname={i.fname}
-                                                lname={i.lname}
-                                                home_phone={i.home_phone}
-                                                mobile_phone={i.mobile_phone}
-                                                work_phone={i.work_phone}
-                                                city={i.city}
-                                                state={i.state}
-                                                postal_code={i.postal_code}
-                                                country={i.country}
-                                                user_id={i.user_id}
-                                                id={i.contact_id}
-                                            />
-
-
-                                            <Tooltip title="Delete Contact">
-                                                <IconButton aria-label="delete" onClick={deleteOpen}>
-                                                    <DeleteTwoToneIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Delete
-                                                id={i.contact_id}
-                                                openDelete={openDelete}
-                                                deleteClose={deleteClose}
-                                            />
-                                        </div>
-                                    </Card>
-                                </Grid>
-                            )) : users.map(i => (
-                                <Grid item key={i.contact_id} xs={12} sm={6} md={4} lg={3} className={classes.cards}>
-                                    <Card key={i.contact_id} elevation={5}>
-                                        <CardActionArea>
-                                            <CardContent>
-                                                <Typography gutterBottom variant="h5" component="h2">
-                                                    {i.fname} {i.lname}
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    Mobile No: {i.mobile_phone}
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <div className={classes.action}>
-                                            <Tooltip title="Edit Contact">
-                                                <IconButton aria-label="edit" onClick={editOpen}>
-                                                    <EditTwoToneIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Edit
-                                                openEdit={openEdit}
-                                                editClose={editClose}
-                                                Transition={Transition}
-                                                fname={i.fname}
-                                                lname={i.lname}
-                                                home_phone={i.home_phone}
-                                                mobile_phone={i.mobile_phone}
-                                                work_phone={i.work_phone}
-                                                city={i.city}
-                                                state={i.state}
-                                                postal_code={i.postal_code}
-                                                country={i.country}
-                                                user_id={i.user_id}
-                                                id={i.contact_id}
-                                            />
-
-
-                                            <Tooltip title="Delete Contact">
-                                                <IconButton aria-label="delete" onClick={deleteOpen}>
-                                                    <DeleteTwoToneIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Delete
-                                                id={i.contact_id}
-                                                openDelete={openDelete}
-                                                deleteClose={deleteClose}
-                                            />
-                                        </div>
-                                    </Card>
-                                </Grid>
-                            ))}
-
-                            {/* {users.map(i => (
-                                <Grid item key={i.contact_id} xs={12} sm={6} md={4} lg={3} className={classes.cards}>
-                                    <Card key={i.contact_id} elevation={5}>
-                                        <CardActionArea>
-                                            <CardContent>
-                                                <Typography gutterBottom variant="h5" component="h2">
-                                                    {i.fname} {i.lname}
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p">
-                                                    Mobile No: {i.mobile_phone}
-                                                </Typography>
-                                            </CardContent>
-                                        </CardActionArea>
-                                        <div className={classes.action}>
-                                            <Tooltip title="Edit Contact">
-                                                <IconButton aria-label="edit" onClick={editOpen}>
-                                                    <EditTwoToneIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Edit
-                                                openEdit={openEdit}
-                                                editClose={editClose}
-                                                Transition={Transition}
-                                                fname={i.fname}
-                                                lname={i.lname}
-                                                home_phone={i.home_phone}
-                                                mobile_phone={i.mobile_phone}
-                                                work_phone={i.work_phone}
-                                                city={i.city}
-                                                state={i.state}
-                                                postal_code={i.postal_code}
-                                                country={i.country}
-                                                user_id={i.user_id}
-                                                id={i.contact_id}
-                                            />
-
-
-                                            <Tooltip title="Delete Contact">
-                                                <IconButton aria-label="delete" onClick={deleteOpen}>
-                                                    <DeleteTwoToneIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Delete
-                                                id={i.contact_id}
-                                                openDelete={openDelete}
-                                                deleteClose={deleteClose}
-                                            />
-                                        </div>
-                                    </Card>
-                                </Grid>
-                            ))
-                            } */}
+                            <SearchComponent />
                         </Grid>
                     </div>
                 </Container>
