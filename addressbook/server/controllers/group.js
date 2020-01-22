@@ -2,7 +2,7 @@ module.exports = {
   addgroup: (req, res) => {
     const db = req.app.get("db");
     const { id, userid, contactid, groupname } = req.body;
-    console.log(id);
+    // console.log(id);
     db.groups
       .insert({
         userid,
@@ -20,7 +20,7 @@ module.exports = {
   addtogroup: (req, res) => {
     const db = req.app.get("db");
     const { id, userid, contactid, groupid } = req.body;
-    console.log(id);
+    // console.log(id);
     db.addressbook
       .insert({
         userid,
@@ -36,10 +36,39 @@ module.exports = {
         res.status(500).end();
       });
   },
+  // sortallcontacts: (req, res) => {
+  //   const db = req.app.get("db");
+  //   const uid = req.params.id;
+  //   const sort = req.params.sort
+  //   console.log(uid);
+  //   db.query(
+  //     `select * from contact_info where userid = 37 ORDER BY lastname  ${sort}`
+  //   ).then(data => {
+  //     res.status(200).json(data);
+  //   });
+  // },
+  updategrpName: (req, res) => {
+    const db = req.app.get("db");
+    const id = req.body.id;
+    const { groupname } = req.body;
+    // console.log(id);
+    db.groups
+      .update(req.params.id, {
+        groupname: groupname
+      })
+
+      .then(user => {
+        res.status(201).json(user);
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      });
+  },
   allgroups: (req, res) => {
     const db = req.app.get("db");
     const uid = req.params.id;
-    console.log(uid);
+    // console.log(uid);
     db.query(
       `select * from groups where userid = ${uid} ORDER BY groupname `
     ).then(data => {
@@ -55,9 +84,7 @@ module.exports = {
   groupmembers: (req, res) => {
     const db = req.app.get("db");
     const uid = req.params.id;
- 
-    // const groupid = JSON.stringify(uid).replace(/[\/\(\)\']/g, "&apos;")
-    console.log(uid);
+    // console.log(uid);
     db.query(
       `select * from contact_info inner join addressbook on contact_info.id = addressbook.contactid where addressbook.groupid = ${uid} ORDER BY lastname`
     ).then(data => {

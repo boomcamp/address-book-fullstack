@@ -23,7 +23,7 @@ class Login extends Component {
     }
   }
   handleChange = e => {
-    console.log(e.value);
+    // console.log(e.value);
     e.name === "userName"
       ? this.setState({ username: e.value })
       : this.setState({ password: e.value });
@@ -37,7 +37,7 @@ class Login extends Component {
         if (res.status == 200) {
           localStorage.setItem("id", res.data.id);
           localStorage.setItem("token", res.data.token);
-          console.log(res.data.token);
+          // console.log(res.data.token);
           this.props.history.push("/homepage");
           message.success("Welcome " + this.state.username);
         }
@@ -62,9 +62,9 @@ class Login extends Component {
             >
               <Avatar size={100} icon="user" />
             </div>
-            <br/>
-            <hr style={{width:'77%',marginRight:'1000px'}}/>
-          
+            <br />
+            <hr style={{ width: "77%", marginRight: "1000px" }} />
+
             <Form onSubmit={e => this.handleSubmit(e)} className="login-form">
               <Form.Item>
                 {getFieldDecorator("username", {

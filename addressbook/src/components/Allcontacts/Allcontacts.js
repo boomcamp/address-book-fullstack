@@ -15,6 +15,7 @@ import {
 } from "antd";
 import { message } from "antd";
 import Search from "./Search/Searches";
+import Sort from "./Sort";
 // import Groups from "./Groups/Groups"
 import Addtogroup from "./Addgroup/Addtogroup";
 import "./allcontacts.css";
@@ -47,7 +48,10 @@ class Allcontacts extends Component {
       getAllgroups: [],
 
       groupids: "",
-      user:""
+      user: "",
+      sort: "",
+      query: "",
+      allContacts: []
     };
   }
   showModal = e => {
@@ -73,7 +77,7 @@ class Allcontacts extends Component {
     // console.log(this.props.allContacts);
     // this.setState({userId:ids})
     // console.log(this.state.userid);
-    console.log(this.state.ids);
+    // console.log(this.state.ids);
     e.name === "lname"
       ? this.setState({ lastname: e.value })
       : e.name === "fname"
@@ -110,8 +114,8 @@ class Allcontacts extends Component {
   }
 
   handleSubmit = e => {
-    console.log(e);
-    console.log();
+    // console.log(e);
+    // console.log();
 
     if (
       this.state.firstname !== "" &&
@@ -155,7 +159,7 @@ class Allcontacts extends Component {
     }
   };
   handleOk = e => {
-    console.log(e);
+    // console.log(e);
     this.setState({
       visible: false
     });
@@ -163,23 +167,23 @@ class Allcontacts extends Component {
 
   ///addto groups
   showAddtoGroup = e => {
-    console.log("contactd",e);
+    // console.log("contactd", e);
     localStorage.setItem("userids", e);
     this.setState({ userids: e, addtogroupModal: true });
   };
   handleAdd = () => {
     axios.post("http://localhost:3003/api/addtogroup", {
       userid: this.state.user,
-      contactid:this.state.userids,
-      groupid: this.state.groupids,
-       })
+      contactid: this.state.userids,
+      groupid: this.state.groupids
+    });
     this.props.getCont();
-    message.success("Added Successfully!");
-    // setTimeout(window.location.reload.bind(window.location), 100);
+    message.success("Added to Successfully!");
+    setTimeout(window.location.reload.bind(window.location), 100);
   };
 
   handleCancel = e => {
-    console.log(e);
+    // console.log(e);
     this.setState({
       visible: false,
       disabled: true,
@@ -189,18 +193,16 @@ class Allcontacts extends Component {
 
   handleChangeGroup = value => {
     const lo = localStorage.getItem("id");
-    console.log(lo);
-    console.log(`selected ${value}`);
-    this.setState({ groupids: value,user:lo});
-
-    
+    // console.log(lo);
+    // console.log(`selected ${value}`);
+    this.setState({ groupids: value, user: lo });
   };
   //delete contact
   onDelete = e => {
-    console.log(e);
+    // console.log(e);
     axios.delete(`http://localhost:3003/api/deleteContact/${e}`).then(res => {
-      console.log(res);
-      console.log("DELETE");
+      // console.log(res);
+      // console.log("DELETE");
       message.success("Deleted!");
       this.props.getCont();
     });
@@ -227,8 +229,23 @@ class Allcontacts extends Component {
     //console.log(search);
   };
 
+  // SORT
+  handleSort = value => {
+    const id = localStorage.getItem("id");
+    axios
+      .get(`http://localhost:3003/api/allContacts/${id}?sort=${value}`)
+      .then(res => this.setState({ allContacts: res.data }))
+      .catch(err => console.log(err));
+  };
+  componentDidUpdate(nextProps) {
+    if (nextProps != this.props) {
+      this.setState({ allContacts: this.props.allContacts });
+    }
+  }
+
   render() {
-    // console.log(this.props.allContacts);
+    // console.log(this.state.allContacts);
+
     // console.log(this.state.datas)
     // console.log(this.props.allContacts == null ? "nani" : "eupo");
     // console.log(this.state.search);
@@ -261,7 +278,7 @@ class Allcontacts extends Component {
             </Select>
           </Modal>
         </div>
-        <div>
+        <div className="conts">
           <h1
             style={{
               width: "100%",
@@ -270,14 +287,22 @@ class Allcontacts extends Component {
               fontWeight: "bolder",
               flexWrap: "wrap"
             }}
+            className="contsHead"
           >
             Contacts
+          </h1>
+          <div className="serts">
             <Search
               search={this.handleSearch}
-              style={{ display: "flex", justifyContent: "center" }}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginRight: "10px"
+              }}
             />
-            {/* <button onClick={e=>this.handleSort()}>sort</button> */}
-          </h1>
+            <Sort sort={this.handleSort} className="sort" />
+          </div>
+          {/* <button onClick={e=>this.handleSort()}>sort</button> */}
         </div>
         <hr className="underline"></hr>
 
@@ -327,7 +352,7 @@ class Allcontacts extends Component {
                 ></Empty>
               </div>
             ) : (
-              this.props.allContacts.map(contact => {
+              this.state.allContacts.map(contact => {
                 let conID = contact.id;
                 let contacts = contact;
                 // console.log(conID)
@@ -422,7 +447,6 @@ class Allcontacts extends Component {
             //SEARCH CONTACT
             this.state.search
               // this.state.search
-              .sort((a, b) => a.lastname.localeCompare(b.lastname))
               .map(contact => {
                 let conID = contact.id;
                 let contacts = contact;
@@ -523,6 +547,8 @@ class Allcontacts extends Component {
         }
         {this.props.allContacts
           // .sort((a, b) => a.lastname.localeCompare(b.lastname))
+          // .sort((b, a) => b.lastname.localeCompare(a.lastname))
+
           .map(contact => {
             let conID = contact.id;
             // console.log(conID)

@@ -19,47 +19,46 @@ export default class AddHomePage extends Component {
     this.state = {
       id: "",
       lastname: "",
-      allGroups:[],
+      allGroups: [],
       allContacts: [],
       ids: parseInt(localStorage.getItem("id"))
     };
   }
+
+  // componentDidMount() {
+  //   console.log('BRYAN')
+  // }
 
   componentDidMount() {
     if (localStorage.getItem("token") != null) {
       this.props.history.push("/homepage");
     } else {
       this.props.history.push("/");
+      //   }
     }
-    this.getCont();
-   
+    const id = localStorage.getItem("id");
+    axios
+      .get(`http://localhost:3003/api/allContacts/${id}?sort=ASC`)
+      .then(data => {
+        //console.log(data.lastname);
+        // console.log('hhh')
+
+        this.setState({ allContacts: data.data });
+      });
   }
 
   getCont = () => {
     const id = localStorage.getItem("id");
     axios.get(`http://localhost:3003/api/allContacts/${id}`).then(data => {
-      // console.log(data.lastname);
-      // console.log(data)
+      //console.log(data.lastname);
+      // console.log('hhh')
+
       this.setState({ allContacts: data.data });
-      // data.data.map(e => {
-      //   console.log(e.lastname);
-      //   console.log(e);
-      //   this.setState({ lastname: e.lastname, firstname: e.firstname });
-      // });
     });
   };
 
-  // getAllgroups = () => {
-  //   const id = localStorage.getItem("id");
-  //   axios.get(`http://localhost:3003/api/allgroups/${id}`).then(datas => {
-  //     console.log(datas.data);
-  //   this.setState({allGroups:datas.data})
-  //     //  this.setState({allGroups:dat})
-  //   });
-  // };
-
   handleSearch = e => {
-    console.log(e);
+    // console.log(e);
   };
   handleLogout = e => {
     localStorage.clear();
@@ -68,7 +67,7 @@ export default class AddHomePage extends Component {
   };
 
   cancel = e => {
-    console.log(e);
+    // console.log(e);
     message.error("Click on No");
   };
 
@@ -78,15 +77,17 @@ export default class AddHomePage extends Component {
   };
 
   onCollapse = collapsed => {
-    console.log(collapsed);
+    // console.log(collapsed);
     this.setState({ collapsed });
   };
+
   render() {
-    console.log(this.state.getAllgroups)
+    // console.log(this.state.allContacts)
     return (
       <div>
         <div className="addHeader">
           <div className="addBook">
+            {/* <h1>gggg</h1> */}
             <Icon
               type="book"
               style={{ fontSize: "60px", color: "#fff" }}
@@ -96,7 +97,11 @@ export default class AddHomePage extends Component {
           </div>
 
           <div className="pop">
-            <Card getCont={this.getCont} getAllgroups={this.state.allGroups} />
+            <Card
+              getCont={this.getCont}
+              getAllgroups={this.state.allGroups}
+              allContacts={this.state.allContacts}
+            />
             <Popconfirm
               placement="leftTop"
               title="Are you Sure to logout?"

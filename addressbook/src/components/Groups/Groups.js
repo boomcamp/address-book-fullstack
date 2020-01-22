@@ -15,7 +15,8 @@ import axios from "axios";
 import { message } from "antd";
 import { Menu } from "antd";
 import { Select } from "antd";
-
+import Groupmem from "./Groupmem/Groupmem";
+import Editgroup from "./Editgroup";
 const { Option } = Select;
 
 const { SubMenu } = Menu;
@@ -25,7 +26,7 @@ class Groups extends Component {
     super(props);
 
     this.state = {
-      getAllgroups:[],
+      getAllgroups: [],
       visibleDrawer: false,
       visibleModal: false,
       openKeys: ["sub1"],
@@ -33,26 +34,34 @@ class Groups extends Component {
       visible: false,
       confirmLoading: false,
       grpName: "",
-      userid: this.props.userid
+      userid: this.props.userid,
+      groupMem: [],
+      grpID: "",
+      editgrpName: "",
+      editgrpNameModal: false
     };
   }
 
   state = {};
 
-
-componentDidMount( ){
+  componentDidMount() {
     const id = localStorage.getItem("id");
     axios.get(`http://localhost:3003/api/allgroups/${id}`).then(datas => {
       // console.log(datas.data);
-    this.setState({getAllgroups:datas.data})
+      this.setState({ getAllgroups: datas.data });
       //  this.setState({allGroups:dat})
     });
-  
-}
+  }
 
   handleChange = value => {
-    
     console.log(`selected ${value}`);
+    this.setState({ grpID: value });
+    axios.get(`http://localhost:3003/api/groupsmember/${value}`).then(datas => {
+      console.log(datas.data);
+
+      this.setState({ groupMem: datas.data });
+      //  this.setState({allGroups:dat})
+    });
   };
 
   onOpenChange = openKeys => {
@@ -70,7 +79,6 @@ componentDidMount( ){
   handleSub = e => {
     e.preventDefault();
     if (this.state.grpName !== "") {
-     
       axios
         .post("http://localhost:3003/api/addgroup", {
           userid: this.state.userid,
@@ -127,11 +135,27 @@ componentDidMount( ){
     }, 2000);
   };
 
-  handleCancel = () => {
+  handleCancels = () => {
     // console.log("Clicked cancel button");
     this.setState({
       visible: false
     });
+  };
+  handleEditgrp = e => {
+    console.log(e);
+    this.setState({ editgrpName: e });
+  };
+
+  edit = () => {
+    this.setState({ editgrpNameModal: true });
+  };
+  clsEdit = () => {
+    this.setState({ editgrpNameModal: false });
+    console.log("object");
+  };
+
+  handleClose = () => {
+    this.setState({ editgrpNameModal: false });
   };
   render() {
     // console.log(this.state);
@@ -155,63 +179,71 @@ componentDidMount( ){
           onClose={this.onClose}
           visible={this.state.visibleDrawer}
         >
-          <div style={{display:'flex',justifyContent:'space-between'}}>
-          <Tooltip title="Add Group" placement="bottom">
-            <Icon
-              type="usergroup-add"
-              style={{ fontSize: "25px", color: "black" }}
-              theme="outlined"
-              className="add-user"
-              onClick={this.showModal}
-            ></Icon>
-          </Tooltip>
-          <Tooltip title="Delete" placement="bottom">
-            <Icon
-              type="delete"
-              style={{ fontSize: "25px", color: "black" }}
-              theme="outlined"
-              className="add-user"
-              onClick={this.showModal}
-            ></Icon>
-          </Tooltip>
-          <Tooltip title="Edit" placement="bottom">
-            <Icon
-              type="edit"
-              style={{ fontSize: "25px", color: "black" }}
-              theme="outlined"
-              className="add-user"
-              onClick={this.showModal}
-            ></Icon>
-          </Tooltip>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Tooltip title="Add Group" placement="bottom">
+              <Icon
+                type="usergroup-add"
+                style={{ fontSize: "25px", color: "black" }}
+                theme="outlined"
+                className="add-user"
+                onClick={this.showModal}
+              ></Icon>
+            </Tooltip>
+            <Tooltip title="Delete" placement="bottom">
+              <Icon
+                type="delete"
+                style={{ fontSize: "25px", color: "black" }}
+                theme="outlined"
+                className="add-user"
+                // onClick={this.showModal}
+              ></Icon>
+            </Tooltip>
+            <Tooltip title="Edit" placement="bottom">
+              <Icon
+                type="edit"
+                style={{ fontSize: "25px", color: "black" }}
+                theme="outlined"
+                className="add-user"
+                onClick={er => this.edit(this.state.grpID)}
+              ></Icon>
+            </Tooltip>
+            <Editgroup
+              editgrpName={this.state.editgrpName}
+              editgrpNameModal={this.state.editgrpNameModal}
+              clsEdit={this.handleClose}
+            />
           </div>
           {/* <span>Select Group</span> */}
           <hr />
           <Select
             defaultValue="--Select Group--"
-            style={{ width: '210px' }}
-            onChange={e=>this.handleChange(e)}
+            style={{ width: "210px" }}
+            onChange={e => this.handleChange(e)}
           >
-          {this.state.getAllgroups.map(groups=>{
-            //  localStorage.setItem('grpids',groups.id)
-            // console.log(groups.id)
-            return<Option value={groups.id}>{groups.groupname}</Option>
-          
-           
-         
-          })}
+            {this.state.getAllgroups.map(groups => {
+              //  localStorage.setItem('grpids',groups.id)
+              // console.log(groups.id)
+              return (
+                <Option value={groups.id} key={groups.id}>
+                  {groups.groupname}
+                </Option>
+              );
+            })}
           </Select>
-         
+          <Groupmem groupmem={this.state.groupMem} />
         </Drawer>
         {
           //Modal add to Gruops
         }
+
         <div>
           <Modal
             title="Add Group"
             visible={this.state.visible}
             onOk={this.handleOk}
-            onCancel={this.handleCancel}
+            onCancel={this.handleCancels}
             footer={null}
+            width={285}
           >
             <div>
               <Form

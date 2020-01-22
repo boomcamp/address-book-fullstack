@@ -32,7 +32,7 @@ class Registration extends Component {
   }
 
   handleChange = e => {
-    console.log(e.value);
+    // console.log(e.value);
     e.name === "userName"
       ? this.setState({ username: e.value })
       : e.name === "email"
@@ -51,11 +51,15 @@ class Registration extends Component {
     });
     if (this.state.confirmPassword === this.state.password) {
       axios.post("http://localhost:3003/api/register", this.state).then(res => {
-        console.log(res.data.token);
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("id",res.data.id)
-        this.props.history.push("/homepage");
-        message.success("Welcome " + this.state.username);
+        if (res.data.message === undefined) {
+          console.log(res.data.token);
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("id", res.data.id);
+          this.props.history.push("/homepage");
+          message.success("Welcome " + this.state.username);
+        } else {
+          message.error(res.data.message);
+        }
       });
     } else {
       message.warning("Password and Confirm Password didn't match");

@@ -11,8 +11,8 @@ class AddBookCard extends Component {
     super(props);
 
     this.state = {
-      allGroups:this.props.getAllgroups,
-      visible:false,
+      allGroups: this.props.getAllgroups,
+      visible: false,
       lastname: "",
       firstname: "",
       home_phone: "",
@@ -23,15 +23,15 @@ class AddBookCard extends Component {
       stae_or_province: "",
       postal_code: "",
       country: "",
-      userid:localStorage.getItem('id'),
+      userid: localStorage.getItem("id")
     };
   }
 
   handleChange = e => {
-   var ids =localStorage.getItem('id')
+    var ids = localStorage.getItem("id");
     console.log(e.value);
     // this.setState({userId:ids})
-    console.log(this.state.userid)
+    console.log(this.state.userid);
     e.name === "lname"
       ? this.setState({ lastname: e.value })
       : e.name === "fname"
@@ -52,7 +52,7 @@ class AddBookCard extends Component {
       ? this.setState({ postal_code: e.value })
       : e.name === "country"
       ? this.setState({ country: e.value })
-      :console.log("object")
+      : console.log("object");
   };
   handleSubmit = e => {
     e.preventDefault();
@@ -71,8 +71,8 @@ class AddBookCard extends Component {
       this.state.country !== ""
     ) {
       axios.post("http://localhost:3003/api/create", this.state).then(res => {
-        console.log(res); 
-        console.log(this.state.userId)
+        console.log(res);
+        console.log(this.state.userId);
         message.success("Added Successfully!");
         this.setState({
           lastname: "",
@@ -85,14 +85,13 @@ class AddBookCard extends Component {
           stae_or_province: "",
           postal_code: "",
           country: "",
-          visible:false
-        })
-        this.props.getCont()
+          visible: false
+        });
+        this.props.getCont();
         setTimeout(window.location.reload.bind(window.location), 250);
       });
     } else {
       message.warning("Please Fill Out the Form");
-
     }
   };
   onChange = checked => {
@@ -120,7 +119,7 @@ class AddBookCard extends Component {
       visible: false
     });
   };
- 
+
   showDrawer = () => {
     this.setState({
       visible: true
@@ -166,7 +165,7 @@ class AddBookCard extends Component {
         <Option value="87">+87</Option>
       </Select>
     );
-  console.log(this.state.getAllgroups)
+    // console.log(this.state.getAllgroups)
     const { visible, onCancel, onCreate, form } = this.props;
     // const { getFieldDecorator } = form;
     return (
@@ -183,7 +182,10 @@ class AddBookCard extends Component {
               ></Icon>
             </Tooltip>
 
-            <Groups userid={this.state.userid} allGroups={this.state.allGroups}/>
+            <Groups
+              userid={this.state.userid}
+              allGroups={this.state.allGroups}
+            />
           </div>
         </div>
 
@@ -220,7 +222,6 @@ class AddBookCard extends Component {
                     <Input
                       prefix={
                         <Icon
-                     
                           type="user"
                           style={{ color: "rgba(0,0,0,.25)" }}
                         />

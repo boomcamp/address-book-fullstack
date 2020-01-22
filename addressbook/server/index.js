@@ -18,27 +18,31 @@ massive({
     app.set("db", db);
     app.use(express.json());
     app.use(cors());
-    //suser
+    //user
     app.post("/api/register", reg.register);
     app.post("/api/login", reg.login);
-
     app.get("/api/users", reg.list);
     app.get("/api/allContacts/:id", addcontact.allcontacts);
+
     app.delete("/api/deleteContact/:id", addcontact.delete);
     app.patch("/api/update/:id", addcontact.update);
-   //groups
+    // app.get("/api/allContacts/:id", addcontact.desc);
+
+    //sort
+    //  app.get("/api/sortedContacts/:id/sort", addgroup.sortallcontacts);
+
+    //groups
+
+    app.patch("/api/editGrpName/:id", addgroup.updategrpName);
     app.post("/api/addgroup", addgroup.addgroup);
     app.post("/api/addtogroup", addgroup.addtogroup);
     app.get("/api/allgroups/:id", addgroup.allgroups);
-//groupmembers
+    //groupmembers
     app.get("/api/groupsmember/:id", addgroup.groupmembers);
-    
-
 
     // app.get('/addressbook/:id', contacts.contactList);
 
     app.post("/api/create", addcontact.addcontact);
-
 
     app.get("/api/protected/data", (req, res) => {
       if (!req.headers.authorization) {
