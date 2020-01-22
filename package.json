@@ -1,0 +1,41 @@
+{
+  "name": "address-book-fullstack",
+  "version": "1.0.0",
+  "description": "For this project you'll be crafting an Address Book application. You'll be responsible for the user interface and its functionality, along with implementing a backend API to persist the data to a database and authorize users.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:start": "docker-compose up -d db",
+    "db:stop": "docker-compose down",
+    "migrate": "node-pg-migrate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HamletDelosReyes/address-book-fullstack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HamletDelosReyes/address-book-fullstack/issues"
+  },
+  "homepage": "https://github.com/HamletDelosReyes/address-book-fullstack#readme",
+  "dependencies": {
+    "@material-ui/core": "^4.8.3",
+    "argon2": "^0.24.1",
+    "axios": "^0.19.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "install": "^0.13.0",
+    "jsonwebtoken": "^8.5.1",
+    "massive": "^6.1.4",
+    "mdbreact": "^4.11.1",
+    "node-pg-migrate": "^3.23.3",
+    "pg": "^7.17.0",
+    "react-dom": "^16.12.0",
+    "react-popper": "^1.3.7",
+    "react-router-dom": "^5.1.2",
+    "secret": "^1.0.2",
+    "styled-components": "^4.4.1"
+  }
+}
