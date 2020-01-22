@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import { LoadContext } from "../AddressBook/addressBook";
 
 export default function Edit({
   openGroupEdit,
@@ -18,6 +19,7 @@ export default function Edit({
   let history = useHistory();
   const [groupname, setGroupname] = useState("");
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
+  const loadValue = React.useContext(LoadContext);
 
   const handleSaveGroup = () => {
     axios
@@ -26,6 +28,7 @@ export default function Edit({
         groupname: groupname
       })
       .then(res => {
+        handleCloseGroupModal();
         Swal.fire({
           title: "Group Contact Edited Successfully",
           icon: "success"
@@ -33,6 +36,7 @@ export default function Edit({
           history.push("/addressbook");
         });
       })
+      .then(() => loadValue.setLoad(true))
       .catch(e => {
         Swal.fire({
           icon: "error",

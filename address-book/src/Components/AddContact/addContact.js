@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
+import { LoadContext } from "../AddressBook/addressBook";
 import {
   Button,
   Dialog,
@@ -66,6 +67,7 @@ const DialogActions = withStyles(theme => ({
 }))(MuiDialogActions);
 
 export default function AddContact({ open, handleClose }) {
+  const loadValue = React.useContext(LoadContext);
   let history = useHistory();
   const [lastname, setLastName] = useState("");
   const [firstname, setFirstName] = useState("");
@@ -86,16 +88,15 @@ export default function AddContact({ open, handleClose }) {
   });
 
   useEffect(() => {
-    async function result() {
+    (async function result() {
       await axios({
         method: "get",
         url: `http://localhost:3004/groupcontacts/${tokenDecoded.userId}`
       })
         .then(res => setState({ ...state, multiple: res.data }))
         .catch(err => console.log(err));
-    }
-    result();
-  }, [tokenDecoded.userId, state]);
+    })();
+  }, []);
 
   const handleSave = () => {
     if (firstname !== "") {
@@ -130,6 +131,7 @@ export default function AddContact({ open, handleClose }) {
             history.push("/addressbook");
           });
         })
+        .then(() => loadValue.setLoad(true))
         .catch(e => {
           Swal.fire({
             icon: "error",

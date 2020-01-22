@@ -9,12 +9,14 @@ import jwt from "jsonwebtoken";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import { LoadContext } from "../AddressBook/addressBook";
 
 export default function AddGroupModal({
   openGroupModal,
   handleCloseGroupModal
 }) {
   let history = useHistory();
+  const loadValue = React.useContext(LoadContext);
   const [groupname, setGroupname] = useState("");
   const tokenDecoded = jwt.decode(localStorage.getItem("Token"));
 
@@ -33,6 +35,7 @@ export default function AddGroupModal({
           history.push("/addressbook");
         });
       })
+      .then(() => loadValue.setLoad())
       .catch(e => {
         Swal.fire({
           icon: "error",

@@ -29,7 +29,7 @@ function create(req, res) {
       postal_code,
       country
     })
-    .then(contact => res.status(200).send(contact))
+    .then(contact => res.status(200).json(contact))
     .catch(err => {
       console.error(err);
     });
@@ -38,13 +38,14 @@ function create(req, res) {
 function getContactByUser(req, res) {
   const db = req.app.get("db");
   const { userid } = req.params;
+  const { order } = req.query;
 
   db.contacts
-    .find({ userid })
-    .then(contacts => res.status(200).send(contacts))
+    .find({ userid }, { order: [{ field: `lastname`, direction: order }] })
+    .then(contacts => res.status(200).json(contacts))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 
@@ -77,10 +78,10 @@ function updateContact(req, res) {
       postal_code,
       country
     })
-    .then(contact => res.status(200).send(contact))
+    .then(contact => res.status(200).json(contact))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 
@@ -89,18 +90,18 @@ function deleteContact(req, res) {
   const { contactid } = req.params;
   db.contacts
     .destroy({ id: contactid })
-    .then(contacts => res.status(200).send(contacts))
+    .then(contact => res.status(200).json(contact))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 
   db.groupmembers
     .destroy({ contactid })
-    .then(contacts => res.status(200).send(contacts))
+    .then(contacts => res.status(200).json(contacts))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 
@@ -110,10 +111,10 @@ function getContactByContactId(req, res) {
 
   db.contacts
     .find({ userid: userid, id: contactid })
-    .then(contacts => res.status(200).send(contacts))
+    .then(contacts => res.status(200).json(contacts))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 

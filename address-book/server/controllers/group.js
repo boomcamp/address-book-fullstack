@@ -11,7 +11,7 @@ function create(req, res) {
     .then(group => res.status(200).send(group))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 
@@ -27,7 +27,7 @@ function addMember(req, res) {
     })
     .then(member => res.status(200).send(member))
     .catch(err => {
-      res.status(500).send(err);
+      res.status(500).end();
       console.error(err);
     });
 }
@@ -41,7 +41,7 @@ function getGroups(req, res) {
     .then(group => res.status(200).send(group))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 
@@ -58,12 +58,12 @@ function deleteGroup(req, res) {
         .then(member => res.status(200).send(member))
         .catch(err => {
           console.error(err);
-          res.status(500).send(err);
+          res.status(500).end();
         });
     })
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 
@@ -76,7 +76,7 @@ function deleteGroupMembersByID(req, res) {
     .then(member => res.status(200).send(member))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 
@@ -92,7 +92,7 @@ function updateGroupContact(req, res) {
     .then(groupcontact => res.status(200).send(groupcontact))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 ``;
@@ -106,7 +106,7 @@ function getContactGroups(req, res) {
     .then(group => res.status(201).send(group))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 
@@ -119,7 +119,7 @@ function getContactGroupMembers(req, res) {
     .then(members => res.status(201).send(members))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 
@@ -132,7 +132,7 @@ function deleteGroupMember(req, res) {
     .then(member => res.status(200).send(member))
     .catch(err => {
       console.error(err);
-      res.status(500).send(err);
+      res.status(500).end();
     });
 }
 

@@ -26,6 +26,7 @@ import GroupIcon from "@material-ui/icons/Group";
 import ViewGroupMembers from "./ViewGroupMembers";
 import AddGroupModal from "./AddGroupModal";
 import EditGroup from "./EditGroup";
+import { LoadContext } from "../AddressBook/addressBook";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -37,6 +38,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function AddGroup() {
+  const loadValue = React.useContext(LoadContext);
   let history = useHistory();
   const classes = useStyles();
   const [groupData, setGroupData] = useState([]);
@@ -74,16 +76,16 @@ export default function AddGroup() {
   };
 
   useEffect(() => {
-    async function result() {
+    (async function result() {
       await axios({
         method: "get",
         url: `http://localhost:3004/groupcontacts/${tokenDecoded.userId}`
       }).then(res => {
         setGroupData(res.data);
       });
-    }
-    result();
-  }, [tokenDecoded.userId, groupData]);
+    })();
+    loadValue.setLoad(false);
+  }, [loadValue.load]);
 
   const handleDeleteGroup = data => {
     Swal.fire({
@@ -108,6 +110,7 @@ export default function AddGroup() {
               history.push("/addressbook");
             });
           })
+          .then(() => loadValue.setLoad(true))
           .catch(err => {
             Swal.fire({
               icon: "error",
@@ -120,7 +123,7 @@ export default function AddGroup() {
   };
 
   return (
-    <Grid container style={{ margin: "2% auto", width: "100%" }}>
+    <Grid container style={{ margin: "1% auto", width: "100%" }}>
       <Grid item sm={12} xs={12} md={12} lg={12}>
         <Card className={classes.card} variant="outlined">
           <Typography
@@ -130,7 +133,7 @@ export default function AddGroup() {
               display: "flex",
               justifyContent: "flex-start",
               paddingLeft: "3%",
-              paddingTop: "2%"
+              paddingTop: "1%"
             }}
           >
             Group List
@@ -154,10 +157,7 @@ export default function AddGroup() {
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText primary={data.groupname} key="text" />
-                        <ListItemSecondaryAction
-                          key="secondary action"
-                          style={{ margin: "0px" }}
-                        >
+                        <ListItemSecondaryAction key="secondary action">
                           <Tooltip title="Delete Group">
                             <IconButton
                               onClick={() => handleDeleteGroup(data)}

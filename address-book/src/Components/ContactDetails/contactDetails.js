@@ -20,6 +20,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { Autocomplete } from "@material-ui/lab";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import { LoadContext } from "../AddressBook/addressBook";
 
 const styles = theme => ({
   root: {
@@ -84,6 +85,7 @@ export default function ContactDetails({
   setgroupData
 }) {
   let history = useHistory();
+  const loadValue = React.useContext(LoadContext);
   const [lastname, setLastName] = useState("");
   const [firstname, setFirstName] = useState("");
   const [home_phone, setHome_phone] = useState("");
@@ -103,16 +105,16 @@ export default function ContactDetails({
     multiple: []
   });
   useEffect(() => {
-    async function result() {
+    (async function result() {
       await axios({
         method: "get",
         url: `http://localhost:3004/groupcontacts/${tokenDecoded.userId}`
       })
         .then(res => setState({ ...state, multiple: res.data }))
         .catch(err => console.log(err));
-    }
-    result();
-  }, [tokenDecoded.userId, state]);
+    })();
+    loadValue.setLoad(false);
+  }, [loadValue.load]);
 
   const handleEditSave = props => {
     setOpenEdit(true);
@@ -158,6 +160,7 @@ export default function ContactDetails({
             history.push("/addressbook");
           });
         })
+        .then(() => loadValue.setLoad(true))
         .catch(e => {
           Swal.fire({
             icon: "error",
