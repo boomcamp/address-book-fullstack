@@ -1,0 +1,53 @@
+.allActions {
+  display: flex;
+  justify-content: space-evenly;
+  
+}
+.underline {
+  width: 100%;
+}
+.mainCon {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  flex-wrap: wrap;
+
+}
+.names{
+  font-size: 1.2em;
+  
+}
+.names1{
+  
+  display: flex;
+  flex-wrap: wrap;
+}
+.lastFirstname{
+  display: flex;
+  flex-wrap: wrap;
+}
+.serts{
+  display: inline-flex;
+  justify-content: end;
+  padding:10px 10px 10px 10px
+}
+.conts{
+  display: flex;
+
+}
+@media only screen and (max-width: 320px) {
+  .conts { 
+    display: flex;
+    flex-wrap: wrap;
+    }
+    .contsHead{
+      margin-left: 10px;
+    }
+}
+@media only screen and (max-width: 425px) {
+  .conts { 
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    }
+}

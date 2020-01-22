@@ -1,0 +1,10 @@
+{
+    "db": {
+      "user": "postgres",
+      "password": "delfz",
+      "host": "localhost",
+      "port": 5432,
+      "database": "add_book"
+    }
+  }
+  

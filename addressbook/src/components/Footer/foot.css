@@ -1,0 +1,11 @@
+.foot{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(16, 40, 68);
+    color: white;
+    text-align: center;
+    height: 5vh;
+    line-height: 50px;
+}
