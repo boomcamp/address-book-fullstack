@@ -1,0 +1,20 @@
+{
+  "name": "address-book-fullstack",
+  "version": "1.0.0",
+  "description": "For this project you'll be crafting an Address Book application. You'll be responsible for the user interface and its functionality, along with implementing a backend API to persist the data to a database and authorize users.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lyzamaemirabete/address-book-fullstack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lyzamaemirabete/address-book-fullstack/issues"
+  },
+  "homepage": "https://github.com/lyzamaemirabete/address-book-fullstack#readme"
+}

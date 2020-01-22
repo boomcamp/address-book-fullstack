@@ -1,0 +1,15 @@
+.App {
+  text-align: center;
+  margin: 0 auto;
+}
+.swal2-container {
+  z-index: 100000 !important;
+}
+
+.MuiTableRow-root .MuiTableCell-root:last-of-type {
+  text-align: center;
+}
+
+.MuiTableRow-root .MuiTableCell-root {
+  padding: 14px;
+}
