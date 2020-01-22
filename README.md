@@ -14,17 +14,17 @@
    - Terminal
 
 ## Project Functionalities
-    -   Displays a consolidated view of the contact information  `Name` and  `phonenumber`.
-    -   Sortable by  `last_name`
-    -   Searchable by  `first_name`  and  `last_name`.
-    -   Detailed view of the selected Contacts
-    -   Displays all editable information about contact.
-    -   Can edit and save selected contact information.
-    -   Forms have appropriate validation and error messages.
-    -   A confirmation is used before deleting a contact.
-    -   The logout removes their authorization and redirects them to the login page.
-    -   Add, delete, edit group.
-    -   Add contact to a group.
+   Displays a consolidated view of the contact information  `Name` and  `phonenumber`.
+   Sortable by  `last_name`
+   Searchable by  `first_name`  and  `last_name`.
+   Detailed view of the selected Contacts
+   Displays all editable information about contact.
+   Can edit and save selected contact information.
+   Forms have appropriate validation and error messages.
+   A confirmation is used before deleting a contact.
+   The logout removes their authorization and redirects them to the login page.
+   Add, delete, edit group.
+   Add contact to a group.
 
 ## Built With
 - [Windows Visual Studio](https://code.visualstudio.com) - The web framework used
