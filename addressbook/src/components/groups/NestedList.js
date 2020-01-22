@@ -6,7 +6,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
-import Group from "@material-ui/icons/Group";
+import { AccountCircle, Group } from "@material-ui/icons";
 import GroupAdd from "@material-ui/icons/GroupAdd";
 import Contacts from "@material-ui/icons/Contacts";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -93,7 +93,20 @@ export const NestedList = props => {
         aria-labelledby="nested-list-subheader"
         subheader={
           <ListSubheader component="div" id="nested-list-subheader">
-            <span style={{ textTransform: "capitalize" }}>
+            <span
+              style={{
+                textTransform: "capitalize",
+                display: "flex",
+                alignItems: "center"
+              }}
+            >
+              <AccountCircle
+                style={{
+                  fontSize: "30px",
+                  margin: "0 10px 0 0",
+                  color: "#3f51b5"
+                }}
+              />
               Hello {user.first_name + " " + user.last_name}!
             </span>
           </ListSubheader>
@@ -117,7 +130,7 @@ export const NestedList = props => {
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
+          <List component="div" disablePadding style={overFlow}>
             <React.Fragment>
               {groups.map(x => (
                 <ListItem
@@ -160,3 +173,4 @@ export const NestedList = props => {
 
 const link = { textDecoration: "none", color: "black" };
 const active = { background: "#cccccc" };
+const overFlow = { maxHeight: "288px", overflow: "auto" };

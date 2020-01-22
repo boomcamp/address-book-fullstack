@@ -10,7 +10,7 @@ module.exports = {
       .findOne({ email: email })
       .then(user => {
         if (user) {
-          throw new Error("email already exists");
+          throw new Error("Email already exists");
         }
 
         argon2

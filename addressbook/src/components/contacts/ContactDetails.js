@@ -127,11 +127,13 @@ export const ContactDetails = props => {
           <Label>Group:</Label>
           <Span>
             <Group style={icon} />
-            {rowData.group_id ? (
+            <span
+              style={
+                rowData.group_id ? {} : { color: "#b22", fontStyle: "italic" }
+              }
+            >
               <GroupName group_id={rowData.group_id} user={user} />
-            ) : (
-              "Not assigned"
-            )}
+            </span>
           </Span>
         </Row>
       </Div>

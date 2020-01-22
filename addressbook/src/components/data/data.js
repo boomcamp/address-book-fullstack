@@ -2,6 +2,22 @@ import styled from "styled-components";
 import React from "react";
 import { GroupName } from "./groupName";
 
+const GroupSpan = styled.span`
+  font-size: 14px;
+  border: 2px solid #5c6ed4;
+  color: #3f51b5;
+  border-radius: 5px;
+  font-style: italic;
+  padding: 5px 10px 5px 10px;
+`;
+const None = styled.span`
+  font-size: 14px;
+  border: 2px solid #b222;
+  color: #b22;
+  border-radius: 5px;
+  font-style: italic;
+  padding: 5px 10px 5px 10px;
+`;
 const Span = styled.span`
   text-transform: capitalize;
 `;
@@ -24,7 +40,16 @@ export const columnData = user => [
   {
     title: "Group",
     field: "group_id",
-    render: rowData => <GroupName group_id={rowData.group_id} user={user} />
+    render: rowData =>
+      rowData.group_id ? (
+        <GroupSpan>
+          <GroupName group_id={rowData.group_id} user={user} />
+        </GroupSpan>
+      ) : (
+        <None>
+          <GroupName group_id={rowData.group_id} user={user} />
+        </None>
+      )
   }
 ];
 export const columnDataMobile = user => [
@@ -37,7 +62,16 @@ export const columnDataMobile = user => [
   {
     title: "Group",
     field: "group_id",
-    render: rowData => <GroupName group_id={rowData.group_id} user={user} />
+    render: rowData =>
+      rowData.group_id ? (
+        <GroupSpan>
+          <GroupName group_id={rowData.group_id} user={user} />
+        </GroupSpan>
+      ) : (
+        <None>
+          <GroupName group_id={rowData.group_id} user={user} />
+        </None>
+      )
   }
 ];
 export const action2 = (

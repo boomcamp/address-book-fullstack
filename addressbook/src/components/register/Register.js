@@ -30,7 +30,7 @@ export const Register = props => {
         setRedirect(true);
       })
       .catch(err => {
-        toast.info(err.response.data.message, {
+        toast.info(err.response.data.error, {
           position: toast.POSITION.TOP_CENTER
         });
       });

@@ -28,7 +28,7 @@ massive({
   app.use(cors());
 
   // users endpoints
-  app.post("/api/register", user.register);
+  app.post("/api/register", valid.user, user.register);
   app.post("/api/login", user.login);
 
   // contact endpoints

@@ -210,7 +210,7 @@ export const Contacts = props => {
           fullWidth
           title={groupName}
           columns={
-            windowWidth >= 600 ? columnData(user) : columnDataMobile(user)
+            windowWidth >= 700 ? columnData(user) : columnDataMobile(user)
           }
           data={
             userData
