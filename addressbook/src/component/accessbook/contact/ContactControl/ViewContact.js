@@ -18,6 +18,7 @@ export class ViewContact extends Component {
         country: "",
         inputDisabled: true,
         edit: false,
+        isEmailValid: true
     }
     toggle = () => {
         this.props.ViewData.map(res => {
@@ -42,30 +43,62 @@ export class ViewContact extends Component {
     }
     OnsaveEdit = () => {
         if (this.state.first_name && this.state.mobile_phone !== "") {
-            Axios({
-                method: 'patch',
-                url: `http://localhost:4001/addressbook/getcontact/${this.props.id}/update`,
-                headers: { Authorization: `Bearer ${localStorage.token}` },
-                data: {
-                    first_name: this.state.first_name,
-                    last_name: this.state.last_name,
-                    home_phone: this.state.home_phone,
-                    mobile_phone: this.state.mobile_phone,
-                    work_phone: this.state.work_phone,
-                    email: this.state.email,
-                    city: this.state.city,
-                    state_or_province: this.state.state_or_province,
-                    postal_code: this.state.postal_code,
-                    country: this.state.country
+            if (this.state.email !== "") {
+                if (/\S+@\S+\.\S+/.test(this.state.email)) {
+                    Axios({
+                        method: 'patch',
+                        url: `http://localhost:4001/addressbook/getcontact/${this.props.id}/update`,
+                        headers: { Authorization: `Bearer ${localStorage.token}` },
+                        data: {
+                            first_name: this.state.first_name,
+                            last_name: this.state.last_name,
+                            home_phone: this.state.home_phone,
+                            mobile_phone: this.state.mobile_phone,
+                            work_phone: this.state.work_phone,
+                            email: this.state.email,
+                            city: this.state.city,
+                            state_or_province: this.state.state_or_province,
+                            postal_code: this.state.postal_code,
+                            country: this.state.country
+                        }
+                    }).then(res => {
+                        this.props.refreshData();
+                        this.props.Editnotify()
+                        this.inputDisabled();
+                        this.setState({isEmailValid: true})
+                    }).catch(error => {
+                        console.log("edit Failed")
+                    })
+                }else{
+                    this.setState({isEmailValid: false})
                 }
-            }).then(res => {
-                this.props.refreshData();
-                this.props.Editnotify()
-                this.inputDisabled();
-            }).catch(error => {
-                console.log("edit Failed")
-            })
-        }else{
+            } else {
+                Axios({
+                    method: 'patch',
+                    url: `http://localhost:4001/addressbook/getcontact/${this.props.id}/update`,
+                    headers: { Authorization: `Bearer ${localStorage.token}` },
+                    data: {
+                        first_name: this.state.first_name,
+                        last_name: this.state.last_name,
+                        home_phone: this.state.home_phone,
+                        mobile_phone: this.state.mobile_phone,
+                        work_phone: this.state.work_phone,
+                        email: this.state.email,
+                        city: this.state.city,
+                        state_or_province: this.state.state_or_province,
+                        postal_code: this.state.postal_code,
+                        country: this.state.country
+                    }
+                }).then(res => {
+                    this.props.refreshData();
+                    this.props.Editnotify()
+                    this.inputDisabled();
+                    this.setState({isEmailValid: true})
+                }).catch(error => {
+                    console.log("edit Failed")
+                })
+            }
+        } else {
             this.props.ErrorNotify()
         }
     }
@@ -73,7 +106,8 @@ export class ViewContact extends Component {
         this.setState({
             ...this.state,
             inputDisabled: !this.state.inputDisabled,
-            edit: !this.state.edit
+            edit: !this.state.edit,
+            isEmailValid: true
         })
     }
     render() {
@@ -89,27 +123,27 @@ export class ViewContact extends Component {
                                 <label>First Name</label>
                                 <input type="text" value={this.state.first_name} name="first_name" onChange={(e) => this.setState({
                                     first_name: e.target.value
-                                })} disabled={this.state.inputDisabled} className={this.state.first_name !== "" ? "form-control" : "form-control is-invalid"}/>
+                                })} disabled={this.state.inputDisabled} className={this.state.first_name !== "" ? "form-control" : "form-control is-invalid"} />
                                 <label>Last Name</label>
                                 <input type="text" className="form-control" value={this.state.last_name} name="last_name" onChange={(e) => this.setState({
                                     last_name: e.target.value
                                 })} disabled={this.state.inputDisabled} />
                                 <label>Home Phone</label>
-                                <input type="text" className="form-control" value={this.state.home_phone} name="home_phone" onChange={(e) => this.setState({
+                                <input type="number" className="form-control" value={this.state.home_phone} name="home_phone" onChange={(e) => this.setState({
                                     home_phone: e.target.value
                                 })} disabled={this.state.inputDisabled} />
                                 <label>Mobile Phone</label>
-                                <input type="text" value={this.state.mobile_phone} name="mobile_phone" onChange={(e) => this.setState({
+                                <input type="number" value={this.state.mobile_phone} name="mobile_phone" onChange={(e) => this.setState({
                                     mobile_phone: e.target.value
-                                })} disabled={this.state.inputDisabled} className={this.state.mobile_phone !== "" ? "form-control" : "form-control is-invalid"}/>
+                                })} disabled={this.state.inputDisabled} className={this.state.mobile_phone !== "" ? "form-control" : "form-control is-invalid"} />
                                 <label>Work Phone</label>
-                                <input type="text" className="form-control" value={this.state.work_phone} name="work_phone" onChange={(e) => this.setState({
+                                <input type="number" className="form-control" value={this.state.work_phone} name="work_phone" onChange={(e) => this.setState({
                                     work_phone: e.target.value
                                 })} disabled={this.state.inputDisabled} />
                             </MDBCol>
                             <MDBCol sm="6">
                                 <label>Email</label>
-                                <input type="text" className="form-control" value={this.state.email} name="email" onChange={(e) => this.setState({
+                                <input type="text" className={this.state.isEmailValid ? "form-control" : "form-control is-invalid"} value={this.state.email} name="email" onChange={(e) => this.setState({
                                     email: e.target.value
                                 })} disabled={this.state.inputDisabled} />
                                 <label>City</label>

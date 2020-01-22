@@ -127,9 +127,10 @@ export default class AddContact extends Component {
                                     <input
                                         type="email"
                                         id="defaultFormEmailEx"
-                                        className="form-control email"
                                         name="email"
+                                        className={this.props.isEmailValid ? "form-control" : "form-control is-invalid"}
                                         onChange={this.handleAddContact}
+                                        placeholder={this.props.isEmailValid ? "" : "Email is Invalid!"}
                                     />
                                 </div>
 

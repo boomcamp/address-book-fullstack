@@ -99,7 +99,7 @@ export default class userControl extends Component {
                     
                     <div className="smallD">
                         <Sort sortASC={this.sortASC} sortDESC={this.sortDESC} />
-                        <AddContact getAddValue={this.getAdd} onclickSave={this.handleSave} OpenModal={this.OPENmodal} modal={this.props.modal} mobile_phoneisRequired={this.props.mobile_phoneisRequired} first_nameisRequired={this.props.first_nameisRequired} />
+                        <AddContact isEmailValid={this.props.isEmailValid} getAddValue={this.getAdd} onclickSave={this.handleSave} OpenModal={this.OPENmodal} modal={this.props.modal} mobile_phoneisRequired={this.props.mobile_phoneisRequired} first_nameisRequired={this.props.first_nameisRequired} />
                         <CreateGroup refreshData={this.onrefeshData} notify={this.notify} />
                         <ViewGroup handleChangeView={this.onChangeView} ViewGroup={this.props.ViewGroup} />
                         <ViewContact handleChangeView={this.onChangeView} ViewContact={this.props.ViewContact} />
