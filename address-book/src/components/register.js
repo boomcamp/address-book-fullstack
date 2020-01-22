@@ -85,14 +85,13 @@ class Register extends Component {
           password: this.state.pword
         })
         .then(res => {
-          if(res.data.message){
+          if (res.data.message) {
             this.handleOpenSnackbar("UserName is Already Taken", "#9a0707");
             this.setState({
               icon: "error"
             });
-          }
-          else{
-            localStorage.setItem("create", this.state.name)
+          } else {
+            localStorage.setItem("create", this.state.name);
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("id", res.data.id);
             this.props.history.push("/addressbook");
@@ -183,7 +182,6 @@ class Register extends Component {
             <Grid
               container
               style={{
-           
                 display: "flex",
                 justifyContent: "center"
               }}
@@ -192,16 +190,16 @@ class Register extends Component {
                 item
                 lg={3}
                 md={12}
- 
                 style={{
                   border: "solid 1px #eee",
-                  padding: 15
+                  padding: 15,
+                 
                 }}
               >
                 <h1>Registration</h1>
                 <TextField
-                fullWidth
-             
+        
+                  fullWidth
                   label={
                     this.state.fnameError ? "Required FirstName" : "FirstName"
                   }
@@ -224,8 +222,7 @@ class Register extends Component {
                   }}
                 />
                 <TextField
-                fullWidth
-               
+                  fullWidth
                   label={
                     this.state.lnameError ? "Required LastName" : "LastName"
                   }
@@ -249,8 +246,7 @@ class Register extends Component {
                 />
 
                 <TextField
-                fullWidth
-         
+                  fullWidth
                   label={this.state.emailError ? "Required Email" : "Email"}
                   error={this.state.emailError}
                   className={classes.textField}
@@ -295,7 +291,7 @@ class Register extends Component {
                   }}
                 />
                 <TextField
-                fullWidth
+                  fullWidth
                   label={
                     this.state.pwordError ? "Required Password" : "Password"
                   }
@@ -319,7 +315,7 @@ class Register extends Component {
                 />
 
                 <TextField
-                fullWidth
+                  fullWidth
                   label={
                     this.state.cpwordError
                       ? "Required Confirm Password"
@@ -344,10 +340,18 @@ class Register extends Component {
                   }}
                 />
 
-                <Button fullWidth variant="contained" color="primary" type="submit">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                >
                   Register
                 </Button>
-                <Link style={{ textDecoration: "none", textAlign: 'center' }} to={`/`}>
+                <Link
+                  style={{ textDecoration: "none", textAlign: "center" }}
+                  to={`/`}
+                >
                   <p>Already have an account</p>
                 </Link>
               </Grid>
