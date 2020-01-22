@@ -1,0 +1,375 @@
+import React, { useState } from "react";
+import {
+  Button,
+  TextField,
+  Grid,
+  Typography,
+  Container,
+  InputAdornment,
+  IconButton
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import {
+  PersonOutlined,
+  Create,
+  EmailOutlined,
+  Visibility,
+  VisibilityOff
+} from "@material-ui/icons";
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
+
+export default function SignUp() {
+  const classes = useStyles();
+  let history = useHistory();
+  const [values, setValues] = useState({
+    password: ""
+  });
+  const [confirmValues, setConfirmValues] = useState({
+    password: ""
+  });
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [conf, setConf] = useState("");
+  const [ErrorUsername, setErrorUsername] = useState("");
+  const [ErrorEmail, setErrorEmail] = useState("");
+  const [ErrorFirstname, setErrorFirstname] = useState("");
+  const [ErrorLastname, setErrorLastname] = useState("");
+  const [ErrorPass, setErrorPass] = useState("");
+  const [ErrorConfirmPass, setErrorConfirmPass] = useState("");
+
+  const handleChangePassword = prop => event =>
+    setValues({ ...values, [prop]: event.target.value });
+  const handleClickShowPassword = () =>
+    setValues({ ...values, showPassword: !values.showPassword });
+  const handleChangeConfrmPassword = prop => event => {
+    setConfirmValues({ ...confirmValues, [prop]: event.target.value });
+    setConf(event.target.value);
+  };
+  const handleClickShowConfirmPassword = () =>
+    setConfirmValues({
+      ...confirmValues,
+      showPassword: !confirmValues.showPassword
+    });
+  const handleMouseDownPassword = e => e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault();
+    fname === ""
+      ? setErrorFirstname("This field is required")
+      : setErrorFirstname("");
+    lname === ""
+      ? setErrorLastname("This field is required")
+      : setErrorLastname("");
+    username === ""
+      ? setErrorUsername("This field is required")
+      : setErrorUsername("");
+    values.password === ""
+      ? setErrorPass("This field is required")
+      : setErrorPass("");
+    values.password.length < 8
+      ? setErrorPass("Password should be 8 or more characters!")
+      : setErrorPass("");
+    if (conf === "") setErrorConfirmPass("This field is required");
+    else if (conf !== values.password)
+      setErrorConfirmPass("The password did not match. Please try again.");
+    else setErrorConfirmPass("");
+
+    if (email === "") setErrorEmail("This field is required");
+    else {
+      if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email))
+        setErrorEmail("");
+      else setErrorEmail("Please Enter a valid Email");
+    }
+    if (
+      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) &&
+      username &&
+      lname &&
+      fname &&
+      conf === values.password &&
+      values.password.length >= 8
+    ) {
+      // Sign Up
+      axios
+        .post("http://localhost:3004/signup/users", {
+          firstname: fname,
+          lastname: lname,
+          username: username,
+          email: email,
+          password: values.password
+        })
+        .then(token => {
+          localStorage.setItem("Token", token.data.token);
+          Swal.fire({
+            title: "Signed Up Successfully",
+            text: "Please Sign In to your account",
+            icon: "success",
+            button: true
+          }).then(() => history.push("/"));
+        })
+        .catch(error => {
+          Swal.fire({
+            title: error,
+            icon: "error",
+            button: true
+          });
+        });
+    } else {
+      Swal.fire({
+        title: "Please complete the Sign Up form first",
+        icon: "warning",
+        button: true
+      });
+    }
+  };
+  return (
+    <Container
+      maxWidth="xs"
+      component="div"
+      className={`${classes.paper} ${classes.rooot}`}
+    >
+      <div className={classes.paper}>
+        <Create className={classes.avatar} />
+        <Typography component="h1" variant="h5" className="header-top">
+          Sign up
+        </Typography>
+        <form className={classes.form} noValidate>
+          <Grid container spacing={2}>
+            <Grid container spacing={1} alignItems="flex-end" xs={12}>
+              <Grid item xs={1}>
+                <EmailOutlined />
+              </Grid>
+              <Grid item xs={11}>
+                <TextField
+                  error={ErrorEmail === "" ? false : true}
+                  helperText={ErrorEmail ? ErrorEmail : ""}
+                  variant="standard"
+                  margin="normal"
+                  required
+                  id="email input-with-icon-grid standard-full-width standard-size-normal"
+                  label="Email Address"
+                  name="emailAdd"
+                  autoComplete="emailadd"
+                  style={{ margin: 8 }}
+                  fullWidth
+                  onChange={e => setEmail(e.target.value)}
+                  InputLabelProps={{ required: false }}
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={1} alignItems="flex-end" xs={12}>
+              <Grid item xs={1}>
+                <AssignmentIndIcon />
+              </Grid>
+              <Grid item xs={11}>
+                <TextField
+                  error={ErrorUsername === "" ? false : true}
+                  helperText={ErrorUsername ? ErrorUsername : ""}
+                  variant="standard"
+                  margin="normal"
+                  required
+                  id="username input-with-icon-grid standard-full-width standard-size-normal"
+                  label="Desired Username"
+                  name="username"
+                  autoComplete="username"
+                  style={{ margin: 8 }}
+                  fullWidth
+                  onChange={e => setUsername(e.target.value)}
+                  InputLabelProps={{ required: false }}
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={1} alignItems="flex-end" xs={12}>
+              <Grid item xs={1}>
+                <PersonOutlined />
+              </Grid>
+              <Grid item xs={11}>
+                <TextField
+                  error={ErrorFirstname === "" ? false : true}
+                  helperText={ErrorFirstname ? ErrorFirstname : ""}
+                  variant="standard"
+                  margin="normal"
+                  required
+                  id="firstName input-with-icon-grid standard-full-width standard-size-normal"
+                  label="First Name"
+                  name="firstName"
+                  autoComplete="fname"
+                  style={{ margin: 8 }}
+                  fullWidth
+                  onChange={e => setFname(e.target.value)}
+                  InputLabelProps={{ required: false }}
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={1} alignItems="flex-end" xs={12}>
+              <Grid item xs={1}>
+                <PersonOutlined />
+              </Grid>
+              <Grid item xs={11}>
+                <TextField
+                  error={ErrorLastname === "" ? false : true}
+                  helperText={ErrorLastname ? ErrorLastname : ""}
+                  variant="standard"
+                  margin="normal"
+                  required
+                  id="lastName input-with-icon-grid standard-full-width standard-size-normal"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="lname"
+                  style={{ margin: 8 }}
+                  fullWidth
+                  onChange={e => setLname(e.target.value)}
+                  InputLabelProps={{ required: false }}
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={1} alignItems="flex-end" xs={12}>
+              <Grid item xs={1}>
+                <LockOutlinedIcon />
+              </Grid>
+              <Grid item xs={11}>
+                <TextField
+                  error={ErrorPass === "" ? false : true}
+                  helperText={ErrorPass ? ErrorPass : ""}
+                  variant="standard"
+                  margin="normal"
+                  required
+                  id="password input-with-icon-grid standard-adornment-password standard-size-normal"
+                  label="Desired Password"
+                  name="password"
+                  autoComplete="password"
+                  style={{ margin: 8 }}
+                  fullWidth
+                  type={values.showPassword ? "text" : "password"}
+                  value={values.password}
+                  onChange={handleChangePassword("password")}
+                  InputLabelProps={{ required: false }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {values.showPassword ? (
+                            <Visibility />
+                          ) : (
+                            <VisibilityOff />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              </Grid>
+            </Grid>
+            <Grid container spacing={1} alignItems="flex-end" xs={12}>
+              <Grid item xs={1}>
+                <LockOutlinedIcon />
+              </Grid>
+              <Grid item xs={11}>
+                <TextField
+                  error={ErrorConfirmPass === "" ? false : true}
+                  helperText={ErrorConfirmPass ? ErrorConfirmPass : ""}
+                  variant="standard"
+                  margin="normal"
+                  required
+                  id="confirm input-with-icon-grid standard-adornment-password standard-size-normal"
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  autoComplete="confirmPassword"
+                  style={{ margin: 8 }}
+                  fullWidth
+                  type={confirmValues.showPassword ? "text" : "password"}
+                  value={conf}
+                  onChange={handleChangeConfrmPassword()}
+                  InputLabelProps={{ required: false }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowConfirmPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {confirmValues.showPassword ? (
+                            <Visibility />
+                          ) : (
+                            <VisibilityOff />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={e => handleSubmit(e)}
+          >
+            Sign Up
+          </Button>
+        </form>
+      </div>
+    </Container>
+  );
+}
+
+const useStyles = makeStyles(theme => ({
+  "@global": {
+    body: {
+      backgroundColor: theme.palette.common.white
+    }
+  },
+  rooot: {
+    background: "#FFF",
+    borderRadius: "8px",
+    boxShadow: "0 8px 17px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);",
+    left: "50%",
+    top: "45%",
+    position: "absolute",
+    msTransform: "translate(-50%, -50%)",
+    webkitTransform: "translate(-50%, -50%)",
+    transform: "translate(-50%, -50%)",
+    zIndex: "2"
+  },
+  paper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    margin: "0 auto"
+  },
+  avatar: {
+    fontSize: "50px",
+    marginTop: 10
+  },
+  form: {
+    width: "100%",
+    marginTop: theme.spacing(1)
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    backgroundColor: "#009688"
+  },
+  toolbar: {
+    display: "flex",
+    justifyContent: "space-between"
+  },
+  noPad: {
+    padding: "0"
+  },
+  white: {
+    color: "white"
+  }
+}));
