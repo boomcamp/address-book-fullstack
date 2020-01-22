@@ -213,6 +213,20 @@ export default function Account({ handleClose }) {
                             <FormHelperText id="work_phone">{help.work_phone}</FormHelperText>
                         </FormControl>
                         <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                            <InputLabel htmlFor="email">Email</InputLabel>
+                            <OutlinedInput
+                                required
+                                id="email"
+                                name="email"
+                                type="email"
+                                error={warn.email}
+                                onBlur={warningUpdate}
+                                onChange={handleChange}
+                                labelWidth={105}
+                            />
+                            <FormHelperText id="email">{help.email}</FormHelperText>
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                             <InputLabel htmlFor="city">City</InputLabel>
                             <OutlinedInput
                                 required

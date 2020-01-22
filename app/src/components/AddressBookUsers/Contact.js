@@ -89,6 +89,7 @@ export default function Contact({ users, handleClose, handleClickOpen, menuOpen,
                                 home_phone={i.home_phone}
                                 mobile_phone={i.mobile_phone}
                                 work_phone={i.work_phone}
+                                email={i.email}
                                 city={i.city}
                                 state={i.state}
                                 postal_code={i.postal_code}

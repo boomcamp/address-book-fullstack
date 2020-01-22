@@ -26,6 +26,10 @@ exports.up = (pgm) => {
             type: 'bigint',
             notNull: true,
         },
+        email: {
+            type: 'text',
+            notNull: true
+        },
         city: {
             type: 'text',
             notNull: true

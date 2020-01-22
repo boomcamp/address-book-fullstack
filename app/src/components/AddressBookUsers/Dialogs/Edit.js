@@ -12,7 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import clsx from 'clsx';
 import FormControl from '@material-ui/core/FormControl';
-// import axios from 'axios';
+import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -26,6 +26,7 @@ export default function Edit({
     home_phone,
     mobile_phone,
     work_phone,
+    email,
     city,
     state,
     postal_code,
@@ -39,6 +40,7 @@ export default function Edit({
         home_phone,
         mobile_phone,
         work_phone,
+        email,
         city,
         state,
         postal_code,
@@ -54,15 +56,15 @@ export default function Edit({
     }
 
     const onSave = () => {
-        // axios({
-        //     method: 'patch',
-        //     url: `http://localhost:3001/api/contacts/${id}`,
-        //     data: newData
-        // })
-        //     .then(edit => (
-        //         window.location.href = "#/addressbook"
-        //     ))
-        //     .catch(e => console.log(e))
+        axios({
+            method: 'patch',
+            url: `http://localhost:3001/api/contacts/${id}`,
+            data: newData
+        })
+            .then(() => (
+                editClose()
+            ))
+            .catch(e => console.log(e))
     }
 
     return (
@@ -89,7 +91,7 @@ export default function Edit({
                     </AppBar>
                     <DialogContent>
                         <div className={classes.display}>
-                            <form className={classes.input} onSubmit={onSave}>
+                            <form className={classes.input} onSubmit={() => onSave()}>
                                 <Grid container>
                                     <Grid item xs={12} sm={12} md={12} lg={12}>
                                         <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
@@ -149,6 +151,18 @@ export default function Edit({
                                                 name="work_phone"
                                                 type="number"
                                                 defaultValue={work_phone}
+                                                onChange={handleEditChange}
+                                                labelWidth={105}
+                                            />
+                                        </FormControl>
+                                        <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                                            <InputLabel htmlFor="email">Email</InputLabel>
+                                            <OutlinedInput
+                                                required
+                                                id="email"
+                                                name="email"
+                                                type="email"
+                                                defaultValue={email}
                                                 onChange={handleEditChange}
                                                 labelWidth={105}
                                             />

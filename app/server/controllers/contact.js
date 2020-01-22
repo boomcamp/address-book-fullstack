@@ -50,6 +50,7 @@ function updateContact(req, res) {
         home_phone,
         mobile_phone,
         work_phone,
+        email,
         city,
         state,
         postal_code,
@@ -69,6 +70,7 @@ function updateContact(req, res) {
                 home_phone,
                 mobile_phone,
                 work_phone,
+                email,
                 city,
                 state,
                 postal_code,
@@ -100,7 +102,7 @@ function deleteContact(req, res) {
 
 function addContact(req, res) {
     const db = req.app.get('db');
-    const { fname, lname, home_phone, mobile_phone, work_phone, city, state, postal_code, country } = req.body;
+    const { fname, lname, home_phone, mobile_phone, work_phone, email, city, state, postal_code, country } = req.body;
     const { user_id } = req.params
 
     db.contact
@@ -110,6 +112,7 @@ function addContact(req, res) {
             home_phone,
             mobile_phone,
             work_phone,
+            email,
             city,
             state,
             postal_code,
