@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import MaterialTable, { MTableToolbar, MTableHeader } from 'material-table';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import MaterialTable, { MTableToolbar } from 'material-table';
+import { createMuiTheme, MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { withSnackbar } from 'notistack';
 
 
@@ -26,35 +26,39 @@ const btnStyle = {
     width: `140px`
 }
 
-const btnStyleEdit = {
-    display: `flex`,
-    alignItems: `center`,
-    border: `none`,
-    color: `#4c6571`,
-    backgroundColor: `transparent`,
-    cursor: `pointer`,
-    height: `30px`
-    // padding: `10px`,
-    // margin: `5px`,
-    // width: `130px`,
-}
+const useStyles = makeStyles(theme => ({
+    btnStyleEdit: {
+        display: `flex`,
+        alignItems: `center`,
+        border: `none`,
+        color: `#4c6571`,
+        backgroundColor: `transparent`,
+        cursor: `pointer`,
+        height: `30px`,
+        "&:hover": {
+            opacity: "0.65"
+        },
+    },
+    btnStyleDelete: {
+        display: `flex`,
+        alignItems: `center`,
+        border: `none`,
+        color: `red`,
+        backgroundColor: `transparent`,
+        cursor: `pointer`,
+        borderLeft: `1px solid #b4c5ce`,
+        height: `30px`,
+        paddingLeft: `2px`,
+        "&:hover": {
+            opacity: "0.65"
+        },
+    }
+  }));
+  
 
-const btnStyleDelete = {
-    display: `flex`,
-    alignItems: `center`,
-    border: `none`,
-    color: `red`,
-    backgroundColor: `transparent`,
-    cursor: `pointer`,
-    borderLeft: `1px solid #b4c5ce`,
-    height: `30px`,
-    paddingLeft: `2px`,
-    // margin: `5px`,
-    // width: `130px`
-}
-
-
+  
 function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, enqueueSnackbar }) {
+    const classes = useStyles();
     const [windowSize, setWindowSize] = useState(window.innerWidth);
     const [open, setOpen] = useState({
         create: false,
@@ -179,14 +183,16 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
             <PopUpModal
                 title="Add Contacts to Group"
                 open={open.createGroup.openModal}
-                closeFn={() => setOpen({ ...open, createGroup: false })}
+                closeFn={() => setOpen({ ...open, createGroup: { openModal: false } })}
             >
                 <CreateGroup row={open.createGroup.row} closeFn={() => setOpen({ ...open, createGroup: { openModal: false } })} />
             </PopUpModal>
 
             <MuiThemeProvider theme={theme}>
                 <MaterialTable
-                    title={(groupObj) ? (windowSize < 426) ? null : <h1>{groupObj.group_name}</h1> : 'Contact Lists'}
+                    title={(groupObj) ? 
+                            (windowSize < 426) ? null : <h1>{groupObj.group_name}</h1> : 
+                            (windowSize < 426) ? null : 'Contact Lists'}
                     columns={state.columns}
                     data={state.data}
                     actions={[
@@ -236,15 +242,17 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                         Toolbar: props => (
                             <div>
                                 <MTableToolbar {...props} style={{ backgroundColor: `red` }} />
-                                <div style={{ padding: '0px 10px', display: `flex`, justifyContent:(groupObj)?`space-between`:`flex-end`, alignItems:`center`}}>
+                                <div style={{ padding: '0px 10px', display: `flex`, justifyContent:(groupObj)?`space-between`:`flex-end`, alignItems:`center`, flexDirection:(windowSize<426)?`column`:`row`}}>
+                                    {(windowSize<426)&&<h3 style={{textTransform:`uppercase`, margin:`0 0 0 0`}}>{(groupObj)&&groupObj.group_name}</h3>}
+                                    
                                     {(groupObj) ? (
                                     <div style={{ display: `flex`}}>
-                                        <button style={btnStyleEdit} onClick={() => setOpen({ ...open, group: true })}>
+                                        <button className={classes.btnStyleEdit} onClick={() => setOpen({ ...open, group: true })}>
                                             <EditIcon /> Edit Group
                                             
                                         </button>
                                         <button
-                                            style={btnStyleDelete}
+                                            className={classes.btnStyleDelete}
                                             onClick={() => {
                                                 if (window.confirm('Are you sure to delete this group?')) {
                                                     deleteGroup(groupObj.id)
@@ -253,7 +261,7 @@ function Table({ groupObj, updateTableFn, updateGroupListFn, state, setStateFn, 
                                             <DeleteIcon /> Delete Group
                                         </button>
                                     </div>
-                                ) : null}
+                                    ) : null}
 
                                     <select style={btnStyle} onChange={handleSort} value={(state.sort) && state.sort}>
                                         <option style={{ color: `grey` }} value="">Sort By Lastname</option>

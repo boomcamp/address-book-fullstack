@@ -1,4 +1,4 @@
-# Project Summary - Fullstack Address Book
+<!-- # Project Summary - Fullstack Address Book
 
 For this project you'll be crafting an Address Book application. You'll be
 responsible for the user interface and its functionality, along with
@@ -122,4 +122,75 @@ query them. This application will most likely require the following entities.
 # Finished
 
 Submit a link to your fork of this repository to the Google Classroom assignment
-related to this project.
+related to this project. -->
+
+
+# Address Book Fullstack Project
+
+This project is a simple address book application that has the following feature:
+
+### Login / Registration Page:
+
+- Login / Registration is the landing page of the application.
+
+  - **New Users** - must register to use the Address Book application
+
+  - **Existing Users** - can login to the application with their `username` and `password`.
+
+### Address Book Page:
+
+- This is the main address book page or the page after logging in of the user.
+
+  - **List of saved user contacts can be seen on this page**:
+
+    - The list displays a consolidated view of the contact information
+      `first_name`, `last_name` and `phonenumbers`.
+
+    - The list is sortable by `last_name` *[utilizing backend]*.
+
+    - The list is searchable by `first_name` and `last_name`.
+
+    - Detailed contact view will show when a contact is selected from this list.
+  
+    - The user can **create** new contacts and save them to the user's address book. Also, the user can add it to a group contacts directly.
+     
+    - The user can **update / delete** contacts from the address book.
+
+    - The user can select contacts and add it to group.
+
+
+### Contact Group Page:
+   - This is the page of the group contacts.
+     - **List of saved user group contacts can be seen on this page**:
+        - There are tabs of group contacts and shows the table of the contacts when clicked.
+
+        - The list displays a consolidated view of the contact information
+        `first_name`, `last_name` and `phonenumbers`.
+
+        - The list is sortable by `last_name` *[utilizing backend]*.
+
+        - The list is searchable by `first_name` and `last_name`.
+
+        - Detailed contact view will show when a contact is selected from this list.
+
+        - The user can **create** new contacts and automatically it will save on the current group selected.
+  
+        - The user can **update / delete** contacts and group contacts from the address book.
+
+### Responsiveness
+  - The application has a responsive UI for three device categories **mobile**, **tablet** and **desktop**.
+
+## Getting Started
+ - `clone` the project
+ - run `npm intsall` to set up the dependencies 
+ - run `npm run dev` to start the `front-end and back-end server`
+
+
+## This project utilize the following technologies:
+
+- Web application and UI - [React.js](https://reactjs.org/)
+- Backend Server / API - [Node.js](https://nodejs.org) using the
+  [express](https://expressjs.com/) server framework
+- Database - [PostgreSQL](https://www.postgresql.org/)
+
+
