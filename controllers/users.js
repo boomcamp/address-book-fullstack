@@ -98,5 +98,22 @@ module.exports = {
           res.status(500).end();
         }
       });
+  },
+  validateUsername: (req, res, next) => {
+    const db = req.app.get("db");
+    const { username } = req.body;
+    db.users
+      .findOne({ username: username })
+      .then(user => {
+        if (user) {
+          throw new Error("Username already exists");
+        }
+        next();
+      })
+      .catch(err => {
+        err.message
+          ? res.status(400).json({ error: err.message })
+          : res.status(500).end();
+      });
   }
 };

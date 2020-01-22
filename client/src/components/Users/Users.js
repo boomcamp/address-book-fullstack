@@ -12,27 +12,21 @@ import {
   MDBDropdownItem
 } from "mdbreact";
 import MaterialTable from "material-table";
+import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
 import axios from "axios";
 import { Tooltip } from "@material-ui/core";
 import Zoom from "@material-ui/core/Zoom";
 import EditAttributesIcon from "@material-ui/icons/EditAttributes";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
-import AccountBox from "@material-ui/icons/AccountBox";
-import Home from "@material-ui/icons/Home";
-import Work from "@material-ui/icons/Work";
 import Button from "@material-ui/core/Button";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
-import LocationOn from "@material-ui/icons/LocationOn";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { FaArrowCircleDown, FaMobileAlt, FaCity } from "react-icons/fa";
+import { FaArrowCircleDown } from "react-icons/fa";
+import { FiEdit } from "react-icons/fi";
 import { AiOutlineUsergroupDelete } from "react-icons/ai";
-import { MdEmail } from "react-icons/md";
+//Modals
 import Modal from "../Modal/Modal";
 import Edit from "../Modal/Edit";
 import Group from "../Modal/Group";
@@ -50,21 +44,62 @@ const Grp = styled.div`
   flex-wrap: wrap;
 `;
 
-const Box = styled.div`
-  display: flex;
-  width: 100%;
-  @media screen and (max-width: 800px) {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-  }
-`;
+const Resize = styled.div`
+  @media only screen and (max-width: 900px),
+    (height: 1024px) and (width: 1366px) and (-webkit-min-device-pixel-ratio: 1.5) and (orientation: landscape),
+    (width: 1024px) and (height: 1366px) and (-webkit-min-device-pixel-ratio: 1.5) and (orientation: portrait) {
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+    }
 
-const Item = styled.div`
-  padding: 10px 20px 10px 20px;
-  width: 50%;
-  @media screen and (max-width: 800px) {
-    width: 100%;
+    thead tr {
+      display: none;
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tr {
+      border: 1px solid lightgray;
+      border-radius: 10px;
+    }
+
+    td {
+      border: none;
+      border-bottom: 1px solid #eee;
+      position: relative;
+      padding-left: 50%;
+    }
+
+    td:before {
+      position: absolute;
+      top: 10px;
+      left: 6px;
+      width: 50%;
+      padding: 10px;
+      white-space: nowrap;
+    }
+
+    td:nth-of-type(1):before {
+      content: "Contact Details";
+    }
+    td:nth-of-type(2):before {
+      content: "Name";
+    }
+    td:nth-of-type(3):before {
+      content: "Contact #";
+    }
+    td:nth-of-type(4):before {
+      content: "Add to group";
+    }
+    td:nth-of-type(5):before {
+      content: "Actions";
+    }
   }
 `;
 
@@ -104,11 +139,6 @@ export default class Users extends React.Component {
               </div>
             </React.Fragment>
           )
-        },
-        {
-          title: "",
-          field: "lname",
-          render: () => <React.Fragment></React.Fragment>
         },
         {
           title: "Contact #",
@@ -164,7 +194,6 @@ export default class Users extends React.Component {
           )
         }
       ],
-      sortType: "asc",
       data: [],
       rowInfo: {},
       sort: "",
@@ -174,7 +203,7 @@ export default class Users extends React.Component {
       toggleModal3: false,
       toggleModal4: false,
       toggleModal5: false,
-      bottomToggle: false,
+      toggleModal6: false,
       isOpen: false
     };
   }
@@ -253,7 +282,7 @@ export default class Users extends React.Component {
     event.preventDefault();
     const Obj = {
       user_id: localStorage.getItem("user_id"),
-      group_id: this.state.groupVal.id,
+      group_id: this.state.groupVal ? this.state.groupVal.id : null,
       fname: this.state.fname,
       lname: this.state.lname,
       home_phone: this.state.homePhone,
@@ -274,7 +303,9 @@ export default class Users extends React.Component {
       })
       .then(() => {
         this.fetchData(this.state.groupVal);
-        toast.success("Success!!");
+        toast.success("Success!!", {
+          position: toast.POSITION.TOP_CENTER
+        });
         this.handleClose();
       })
       .catch(err => toast.error(err.response.data.error));
@@ -303,9 +334,11 @@ export default class Users extends React.Component {
           Authorization: `Bearer ${localStorage.getItem("user")}`
         }
       })
-      .then(res => {
+      .then(() => {
         this.fetchData(this.state.groupVal);
-        toast.info("Successfully Edited!!");
+        toast.info("Successfully Edited!!", {
+          position: toast.POSITION.TOP_CENTER
+        });
         this.clickClose();
       })
       .catch(err => toast.error(err.response.data.error));
@@ -325,8 +358,33 @@ export default class Users extends React.Component {
       })
       .then(res => {
         this.fetchData(this.state.groupVal);
-        toast.success(`Successfully added to the group`);
+        toast.success(`Successfully added to the group`, {
+          position: toast.POSITION.TOP_CENTER
+        });
         this.clickClose();
+      })
+      .catch(err => toast.error(err.response.data.error));
+  };
+
+  editGroupName = event => {
+    event.preventDefault();
+    const Obj = {
+      group_name: this.state.group_name
+    };
+    const url = `http://localhost:5009/api/groups/${this.state.groupVal.id}/edit`;
+
+    axios
+      .patch(url, Obj, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("user")}`
+        }
+      })
+      .then(res => {
+        this.fetchData(res.data[0]);
+        toast.success(`Successfully Edited`, {
+          position: toast.POSITION.TOP_CENTER
+        });
+        this.clickClose5();
       })
       .catch(err => toast.error(err.response.data.error));
   };
@@ -346,7 +404,9 @@ export default class Users extends React.Component {
       })
       .then(() => {
         this.fetchData(this.state.groupVal);
-        toast.success("Group Added!!");
+        toast.success("Group Added!!", {
+          position: toast.POSITION.TOP_CENTER
+        });
         this.clickClose1();
       })
       .catch(err => toast.error(err.response.data.error));
@@ -363,7 +423,9 @@ export default class Users extends React.Component {
       .then(() => {
         this.setState({ groupVal: undefined });
         this.fetchData(this.state.groupVal);
-        toast.info("Successfully Deleted");
+        toast.info("Successfully Deleted", {
+          position: toast.POSITION.TOP_CENTER
+        });
         this.clickClose2();
       })
       .catch(err => toast.error(err.response.data.error));
@@ -382,7 +444,9 @@ export default class Users extends React.Component {
       )
       .then(() => {
         this.fetchData(this.state.groupVal);
-        toast.info("Successfully Deleted");
+        toast.info("Successfully Deleted", {
+          position: toast.POSITION.TOP_CENTER
+        });
         this.clickClose3();
       })
       .catch(err => toast.error(err.response.data.error));
@@ -402,8 +466,8 @@ export default class Users extends React.Component {
   handleClickOpen = () => {
     this.setState({ toggleModal: true });
   };
-  clickOpen = rowInfo => {
-    this.setState({ toggleModal1: true, rowData: rowInfo });
+  clickOpen = contactInfo => {
+    this.setState({ toggleModal1: true, rowData: contactInfo });
   };
   clickOpen1 = rowInfo => {
     this.setState({ toggleModal2: true, rowData: rowInfo });
@@ -416,6 +480,9 @@ export default class Users extends React.Component {
   };
   clickOpen4 = rowInfo => {
     this.setState({ toggleModal5: true, rowData: rowInfo });
+  };
+  clickOpen5 = groupData => {
+    this.setState({ toggleModal6: true, groupVal: groupData });
   };
   clickBottomToggle = rowInfo => {
     this.setState({ bottomToggle: true, rowData: rowInfo });
@@ -439,133 +506,24 @@ export default class Users extends React.Component {
   clickClose4 = () => {
     this.setState({ toggleModal5: false });
   };
-  closeBottomToggle = () => {
-    this.setState({ bottomToggle: false });
+  clickClose5 = () => {
+    this.setState({ toggleModal6: false });
   };
 
   myChangeHandler1 = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  searchFilter = event => {
+    this.setState({
+      filter: event.target.value
+    });
+  };
+
   render() {
     return (
       <div>
         <ToastContainer />
-        <Dialog
-          open={this.state.toggleModal5}
-          onClose={this.clickClose4}
-          maxWidth={"xs"}
-          fullWidth
-        >
-          <DialogTitle id="alert-dialog-title">{"Contact Details"}</DialogTitle>
-          <DialogContent dividers>
-            <Box>
-              <Item>
-                <span
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <AccountBox />
-                  {"  "}
-                  {this.state.rowData
-                    ? this.state.rowData.fname + " " + this.state.rowData.lname
-                    : ""}
-                </span>
-              </Item>
-              <Item>
-                <span
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <Work />
-                  {"  "}
-                  {this.state.rowData ? this.state.rowData.work_phone : ""}
-                </span>
-              </Item>
-            </Box>
-            <Box>
-              <Item>
-                <span
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <Home />
-                  {"  "}
-                  {this.state.rowData ? this.state.rowData.home_phone : ""}
-                </span>
-              </Item>
-              <Item>
-                <span
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <FaMobileAlt size={25} />
-                  {"  "}
-                  {this.state.rowData ? this.state.rowData.mobile_phone : ""}
-                </span>
-              </Item>
-            </Box>
-            <Box>
-              <Item>
-                <span
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <MdEmail size={25} />
-                  {"  "}
-                  {this.state.rowData ? this.state.rowData.email : ""}
-                </span>
-              </Item>
-              <Item>
-                <span
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <FaCity size={25} />
-                  {"  "}
-                  {this.state.rowData ? this.state.rowData.city : ""}
-                </span>
-              </Item>
-            </Box>
-            <Box>
-              <Item>
-                <span
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <LocationOn />
-                  {"  "}
-                  {this.state.rowData
-                    ? this.state.rowData.state_or_province
-                    : ""}
-                </span>
-              </Item>
-              <Item>
-                <span
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <LocationOn />
-                  {"  "}
-                  {this.state.rowData ? this.state.rowData.country : ""}
-                </span>
-              </Item>
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.clickClose4} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
         <header>
           <MDBNavbar
             color="primary-color-dark"
@@ -598,6 +556,19 @@ export default class Users extends React.Component {
             </MDBCollapse>
           </MDBNavbar>
           <Div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                flexWrap: "wrap"
+              }}
+            >
+              <TextField
+                id="outlined-basic"
+                label="Search"
+                onChange={this.searchFilter}
+              />
+            </div>
             <Grp>
               <MDBDropdown>
                 <MDBDropdownToggle
@@ -624,48 +595,6 @@ export default class Users extends React.Component {
                       ))
                     : ""}
                 </MDBDropdownMenu>
-                <Dialog
-                  open={this.state.toggleModal3}
-                  onClose={this.clickClose2}
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Are you sure you want to delete this group"}
-                  </DialogTitle>
-                  <DialogContent></DialogContent>
-                  <DialogActions>
-                    <Button onClick={this.clickClose2} color="primary">
-                      No
-                    </Button>
-                    <Button
-                      onClick={this.deleteGroup}
-                      color="primary"
-                      autoFocus
-                    >
-                      Yes
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-                <Dialog
-                  open={this.state.toggleModal4}
-                  onClose={this.clickClose3}
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    {"Are you sure you want to delete this contact?"}
-                  </DialogTitle>
-                  <DialogContent></DialogContent>
-                  <DialogActions>
-                    <Button onClick={this.clickClose3} color="primary">
-                      No
-                    </Button>
-                    <Button
-                      onClick={this.deleteHandler}
-                      color="primary"
-                      autoFocus
-                    >
-                      Yes
-                    </Button>
-                  </DialogActions>
-                </Dialog>
               </MDBDropdown>
               <MDBDropdown>
                 <MDBDropdownToggle
@@ -688,19 +617,25 @@ export default class Users extends React.Component {
                 </MDBDropdownMenu>
               </MDBDropdown>
             </Grp>
-            <span>
+            <Resize>
               <MaterialTable
                 title={
                   <div>
                     <span
                       style={{
                         fontSize: 25,
-                        fontWeight: "bold"
+                        fontWeight: "bold",
+                        color: "darkblue"
                       }}
                     >
                       {this.state.groupVal ? (
                         <div>
                           {this.state.groupVal.group_name}{" "}
+                          <FiEdit
+                            cursor="pointer"
+                            onClick={() => this.clickOpen5(this.state.groupVal)}
+                          />
+                          {"  "}
                           <AiOutlineUsergroupDelete
                             cursor="pointer"
                             onClick={() => this.clickOpen2(this.state.groupVal)}
@@ -713,7 +648,13 @@ export default class Users extends React.Component {
                   </div>
                 }
                 columns={this.state.columns}
-                data={this.state.data}
+                data={this.state.data.filter(row => {
+                  const regex = new RegExp(this.state.filter, "gi");
+                  if (regex.test(row.fname) || regex.test(row.lname)) {
+                    return row;
+                  }
+                  return null;
+                })}
                 actions={[
                   {
                     icon: "add",
@@ -730,30 +671,43 @@ export default class Users extends React.Component {
                 ]}
                 options={{
                   actionsColumnIndex: -1,
-                  sorting: false
+                  sorting: false,
+                  paging: false,
+                  search: false
                 }}
               />
-            </span>
+            </Resize>
           </Div>
           <Modal
             handleClickOpen={this.state.toggleModal}
-            handleClose={this.handleClose}
             myChangeHandler1={this.myChangeHandler1}
             contactHandler={this.contactHandler}
+            handleClose={this.handleClose}
           />
           <Edit
-            clickOpen={this.state.toggleModal1}
-            clickClose={this.clickClose}
-            rowInfo={this.state.rowData}
-            editHandler={this.editHandler}
             myChangeHandler1={this.myChangeHandler1}
+            clickOpen={this.state.toggleModal1}
+            editHandler={this.editHandler}
+            clickClose={this.clickClose}
           />
           <Group
-            clickOpen1={this.state.toggleModal2}
-            clickClose1={this.clickClose1}
-            addGroupHandler={this.addGroupHandler}
-            addToGroup={this.addToGroup}
             myChangeHandler1={this.myChangeHandler1}
+            addGroupHandler={this.addGroupHandler}
+            clickOpen1={this.state.toggleModal2}
+            clickOpen2={this.state.toggleModal3}
+            clickOpen3={this.state.toggleModal4}
+            clickOpen4={this.state.toggleModal5}
+            clickOpen5={this.state.toggleModal6}
+            deleteHandler={this.deleteHandler}
+            editGroupName={this.editGroupName}
+            clickClose1={this.clickClose1}
+            clickClose2={this.clickClose2}
+            clickClose3={this.clickClose3}
+            clickClose4={this.clickClose4}
+            clickClose5={this.clickClose5}
+            deleteGroup={this.deleteGroup}
+            addToGroup={this.addToGroup}
+            rowInfo={this.state.rowData}
           />
         </header>
       </div>

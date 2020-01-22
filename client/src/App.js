@@ -10,12 +10,31 @@ export default class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      data: []
+      data: [],
+      validation: {}
     };
   }
 
   myChangeHandler = event => {
     this.setState({ [event.target.name]: event.target.value });
+    if (event.target.name === "confirmPassword") {
+      if (event.target.value !== this.state.password) {
+        return this.setState({
+          validation: {
+            ...this.state.validation,
+            confirmPassword: true,
+            confirmPasswordMsg: "Password don't match"
+          }
+        });
+      }
+      return this.setState({
+        validation: {
+          ...this.state.validation,
+          confirmPassword: false,
+          confirmPasswordMsg: ""
+        }
+      });
+    }
   };
 
   componentDidMount() {
@@ -37,7 +56,9 @@ export default class App extends React.Component {
         this.setState({
           token: localStorage.getItem("user")
         });
-        toast.success(`Welcome ${res.data.username}!`);
+        toast.success(`Welcome ${res.data.username}!`, {
+          position: toast.POSITION.TOP_CENTER
+        });
       })
       .catch(err => toast.error(err.response.data.error));
   };
@@ -64,7 +85,9 @@ export default class App extends React.Component {
         this.setState({
           redirect: true
         });
-        toast.success("Success!!");
+        toast.success("Success!!", {
+          position: toast.POSITION.TOP_CENTER
+        });
       })
       .catch(err => toast.error(err.response.data.error));
   };
@@ -90,6 +113,7 @@ export default class App extends React.Component {
             handleLogout={this.handleLogout}
             redirect={this.state.redirect}
             token={this.state.token}
+            validation={this.state.validation}
           />
         </HashRouter>
         <ToastContainer />

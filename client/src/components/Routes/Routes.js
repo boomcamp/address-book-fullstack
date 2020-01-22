@@ -14,7 +14,8 @@ export default class Routes extends React.Component {
       token,
       redirect,
       redirectHandler,
-      myChangeHandler
+      myChangeHandler,
+      validation
     } = this.props;
     return (
       <Switch>
@@ -42,6 +43,7 @@ export default class Routes extends React.Component {
                 myChangeHandler={myChangeHandler}
                 registerHandler={registerHandler}
                 redirectHandler={redirectHandler}
+                validation={validation}
               />
             )
           }

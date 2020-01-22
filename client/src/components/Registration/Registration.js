@@ -4,6 +4,7 @@ import "mdbreact/dist/css/mdb.css";
 import { Link } from "react-router-dom";
 import { MDBRow, MDBBtn } from "mdbreact";
 import styled from "styled-components";
+import { TextField } from "@material-ui/core";
 
 const Div = styled.div`
   padding-top: 50px;
@@ -24,6 +25,7 @@ const Form = styled.div`
 `;
 export default class Registration extends React.Component {
   render() {
+    const { validation } = this.props;
     return (
       <Div>
         <MDBRow>
@@ -39,93 +41,95 @@ export default class Registration extends React.Component {
                   >
                     Sign up
                   </p>
-                  <label
-                    htmlFor="defaultFormRegisterUserNameEx"
-                    className="grey-text"
-                  >
-                    Your username
-                  </label>
-                  <input
+
+                  <TextField
                     name="username"
                     onChange={this.props.myChangeHandler}
                     type="text"
                     id="defaultFormRegisterUserNameEx"
-                    placeholder="Your username"
-                    className="form-control"
+                    label="Your username"
+                    variant="outlined"
                     required
+                    style={{
+                      margin: "5px"
+                    }}
                   />
                   <br />
-                  <label htmlFor="firstName" className="grey-text">
-                    Your First Name
-                  </label>
-                  <input
+
+                  <TextField
                     name="fname"
                     onChange={this.props.myChangeHandler}
                     type="text"
                     id="firstName"
-                    placeholder="Your First Name"
-                    className="form-control"
+                    label="Your First Name"
+                    variant="outlined"
                     required
+                    style={{
+                      margin: "5px"
+                    }}
                   />
                   <br />
-                  <label htmlFor="lastName" className="grey-text">
-                    Your Last Name
-                  </label>
-                  <input
+
+                  <TextField
                     name="lname"
                     onChange={this.props.myChangeHandler}
                     type="text"
                     id="lastName"
-                    placeholder="Your Last Name"
-                    className="form-control"
+                    label="Your Last Name"
+                    variant="outlined"
                     required
+                    style={{
+                      margin: "5px"
+                    }}
                   />
                   <br />
-                  <label
-                    htmlFor="materialFormRegisterConfirmEx3"
-                    className="grey-text"
-                  >
-                    Your email
-                  </label>
-                  <input
+
+                  <TextField
                     name="email"
                     onChange={this.props.myChangeHandler}
                     type="email"
                     id="materialFormLoginConfirmEx3"
-                    className="form-control"
-                    placeholder="Your Email address"
+                    variant="outlined"
+                    label="Your Email address"
                     required
+                    style={{
+                      margin: "5px"
+                    }}
                   />
                   <div className="invalid-feedback">
                     Please provide a valid email.
                   </div>
                   <div className="valid-feedback">Looks good!</div>
                   <br />
-                  <label htmlFor="password" className="grey-text">
-                    Password
-                  </label>
-                  <input
+
+                  <TextField
                     name="password"
                     type="password"
                     id="password"
-                    className="form-control"
-                    placeholder="Password"
+                    variant="outlined"
+                    label="Password"
                     onChange={this.props.myChangeHandler}
                     required
+                    style={{
+                      margin: "5px"
+                    }}
                   />
 
                   <br />
-                  <label htmlFor="password" className="grey-text">
-                    Re-type password
-                  </label>
-                  <input
-                    name="plainPassword"
+
+                  <TextField
+                    error={validation.confirmPassword}
+                    name="confirmPassword"
                     type="password"
                     id="password1"
-                    className="form-control"
-                    placeholder="Confirm your password"
+                    variant="outlined"
+                    label="Confirm your password"
                     onChange={this.props.myChangeHandler}
                     required
+                    helperText={validation.confirmPasswordMsg}
+                    style={{
+                      margin: "5px"
+                    }}
                   />
                   <div className="text-center mt-4">
                     <MDBBtn className="submit" color="indigo" type="submit">

@@ -42,6 +42,9 @@ export default class Login extends React.Component {
                   className="form-control"
                   label="Your Username"
                   required
+                  style={{
+                    margin: "5px"
+                  }}
                 />
               </Input>
               <br />
@@ -56,6 +59,9 @@ export default class Login extends React.Component {
                   className="form-control"
                   label="Your Password"
                   required
+                  style={{
+                    margin: "5px"
+                  }}
                 />
               </Input>
               <div className="text-center mt-4">

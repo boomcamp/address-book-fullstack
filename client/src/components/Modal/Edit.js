@@ -20,12 +20,7 @@ const Input = styled.div`
 `;
 
 export default class Edit extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
   render() {
-    const { rowInfo } = this.props;
     return (
       <div>
         <Dialog open={this.props.clickOpen} onClose={this.props.clickClose}>
@@ -51,11 +46,9 @@ export default class Edit extends React.Component {
                       type="text"
                       id="fname"
                       name="fname"
-                      defaultValue={rowInfo ? rowInfo.fname : ""}
                       label="First Name"
                       fullWidth
                       onChange={this.props.myChangeHandler1}
-                      required
                     />
                   </Input>
 
@@ -65,10 +58,8 @@ export default class Edit extends React.Component {
                       type="text"
                       id="lname"
                       name="lname"
-                      defaultValue={rowInfo ? rowInfo.lname : ""}
                       fullWidth
                       onChange={this.props.myChangeHandler1}
-                      required
                     />
                   </Input>
                 </Form>
@@ -76,24 +67,20 @@ export default class Edit extends React.Component {
                   <Input>
                     <TextField
                       label="Home Phone Number"
-                      type="text"
+                      type="number"
                       id="home_phone"
                       name="homePhone"
-                      defaultValue={rowInfo ? rowInfo.home_phone : ""}
                       onChange={this.props.myChangeHandler}
-                      required
                       fullWidth
                     />
                   </Input>
                   <Input>
                     <TextField
                       label="Mobile Phone Number"
-                      type="text"
+                      type="number"
                       id="mobile_phone"
                       name="mobilePhone"
-                      defaultValue={rowInfo ? rowInfo.mobile_phone : ""}
                       onChange={this.props.myChangeHandler1}
-                      required
                       fullWidth
                     />
                   </Input>
@@ -102,12 +89,10 @@ export default class Edit extends React.Component {
                   <Input>
                     <TextField
                       label="Work Phone Number"
-                      type="text"
+                      type="number"
                       id="work_phone"
                       name="workPhone"
-                      defaultValue={rowInfo ? rowInfo.work_phone : ""}
                       onChange={this.props.myChangeHandler1}
-                      required
                       fullWidth
                     />
                   </Input>
@@ -117,9 +102,7 @@ export default class Edit extends React.Component {
                       type="email"
                       id="email"
                       name="email"
-                      defaultValue={rowInfo ? rowInfo.email : ""}
                       onChange={this.props.myChangeHandler1}
-                      required
                       fullWidth
                     />
                   </Input>
@@ -131,9 +114,7 @@ export default class Edit extends React.Component {
                       type="text"
                       id="city"
                       name="city"
-                      defaultValue={rowInfo ? rowInfo.city : ""}
                       onChange={this.props.myChangeHandler1}
-                      required
                       fullWidth
                     />
                   </Input>
@@ -143,9 +124,7 @@ export default class Edit extends React.Component {
                       type="text"
                       id="state_or_province"
                       name="state_or_province"
-                      defaultValue={rowInfo ? rowInfo.state_or_province : ""}
                       onChange={this.props.myChangeHandler1}
-                      required
                       fullWidth
                     />
                   </Input>
@@ -157,9 +136,7 @@ export default class Edit extends React.Component {
                       type="number"
                       id="postal_code"
                       name="postalCode"
-                      defaultValue={rowInfo ? rowInfo.postal_code : ""}
                       onChange={this.props.myChangeHandler1}
-                      required
                       fullWidth
                     />
                   </Input>
@@ -169,9 +146,7 @@ export default class Edit extends React.Component {
                       type="text"
                       id="country"
                       name="country"
-                      defaultValue={rowInfo ? rowInfo.country : ""}
                       onChange={this.props.myChangeHandler1}
-                      required
                       fullWidth
                     />
                   </Input>

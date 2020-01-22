@@ -34,7 +34,7 @@ massive({
       }
     };
     //User endpoints
-    app.post("/api/register", users.register);
+    app.post("/api/register", users.validateUsername, users.register);
     app.get("/api/users", users.list);
     app.post("/api/login", users.login);
     //Contact endpoints
