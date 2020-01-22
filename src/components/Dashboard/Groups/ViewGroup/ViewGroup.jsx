@@ -7,7 +7,11 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Grid} from "@material-ui/core";
 import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, TablePagination } from '@material-ui/core';
 import { TextField, IconButton } from '@material-ui/core';
-import { Check as CheckIcon, Close as CloseIcon, Edit as EditIcon, Delete as DeleteIcon} from '@material-ui/icons';
+import { Check as CheckIcon, Close as CloseIcon, Edit as EditIcon } from '@material-ui/icons';
+
+import DeleteGroup from './DeleteGroup/DeleteGroup';
+import DeleteGroupContact from './DeleteGroupContact/DeleteGroupContact';
+import AddGroupContacts from './AddGroupContacts/AddGroupContacts';
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function ViewGroup({ data, fetchGroupsFn }) {
+function ViewGroup({ data, fetchGroupsFn, deleteNotif }) {
 
   const classes = useStyles();
   const theme = useTheme();
@@ -93,7 +97,7 @@ function ViewGroup({ data, fetchGroupsFn }) {
       fetchGroupsFn();
     })
     .catch(() => {
-      toast.error("Please Try again", {
+      toast.error("Sorry! Please Try again", {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -109,7 +113,7 @@ function ViewGroup({ data, fetchGroupsFn }) {
       <Button onClick={handleClickOpen} variant="outlined" size="large" color="primary" className={classes.viewBtn}>
         VIEW
       </Button>
-      <Dialog disableBackdropClick fullScreen={fullScreen} open={open} onClose={handleClose} aria-labelledby="Add-Group-Dialog" maxWidth='md' fullWidth>
+      <Dialog fullScreen={fullScreen} open={open} onClose={handleClose} aria-labelledby="Add-Group-Dialog" maxWidth='md' fullWidth>
         <ToastContainer
           position="bottom-right"
           autoClose={5000}
@@ -135,13 +139,11 @@ function ViewGroup({ data, fetchGroupsFn }) {
             </form>
             :
             <div style={{display: 'inline-flex'}}>
-              <span style={{marginTop: '2.5%'}}>{data.groupName}</span>
+              <span style={{marginTop: '2.3%', display: 'flex', alignItems: 'center'}}>{data.groupName}</span>
               <IconButton onClick={() => setEditName(true)} style={{color: '#fc7b03'}} aria-label="edit">
                 <EditIcon />
               </IconButton>
-              <IconButton style={{color: '#ff0000'}} aria-label="delete">
-                <DeleteIcon />
-              </IconButton>
+              <DeleteGroup data={data} deleteNotif={deleteNotif} handleCloseMainDialog={handleClose} fetchGroupsFn={fetchGroupsFn} />
             </div>            
           }
         </DialogTitle>
@@ -168,9 +170,7 @@ function ViewGroup({ data, fetchGroupsFn }) {
                                 {row.ab_firstName+" "+row.ab_lastName}
                               </TableCell>
                               <TableCell align="right">
-                                <IconButton style={{color: '#ff0000'}} aria-label="delete">
-                                  <CloseIcon />
-                                </IconButton>
+                                <DeleteGroupContact groupID={data.groupID} groupMemberID={row.groupMember_ID} contactName={row.ab_firstName+" "+row.ab_lastName} fetchGroupMembers={fetchGroupMembers}/>
                               </TableCell>
                             </TableRow>
                           );
@@ -193,6 +193,7 @@ function ViewGroup({ data, fetchGroupsFn }) {
             </Grid>         
           </DialogContent>
           <DialogActions>
+            <AddGroupContacts fetchGroupMembers={fetchGroupMembers} data={data}/>
             <Button onClick={handleClose} color="secondary">
               Close
             </Button>

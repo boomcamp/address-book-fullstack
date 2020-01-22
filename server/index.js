@@ -19,36 +19,36 @@ massive({
     app.set('db', db);
     app.use(express.json());
 
-    //Register
+    //Register //ok
     app.post('/api/signup', users.signup);
-    //Sign-in
+    //Sign-in //ok
     app.post('/api/login', users.login);
-    //get user details
+    //get user details //ok
     app.get('/api/user/:id', users.getUser);
-    //list all contacts 
+    //list all contacts //ok
     app.get('/api/contacts/:userID/:order', contacts.listContacts);
-    //create contact
+    //create contact //ok
     app.post('/api/contact/:userID', contacts.addContact);
-    //update contact
+    //update contact //ok
     app.patch('/api/contact/:id', contacts.updateContact);
-    //delete contact 
+    //delete contact //ok
     app.delete('/api/contact/:id', contacts.deleteContact);
-    //list all contacts not in group
+    //list all contacts not in group //ok
     app.get('/api/group/:id/not_in_group', groups.listContactsNotInGroup);
-    //list all contacts in group
+    //list all contacts in group //ok
     app.get('/api/group/:id/contacts', groups.listContacts);
-    //list all groups
+    //list all groups //ok
     app.get('/api/groups/:userID/:order', groups.listGroups);
-    //add group
+    //add group //ok
     app.post('/api/group/:userID', groups.addGroup);
-    //edit group
+    //edit group //ok
     app.patch('/api/group/:id', groups.editGroup);
-    //delete group
+    //delete group //ok
     app.delete('/api/group/:id', groups.deleteGroup);
     //add members to group
-    app.post('/api/group/:id', groups.addMembers);
-    //delete member group
-    app.delete('/api/group/:id/:contactID', groups.deleteMember);
+    app.post('/api/group/:id/add', groups.addMembers);
+    //delete member group //ok
+    app.delete('/api/group/:id/:groupMemberID', groups.deleteMember);
 
     const port = 3002;
     app.listen(port, () => {

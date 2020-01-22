@@ -11,6 +11,9 @@ import { Search as SearchIcon } from '@material-ui/icons';
 import ViewGroup from './ViewGroup/ViewGroup';
 import AddGroup from './AddGroup/AddGroup';
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const useStyles = makeStyles(theme => ({
   root: {
     width: "100%"
@@ -88,8 +91,30 @@ function Groups({sessionid}) {
     ( sortDirection === 'desc') ? setSortDirection('asc') : setSortDirection('desc');
   }
 
+  const deleteNotif = () => {
+    toast.success("Group Deleted", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true
+    });
+  }
+
   return (
     <Grid container direction="row" justify="center" alignItems="center">
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnVisibilityChange
+        draggable
+        pauseOnHover
+      />
       <Grid container direction="row" justify="flex-end" alignItems="center">
         <Grid item xs={5} sm={3} md={2} lg={1} xl={1} className={classes.addGroupDiv}>
           <AddGroup fetchGroupsFn={fetchGroupsFn} />
@@ -139,7 +164,7 @@ function Groups({sessionid}) {
                                   <Chip variant="outlined" color="primary" avatar={<Avatar>{row.groupName.substring(0,1).toUpperCase()}</Avatar>} label={row.groupName}/>
                                 </TableCell>
                                 <TableCell align="right" className={classes.actionBtn}>
-                                  <ViewGroup fetchGroupsFn={fetchGroupsFn} data={row}/>
+                                  <ViewGroup deleteNotif={deleteNotif} fetchGroupsFn={fetchGroupsFn} data={row}/>
                                 </TableCell>
                               </TableRow>
                             );

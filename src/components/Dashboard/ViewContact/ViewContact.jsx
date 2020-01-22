@@ -75,18 +75,6 @@ function ViewContact({data, fetchContactsFn}) {
 
   const handleCloseEdit = () => {
     setEdit(false);
-    setEditedDetails({
-      firstname: data.ab_firstName,
-      lastname: data.ab_lastName,
-      home_phone: data.ab_home_phone,
-      mobile_phone: data.ab_mobile_phone,
-      work_phone: data.ab_work_phone,
-      city: data.ab_city,
-      email: data.ab_email,
-      state: data.ab_state,
-      postal_code: data.ab_postal_code,
-      country: data.ab_country,
-    })
   }
 
   const onHandleField = (e) => {
@@ -149,7 +137,7 @@ function ViewContact({data, fetchContactsFn}) {
         </ButtonGroup>
       </Hidden>
       <Dialog fullScreen={fullScreen} open={open} onClose={handleClose} aria-labelledby="Add-Contact-Dialog" maxWidth='md' fullWidth>
-      <ToastContainer
+        <ToastContainer
           position="bottom-right"
           autoClose={5000}
           hideProgressBar={false}
@@ -181,200 +169,334 @@ function ViewContact({data, fetchContactsFn}) {
             }
           </div>
         </DialogTitle>
+        {edit 
+        ?
         <form onSubmit={onSubmitEditFn}>
           <DialogContent dividers>
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={12} md={6} lg={6}>
-                  <TextField
-                    name="firstname"
-                    label="First Name"
-                    defaultValue={(editedDetails.firstname) ? editedDetails.firstname : ''}
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                      readOnly: (!edit) ? true : false,
-                    }}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    autoFocus={(edit) ? true : false}
-                    onChange={onHandleField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6} lg={6}>
-                  <TextField
-                  
-                    name="lastname" 
-                    label="Last Name"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                      readOnly: (!edit) ? true : false,
-                    }}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    defaultValue={(data.ab_lastName) ? data.ab_lastName : ''}
-                    onChange={onHandleField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12} md={4} lg={4}>
-                  <TextField
-                    name="home_phone"
-                    label="Home Number"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                      readOnly: (!edit) ? true : false,
-                    }}
-                    defaultValue={(data.ab_home_phone) ? data.ab_home_phone : ''}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={onHandleField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12} md={4} lg={4}>
-                  <TextField
-                    name="mobile_phone"
-                    label="Mobile Number"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                      readOnly: (!edit) ? true : false,
-                    }}
-                    defaultValue={(data.ab_mobile_phone) ? data.ab_mobile_phone : ''}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={onHandleField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12} md={4} lg={4}>
-                  <TextField
-                    name="work_phone"
-                    label="Work Number"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                      readOnly: (!edit) ? true : false,
-                    }}
-                    defaultValue={(data.ab_work_phone) ? data.ab_work_phone : ''}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={onHandleField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={12}>
-                  <TextField
-                    name="email"
-                    label="Email address"
-                    type="email"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                      readOnly: (!edit) ? true : false,
-                    }}
-                    defaultValue={(data.ab_email) ? data.ab_email : ''}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={onHandleField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6} lg={3}>
-                  <TextField
-                    name="city"
-                    label="City"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                      readOnly: (!edit) ? true : false,
-                    }}
-                    defaultValue={(data.ab_city) ? data.ab_city : ''}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={onHandleField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6} lg={3}>
-                  <TextField
-                    name="state"
-                    label="State"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                      readOnly: (!edit) ? true : false,
-                    }}
-                    defaultValue={(data.ab_state) ? data.ab_state : ''}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={onHandleField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6} lg={3}>
-                  <TextField
-                    name="country"
-                    label="Country"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    InputProps={{
-                      readOnly: (!edit) ? true : false,
-                    }}
-                    defaultValue={(data.ab_country) ? data.ab_country : ''}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={onHandleField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6} lg={3}>
-                  <TextField
-                    name="postal_code"
-                    label="Postal Code"
-                    type="text"
-                    fullWidth
-                    variant="outlined" 
-                    InputProps={{
-                      readOnly: (!edit) ? true : false,
-                    }} 
-                    defaultValue={(data.ab_postal_code) ? data.ab_postal_code : ''}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={onHandleField}
-                  />
-                </Grid>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
+                <TextField
+                  name="firstname"
+                  label="First Name"
+                  defaultValue={(data.ab_firstName) ? data.ab_firstName : ''}
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  required
+                  onChange={onHandleField}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  autoFocus={true}
+                />
               </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
+                <TextField
+                  name="lastname" 
+                  label="Last Name"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  required
+                  onChange={onHandleField}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  defaultValue={(data.ab_lastName) ? data.ab_lastName : ''}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={4} lg={4}>
+                <TextField
+                  name="home_phone"
+                  label="Home Number"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  onChange={onHandleField}
+                  defaultValue={(data.ab_home_phone) ? data.ab_home_phone : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={4} lg={4}>
+                <TextField
+                  name="mobile_phone"
+                  label="Mobile Number"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  required
+                  onChange={onHandleField}
+                  defaultValue={(data.ab_mobile_phone) ? data.ab_mobile_phone : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={4} lg={4}>
+                <TextField
+                  name="work_phone"
+                  label="Work Number"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  onChange={onHandleField}
+                  defaultValue={(data.ab_work_phone) ? data.ab_work_phone : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={12} lg={12}>
+                <TextField
+                  name="email"
+                  label="Email address"
+                  type="email"
+                  fullWidth
+                  variant="outlined"
+                  required
+                  onChange={onHandleField}
+                  defaultValue={(data.ab_email) ? data.ab_email : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={3}>
+                <TextField
+                  name="city"
+                  label="City"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  required
+                  onChange={onHandleField}
+                  defaultValue={(data.ab_city) ? data.ab_city : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={3}>
+                <TextField
+                  name="state"
+                  label="State"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  required
+                  onChange={onHandleField}
+                  defaultValue={(data.ab_state) ? data.ab_state : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={3}>
+                <TextField
+                  name="country"
+                  label="Country"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  required
+                  onChange={onHandleField}
+                  defaultValue={(data.ab_country) ? data.ab_country : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={3}>
+                <TextField
+                  name="postal_code"
+                  label="Postal Code"
+                  type="text"
+                  fullWidth
+                  variant="outlined" 
+                  required
+                  onChange={onHandleField}
+                  defaultValue={(data.ab_postal_code) ? data.ab_postal_code : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+            </Grid>
           </DialogContent>
-          {(edit) ? 
-            <DialogActions>
-              <Button color="primary" type="submit">
-                Save
-              </Button> 
-              <Button onClick={handleCloseEdit} color="secondary">
-                Discard
-              </Button>
-            </DialogActions>
-            :
-            <DialogActions>
-              <Button onClick={handleClose} color="secondary">
-                Close
-              </Button>
-            </DialogActions>
-          }
+          <DialogActions>
+            <Button color="primary" type="submit">
+              Save
+            </Button> 
+            <Button onClick={handleCloseEdit} color="secondary">
+              Discard
+            </Button>
+          </DialogActions>
         </form>
+        :
+        <React.Fragment>
+          <DialogContent dividers>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
+                <TextField
+                  label="First Name"
+                  defaultValue={(data.ab_firstName) ? data.ab_firstName : ''}
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
+                <TextField
+                  label="Last Name"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  defaultValue={(data.ab_lastName) ? data.ab_lastName : ''}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={4} lg={4}>
+                <TextField
+                  label="Home Number"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  defaultValue={(data.ab_home_phone) ? data.ab_home_phone : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={4} lg={4}>
+                <TextField
+                  label="Mobile Number"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  defaultValue={(data.ab_mobile_phone) ? data.ab_mobile_phone : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={4} lg={4}>
+                <TextField
+                  label="Work Number"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  defaultValue={(data.ab_work_phone) ? data.ab_work_phone : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={12} lg={12}>
+                <TextField
+                  label="Email address"
+                  type="email"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  defaultValue={(data.ab_email) ? data.ab_email : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={3}>
+                <TextField
+                  label="City"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  defaultValue={(data.ab_city) ? data.ab_city : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={3}>
+                <TextField
+                  label="State"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  defaultValue={(data.ab_state) ? data.ab_state : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={3}>
+                <TextField
+                  label="Country"
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    readOnly: true
+                  }}
+                  defaultValue={(data.ab_country) ? data.ab_country : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={3}>
+                <TextField
+                  label="Postal Code"
+                  type="text"
+                  fullWidth
+                  variant="outlined" 
+                  InputProps={{
+                    readOnly: true
+                  }} 
+                  defaultValue={(data.ab_postal_code) ? data.ab_postal_code : ''}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="secondary">
+              Close
+            </Button>
+          </DialogActions>
+        </React.Fragment>
+        }
       </Dialog>
     </React.Fragment>
   )

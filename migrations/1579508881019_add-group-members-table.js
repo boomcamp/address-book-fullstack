@@ -34,7 +34,7 @@ exports.up = (pgm) => {
         table: 'address_book',
         rules: {
           onDelete: 'CASCADE',
-          onUpdate: 'RESTRICT'
+          onUpdate: 'CASCADE'
         }
       }
     }

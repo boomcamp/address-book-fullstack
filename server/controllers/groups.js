@@ -12,15 +12,21 @@ module.exports = {
   },
   addGroup: (req, res) => {
     const db = req.app.get("db");
-    const { groupName } = req.body;
+    const { groupName, groupMembers } = req.body;
     const { userID } = req.params;
 
-    db.groups
-    .insert({
+    db.groups.insert({
       groupName,
       userID
     })
-    .then(group => res.status(201).send(contact))
+    .then((group) => {
+      if(groupMembers.length !== 0){
+        for(let memberID of groupMembers){
+          db.query(`INSERT INTO groups_members("groupID", "abID") VALUES (${group.groupID}, ${memberID})`)
+        }
+      }
+      res.status(201).send(`${group.groupName}`);
+    })
     .catch(error => {
       console.error(error);
       res.status(500).end();
@@ -44,13 +50,20 @@ module.exports = {
   },
   deleteGroup: (req, res) => {
     const db = req.app.get("db");
-    const { groupID } = req.params;
+    const { id } = req.params;
 
-    db.groups
-    .destroy({
-      groupID
+    //db.query(`DELETE g, gm FROM groups AS g INNER JOIN groups_members AS gm ON g."groupID" = gm."groupID" WHERE g."groupID" = ${groupID}`)
+    db.query(`DELETE FROM groups_members WHERE "groupID" = ${id}`)
+    .then(() => {
+      db.query(`DELETE FROM groups WHERE "groupID" = ${id}`)
+      .then(() => {
+        res.status(200).send("Group Deleted")
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).end();
+      })
     })
-    .then( () => res.status(200).send("Group Deleted"))
     .catch( error => {
       console.error(error);
       res.status(500).end();
@@ -58,10 +71,36 @@ module.exports = {
   },
   addMembers: (req, res) => {
     const db = req.app.get("db");
+    const { groupMembers } = req.body;
+    const { id } = req.params;
+    let newContact = [];
+    console.log(req.body)
 
+    // if(groupMembers.length !== 0){
+    //   for(let index in groupMembers){
+    //     db.query(`INSERT INTO groups_members("groupID", "abID") VALUES (${id}, ${groupMembers[index]})`)
+    //     // db.groups_members.insert({ groupID: id, abID: groupMembers[index]})
+    //     // .then(contact => newContact.push(contact))
+    //     if(index+1 === groupMembers.length){
+    //       res.status(201).send(newContact);
+    //     }
+    //   }
+    // }
   },
   deleteMember: (req, res) => {
     const db = req.app.get("db");
+    const { id, groupMemberID } = req.params;
+
+    db.groups_members
+    .destroy({
+      groupMember_ID: groupMemberID,
+      groupID: id
+    })
+    .then(() => res.status(200).send('Group Member Deleted'))
+    .catch(error => {
+      console.error(error);
+      res.status(500).end();
+    })
   },
   listContacts: (req, res) => {
     const db = req.app.get("db");
@@ -97,13 +136,11 @@ module.exports = {
   },
   listContactsNotInGroup: (req, res) => {
     const db = req.app.get("db");
-    const { userID, order } = req.params;
+    const { id } = req.params;
 
-    // db.address_book
-    // .find({ userID })
-    db.query(`SELECT * FROM address_book where "userID" = ${userID} ORDER BY "ab_lastName" ${order}`)
+    db.query(`SELECT DISTINCT * FROM address_book as ab WHERE NOT EXISTS(SELECT * FROM groups_members as gm WHERE ab."abID" = gm."abID" AND gm."groupID" = ${id})`)
     .then(contacts => {
-      res.status(200).send(contacts)
+      res.status(200).send(contacts);
     })
     .catch(error => {
       console.error(error);

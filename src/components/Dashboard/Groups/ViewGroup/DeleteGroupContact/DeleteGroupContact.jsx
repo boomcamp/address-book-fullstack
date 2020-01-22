@@ -1,22 +1,14 @@
-import React, {Fragment, useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
+import { Close as CloseIcon} from '@material-ui/icons';
 import {IconButton } from '@material-ui/core';
-import {Delete as DeleteIcon} from '@material-ui/icons'; 
-import { makeStyles } from '@material-ui/core/styles';
-
 import { Dialog, DialogTitle, DialogContent, Typography, DialogActions, Button, } from '@material-ui/core';
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const useStyles = makeStyles(theme => ({
-  deleteBtn: {
-    color: '#d40054',
-  },
-}));
-
-function DeleteContactM({ contactName, contactID, fetchContactsFn }) {
+function DeleteGroupContact({fetchGroupMembers, contactName, groupID, groupMemberID}) {
 
   const [open, setOpen] = useState(false);
 
@@ -28,10 +20,10 @@ function DeleteContactM({ contactName, contactID, fetchContactsFn }) {
     setOpen(false);
   };
 
-  const deleteContactFn = () => {
+  const DeleteGroupContactFn = () => {
     axios({
       method: 'delete',
-      url: `http://localhost:3002/api/contact/${contactID}`
+      url: `http://localhost:3002/api/group/${groupID}/${groupMemberID}`
     })
     .then(() => {
       toast.success("Contact Deleted", {
@@ -42,7 +34,7 @@ function DeleteContactM({ contactName, contactID, fetchContactsFn }) {
         pauseOnHover: true,
         draggable: true
       });
-      fetchContactsFn();
+      fetchGroupMembers();
     })
     .catch(error => {
       console.error(error);
@@ -58,11 +50,10 @@ function DeleteContactM({ contactName, contactID, fetchContactsFn }) {
     setOpen(false);
   }
 
-  const classes = useStyles();
   return (
-    <Fragment>
-      <IconButton onClick={handleClickOpen} aria-label="delete" className={classes.deleteBtn}>
-        <DeleteIcon />
+    <React.Fragment>
+      <IconButton onClick={handleClickOpen} style={{color: '#ff0000'}} aria-label="delete">
+        <CloseIcon />
       </IconButton>
       <Dialog
         open={open}
@@ -81,23 +72,23 @@ function DeleteContactM({ contactName, contactID, fetchContactsFn }) {
           draggable
           pauseOnHover
         />
-        <DialogTitle id="alert-dialog-title">{"Delete Contact?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Are you sure to remove this contact?"}</DialogTitle>
         <DialogContent>
-          <Typography variant="overline" display="block" gutterBottom>
+          <Typography style={{textAlign: 'center'}} variant="overline" display="block" gutterBottom>
             {contactName}
           </Typography>
         </DialogContent>
         <DialogActions>
+          <Button onClick={() => DeleteGroupContactFn()} color="primary" autoFocus>
+            Remove
+          </Button>
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button onClick={() => deleteContactFn()} color="primary" autoFocus>
-            Delete
-          </Button>
         </DialogActions>
       </Dialog>
-    </Fragment>
+    </React.Fragment>
   )
 }
 
-export default DeleteContactM
+export default DeleteGroupContact;

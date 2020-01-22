@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import { makeStyles, /*useTheme*/ } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { Fab } from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
+import { Add as AddIcon, Close as CloseIcon } from '@material-ui/icons';
 import { Dialog, DialogTitle, DialogContent, Button, DialogActions, Grid, TextField} from '@material-ui/core';
-//import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Select, Input, Chip, FormControl, InputLabel, MenuItem } from '@material-ui/core';
+import { Select, Input, FormControl, InputLabel, MenuItem, FormHelperText } from '@material-ui/core';
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles(theme => ({
   addBtn: {
@@ -19,14 +21,7 @@ const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
     width: '100%',
-  },
-  memberSelect: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  member: {
-    margin: 2,
-  },
+  }
 }));
 
 function AddGroup({fetchGroupsFn}) {
@@ -34,6 +29,8 @@ function AddGroup({fetchGroupsFn}) {
   const sessionid = localStorage.getItem('sessionid');
 
   const [contacts, setContacts] = useState([]);
+
+  const [addMembers, setAddMembers] = useState(false);
   
   const fetchContactsFn = () => {
     axios({
@@ -52,8 +49,6 @@ function AddGroup({fetchGroupsFn}) {
   }, [])
 
   const classes = useStyles();
-  // const theme = useTheme();
-  // const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [open, setOpen] = React.useState(false);
 
@@ -62,40 +57,64 @@ function AddGroup({fetchGroupsFn}) {
   };
 
   const handleClose = () => {
+    onCloseSelectHandle();
     setOpen(false);
   };
 
   const [groupData, setGroupData] = useState({
     groupName: '',
-    groupMembersByID: [],
     groupMembers: []
   })
-
-  // const returnMember = (val) => {
-  //   let newArray = [];
-  //   let newArrayByID = [];
-
-  //   for(let value of val){
-  //     let split = value.split('+');
-  //     newArray.push((split[0]));
-  //     newArrayByID.push((split[split.length-1]));
-  //   }
-  //   setGroupData({...groupData, groupMembersByID: newArrayByID})
-  //   console.log(groupData)
-  //   return newArray;
-  // }
 
   const onChangeHandle = (e) => {
     setGroupData({
       ...groupData, 
-      [e.target.name]: /*(e.target.name === "groupMembers") ? returnMember(e.target.value) :*/ e.target.value
+      [e.target.name]: e.target.value
     })
   } 
 
+  const [formError, setFormError] = useState(false);
+
   const addGroupFn = (e) => {
     e.preventDefault();
-    console.log(groupData);
-    //fetchGroupsFn();
+    if(addMembers && groupData.groupMembers.length === 0){
+      setFormError(true)
+    }else{
+      setFormError(true);
+      axios({
+        method: 'POST',
+        url: `http://localhost:3002/api/group/${sessionid}`,
+        data: groupData
+      })
+      .then(response => {
+        toast.success("Group Added", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        });
+        fetchGroupsFn();
+      })
+      .catch(error => {
+        toast.error("Sorry! Please try again.", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        });
+      })
+      onCloseSelectHandle();
+      setOpen(false);
+    }
+  }
+
+  const onCloseSelectHandle = () => {
+    setAddMembers(false);
+    setGroupData({...groupData, groupMembers: []})
   }
 
   return (
@@ -111,7 +130,18 @@ function AddGroup({fetchGroupsFn}) {
         <AddIcon />
         Add Group
       </Fab>
-      <Dialog disableBackdropClick /*disableEscapeKeyDown*/ /*fullScreen={fullScreen}*/ open={open} onClose={handleClose} aria-labelledby="Add-Group-Dialog" maxWidth='md' fullWidth>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="Add-Group-Dialog" maxWidth='md' fullWidth>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
         <DialogTitle>Add Group</DialogTitle>
         <form onSubmit={addGroupFn} className={classes.form}>
           <DialogContent dividers>   
@@ -131,48 +161,64 @@ function AddGroup({fetchGroupsFn}) {
                   onChange={onChangeHandle}
                 />
               </Grid>
-              <Grid item xs={12}>
-              <FormControl className={classes.formControl}>
-                <InputLabel id="demo-mutiple-chip-label">Members:</InputLabel>
-                <Select
-                  multiple
-                  name="groupMembers"
-                  autoWidth={true}
-                  value={groupData.groupMembers}
-                  onChange={onChangeHandle}
-                  input={<Input id="select-members" />}
-                  renderValue={selected => (
-                    <div className={classes.memberSelect}>
-                      {selected.map(value => (
-                        <Chip key={value} label={value} className={classes.member} />
+              {(addMembers) && 
+                <Grid item xs={12}>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel id="demo-mutiple-chip-label">Members:</InputLabel>
+                    <Select
+                      multiple
+                      error={formError}
+                      name="groupMembers"
+                      autoWidth={true}
+                      value={groupData.groupMembers}
+                      onChange={onChangeHandle}
+                      input={<Input id="select-members" />}
+                    >HTMLTableRowHTMLTableRowElement
+                      {contacts.map(row => (
+                        <MenuItem key={row.abID} value={row.abID} >
+                          {row.ab_firstName+" "+row.ab_lastName}
+                        </MenuItem>
                       ))}
-                    </div>
-                  )}
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        height: '100',
-                        width: '500px',
-                      },
-                    },
-                  }}
-                >HTMLTableRowHTMLTableRowElement
-                  {contacts.map(row => (
-                    <MenuItem key={row.abID} value={row.ab_firstName+" "+row.ab_lastName+"+"+row.abID} >
-                      {row.ab_firstName+" "+row.ab_lastName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                    </Select>
+                    <FormHelperText error={formError}>Please select at least 1 contact</FormHelperText>
+                  </FormControl>
+                </Grid>
+              }
+              <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
+                {(addMembers) ?
+                  <Fab
+                    variant="extended"
+                    size="small"
+                    color="primary"
+                    aria-label="add"
+                    style={{background: 'none', color: '#000'}}
+                    onClick={onCloseSelectHandle}
+                  >
+                    <CloseIcon />
+                    Cancel
+                  </Fab>
+                  :
+                  <Fab
+                    variant="extended"
+                    size="small"
+                    color="primary"
+                    aria-label="add"
+                    style={{background: 'none', color: '#000'}}
+                    onClick={() => setAddMembers(true)}
+                  >
+                    <AddIcon />
+                    Add Members
+                  </Fab>
+                }
               </Grid>
             </Grid>         
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="secondary">
-              Cancel
-            </Button>
             <Button type="submit" color="primary">
               Add
+            </Button>
+            <Button onClick={handleClose} color="secondary">
+              Cancel
             </Button>
           </DialogActions>
         </form>       

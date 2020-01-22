@@ -1,22 +1,14 @@
-import React, {Fragment, useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
-import {IconButton } from '@material-ui/core';
-import {Delete as DeleteIcon} from '@material-ui/icons'; 
-import { makeStyles } from '@material-ui/core/styles';
-
-import { Dialog, DialogTitle, DialogContent, Typography, DialogActions, Button, } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
+import { Delete as DeleteIcon} from '@material-ui/icons';
+import { Dialog, DialogTitle, Typography, DialogActions, Button, } from '@material-ui/core';
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const useStyles = makeStyles(theme => ({
-  deleteBtn: {
-    color: '#d40054',
-  },
-}));
-
-function DeleteContactM({ contactName, contactID, fetchContactsFn }) {
+function DeleteGroup({data, fetchGroupsFn, handleCloseMainDialog, deleteNotif}) {
 
   const [open, setOpen] = useState(false);
 
@@ -28,21 +20,15 @@ function DeleteContactM({ contactName, contactID, fetchContactsFn }) {
     setOpen(false);
   };
 
-  const deleteContactFn = () => {
+  const DeleteGroupFn = () => {
     axios({
       method: 'delete',
-      url: `http://localhost:3002/api/contact/${contactID}`
+      url: `http://localhost:3002/api/group/${data.groupID}`,
     })
     .then(() => {
-      toast.success("Contact Deleted", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-      });
-      fetchContactsFn();
+      handleCloseMainDialog();
+      fetchGroupsFn();
+      deleteNotif();
     })
     .catch(error => {
       console.error(error);
@@ -57,11 +43,10 @@ function DeleteContactM({ contactName, contactID, fetchContactsFn }) {
     })
     setOpen(false);
   }
-
-  const classes = useStyles();
+  
   return (
-    <Fragment>
-      <IconButton onClick={handleClickOpen} aria-label="delete" className={classes.deleteBtn}>
+    <React.Fragment>
+      <IconButton onClick={handleClickOpen} style={{color: '#ff0000'}} aria-label="delete">
         <DeleteIcon />
       </IconButton>
       <Dialog
@@ -81,23 +66,22 @@ function DeleteContactM({ contactName, contactID, fetchContactsFn }) {
           draggable
           pauseOnHover
         />
-        <DialogTitle id="alert-dialog-title">{"Delete Contact?"}</DialogTitle>
-        <DialogContent>
-          <Typography variant="overline" display="block" gutterBottom>
-            {contactName}
+        <DialogTitle style={{display: 'flex', alignItems: 'center'}} id="alert-dialog-title">
+          <Typography style={{textAlign: 'center'}} variant="overline" display="block" gutterBottom>
+            Are you sure to remove {data.groupName}?
           </Typography>
-        </DialogContent>
+        </DialogTitle>
         <DialogActions>
+          <Button onClick={() => DeleteGroupFn()} color="primary" autoFocus>
+            Remove
+          </Button>
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button onClick={() => deleteContactFn()} color="primary" autoFocus>
-            Delete
-          </Button>
         </DialogActions>
       </Dialog>
-    </Fragment>
+    </React.Fragment>
   )
 }
 
-export default DeleteContactM
+export default DeleteGroup
