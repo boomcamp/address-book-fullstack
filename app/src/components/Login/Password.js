@@ -6,7 +6,7 @@ import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import clsx from 'clsx';
 import FormControl from '@material-ui/core/FormControl';
-import { Card, CardContent, Button, Tooltip } from '@material-ui/core';
+import { Card, CardContent, Button } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -66,36 +66,45 @@ export default function LoginPage({ handleLogin, prevStep, handleChange, warn, h
                                             </IconButton>
                                         </InputAdornment>
                                     }
-                                    labelWidth={70}
+                                    labelWidth={80}
                                 />
                                 <FormHelperText id="password">{help}</FormHelperText>
                             </FormControl>
                         </CardContent>
                         <CardContent className={classes.link2}>
-                            <Tooltip title="Beta">
-                                <span>
+                            <Grid
+                                container
+                                direction="row"
+                                justify="space-between"
+                                alignItems="center"
+                                spacing={2}
+                                className={classes.button}
+                            >
+                                <Grid item>
                                     <Button disabled size="small" color="primary" className={classes.forgot}>
                                         Forgot Password?
                                     </Button>
-                                </span>
-                            </Tooltip>
-                            <div className={classes.button}>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    className={classes.back}
-                                    onClick={prevStep}>
-                                    Back
-                                </Button>
-                            </div>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                className={classes.ok}
-                                type="submit"
-                            >
-                                OK
-                            </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.back}
+                                        onClick={prevStep}>
+                                        Back
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.ok}
+                                        type="submit"
+                                    >
+                                        OK
+                                    </Button>
+                                </Grid>
+                            </Grid>
                         </CardContent>
                     </form>
                 </Card>
@@ -143,9 +152,9 @@ const useStyles = makeStyles(theme => ({
         marginRight: -10
     },
     forgot: {
-        marginLeft: -33
+        marginLeft: 10
     },
     button: {
-        marginRight: -50
+        marginRight: 20
     }
 }));

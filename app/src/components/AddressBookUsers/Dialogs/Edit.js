@@ -165,7 +165,7 @@ export default function Edit({
                                                 type="email"
                                                 defaultValue={email}
                                                 onChange={handleEditChange}
-                                                labelWidth={105}
+                                                labelWidth={45}
                                             />
                                         </FormControl>
                                         <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">

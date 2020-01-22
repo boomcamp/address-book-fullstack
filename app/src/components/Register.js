@@ -322,7 +322,7 @@ const useStyles = makeStyles(theme => ({
         width: "95%",
     },
     margin: {
-        margin: theme.spacing(2),
+        margin: theme.spacing(1),
     },
     buttons: {
         display: 'flex',

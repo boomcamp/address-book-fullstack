@@ -140,8 +140,8 @@ export default function Account({ handleClose }) {
         <div className={classes.root}>
             <ToastContainer enableMultiContainer />
             <form className={classes.input} autoComplete="off" onSubmit={handleSubmit}>
-                <Grid container>
-                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                <Grid container style={{ minWidth: 320 }}>
+                    <Grid item>
                         <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                             <InputLabel htmlFor="fname">First Name</InputLabel>
                             <OutlinedInput
@@ -222,7 +222,7 @@ export default function Account({ handleClose }) {
                                 error={warn.email}
                                 onBlur={warningUpdate}
                                 onChange={handleChange}
-                                labelWidth={105}
+                                labelWidth={45}
                             />
                             <FormHelperText id="email">{help.email}</FormHelperText>
                         </FormControl>

@@ -39,7 +39,7 @@ export default function LoginPage({ nextStep, handleChange, warn, help, warningU
 
     return (
         <React.Fragment>
-            <Grid container className={classes.root}>
+            <Grid container className={classes.root} style={{ minWidth: 320 }}>
                 <ToastContainer enableMulticontainer />
                 <Grid item xs={12} sm={6} md={4} lg={3}>
                     <Card className={classes.card}>
@@ -69,7 +69,7 @@ export default function LoginPage({ nextStep, handleChange, warn, help, warningU
                                                 <AccountBoxIcon />
                                             </InputAdornment>
                                         }
-                                        labelWidth={70}
+                                        labelWidth={80}
                                     />
                                     <FormHelperText id="username">{help}</FormHelperText>
                                 </FormControl>
@@ -79,7 +79,7 @@ export default function LoginPage({ nextStep, handleChange, warn, help, warningU
                                     <span>
                                         <Button disabled size="small" color="primary" >
                                             Forgot Email?
-                            </Button>
+                                        </Button>
                                     </span>
                                 </Tooltip>
                             </div>
@@ -90,7 +90,7 @@ export default function LoginPage({ nextStep, handleChange, warn, help, warningU
                                         color="primary"
                                         onClick={handleClickOpen}>
                                         Create an account
-                            </Button>
+                                    </Button>
                                     <Dialog
                                         fullWidth
                                         open={open}
@@ -111,7 +111,7 @@ export default function LoginPage({ nextStep, handleChange, warn, help, warningU
                                     color="primary"
                                     type="submit">
                                     Next
-                    </Button>
+                                </Button>
                             </CardContent>
                         </form>
                     </Card>
