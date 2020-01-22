@@ -27,7 +27,7 @@
 
 ## Built With
 - [Windows Visual Studio](https://code.visualstudio.com) - The web framework used
-- [React JS]([https://reactjs.org/](https://reactjs.org/))
+- [React JS]([https://reactjs.org/](https://reactjs.org/)
 
 
 ## Creator
