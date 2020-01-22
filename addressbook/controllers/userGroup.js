@@ -58,8 +58,13 @@ function getGroupMember(req, res) {
 function DeleteGroup(req, res) {
     const db = req.app.get("db");
     db.query(
-        `DELETE FROM groups,members FROM groups INNER JOIN members ON members.GroupId = groups.groupId WHERE groups.groupId = ${req.params.id};`
-    ).then(Del => res.status(201).json(Del)).catch(err => {
+        `DELETE FROM members WHERE "GroupId"=${req.params.id}`
+    ).then(Del => {
+        db.query(`DELETE FROM groups WHERE "groupId"=${req.params.id}`).then(dele => res.status(201).json(dele)).catch(err => {
+            console.log(err);
+            res.status(500).end();
+        })
+    }).catch(err => {
         console.log(err);
         res.status(500).end();
     })

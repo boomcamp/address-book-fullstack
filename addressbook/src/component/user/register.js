@@ -17,7 +17,8 @@ export default class register extends Component {
             errEmail: false,
             errPassword: false,
             errConfirmPasswrod: false,
-            EmailisValid: true
+            EmailisValid: true,
+            passwordgreater5: true
         }
     }
     submitHandler = () => {
@@ -35,19 +36,23 @@ export default class register extends Component {
         }
         if (this.state.username && this.state.email && this.state.password && this.state.confirmpassword !== "") {
             if (/\S+@\S+\.\S+/.test(this.state.email)) {
-                if (this.state.password === this.state.confirmpassword) {
-                    Axios.post(`http://localhost:4001/addressbook/register`, { "username": this.state.username, "email": this.state.email, "password": this.state.password })
-                        .then(result => {
-                            localStorage.setItem("token", result.data.token);
-                            localStorage.clear();
-                            this.props.history.push('/')
-                            this.notify();
-                        })
-                        .catch(err => {
-                            console.error(err)
-                        })
-                } else {
-                    this.setState({ errPasswordMatch: true })
+                if(this.state.password.length < 5){
+                    this.setState({passwordgreater5: false})
+                }else{
+                    if (this.state.password === this.state.confirmpassword) {
+                        Axios.post(`http://localhost:4001/addressbook/register`, { "username": this.state.username, "email": this.state.email, "password": this.state.password })
+                            .then(result => {
+                                localStorage.setItem("token", result.data.token);
+                                localStorage.clear();
+                                this.props.history.push('/')
+                                this.notify();
+                            })
+                            .catch(err => {
+                                console.error(err)
+                            })
+                    } else {
+                        this.setState({ errPasswordMatch: true })
+                    }
                 }
             } else {
                 this.setState({ EmailisValid: false })
@@ -63,7 +68,8 @@ export default class register extends Component {
             errEmail: false,
             errPassword: false,
             errConfirmPasswrod: false,
-            EmailisValid: true
+            EmailisValid: true,
+            passwordgreater5: true
         });
     };
     notify = () => toast.success("Registration Success");
@@ -78,7 +84,7 @@ export default class register extends Component {
                         <MDBCard>
                             <MDBCardBody>
                                 <form>
-                                    <p className="h4 text-center py-4"><MDBIcon className="cyan-text pr-3" icon="user-alt" size="6x" /></p>
+                                    <p className="h4 text-center py-4"><MDBIcon className="blue-grey-text pr-3" icon="user-alt" size="6x" /></p>
                                     <label>Username</label>
                                     <input type="text" name="username" className={this.state.errUsername === false ? "form-control" : "form-control is-invalid"} onChange={this.changeHandler} />
                                     {this.state.errUsername === true ?
@@ -100,6 +106,10 @@ export default class register extends Component {
                                     {this.state.errPassword === true ?
                                         <div className="red-text">
                                             Password is required!
+                                        </div> : null}
+                                        {this.state.passwordgreater5 === false ?
+                                        <div className="red-text">
+                                            Password must be greater than 4!
                                         </div> : null}
                                     <label>Confirm Password</label>
                                     <input type="password" name="confirmpassword" className={this.state.errConfirmPasswrod === false && this.state.errPasswordMatch === false ? "form-control" : "form-control is-invalid"} onChange={this.changeHandler} />

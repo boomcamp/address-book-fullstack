@@ -144,6 +144,7 @@ export default class accessbook extends Component {
     deleteNotify = () => toast.error("Contact Deleted");
     Editnotify = () => toast.success("Edit Saved")
     ErrorNotify = () => toast.error("Fill Required Field")
+    NotifyDeleteGroup = () => toast.error("Group Deleted");
     render() {
         return (
             <React.Fragment>
@@ -158,7 +159,7 @@ export default class accessbook extends Component {
                             <ContactList ErrorNotify={this.ErrorNotify} data={this.state.data} Editnotify={this.Editnotify} searched={this.state.Searched} searchInput={this.state.searchInput} Refreshed={this.getData} deleteNotify={this.deleteNotify} />
                         </MDBCol>
                         <MDBCol lg="10" hidden={this.state.GroupList}>
-                            <GroupList getData={this.getData} MembertoAdd={this.state.MembertoAdd} groupMember={this.state.groupMember} group={this.state.group} data={this.state.data} />
+                            <GroupList NotifyDeleteGroup={this.NotifyDeleteGroup} getData={this.getData} MembertoAdd={this.state.MembertoAdd} groupMember={this.state.groupMember} group={this.state.group} data={this.state.data} />
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>

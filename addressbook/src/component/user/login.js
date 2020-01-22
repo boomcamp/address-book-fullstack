@@ -58,7 +58,7 @@ export default class login extends Component {
                         <MDBCard>
                             <MDBCardBody>
                                 <form>
-                                    <p className="h4 text-center py-4"><MDBIcon className="cyan-text pr-3" icon="user-alt" size="6x" /></p>
+                                    <p className="h4 text-center py-4"><MDBIcon className="blue-grey-text pr-3" icon="user-alt" size="6x" /></p>
                                     {this.state.valid === false ?
                                         <MDBAlert color="danger" >
                                             Incorrect Username or Password!
