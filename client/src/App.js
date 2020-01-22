@@ -12,6 +12,7 @@ export default class App extends Component {
     this.state = {
       isLoading: false,
       isModal: false,
+      confirmSignup: true,
       sort: "asc"
     };
   }
@@ -45,8 +46,7 @@ export default class App extends Component {
         )
         .then(response => {
           this.setState({
-            groups: response.data.allGroups,
-            isLoading: false
+            groups: response.data.allGroups
           });
         });
       axios
@@ -56,6 +56,9 @@ export default class App extends Component {
             pName: res.data[0].firstName + " " + res.data[0].lastName
           });
         });
+      this.setState({
+        isLoading: false
+      });
     }
   };
 
@@ -210,7 +213,7 @@ export default class App extends Component {
       });
   };
 
-  deleteContactHandler = (event, rowData) => {
+  deleteContactHandler = async (event, rowData) => {
     event.preventDefault();
     rowData.map(e =>
       axios
@@ -224,7 +227,6 @@ export default class App extends Component {
             isLoading: true,
             isModal: false
           });
-          toast.success(`Contact has been Successfully Deleted`);
         })
         .catch(errors => {
           try {
@@ -234,6 +236,7 @@ export default class App extends Component {
           }
         })
     );
+    return toast.success(`Contact/s has been Successfully Deleted`);
   };
 
   editGroupHandler = (event, data) => {
@@ -294,27 +297,31 @@ export default class App extends Component {
       user_id: localStorage.getItem("userId"),
       group_name: this.state.groupName
     };
-    axios
-      .post("http://localhost:4001/groups/create", Obj, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      })
-      .then(() => {
-        this.setState({
-          isLoading: true,
-          isModal: false
-        });
-        toast.success(`Group has been Successfully Added`);
-      })
-      .catch(errors => {
-        try {
-          toast.error(errors.response.data.error);
-        } catch {
-          console.log(errors);
-        }
-      });
+    return this.state.group_name
+      ? axios
+          .post("http://localhost:4001/groups/create", Obj, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+          })
+          .then(() => {
+            this.setState({
+              isLoading: true,
+              isModal: false
+            });
+            toast.success(`Group has been Successfully Added`);
+          })
+          .catch(errors => {
+            try {
+              toast.error(errors.response.data.error);
+            } catch {
+              console.log(errors);
+            }
+          })
+      : "";
   };
 
-  addToGroupHandler = (event, rowData) => {
+  addToGroupHandler = async (event, rowData) => {
     event.preventDefault();
     rowData.map(e =>
       axios
@@ -334,7 +341,6 @@ export default class App extends Component {
             isLoading: true,
             isModal: false
           });
-          toast.success(`Contact has been Successfully Edited`);
         })
         .catch(errors => {
           try {
@@ -344,6 +350,7 @@ export default class App extends Component {
           }
         })
     );
+    return toast.success(`Contact has been Successfully Moved`);
   };
 
   createContactHandler = event => {
@@ -374,7 +381,11 @@ export default class App extends Component {
       this.state.zip &&
       this.state.country
       ? axios
-          .post("http://localhost:4001/contacts/create", Obj)
+          .post("http://localhost:4001/contacts/create", Obj, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+          })
           .then(() => {
             this.setState({
               isLoading: true,
@@ -400,9 +411,13 @@ export default class App extends Component {
       this.setState({ isLoading: true });
     }
     if (event.target.name === "cpassword") {
-      this.state.password === event.target.value
-        ? (event.target.className = "form-control is-valid")
-        : (event.target.className = "form-control is-invalid");
+      if (this.state.password === event.target.value) {
+        this.setState({ confirmSignup: true });
+        event.target.className = "form-control is-valid";
+      } else {
+        this.setState({ confirmSignup: false });
+        event.target.className = "form-control is-invalid";
+      }
     }
   };
 
@@ -570,6 +585,7 @@ export default class App extends Component {
           viewContact={this.state.viewContact}
           groupData={this.state.groupData}
           fetchContact={this.fetchContact}
+          confirmSignup={this.state.confirmSignup}
           pName={this.state.pName}
         />
       </HashRouter>

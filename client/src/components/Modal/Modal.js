@@ -434,7 +434,7 @@ export default class Modal extends React.Component {
                       <input
                         defaultValue={currentData.home_phone}
                         onChange={changeHandler}
-                        type="text"
+                        type="number"
                         id="hphone"
                         className="form-control"
                         name="hphone"
@@ -453,7 +453,7 @@ export default class Modal extends React.Component {
                       <input
                         defaultValue={currentData.mobile_phone}
                         onChange={changeHandler}
-                        type="text"
+                        type="number"
                         id="mphone"
                         className="form-control"
                         name="mphone"
@@ -472,7 +472,7 @@ export default class Modal extends React.Component {
                       <input
                         defaultValue={currentData.work_phone}
                         onChange={changeHandler}
-                        type="text"
+                        type="number"
                         id="wphone"
                         className="form-control"
                         name="wphone"
@@ -531,7 +531,7 @@ export default class Modal extends React.Component {
                       <input
                         defaultValue={currentData.postal_code}
                         onChange={changeHandler}
-                        type="text"
+                        type="number"
                         id="zip"
                         className="form-control"
                         name="zip"
@@ -637,7 +637,7 @@ export default class Modal extends React.Component {
                       </label>
                       <input
                         onChange={changeHandler}
-                        type="text"
+                        type="email"
                         id="email"
                         className="form-control"
                         name="email"
@@ -645,7 +645,7 @@ export default class Modal extends React.Component {
                         required
                       />
                       <div className="invalid-feedback">
-                        Please provide a valid country.
+                        Please provide a valid email.
                       </div>
                       <div className="valid-feedback">Looks good!</div>
                     </MDBCol>
@@ -657,7 +657,7 @@ export default class Modal extends React.Component {
                       </label>
                       <input
                         onChange={changeHandler}
-                        type="text"
+                        type="number"
                         id="hphone"
                         className="form-control"
                         name="hphone"
@@ -675,7 +675,7 @@ export default class Modal extends React.Component {
                       </label>
                       <input
                         onChange={changeHandler}
-                        type="text"
+                        type="number"
                         id="mphone"
                         className="form-control"
                         name="mphone"
@@ -693,7 +693,7 @@ export default class Modal extends React.Component {
                       </label>
                       <input
                         onChange={changeHandler}
-                        type="text"
+                        type="number"
                         id="wphone"
                         className="form-control"
                         name="wphone"
@@ -749,7 +749,7 @@ export default class Modal extends React.Component {
                       </label>
                       <input
                         onChange={changeHandler}
-                        type="text"
+                        type="number"
                         id="zip"
                         className="form-control"
                         name="zip"

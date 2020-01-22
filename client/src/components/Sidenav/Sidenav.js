@@ -28,7 +28,12 @@ import Avatar from "@material-ui/core/Avatar";
 import { MDBBtn, MDBIcon } from "mdbreact";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
-import Routes from "./routes";
+import Contacts from "../Contacts/Contacts";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core";
+import Brightness4Icon from "@material-ui/icons/Brightness4";
+import blue from "@material-ui/core/colors/blue";
+import lightBlue from "@material-ui/core/colors/lightBlue";
 
 const drawerWidth = 240;
 
@@ -101,6 +106,7 @@ function ResponsiveDrawer(props) {
   const open = Boolean(anchorEl);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [openGroup, setOpenGroup] = React.useState(true);
+  const [webTheme, setWebTheme] = React.useState("light");
 
   const handleClick = () => {
     setOpenGroup(!openGroup);
@@ -235,115 +241,140 @@ function ResponsiveDrawer(props) {
     setAnchorEl(null);
   };
 
+  const handleTheme = () => {
+    webTheme === "dark" ? setWebTheme("light") : setWebTheme("dark");
+  };
+
+  const dark = createMuiTheme({
+    palette: {
+      type: webTheme,
+      primary: blue,
+      secondary: lightBlue
+    }
+  });
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Address Book
-          </Typography>
-          <div style={{ marginLeft: "auto" }}>
+      <ThemeProvider theme={dark}>
+        <CssBaseline />
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar>
             <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
               color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
             >
-              <AccountCircle />
+              <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right"
+            <Typography variant="h6" noWrap>
+              Address Book
+            </Typography>
+            <div style={{ marginLeft: "auto" }}>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleTheme}
+                color="inherit"
+              >
+                <Brightness4Icon />
+              </IconButton>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right"
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right"
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </div>
+          </Toolbar>
+        </AppBar>
+        <nav className={classes.drawer} aria-label="mailbox folders">
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              anchor={theme.direction === "rtl" ? "right" : "left"}
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right"
+              ModalProps={{
+                keepMounted: true
               }}
-              open={open}
-              onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
-          </div>
-        </Toolbar>
-      </AppBar>
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === "rtl" ? "right" : "left"}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper
-            }}
-            ModalProps={{
-              keepMounted: true
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
-      <main className={classes.content}>
-        <div className={classes.toolbar}></div>
-        <Routes
-          createContactHandler={createContactHandler}
-          editContactHandler={editContactHandler}
-          deleteContactHandler={deleteContactHandler}
-          changeHandler={changeHandler}
-          selectHandler={selectHandler}
-          isLoading={isLoading}
-          handleModalClose={handleModalClose}
-          handleModalOpen={handleModalOpen}
-          isModal={isModal}
-          currentData={currentData}
-          deleteContact={deleteContact}
-          contact={contact}
-          addToGroup={addToGroup}
-          addToGroupHandler={addToGroupHandler}
-          addAGroup={addAGroup}
-          editContact={editContact}
-          addAGroupHandler={addAGroupHandler}
-          editGroup={editGroup}
-          editGroupHandler={editGroupHandler}
-          deleteGroup={deleteGroup}
-          deleteGroupHandler={deleteGroupHandler}
-          groups={groups}
-          search={search}
-          viewContact={viewContact}
-          groupData={groupData}
-        />
-      </main>
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper
+              }}
+              variant="permanent"
+              open
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+        <main className={classes.content}>
+          <div className={classes.toolbar}></div>
+          <Contacts
+            handleLogout={handleLogout}
+            viewContact={viewContact}
+            createContactHandler={createContactHandler}
+            changeHandler={changeHandler}
+            selectHandler={selectHandler}
+            isLoading={isLoading}
+            handleModalClose={handleModalClose}
+            handleModalOpen={handleModalOpen}
+            isModal={isModal}
+            currentData={currentData}
+            editContact={editContact}
+            editContactHandler={editContactHandler}
+            deleteContactHandler={deleteContactHandler}
+            deleteContact={deleteContact}
+            contact={contact}
+            addToGroup={addToGroup}
+            addToGroupHandler={addToGroupHandler}
+            addAGroup={addAGroup}
+            addAGroupHandler={addAGroupHandler}
+            editGroup={editGroup}
+            editGroupHandler={editGroupHandler}
+            deleteGroup={deleteGroup}
+            deleteGroupHandler={deleteGroupHandler}
+            searchHandler={props.searchHandler}
+            groups={groups}
+            search={search}
+            groupData={groupData}
+            webTheme={webTheme}
+          />
+        </main>
+      </ThemeProvider>
     </div>
   );
 }

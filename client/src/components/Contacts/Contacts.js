@@ -9,6 +9,7 @@ export default class Contacts extends React.Component {
       <div>
         <Filter changeHandler={this.props.changeHandler} />
         <Table
+          webTheme={this.props.webTheme}
           search={this.props.search}
           contact={this.props.contact}
           groupData={this.props.groupData}

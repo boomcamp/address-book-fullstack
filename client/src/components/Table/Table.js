@@ -15,21 +15,15 @@ import {
 } from "mdbreact";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Box from "@material-ui/core/Box";
+import blue from "@material-ui/core/colors/blue";
+import lightBlue from "@material-ui/core/colors/lightBlue";
+
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 
 export default class Table extends React.Component {
   constructor() {
     super();
-    this.theme = createMuiTheme({
-      palette: {
-        primary: {
-          main: "#4caf50"
-        },
-        secondary: {
-          main: "#75dcf7"
-        }
-      }
-    });
+
     this.state = {
       toggle: false,
       width: window.innerWidth,
@@ -50,19 +44,17 @@ export default class Table extends React.Component {
     window.removeEventListener("resize", this.updateDimensions);
   }
 
-  getRandomColor = () => {
-    var letters = "0123456789ABCDEF";
-    var color = "#";
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-
-    return color;
-  };
   render() {
+    const theme = createMuiTheme({
+      palette: {
+        type: this.props.webTheme,
+        primary: blue,
+        secondary: lightBlue
+      }
+    });
     const { search } = this.props;
     const tableColumns =
-      this.state.width < 770
+      this.state.width < 1000
         ? [
             {
               title: "Name",
@@ -95,7 +87,13 @@ export default class Table extends React.Component {
               render: rowData => (
                 <React.Fragment>
                   <MDBDropdown>
-                    <MDBDropdownToggle nav style={{ color: "black" }}>
+                    <MDBDropdownToggle
+                      nav
+                      style={{
+                        color:
+                          this.props.webTheme === "dark" ? "white" : "black"
+                      }}
+                    >
                       <Tooltip title="Show items">
                         <MoreVertIcon />
                       </Tooltip>
@@ -194,7 +192,7 @@ export default class Table extends React.Component {
       : [];
 
     return (
-      <MuiThemeProvider theme={this.theme}>
+      <MuiThemeProvider theme={theme}>
         <MaterialTable
           title={
             <div>

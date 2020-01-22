@@ -141,7 +141,11 @@ export default class Registration extends React.Component {
               <div className="text-center mb-4 mt-3">
                 <MDBBtn
                   gradient="blue"
-                  className="btn-block z-depth-2"
+                  className={
+                    this.props.confirmSignup
+                      ? "btn-block z-depth-2"
+                      : "btn-block z-depth-2 disabled"
+                  }
                   type="submit"
                 >
                   Sign Up

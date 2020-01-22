@@ -37,13 +37,13 @@ massive({
   };
 
   //USER'S ENDPOINT
-  app.post("/register", validate.register);
+  app.post("/register", validate.user, validate.email, validate.register);
   app.post("/login", validate.login);
   app.get("/fetch/:id", validate.fetchUser);
 
   //CONTACT'S ENDPOINT
   app.get("/contacts/:id/all", auth, contact.allContacts);
-  app.post("/contacts/create", auth, contact.createContact);
+  app.post("/contacts/create", auth, contact.email, contact.createContact);
   app.patch("/contacts/:id/edit", auth, contact.editContact);
   app.delete("/contacts/:id/delete", auth, contact.deleteContact);
 

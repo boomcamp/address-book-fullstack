@@ -40,6 +40,7 @@ export default class Routes extends React.Component {
       groupData,
       viewContact,
       editContact,
+      confirmSignup,
       pName
     } = this.props;
     return (
@@ -96,6 +97,7 @@ export default class Routes extends React.Component {
               <Registration
                 handleSignUp={handleSignUp}
                 changeHandler={changeHandler}
+                confirmSignup={confirmSignup}
               />
             )
           }

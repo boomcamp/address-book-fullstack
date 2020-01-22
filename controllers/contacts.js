@@ -41,5 +41,22 @@ module.exports = {
         console.error(err);
         res.status(500).end();
       });
+  },
+  email: (req, res, next) => {
+    const db = req.app.get("db");
+    const { email } = req.body;
+    db.contacts
+      .findOne({ email: email })
+      .then(email => {
+        if (email) {
+          throw new Error("Email already exists");
+        }
+        next();
+      })
+      .catch(err => {
+        err.message
+          ? res.status(400).json({ error: err.message })
+          : res.status(500).end();
+      });
   }
 };
