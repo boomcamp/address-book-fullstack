@@ -117,7 +117,7 @@ export default function ResponsiveDialog(props) {
 								name="firstName"
 								label="First name"
 								fullWidth
-								autoComplete="fname"
+								autoComplete="firstName"
 								onChange={handleChange}
 							/>
 						</Grid>

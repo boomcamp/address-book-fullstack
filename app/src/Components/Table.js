@@ -45,7 +45,7 @@ const useStyles = makeStyles({
 
 export default function SimpleTable(props) {
 	const classes = useStyles();
-	const { handleViewDetails, state, id, getData } = props;
+	const { handleViewDetails, state, getData } = props;
 
 	var userId;
 	userId = jwt.decode(localStorage.getItem("Token")).userId;
@@ -127,10 +127,11 @@ export default function SimpleTable(props) {
 										onClick={() => handleViewDetails(row.id)}
 									/>
 								</Tooltip>
+
 								<AddToGroup
 									handleClose={handleClose}
-									userId={id}
 									contactId={row.id}
+									getData={getData}
 								/>
 								<Tooltip title="Delete">
 									<img

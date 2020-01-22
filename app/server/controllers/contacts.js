@@ -4,7 +4,6 @@ const secret = require("../../../secret");
 
 const create = (req, res) => {
 	const db = req.app.get("db");
-	console.log(req.body);
 	const {
 		firstname,
 		lastname,
@@ -18,7 +17,6 @@ const create = (req, res) => {
 		country
 	} = req.body;
 	const { userid } = req.params;
-	console.log(firstname);
 
 	db.contacts
 		.insert({

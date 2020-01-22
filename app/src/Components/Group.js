@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 			width: "10px"
 		},
 		"&::-webkit-scrollbar-thumb": {
-			backgroundColor: "#a5b8eb"
+			backgroundColor: "#7c7cca"
 		}
 	},
 	paper2: {

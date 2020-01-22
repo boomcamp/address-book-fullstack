@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,7 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Fade from "@material-ui/core/Fade";
 import swal from "sweetalert";
-
+import jwt from "jsonwebtoken";
 import login from "../assets/images/login.png";
 import ab from "../assets/images/ab.png";
 
@@ -64,8 +64,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignIn() {
 	const classes = useStyles();
-
 	let history = useHistory();
+
+	useEffect(() => {
+		if (localStorage.getItem("Token")) {
+			if (jwt.decode(localStorage.getItem("Token")).userId) {
+				history.push("/home");
+			}
+		}
+	});
 
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");

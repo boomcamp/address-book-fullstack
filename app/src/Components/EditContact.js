@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 			background: "#b3e8ff",
 			color: "purple"
 		},
-		"@media (max-width: 767px)": {
+		"@media (max-width: 768px)": {
 			borderRadius: "0",
 			width: "50%",
 			flexDirection: "row",
@@ -43,10 +43,11 @@ const useStyles = makeStyles(theme => ({
 		}
 	},
 	editIcon: {
-		width: "20px",
+		width: "15px",
 		marginBottom: "10px",
-		"@media (max-width: 767px)": {
-			width: "20px"
+		"@media (max-width: 768px)": {
+			width: "20px",
+			marginRight: "10px"
 		}
 	},
 	hover: {

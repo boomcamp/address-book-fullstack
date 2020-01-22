@@ -61,8 +61,9 @@ const getGroupsByUser = (req, res) => {
 const getGroupsByContactId = (req, res) => {
 	const db = req.app.get("db");
 	const { contactid, userid } = req.params;
+
 	db.query(
-		`SELECT * FROM groupcontacts t1 WHERE NOT EXISTS (SELECT * FROM groupmembers t2 WHERE t1.id = t2.groupid AND t2.contactid = ${contactid} )`
+		`SELECT * FROM groupcontacts t1 WHERE NOT EXISTS (SELECT * FROM groupmembers t2 WHERE t1.id = t2.groupid AND t2.contactid = ${contactid}) AND t1.userid = ${userid} `
 	)
 		.then(results => {
 			res.status(200).send(results);

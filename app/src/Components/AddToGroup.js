@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -10,7 +10,6 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import addToGroup from "../assets/images/add-group.png";
 import Tooltip from "@material-ui/core/Tooltip";
-import jwt from "jsonwebtoken";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -18,6 +17,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import { Typography } from "@material-ui/core";
 import swal from "sweetalert";
+import jwt from "jsonwebtoken";
 
 const useStyles = makeStyles(theme => ({
 	view: {
@@ -49,21 +49,20 @@ export default function ViewGroup(props) {
 	const [value, setValue] = React.useState("");
 	const [select, setSelect] = React.useState(null);
 
-	var userId;
-	userId = jwt.decode(localStorage.getItem("Token")).userId;
+	const handleFetch = contactId => {
+		var userId = jwt.decode(localStorage.getItem("Token")).userId;
+		console.log(contactId, userId);
 
-	useEffect(() => {
-		handleFetch(contactId);
-	}, [contactId]);
-
-	const handleFetch = () => {
-		axios.get(`http://localhost:3006/groupcontacts/${contactId}`).then(res => {
-			setState(res.data);
-			handleFetch();
-		});
+		axios
+			.get(`http://localhost:3006/groupcontacts/${contactId}/${userId}`)
+			.then(res => {
+				console.log(res.data);
+				setState(res.data);
+			});
 	};
 
 	const handleClickOpen = () => {
+		handleFetch(contactId);
 		setOpen(true);
 	};
 
@@ -86,6 +85,7 @@ export default function ViewGroup(props) {
 				contactid: contactId
 			})
 			.then(res => {
+				handleFetch(contactId);
 				handleClose();
 				swal({
 					title: `Contact Successfully Added to ${value}!`,
@@ -154,7 +154,7 @@ export default function ViewGroup(props) {
 						autoFocus
 						style={{ color: "white" }}
 						onClick={() => {
-							handleAddContactsGroup(select, contactId);
+							handleAddContactsGroup();
 						}}
 					>
 						Add

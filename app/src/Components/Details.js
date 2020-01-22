@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 		display: "flex",
 		alignItems: "center",
 		color: "white",
-		"@media (max-width: 767px)": {
+		"@media (max-width: 768px)": {
 			marginTop: "0vh",
 			fontSize: "14px"
 		}
@@ -81,7 +81,7 @@ const useStyles = makeStyles(theme => ({
 			background: "#b3e8ff",
 			color: "purple"
 		},
-		"@media (max-width: 767px)": {
+		"@media (max-width: 768px)": {
 			borderRadius: "0",
 			width: "50%",
 			flexDirection: "row",
@@ -95,8 +95,9 @@ const useStyles = makeStyles(theme => ({
 	editIcon: {
 		width: "20px",
 		marginBottom: "10px",
-		"@media (max-width: 767px)": {
-			width: "20px"
+		"@media (max-width: 768px)": {
+			width: "20px",
+			marginRight: "10px"
 		}
 	},
 	title: {
@@ -110,7 +111,7 @@ const useStyles = makeStyles(theme => ({
 		display: "flex",
 		flexDirection: "column"
 	},
-	"@media (max-width: 767px)": {
+	"@media (max-width: 768px)": {
 		flexDirection: "row"
 	},
 	groupStyle: {
@@ -161,7 +162,7 @@ export default function Details(props) {
 		handleContactGroups(contactId);
 	}, [contactId]);
 
-	const handleContactGroups = () => {
+	const handleContactGroups = contactId => {
 		axios.get(`http://localhost:3006/group-members/${contactId}`).then(res => {
 			setGroupList(res.data);
 		});
@@ -186,7 +187,7 @@ export default function Details(props) {
 						</span>
 					</Typography>
 					<Grid container>
-						<Grid item xs={12} sm={3}>
+						<Grid item xs={12} sm={12} md={3}>
 							<Typography className={classes.info}>
 								<b className={classes.pad}>First Name:</b>{" "}
 								<span className={classes.title}>{firstname}</span>
@@ -208,7 +209,7 @@ export default function Details(props) {
 								<span className={classes.title}>{work_phone}</span>
 							</Typography>
 						</Grid>
-						<Grid item xs={12} sm={3}>
+						<Grid item xs={12} sm={12} md={3}>
 							<Typography className={classes.info}>
 								<b className={classes.pad}>Email:</b>{" "}
 								<span style={{ color: "purple" }}>{email}</span>
@@ -230,7 +231,7 @@ export default function Details(props) {
 								<span className={classes.title}>{country}</span>
 							</Typography>
 						</Grid>
-						<Grid item xs={12} sm={3}>
+						<Grid item xs={12} sm={12} md={3}>
 							<Typography className={classes.info}>
 								<b className={classes.pad}>Group/s:</b>{" "}
 							</Typography>
@@ -253,7 +254,7 @@ export default function Details(props) {
 								})}
 							</div>
 						</Grid>
-						<Grid item xs={12} sm={3} align="center">
+						<Grid item xs={12} sm={12} md={3} align="center">
 							<div className={classes.closeEdit}>
 								<EditContact
 									firstname={firstname}

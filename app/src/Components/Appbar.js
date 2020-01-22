@@ -22,7 +22,7 @@ export default function ButtonAppBar() {
 
 	return (
 		<div className={classes.root}>
-			<AppBar position="static">
+			<AppBar position="static" style={{ background: "#7c7dcb" }}>
 				<Toolbar>
 					<Typography variant="h6" className={classes.title}>
 						Address Book

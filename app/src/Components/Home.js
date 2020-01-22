@@ -19,6 +19,8 @@ import jwt from "jsonwebtoken";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useHistory } from "react-router-dom";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -32,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 		textAlign: "left",
 		display: "flex",
 		alignItems: "center",
-		"@media (max-width: 768px)": {
+		"@media (max-width: 767px)": {
 			display: "none"
 		}
 	},
@@ -48,7 +50,8 @@ const useStyles = makeStyles(theme => ({
 		}
 	},
 	headColor: {
-		background: "#7c7cca"
+		background:
+			"linear-gradient(207deg, rgba(124,124,202,1) 55%, rgba(138,186,250,1) 80%, rgba(124,124,202,1) 100%);"
 	},
 	abLogo: {
 		width: "20px",
@@ -92,7 +95,8 @@ const useStyles = makeStyles(theme => ({
 		marginTop: "5vh",
 		marginBottom: "3px",
 		color: "white",
-		background: "#a4beeb",
+		background:
+			"linear-gradient(207deg, rgba(124,124,202,1) 4%, rgba(124,124,202,1) 18%, rgba(138,186,250,1) 49%, rgba(125,129,206,1) 67%, rgba(124,124,202,1) 100%);",
 		width: "94%",
 		"@media (max-width: 767px)": {
 			fontSize: "18px",
@@ -278,7 +282,19 @@ export default function ButtonAppBar() {
 						></IconButton>
 						<Typography variant="h6" className={classes.title}>
 							<img src={ablogo} alt="addressbook" className={classes.abLogo} />
-							<span>Welcome to Address Book!</span>
+							<span style={{ fontSize: "20px", fontWeight: "bold" }}>
+								Welcome to{" "}
+								<span
+									style={{
+										color: "pink",
+										fontSize: "20px",
+										fontWeight: "bold"
+									}}
+								>
+									Address Book
+								</span>
+								!
+							</span>
 						</Typography>
 						<div className={classes.buttons}>
 							<Button className={classes.nameColor}>
@@ -287,9 +303,15 @@ export default function ButtonAppBar() {
 								</span>
 								{userInfo.lastname}
 							</Button>
-							<Button color="inherit" className={classes.but} onClick={logout}>
-								Logout
-							</Button>
+							<Tooltip title="Logout">
+								<Button
+									color="inherit"
+									className={classes.but}
+									onClick={logout}
+								>
+									<ExitToAppIcon fontSize="default" />
+								</Button>
+							</Tooltip>
 						</div>
 					</Toolbar>
 				</AppBar>

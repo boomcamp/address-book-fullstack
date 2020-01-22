@@ -99,6 +99,7 @@ export default function ViewGroup(props) {
 				<DialogContent>
 					<form className={classes.root} noValidate autoComplete="off">
 						<TextField
+							color="secondary"
 							style={{ marginBottom: "2vh" }}
 							id="outlined-basic"
 							label="Group Name"
