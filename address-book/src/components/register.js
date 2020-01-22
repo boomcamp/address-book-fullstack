@@ -85,17 +85,26 @@ class Register extends Component {
           password: this.state.pword
         })
         .then(res => {
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("id", res.data.id);
-          this.props.history.push("/addressbook");
-          this.setState({
-            firstname: "",
-            lastname: "",
-            email: "",
-            uname: "",
-            pword: "",
-            cpword: ""
-          });
+          if(res.data.message){
+            this.handleOpenSnackbar("UserName is Already Taken", "#9a0707");
+            this.setState({
+              icon: "error"
+            });
+          }
+          else{
+            localStorage.setItem("create", this.state.name)
+            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("id", res.data.id);
+            this.props.history.push("/addressbook");
+            this.setState({
+              firstname: "",
+              lastname: "",
+              email: "",
+              uname: "",
+              pword: "",
+              cpword: ""
+            });
+          }
         });
     } else {
       this.handleOpenSnackbar("Invalid password confirmation", "#9a0707");

@@ -68,7 +68,8 @@ class Addressbooktable extends Component {
               style={{
                 textDecoration: "none",
                 color: "black",
-                cursor: "pointer"
+                cursor: "pointer",
+                textTransform: "capitalize"
               }}
             >
               {rowData.first_name} {rowData.last_name}

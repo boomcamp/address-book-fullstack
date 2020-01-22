@@ -85,6 +85,7 @@ class Addressbook extends Component {
       localStorage.removeItem("auth");
     }
     if (newUsers) {
+   
       this.handleOpenSnackbar("Successfully Create", "darkgreen");
       this.setState({
         icon: "check"
@@ -92,6 +93,7 @@ class Addressbook extends Component {
       this.getAll();
       localStorage.removeItem("create");
     }
+   
   }
 
   handleSearch = e => {
