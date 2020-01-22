@@ -239,6 +239,7 @@ export const Contacts = props => {
                   });
                   getUserData(user, sort).then(user => setUserData(user));
                   setEdit(false);
+                  fetch(user, group, userData, setUserData, sort);
                 }}
               >
                 <TextField
