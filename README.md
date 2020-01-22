@@ -129,6 +129,7 @@ related to this project. -->
 
 This project is a simple address book application that has the following feature:
 
+
 ### Login / Registration Page:
 
 - Login / Registration is the landing page of the application.
@@ -140,51 +141,50 @@ This project is a simple address book application that has the following feature
 ### Address Book Page:
 
 - This is the main address book page or the page after logging in of the user.
+  - The list displays a consolidated view of the contact information
+     `first_name`, `last_name` and `phonenumbers`.
 
-  - **List of saved user contacts can be seen on this page**:
+  - The list is sortable by `last_name` *[utilizing backend]*.
+
+  - The list is searchable by `first_name` and `last_name`.
+
+  - Detailed contact view will show when a contact is selected from this list.
+  
+  - The user can **create** new contacts and save them to the user's address book. Also, the user can add it to a group contacts directly.
+     
+  - The user can **update / delete** contacts from the address book.
+
+  - The user can select contacts and add it to group.
+
+
+### Contact Group Page:
+  - This is the page of the group contacts.
+    - There are tabs of group contacts and shows the table of the contacts when clicked.
 
     - The list displays a consolidated view of the contact information
-      `first_name`, `last_name` and `phonenumbers`.
+        `first_name`, `last_name` and `phonenumbers`.
 
     - The list is sortable by `last_name` *[utilizing backend]*.
 
     - The list is searchable by `first_name` and `last_name`.
 
     - Detailed contact view will show when a contact is selected from this list.
+
+    - The user can **create** new contacts and automatically it will save on the current group selected.
   
-    - The user can **create** new contacts and save them to the user's address book. Also, the user can add it to a group contacts directly.
-     
-    - The user can **update / delete** contacts from the address book.
-
-    - The user can select contacts and add it to group.
-
-
-### Contact Group Page:
-   - This is the page of the group contacts.
-     - **List of saved user group contacts can be seen on this page**:
-        - There are tabs of group contacts and shows the table of the contacts when clicked.
-
-        - The list displays a consolidated view of the contact information
-        `first_name`, `last_name` and `phonenumbers`.
-
-        - The list is sortable by `last_name` *[utilizing backend]*.
-
-        - The list is searchable by `first_name` and `last_name`.
-
-        - Detailed contact view will show when a contact is selected from this list.
-
-        - The user can **create** new contacts and automatically it will save on the current group selected.
-  
-        - The user can **update / delete** contacts and group contacts from the address book.
+    - The user can **update / delete** contacts and group contacts from the address book.
 
 ### Responsiveness
   - The application has a responsive UI for three device categories **mobile**, **tablet** and **desktop**.
 
+<br />
+
 ## Getting Started
  - `clone` the project
  - run `npm intsall` to set up the dependencies 
- - run `npm run dev` to start the `front-end and back-end server`
+ - run `npm run dev` to start the `front-end and back-end server` on development mode
 
+<br />
 
 ## This project utilize the following technologies:
 
@@ -193,4 +193,6 @@ This project is a simple address book application that has the following feature
   [express](https://expressjs.com/) server framework
 - Database - [PostgreSQL](https://www.postgresql.org/)
 
+<br /><br />
 
+**Develop By:** ***Jake M. balbedina***
