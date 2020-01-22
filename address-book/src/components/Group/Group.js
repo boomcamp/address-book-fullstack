@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import GroupIcon from '@material-ui/icons/Group';
+// import GroupIcon from '@material-ui/icons/Group';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import TableActions from '../tools/TableActions'
 import fetchGroupContact from '../tools/js/fetchGroupContact'
@@ -143,6 +144,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Group() {
     const classes = useStyles();
+    const [loading, setLoading] = useState(true)
     const [value, setValue] = useState(0);
     const [group, setGroup] = useState([])
 
@@ -161,9 +163,12 @@ export default function Group() {
         return () => { isCancelled = true };
     }, [])
 
+    setTimeout(() => {
+        setLoading(false)
+    }, 2000)
+
     return (
         <TemplateMainPage>
-            {/* <a href="#" style={{textDecoration:`none`}}>Contacts </a> > <a href="#" style={{textDecoration:`none`}}>Group Contacts</a> */}
             <div className={classes.root}>
                 <div>
                     {(group.length!==0)&&<h3 style={{textAlign: `center`}}>{/* <GroupIcon /> */} Group Contacts</h3>}
@@ -180,18 +185,28 @@ export default function Group() {
                         ))}
                     </Tabs>
                 </div>
+              
+                {(loading)?
+                    <h1 style={{textAlign: `center`, opacity: `0.5`, margin:`0`, width:`100%`}}>
+                        <LinearProgress style={{margin:`0 0 100px 0`, backgroundColor:`grey`, color:`grey`}} />
+                        <i style={{}}>Loading...</i>     
+                    </h1>
 
-                {(group.length === 0) ?
-                    <h2 style={{ textAlign: `center`, opacity: `0.5`, height: `50vh`, margin: `100px 0`, width:`100%`}}><i>There are no Available Groups...</i></h2>
-                    : group.map((x, i) => (
-                        <TabPanel
-                            style={{width:`90%`}}
-                            fetchGroupFn={fetchGroup}
-                            value={value}
-                            index={i}
-                            key={i}
-                            id={x.id} groupObj={x} updateGroupListFn={(data) => setGroup(data)} />
-                    ))}
+                :(group.length === 0 && !loading) ?
+                    <h2 style={{ textAlign: `center`, opacity: `0.5`, height: `50vh`, margin: `100px 0`, width:`100%`}}>
+                        <i>There are no Available Groups...</i>
+                    </h2>
+
+                : group.map((x, i) => (
+                    <TabPanel
+                        style={{width:`90%`}}
+                        fetchGroupFn={fetchGroup}
+                        value={value}
+                        index={i}
+                        key={i}
+                        id={x.id} groupObj={x} updateGroupListFn={(data) => {setGroup(data); setValue(0)}} />
+                    ))
+                }
             </div>
         </TemplateMainPage>
     );

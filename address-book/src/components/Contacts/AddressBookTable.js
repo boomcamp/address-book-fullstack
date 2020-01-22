@@ -42,7 +42,7 @@ export default function AddressBookTable() {
                 render: (rowData) => (
                     <div style={{display:`flex`, alignItems:`center`}}>
                         <span style={contactLogoStyle}>{rowData.first_name[0]}</span> 
-                        <p style={{fontFamily:`Helvetica`, padding:`10px`}}>{rowData.first_name} {rowData.last_name}</p>
+                        <p style={{fontFamily:`Helvetica`, padding:`10px`, margin:`0`}}>{rowData.first_name} {rowData.last_name}</p>
                     </div>
                 )
             },

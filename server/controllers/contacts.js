@@ -13,6 +13,7 @@ module.exports = {
         try {
             const token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, secret);
+            console.log(groupAdd, groupId)
 
             if(groupAdd){
                 db.group_contact
@@ -62,7 +63,6 @@ module.exports = {
                     res.status(500).end()
                 })
             }   
-         
             else if(!groupAdd && !groupId){
                 db.contacts
                 .save({

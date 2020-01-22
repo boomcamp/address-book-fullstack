@@ -18,7 +18,7 @@ function TableActions({ rowData, enqueueSnackbar, updateTableFn, setStateFn, gro
         new Promise(resolve => {
             setTimeout(() => {
                 resolve();
-                    updateTableFn()
+                updateTableFn()
             }, 600);
         }).then(res => {
             enqueueSnackbar('Successfully Updated', { variant: 'success', autoHideDuration: 1000, })
@@ -73,12 +73,16 @@ function TableActions({ rowData, enqueueSnackbar, updateTableFn, setStateFn, gro
             </PopUpModal>
 
             <div style={{ display: `flex`, justifyContent: `space-around`, width: `80px` }}>
-                <EditIcon onClick={(e) => {
-                    e.stopPropagation()
-                    setUpdate({ ...update, openModal: true, row: rowData })
-                }} />
+                <EditIcon
+                    style={{color:`#4c6571`}}
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        setUpdate({ ...update, openModal: true, row: rowData })
+                    }}
+                />
 
-                <DeleteIcon style={{ color: `red` }}
+                <DeleteIcon
+                    style={{ color: `red` }}
                     onClick={(e) => {
                         e.stopPropagation();
                         if (window.confirm((!groupObj) ? 'Are you sure to delete this Contact?' : 'Are you sure you want to remove this from the Group?')) {

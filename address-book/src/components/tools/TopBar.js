@@ -7,6 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const drawerWidth = 240;
 
@@ -36,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function TopBar({ handleOpenfn, open}) {
+    const matches = useMediaQuery('(min-width:426px)');
     const classes = useStyles();
     const [user, setUser] = useState();
 
@@ -67,13 +69,13 @@ export default function TopBar({ handleOpenfn, open}) {
                     className={clsx(classes.menuButton, open && classes.hide)}>
                     <MenuIcon />
                 </IconButton>
-                {/* {(open) ? (
+                {(matches) ? (
                 <div style={{ width: `100%`, display: `flex`, justifyContent: `space-between`, alignItems: `center` }}>
                     <h2>Address Book Project</h2>
                     <h3>Welcome, {user}!</h3>
-                </div> ) :  */}
+                </div> ) : 
                 <h2>Address Book Project</h2> 
-                {/* } */}
+                }
             </Toolbar>
         </AppBar>
     )

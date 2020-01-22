@@ -9,7 +9,7 @@ import { useTheme } from '@material-ui/core/styles';
 
 export default function PopUpModal({ children, closeFn, open, title }) {
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const fullScreen = useMediaQuery(theme.breakpoints.down(481));
 
     return (
         <>

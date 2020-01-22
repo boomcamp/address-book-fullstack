@@ -1,6 +1,7 @@
 import React, { useState} from 'react'
 import {Link, Redirect} from 'react-router-dom'
 import axios from 'axios'
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 //MATERIAL UI
 import Paper from '@material-ui/core/Paper';
@@ -12,14 +13,14 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import IconButton from '@material-ui/core/IconButton';
 
     // STYLES
-    const containerStyle = {
-        border: '1px solid lightgrey',
-        boxShadow: '4px 5px 5px 1px rgba(0,0,0,0.14)',
-        width: '500px',
-        // height: '80%',
-        // margin: '13% 0 1% 0',
-        margin:`250px auto 10px auto`
-    }
+    // const containerStyle = {
+    //     border: '1px solid lightgrey',
+    //     boxShadow: '4px 5px 5px 1px rgba(0,0,0,0.14)',
+    //     width: '500px',
+    //     // height: '80%',
+    //     // margin: '13% 0 1% 0',
+    //     margin:`250px auto 10px auto`
+    // }
 
     const headerStyle = {
         background: `#4B6573`, 
@@ -38,6 +39,7 @@ import IconButton from '@material-ui/core/IconButton';
     }
 
 function Login() {
+    const matches = useMediaQuery('(max-width:426px)');
     const [user, setUser] = useState({
         username: "",
         password: "",
@@ -60,16 +62,16 @@ function Login() {
             setStatus({...status, error: true})
         })
     }
-
+console.log(matches)
     if(status.success || sessionStorage.getItem('token'))
         return <Redirect to='/dashboard' />
 
     return (
-        <div style={{textAlign:`center`}}>
-            <Paper style={containerStyle} className="container">
+        <div style={{textAlign:`center`, marginBottom:`250px`}}>
+            <Paper style={{border: '1px solid lightgrey', boxShadow: '4px 5px 5px 1px rgba(0,0,0,0.14)', width: (matches)?'':'500px', margin:`250px auto 10px auto`}}>
                 <h3 style={headerStyle}>Login</h3>  
 
-                <ValidatorForm
+                <ValidatorForm 
                     style={formStyle}
                     onSubmit={handleSubmit} 
                     onError={errors => console.log(errors)}>    
