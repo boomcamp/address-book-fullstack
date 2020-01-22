@@ -37,3 +37,6 @@ Jerommel A. Astilero
 
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [StackOverflow](https://stackoverflow.com/)
+- [Material UI](https://material-ui.com/)
+- [MDB React](https://mdbootstrap.com/)
+- [MassiveJS](https://massivejs.org/)
