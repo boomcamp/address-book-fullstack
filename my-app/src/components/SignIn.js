@@ -23,6 +23,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 export default function SignIn(props) {
 	const classes = useStyles();
 
+	const [data, setData] = useState([]);
 	const [errors, setErrors] = useState({});
 	const { values, handleChange } = ManageForm();
 
@@ -45,11 +46,19 @@ export default function SignIn(props) {
 			setOpen(true);
 			localStorage.removeItem('notif');
 		}
+		axios
+			.get(`/api/users`)
+			.then(res => {
+				setData(res.data);
+			})
+			.catch(err => {
+				console.log(err);
+			});
 	}, [setOpen, props.history]);
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		setErrors(Validate(values));
+		setErrors(Validate(values, data, 'signin'));
 
 		const { username, password } = values;
 

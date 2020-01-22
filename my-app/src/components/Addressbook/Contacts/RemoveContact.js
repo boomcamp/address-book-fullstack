@@ -1,9 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
+import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core';
 
 export default function RemoveContact(props) {
 	const { data, modal, setModal, setNotif } = props;

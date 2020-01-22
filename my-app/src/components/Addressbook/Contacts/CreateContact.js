@@ -3,14 +3,16 @@ import axios from 'axios';
 import Validate from './ValidateContact';
 import DateToday from '../../DateToday';
 
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import {
+	Grid,
+	Button,
+	TextField,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	InputAdornment,
+	DialogTitle
+} from '@material-ui/core';
 
 export default function CreateContact(props) {
 	const today = DateToday();
@@ -44,11 +46,6 @@ export default function CreateContact(props) {
 	};
 	const handleSubmit = () => {
 		setErrors(Validate(values));
-		props.setState(prevState => {
-			const data = [...prevState.data];
-			data.push(values);
-			return { ...prevState, data };
-		});
 
 		if (Object.keys(Validate(values)).length === 0) {
 			axios({
@@ -74,7 +71,11 @@ export default function CreateContact(props) {
 						country: '',
 						date_created: today
 					});
-
+					props.setState(prevState => {
+						const data = [...prevState.data];
+						data.push(values);
+						return { ...prevState, data };
+					});
 					props.setNotif(true);
 				})
 				.catch(err => {

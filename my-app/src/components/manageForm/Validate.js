@@ -1,4 +1,4 @@
-export default function Validate(values) {
+export default function Validate(values, data, type) {
 	let errors = {};
 	if (!values.firstname) {
 		errors.firstname = 'First Name is required';
@@ -19,5 +19,18 @@ export default function Validate(values) {
 	} else if (values.password.length < 10) {
 		errors.password = 'Password needs to be more than 10 characters';
 	}
+
+	if (type === 'signup') {
+		data.map(user => {
+			if (user.email === values.email) {
+				errors.email = 'Email is already exist';
+			}
+			if (user.username === values.username) {
+				errors.username = 'Username is already exist';
+			}
+			return null;
+		});
+	}
+
 	return errors;
 }

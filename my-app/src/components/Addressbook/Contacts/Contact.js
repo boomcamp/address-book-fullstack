@@ -1,12 +1,13 @@
 import React from 'react';
-import MaterialTable from 'material-table';
-import ContactData from './ContactData';
-import { Snackbar } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
 
 import CreateContact from './CreateContact';
 import ViewAndEditContact from './ViewAndEditContact';
 import RemoveContact from './RemoveContact';
+import ContactData from './ContactData';
+
+import MaterialTable from 'material-table';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 export default function Contacts() {
 	const [createModal, setCreateModal] = React.useState(false);
@@ -23,12 +24,10 @@ export default function Contacts() {
 	return (
 		<React.Fragment>
 			<MaterialTable
-				// style={{ paddingLeft: '20px', paddingRight: '20px' }}
 				title="Contacts"
 				columns={state.columns}
 				data={state.data}
 				options={{
-					// filtering: true,
 					actionsColumnIndex: -1,
 					selection: true,
 					actionsCellStyle: {

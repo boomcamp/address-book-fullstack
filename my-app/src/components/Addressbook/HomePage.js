@@ -65,7 +65,11 @@ export default function HomePage(props) {
 	return (
 		<React.Fragment>
 			<div className={classes.root}>
-				<AppBar position="fixed" className={classes.appBar}>
+				<AppBar
+					position="fixed"
+					className={classes.appBar}
+					style={{ backgroundColor: '#4da6ff' }}
+				>
 					<Toolbar>
 						<IconButton
 							color="inherit"

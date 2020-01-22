@@ -3,14 +3,17 @@ import MaterialTable from 'material-table';
 import ContactData from './ContactData';
 import axios from 'axios';
 
-import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
+import {
+	withStyles,
+	Dialog,
+	IconButton,
+	Typography,
+	Snackbar
+} from '@material-ui/core';
+
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
-import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import CloseIcon from '@material-ui/icons/Close';
 
 export default function AddMembers(props) {
 	const { rowData, modal, setModal, member, setMembers } = props;
@@ -103,7 +106,7 @@ export default function AddMembers(props) {
 
 			<Snackbar
 				open={notif}
-				autoHideDuration={1000}
+				autoHideDuration={500}
 				onClose={handleClose}
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
 			>

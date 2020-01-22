@@ -20,13 +20,14 @@ import {
 export default function Signup(props) {
 	const classes = useStyles();
 
+	const [data, setData] = useState([]);
 	const [errors, setErrors] = useState({});
 	const [submit, setSubmit] = useState(false);
 	const { values, setValues, handleChange } = ManageForm();
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		setErrors(Validate(values));
+		setErrors(Validate(values, data, 'signup'));
 		setSubmit(true);
 	};
 
@@ -34,6 +35,16 @@ export default function Signup(props) {
 		if (localStorage.getItem('token')) {
 			props.history.push('/users');
 		}
+
+		axios
+			.get(`/api/users`)
+			.then(res => {
+				setData(res.data);
+			})
+			.catch(err => {
+				console.log(err);
+			});
+
 		const { firstname, lastname, username, email, password } = values;
 
 		if (Object.keys(errors).length === 0 && submit) {
