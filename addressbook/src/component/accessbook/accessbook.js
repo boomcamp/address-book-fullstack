@@ -152,7 +152,8 @@ export default class accessbook extends Component {
                         city: "",
                         state_or_province: "",
                         postal_code: "",
-                        country: ""
+                        country: "",
+                        isEmailValid: true
                     })
                     this.toggle();
                     this.notify();
@@ -168,7 +169,8 @@ export default class accessbook extends Component {
             ContactList: !this.state.ContactList,
             GroupList: !this.state.GroupList,
             ViewGroup: !this.state.ViewGroup,
-            ViewContact: !this.state.ViewContact
+            ViewContact: !this.state.ViewContact,
+            isEmailValid: true
         })
     }
     sortASC = () => {
