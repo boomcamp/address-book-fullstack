@@ -37,8 +37,8 @@
 
 ## Acknowledgements
 
-- [Stack Overflow]([https://stackoverflow.com/](https://stackoverflow.com/))
+- [Stack Overflow](https://stackoverflow.com/)
 - [Windows Visual Studio](https://code.visualstudio.com)
-- [Material UI]([https://material-ui.com/](https://material-ui.com/))
-- [MDB React]([https://mdbootstrap.com/](https://mdbootstrap.com/))
-- [MassiveJS]([https://massivejs.org/](https://massivejs.org/))
+- [Material UI](https://material-ui.com/)
+- [MDB React](https://mdbootstrap.com/)
+- [MassiveJS](https://massivejs.org/)
