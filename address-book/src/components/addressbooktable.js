@@ -4,9 +4,9 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Contact from "./new";
 import MaterialTable from "material-table";
-import { Grid,Snackbar } from "@material-ui/core";
+import { Grid, Snackbar } from "@material-ui/core";
 import GroupList from "./groupList";
-import {  withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -64,7 +64,6 @@ class Addressbooktable extends Component {
           field: "first_name",
 
           render: rowData => (
-            // console.log(rowdata)
             <span
               style={{
                 textDecoration: "none",
@@ -110,7 +109,6 @@ class Addressbooktable extends Component {
                     onClick={() => this.handleOpenModal({ item: { rowData } })}
                   />
                 </Tooltip>
-              
               </span>
 
               <span
@@ -186,8 +184,6 @@ class Addressbooktable extends Component {
         email: res.data.email,
         postal: res.data.postal_code
       });
-
-      // console.log(this.state.mobilephone)
     });
     this.setState({
       openModal: true,
@@ -208,7 +204,6 @@ class Addressbooktable extends Component {
   }
 
   handleGetid = item => {
-    console.log(item.item.rowData.contactid);
     localStorage.setItem("idDelete", item.item.rowData.contactid);
 
     this.handleOpen();
@@ -240,10 +235,6 @@ class Addressbooktable extends Component {
       });
   };
   setFields = event => {
-    // console.log(event.target)
-    // this.setState({
-    //   fname: event.target.value
-    // })
     var fieldname = event.target.name;
     var fieldError = fieldname + "Error";
     var value = event.target.value;
@@ -290,13 +281,12 @@ class Addressbooktable extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-            <Button onClick={this.handleClose} color="primary" autoFocus>
+              <Button onClick={this.handleClose} color="primary" autoFocus>
                 No
               </Button>
               <Button onClick={() => this.handleYes()} color="primary">
                 Yes
               </Button>
-          
             </DialogActions>
           </Dialog>
         </div>
@@ -378,28 +368,28 @@ class Addressbooktable extends Component {
         >
           <DialogTitle id="form-dialog-title">Edit Contact</DialogTitle>
           <EditContacts
-                  handleCloseModal={this.handleCloseModal}
-                  openModal={this.state.openModal}
-                  dataEdit={this.state.dataEdit}
-                  setFields={this.setFields}
-                  fname={this.state.fname}
-                  lname={this.state.lname}
-                  email={this.state.email}
-                  postal={this.state.postal}
-                  city={this.state.city}
-                  prov={this.state.prov}
-                  mobilephone={this.state.mobilephone}
-                  homephone={this.state.homephone}
-                  workphone={this.state.workphone}
-                  country={this.state.country}
-                  disabled={this.state.disabled}
-                  buttonChange={this.state.buttonChange}
-                  saveDisabled={this.state.saveDisabled}
-                  editButton={this.state.editButton}
-                  saveButton={this.state.saveButton}
-                  handleCancel={this.handleCancel}
-                  handleEdit={this.handleEdit}
-                />
+            handleCloseModal={this.handleCloseModal}
+            openModal={this.state.openModal}
+            dataEdit={this.state.dataEdit}
+            setFields={this.setFields}
+            fname={this.state.fname}
+            lname={this.state.lname}
+            email={this.state.email}
+            postal={this.state.postal}
+            city={this.state.city}
+            prov={this.state.prov}
+            mobilephone={this.state.mobilephone}
+            homephone={this.state.homephone}
+            workphone={this.state.workphone}
+            country={this.state.country}
+            disabled={this.state.disabled}
+            buttonChange={this.state.buttonChange}
+            saveDisabled={this.state.saveDisabled}
+            editButton={this.state.editButton}
+            saveButton={this.state.saveButton}
+            handleCancel={this.handleCancel}
+            handleEdit={this.handleEdit}
+          />
         </Dialog>
       </React.Fragment>
     );

@@ -14,7 +14,6 @@ function createContact(req, res) {
     postal_code,
     country
   } = req.body;
-  // console.log(req.body);
   db.contacts
     .insert(
       {
@@ -71,7 +70,6 @@ function contactList(req, res) {
       res.status(200).json(data);
     });
   } else {
-    console.log(groups)
     db.query(
       `select * from contacts INNER JOIN address_book on contacts.id = address_book.contactid where address_book.userid = ${userId} and address_book.groupid = ${groups}`
     ).then(data => {

@@ -5,12 +5,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import PermIdentity from "@material-ui/icons/PermIdentity";
 import Lock from "@material-ui/icons/Lock";
 import Icon from "@material-ui/core/Icon";
-import {
-  TextField,
-  Grid,
-  Button,
-  Snackbar,
-} from "@material-ui/core";
+import { TextField, Grid, Button, Snackbar } from "@material-ui/core";
 import axios from "axios";
 const useStyles = makeStyles(theme => ({}));
 class Login extends Component {
@@ -80,20 +75,19 @@ class Login extends Component {
           localStorage.setItem("id", res.data.id);
           this.props.history.push("/register");
         } else if (res.data.error === "Incorrect Password") {
-          // console.log(res.data.error)
           this.handleOpenSnackbar("Incorrect password ", "#9a0707");
           this.setState({
             icon: "error"
           });
         } else if (res.data.error === "Incorrect Password") {
           this.handleOpenSnackbar("Incorrect password ", "#9a0707");
-          console.log(res.data.error);
+
           this.setState({
             icon: "error"
           });
         } else {
           this.handleOpenSnackbar("Incorrect Username ", "#9a0707");
-          console.log(res.data.error);
+
           this.setState({
             icon: "error"
           });
@@ -137,85 +131,86 @@ class Login extends Component {
             <Grid
               container
               style={{
-                display: 'flex',
-                justifyContent: 'center'
+                display: "flex",
+                justifyContent: "center"
               }}
             >
-              <Grid item
-               lg={3}
-               md={12}
-                style={{padding: 15, border: 'solid 1px #eee'}}   
+              <Grid
+                item
+                lg={3}
+                md={12}
+                style={{ padding: 15, border: "solid 1px #eee" }}
               >
-              <h1>Log in</h1>
+                <h1>Log in</h1>
 
-              <TextField
-                variant="outlined"
-                fullWidth
-                label="Username"
-                required
-                id="standard-required"
-                className={classes.textField}
-                type="text"
-                autoComplete="email"
-                margin="normal"
-                name="uname"
-                // error={this.state.error}
-                onChange={e => {
-                  this.handleChange(e);
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PermIdentity style={{ color: "grey" }} />
-                    </InputAdornment>
-                  )
-                }}
-              />
-
-              <TextField
-                variant="outlined"
-                fullWidth
-                label="Password"
-                required
-                id="filled-password-input"
-                className={classes.textField}
-                type="password"
-                margin="normal"
-                name="pword"
-                onChange={e => {
-                  this.handleChange(e);
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Lock style={{ color: "grey" }} />
-                    </InputAdornment>
-                  )
-                }}
-              />
-
-              <div style={{ marginTop: 20 }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
+                <TextField
+                  variant="outlined"
                   fullWidth
-                >
-                  Sign In
-                </Button>
-                &emsp;
-                <Link style={{ textDecoration: "none" }} to="/register">
+                  label="Username"
+                  required
+                  id="standard-required"
+                  className={classes.textField}
+                  type="text"
+                  autoComplete="email"
+                  margin="normal"
+                  name="uname"
+                  // error={this.state.error}
+                  onChange={e => {
+                    this.handleChange(e);
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PermIdentity style={{ color: "grey" }} />
+                      </InputAdornment>
+                    )
+                  }}
+                />
+
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  label="Password"
+                  required
+                  id="filled-password-input"
+                  className={classes.textField}
+                  type="password"
+                  margin="normal"
+                  name="pword"
+                  onChange={e => {
+                    this.handleChange(e);
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Lock style={{ color: "grey" }} />
+                      </InputAdornment>
+                    )
+                  }}
+                />
+
+                <div style={{ marginTop: 20 }}>
                   <Button
                     variant="contained"
-                    color="secondary"
-                    type="button"
+                    color="primary"
+                    type="submit"
                     fullWidth
                   >
-                    Register
+                    Sign In
                   </Button>
-                </Link>
-              </div>
-            </Grid>
+                  &emsp;
+                  <Link style={{ textDecoration: "none" }} to="/register">
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      type="button"
+                      fullWidth
+                    >
+                      Register
+                    </Button>
+                  </Link>
+                </div>
+              </Grid>
             </Grid>
           </div>
         </form>

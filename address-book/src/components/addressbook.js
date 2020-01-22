@@ -115,7 +115,7 @@ class Addressbook extends Component {
     }, ()=> {
       this.getAll()
     })
-    console.log(this.state.query)
+  
    
   }
 

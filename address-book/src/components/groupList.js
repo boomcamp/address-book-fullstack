@@ -189,11 +189,7 @@ class GroupList extends Component {
     this.setState({ open: false });
   };
 
-  handleAddToGroups = e => {
-    console.log(e.target.value);
-  };
   setValue = e => {
-    console.log(e);
 
     this.setState({
       selectValue: e
@@ -206,10 +202,12 @@ class GroupList extends Component {
   };
 
   handleAdd = () => {
-    console.log(this.state.idArray);
 
     if (this.state.idArray.length <= 0) {
-      console.log("No selected");
+       this.handleOpenSnackbar("No Selected", "#9a0707");
+      this.setState({
+        icon: "error"
+      });
     } else {
       this.state.idArray.map(item => {
         const idLocal = localStorage.getItem("id");
@@ -267,7 +265,6 @@ class GroupList extends Component {
     });
   };
   setFields = event => {
-    console.log(event);
     var value = event.target.value;
     this.setState({
       groupEdit: value
