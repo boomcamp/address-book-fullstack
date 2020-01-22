@@ -10,10 +10,6 @@ import {
   Grid,
   Button,
   Snackbar,
-  Typography,
-  Toolbar,
-  IconButton,
-  AppBar
 } from "@material-ui/core";
 import axios from "axios";
 const useStyles = makeStyles(theme => ({}));
@@ -140,14 +136,16 @@ class Login extends Component {
           >
             <Grid
               container
-              lg={3}
-              md={12}
-              direction="column"
               style={{
-                border: "solid 1px #eee",
-                padding: 15
+                display: 'flex',
+                justifyContent: 'center'
               }}
             >
+              <Grid item
+               lg={3}
+               md={12}
+                style={{padding: 15, border: 'solid 1px #eee'}}   
+              >
               <h1>Log in</h1>
 
               <TextField
@@ -217,6 +215,7 @@ class Login extends Component {
                   </Button>
                 </Link>
               </div>
+            </Grid>
             </Grid>
           </div>
         </form>

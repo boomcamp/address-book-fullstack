@@ -4,9 +4,9 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Contact from "./new";
 import MaterialTable from "material-table";
-import { Grid, IconButton } from "@material-ui/core";
+import { Grid,Snackbar } from "@material-ui/core";
 import GroupList from "./groupList";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import {  withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -18,7 +18,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import EditContacts from "./modal/editContacts";
 import Tooltip from "@material-ui/core/Tooltip";
-import GroupIcon from "@material-ui/icons/Group";
+import Icon from "@material-ui/core/Icon";
 const styles = {
   main: {
     ["@media (max-width:640px)"]: {
@@ -33,6 +33,9 @@ class Addressbooktable extends Component {
     super(props);
 
     this.state = {
+      snackbarState: false,
+      snackbarMessage: "",
+      icon: "",
       tempData: [],
       disabled: true,
       buttonChange: "Edit",
@@ -131,6 +134,16 @@ class Addressbooktable extends Component {
       ]
     };
   }
+  handleCloseSnackbar = () => {
+    this.setState({ snackbarState: false, snackbarMessage: "" });
+  };
+  handleOpenSnackbar = (message, color) => {
+    this.setState({
+      snackbarState: true,
+      snackbarMessage: message,
+      backgroundColor: color ? color : ""
+    });
+  };
   handleEdit = () => {
     this.setState({
       disabled: false,
@@ -219,8 +232,10 @@ class Addressbooktable extends Component {
       .then(res => {
         localStorage.removeItem("idDelete");
         this.props.getAll();
+        this.handleOpenSnackbar("Successfully Delete", "Darkgreen");
         this.setState({
-          open: false
+          open: false,
+          icon: "check"
         });
       });
   };
@@ -241,6 +256,26 @@ class Addressbooktable extends Component {
     const { classes } = this.props;
     return (
       <React.Fragment>
+        <Snackbar
+          ContentProps={{
+            style: {
+              backgroundColor: this.state.backgroundColor
+            }
+          }}
+          open={this.state.snackbarState}
+          message={
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <Icon style={{ marginRight: 5 }}>{this.state.icon}</Icon>
+              {this.state.snackbarMessage}
+            </span>
+          }
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right"
+          }}
+          autoHideDuration={2000}
+          onClose={this.handleCloseSnackbar}
+        />
         <div>
           <Dialog
             open={this.state.open}

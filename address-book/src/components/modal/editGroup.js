@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import {
-  Dialog,
   DialogActions,
-  DialogTitle,
   TextField,
   DialogContent,
   Button,
@@ -60,7 +58,7 @@ export default class EditGroup extends Component {
               Edit
             </Button>
             <Button
-              type="submit"
+              onClick={() => this.props.handleSave()}
               style={{ display: `${this.props.saveButton}` }}
               disabled={this.props.saveDisabled}
               color="primary"

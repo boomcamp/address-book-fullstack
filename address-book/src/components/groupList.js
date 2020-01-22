@@ -23,6 +23,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Confrimation from "./modal/confirmation";
 import Icon from "@material-ui/core/Icon";
 import CancelIcon from "@material-ui/icons/Cancel";
+import { withStyles } from "@material-ui/core/styles";
 import {
   Dialog,
   DialogActions,
@@ -33,8 +34,14 @@ import {
 } from "@material-ui/core";
 import EditGroup from "./modal/editGroup";
 import DeleteGroups from "./modal/deletegroups";
-
-export default class GroupList extends Component {
+const styles = {
+  iconDisplay: {
+    "@media (max-width: 366px)": {
+      display: "none"
+    }
+  }
+};
+class GroupList extends Component {
   constructor(props) {
     super(props);
 
@@ -58,7 +65,8 @@ export default class GroupList extends Component {
       openDelete: false,
       snackbarState: false,
       snackbarMessage: "",
-      icon: ""
+      icon: "",
+      iconDisplay: ""
     };
   }
   handleCloseSnackbar = () => {
@@ -79,8 +87,7 @@ export default class GroupList extends Component {
     });
     this.handleCloseEditGroup();
   };
-  handleSave = (e) => {
-    e.preventDefault()
+  handleSave = e => {
     const name = localStorage.getItem("name");
     if (name === this.state.groupEdit) {
       this.handleOpenSnackbar("The Same Group Name", "#9a0707");
@@ -94,35 +101,36 @@ export default class GroupList extends Component {
         editButton: "none",
         saveButton: "flex"
       });
+      this.handleCancelGroups();
+      this.handleSelect();
       localStorage.removeItem("idGroup");
       localStorage.removeItem("name");
     } else {
       const idGroup = localStorage.getItem("idGroup");
       const id = localStorage.getItem("id");
-      axios.patch(`/editgroup/${id}/${idGroup}`, {
-        group_name: this.state.groupEdit
-      })
-     .then(res => {
-        localStorage.removeItem("idGroup");
-        localStorage.removeItem("name");
-        this.handleOpenSnackbar("Successfully Edit", "Darkgreen");
-        this.handleCancelGroups()
-        this.setState({
-          icon: "check",
-          groupEdit: "",
-          disabled: false,
-          saveDisabled: false,
-          editButton: "none",
-          saveButton: "flex",
-          
+      axios
+        .patch(`/editgroup/${id}/${idGroup}`, {
+          group_name: this.state.groupEdit
         })
-      });
-      
+        .then(res => {
+          localStorage.removeItem("idGroup");
+          localStorage.removeItem("name");
+          this.handleOpenSnackbar("Successfully Edit", "Darkgreen");
+          this.handleSelect();
+          this.handleCancelGroups();
+          this.setState({
+            icon: "check",
+            disabled: true,
+            saveDisabled: false,
+            editButton: "flex",
+            saveButton: "none"
+          });
+        });
+
       this.handleSelect();
     }
   };
   handleEditGroup = () => {
- 
     this.setState({
       disabled: false,
       saveDisabled: false,
@@ -205,7 +213,7 @@ export default class GroupList extends Component {
     } else {
       this.state.idArray.map(item => {
         const idLocal = localStorage.getItem("id");
-        axios
+        return axios
           .patch(`/addressbook/addtogroup/${idLocal}/${item.id}`, {
             groupid: this.state.currentGroupId
           })
@@ -234,8 +242,10 @@ export default class GroupList extends Component {
     const iD = localStorage.getItem("idRemove");
     axios.patch(`/addressbook/removeToGroup/${iD}`).then(res => {
       axios.get(`/addressbook/${userid}?groups=${id}`).then(resdata => {
+        this.handleOpenSnackbar("Successfully Remove", "Darkgreen");
         this.setState({
-          bygroups: resdata.data
+          bygroups: resdata.data,
+          icon:"check"
         });
         this.handleCloseMods();
       });
@@ -258,7 +268,6 @@ export default class GroupList extends Component {
   };
   setFields = event => {
     console.log(event);
-    var fieldname = event.target.name;
     var value = event.target.value;
     this.setState({
       groupEdit: value
@@ -281,21 +290,30 @@ export default class GroupList extends Component {
     const groupid = localStorage.getItem("delete");
     if (this.state.bygroups.length === 0) {
       axios.delete(`/deleteGroups/${id}/${groupid}`).then(res => {
-        window.location.reload();
+        this.handleSelect();
         this.handleCloseDelete();
+        this.handleOpenSnackbar("Successfully Delete", "Darkgreen");
+        this.setState({
+          icon: "check"
+        });
       });
     } else {
       axios.patch(`/updateToNull/${id}/${groupid}`).then(res => {
         axios.delete(`/deleteGroups/${id}/${groupid}`).then(resdata => {
-          window.location.reload();
+          this.handleSelect();
           this.handleCloseDelete();
+          this.handleOpenSnackbar("Successfully Delete", "Darkgreen");
+          this.setState({
+            icon: "check"
+          });
         });
       });
     }
   };
   render() {
+    const { classes } = this.props;
     return (
-      <React.Fragment>
+      <div className={classes.root}>
         <Snackbar
           ContentProps={{
             style: {
@@ -332,8 +350,8 @@ export default class GroupList extends Component {
           >
             {this.state.list.map(group => (
               <List key={group.id}>
-                <ListItem>
-                  <ListItemAvatar>
+                <ListItem key={group.id}>
+                  <ListItemAvatar className={classes.iconDisplay}>
                     <Avatar>
                       <GroupIcon />
                     </Avatar>
@@ -467,7 +485,7 @@ export default class GroupList extends Component {
             >
               {this.state.bygroups.map(list => {
                 return (
-                  <Grid item style={{ margin: 30 }} lg={3}>
+                  <Grid key={list.id} item style={{ margin: 30 }} lg={3}>
                     <Card>
                       <CardContent>
                         <Typography
@@ -548,7 +566,8 @@ export default class GroupList extends Component {
             handleYesDelete={this.handleYesDelete}
           />
         </Dialog>
-      </React.Fragment>
+      </div>
     );
   }
 }
+export default withStyles(styles)(GroupList);

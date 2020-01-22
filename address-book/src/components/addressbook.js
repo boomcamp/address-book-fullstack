@@ -5,9 +5,7 @@ import Search from "./search";
 
 import RecentActorsIcon from "@material-ui/icons/RecentActors";
 import {
-  TextField,
   Grid,
-  Button,
   Snackbar,
   Typography,
   Toolbar,
@@ -16,18 +14,10 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import MenuIcon from "@material-ui/icons/Menu";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import ExitToApp from "@material-ui/icons/ExitToApp";
 import Tooltip from "@material-ui/core/Tooltip";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import PeopleOutline from "@material-ui/icons/PeopleOutline";
-import InputAdornment from "@material-ui/core/InputAdornment";
 
 const useStyles = makeStyles(theme => ({
   root: {

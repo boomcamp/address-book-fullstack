@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import Box from "@material-ui/core/Box";
 import Tooltip from "@material-ui/core/Tooltip";
-import { IconButton, TextField, Grid, Button,Snackbar } from "@material-ui/core";
+import { IconButton,Snackbar } from "@material-ui/core";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import axios from "axios";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Groups from "./modal/newGroups";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import Contacts from "./modal/newContacts";
@@ -67,7 +66,7 @@ export default class New extends Component {
     });
   };
   handleOpenModal = e => {
-    if (e == 1) {
+    if (e === 1) {
       this.setState({
         openModal: true
       });
@@ -84,7 +83,6 @@ export default class New extends Component {
   };
 
   render() {
-    const { classes } = this.props;
     return (
       <React.Fragment>
          <Snackbar

@@ -75,7 +75,7 @@ class Register extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    if (this.state.pword == this.state.cpword) {
+    if (this.state.pword === this.state.cpword) {
       axios
         .post("/users", {
           firstname: this.state.fname,
@@ -173,166 +173,175 @@ class Register extends Component {
           >
             <Grid
               container
-              lg={3}
-              md={12}
-              direction="column"
               style={{
-                border: "solid 1px #eee",
-                padding: 15
+           
+                display: "flex",
+                justifyContent: "center"
               }}
             >
-              <h1>Registration</h1>
-              <TextField
-                required
-                id="standard-required"
-                label={
-                  this.state.fnameError ? "Required FirstName" : "FirstName"
-                }
-                error={this.state.fnameError}
-                className={classes.textField}
-                margin="normal"
-                type="text"
-                name="fname"
-                value={this.state.fname}
-                onChange={e => {
-                  this.setFields(e);
+              <Grid
+                item
+                lg={3}
+                md={12}
+ 
+                style={{
+                  border: "solid 1px #eee",
+                  padding: 15
                 }}
-                required
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PersonAddIcon style={{ color: "grey" }} />
-                    </InputAdornment>
-                  )
-                }}
-              />
-              <TextField
-                required
-                id="standard-required"
-                label={this.state.lnameError ? "Required LastName" : "LastName"}
-                error={this.state.lnameError}
-                className={classes.textField}
-                margin="normal"
-                type="text"
-                name="lname"
-                value={this.state.lname}
-                onChange={e => {
-                  this.setFields(e);
-                }}
-                required
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PersonAddIcon style={{ color: "grey" }} />
-                    </InputAdornment>
-                  )
-                }}
-              />
+              >
+                <h1>Registration</h1>
+                <TextField
+                fullWidth
+             
+                  label={
+                    this.state.fnameError ? "Required FirstName" : "FirstName"
+                  }
+                  error={this.state.fnameError}
+                  className={classes.textField}
+                  margin="normal"
+                  type="text"
+                  name="fname"
+                  value={this.state.fname}
+                  onChange={e => {
+                    this.setFields(e);
+                  }}
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonAddIcon style={{ color: "grey" }} />
+                      </InputAdornment>
+                    )
+                  }}
+                />
+                <TextField
+                fullWidth
+               
+                  label={
+                    this.state.lnameError ? "Required LastName" : "LastName"
+                  }
+                  error={this.state.lnameError}
+                  className={classes.textField}
+                  margin="normal"
+                  type="text"
+                  name="lname"
+                  value={this.state.lname}
+                  onChange={e => {
+                    this.setFields(e);
+                  }}
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonAddIcon style={{ color: "grey" }} />
+                      </InputAdornment>
+                    )
+                  }}
+                />
 
-              <TextField
-                required
-                id="standard-required"
-                label={this.state.emailError ? "Required Email" : "Email"}
-                error={this.state.emailError}
-                className={classes.textField}
-                margin="normal"
-                type="email"
-                name="email"
-                value={this.state.email}
-                onChange={e => {
-                  this.setFields(e);
-                }}
-                required
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailIcon style={{ color: "grey" }} />
-                    </InputAdornment>
-                  )
-                }}
-              />
+                <TextField
+                fullWidth
+         
+                  label={this.state.emailError ? "Required Email" : "Email"}
+                  error={this.state.emailError}
+                  className={classes.textField}
+                  margin="normal"
+                  type="email"
+                  name="email"
+                  value={this.state.email}
+                  onChange={e => {
+                    this.setFields(e);
+                  }}
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailIcon style={{ color: "grey" }} />
+                      </InputAdornment>
+                    )
+                  }}
+                />
 
-              <TextField
-                required
-                id="standard-required"
-                label={this.state.unameError ? "Required Username" : "Username"}
-                error={this.state.unameError}
-                className={classes.textField}
-                margin="normal"
-                type="text"
-                name="uname"
-                value={this.state.uname}
-                label="Username"
-                onChange={e => {
-                  this.setFields(e);
-                }}
-                required
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PersonIcon style={{ color: "grey" }} />
-                    </InputAdornment>
-                  )
-                }}
-              />
-              <TextField
-                required
-                id="standard-required"
-                label={this.state.pwordError ? "Required Password" : "Password"}
-                error={this.state.pwordError}
-                className={classes.textField}
-                margin="normal"
-                type="password"
-                value={this.state.pword}
-                name="pword"
-                label="Password"
-                onChange={e => {
-                  this.setFields(e);
-                }}
-                required
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon style={{ color: "grey" }} />
-                    </InputAdornment>
-                  )
-                }}
-              />
+                <TextField
+                  label={
+                    this.state.unameError ? "Required Username" : "Username"
+                  }
+                  error={this.state.unameError}
+                  className={classes.textField}
+                  margin="normal"
+                  type="text"
+                  name="uname"
+                  value={this.state.uname}
+                  onChange={e => {
+                    this.setFields(e);
+                  }}
+                  fullWidth
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonIcon style={{ color: "grey" }} />
+                      </InputAdornment>
+                    )
+                  }}
+                />
+                <TextField
+                fullWidth
+                  label={
+                    this.state.pwordError ? "Required Password" : "Password"
+                  }
+                  error={this.state.pwordError}
+                  className={classes.textField}
+                  margin="normal"
+                  type="password"
+                  value={this.state.pword}
+                  name="pword"
+                  onChange={e => {
+                    this.setFields(e);
+                  }}
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon style={{ color: "grey" }} />
+                      </InputAdornment>
+                    )
+                  }}
+                />
 
-              <TextField
-                required
-                id="standard-required"
-                label={
-                  this.state.cpwordError
-                    ? "Required Confirm Password"
-                    : "Confirm Password"
-                }
-                error={this.state.cpwordError}
-                className={classes.textField}
-                margin="normal"
-                type="password"
-                name="cpword"
-                label="Confirm Password"
-                value={this.state.cpword}
-                onChange={e => {
-                  this.setFields(e);
-                }}
-                required
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon style={{ color: "grey" }} />
-                    </InputAdornment>
-                  )
-                }}
-              />
+                <TextField
+                fullWidth
+                  label={
+                    this.state.cpwordError
+                      ? "Required Confirm Password"
+                      : "Confirm Password"
+                  }
+                  error={this.state.cpwordError}
+                  className={classes.textField}
+                  margin="normal"
+                  type="password"
+                  name="cpword"
+                  value={this.state.cpword}
+                  onChange={e => {
+                    this.setFields(e);
+                  }}
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon style={{ color: "grey" }} />
+                      </InputAdornment>
+                    )
+                  }}
+                />
 
-              <Button variant="contained" color="primary" type="submit">
-                Register
-              </Button>
-              <Link style={{ textDecoration: "none" }} to={`/`}>
-                <p>Already have an account</p>
-              </Link>
+                <Button fullWidth variant="contained" color="primary" type="submit">
+                  Register
+                </Button>
+                <Link style={{ textDecoration: "none", textAlign: 'center' }} to={`/`}>
+                  <p>Already have an account</p>
+                </Link>
+              </Grid>
             </Grid>
           </div>
         </form>

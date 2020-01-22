@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import {
-  Dialog,
   DialogActions,
   DialogTitle,
-  TextField,
-  DialogContent,
   Button
 } from "@material-ui/core";
 export default class Confirmation extends Component {

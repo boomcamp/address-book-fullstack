@@ -1,27 +1,11 @@
 import React, { Component } from "react";
-import Box from "@material-ui/core/Box";
-import Tooltip from "@material-ui/core/Tooltip";
-import {
-  IconButton,
-  TextField,
-  Grid,
-  Button,
-  Snackbar
-} from "@material-ui/core";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import { TextField, Grid, Button, Snackbar } from "@material-ui/core";
 import Icon from "@material-ui/core/Icon";
-import Table from "../addressbooktable";
-import Search from "../search";
-import RecentActorsIcon from "@material-ui/icons/RecentActors";
-import {} from "@material-ui/core";
 import axios from "axios";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import PersonIcon from "@material-ui/icons/Person";
 import EmailIcon from "@material-ui/icons/Email";
@@ -132,9 +116,8 @@ export default class NewContacts extends Component {
   };
 
   render() {
-    const { openModal, handleCloseModal, handleOpenModal } = this.props;
-    const { classes } = this.props;
-    // console.log(this.props);
+    const { openModal, handleCloseModal } = this.props;
+
     return (
       <React.Fragment>
         <Snackbar
@@ -179,7 +162,7 @@ export default class NewContacts extends Component {
                 alignItems="center"
               >
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={
                     this.state.fnameError ? "Required FirstName" : "FirstName"
@@ -202,7 +185,7 @@ export default class NewContacts extends Component {
                   }}
                 />
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={
                     this.state.lnameError ? "Required LastName" : "LastName"
@@ -275,7 +258,7 @@ export default class NewContacts extends Component {
                 />
 
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={this.state.emailError ? "Required email" : "email"}
                   error={this.state.emailError}
@@ -305,7 +288,7 @@ export default class NewContacts extends Component {
                 alignItems="center"
               >
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={this.state.cityError ? "Required city" : "city"}
                   error={this.state.cityError}
@@ -328,7 +311,7 @@ export default class NewContacts extends Component {
                 />
 
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={
                     this.state.stateOrProvinceError
@@ -362,7 +345,7 @@ export default class NewContacts extends Component {
                 alignItems="center"
               >
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={
                     this.state.postalcodeError
@@ -388,7 +371,7 @@ export default class NewContacts extends Component {
                   }}
                 />
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={
                     this.state.countryError ? "Required  Country" : "Country"

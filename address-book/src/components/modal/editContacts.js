@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { TextField, Grid, Button } from "@material-ui/core";
 import axios from "axios";
-import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import PersonIcon from "@material-ui/icons/Person";
 import EmailIcon from "@material-ui/icons/Email";
@@ -39,7 +37,6 @@ export default class EditContacts extends Component {
   };
 
   render() {
-    const { openModal, handleCloseModal, dataEdit } = this.props;
     return (
       <React.Fragment>
      
@@ -75,7 +72,7 @@ export default class EditContacts extends Component {
                   onChange={e => {
                     this.props.setFields(e);
                   }}
-                  required
+                  
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -85,7 +82,7 @@ export default class EditContacts extends Component {
                   }}
                 />
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={
                     this.state.last_nameError ? "Required LastName" : "LastName"
@@ -117,7 +114,7 @@ export default class EditContacts extends Component {
                 alignItems="center"
               >
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label="Mobile Phone"
                   margin="normal"
@@ -139,7 +136,7 @@ export default class EditContacts extends Component {
                 />
 
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label="Work Phone"
                   margin="normal"
@@ -168,7 +165,7 @@ export default class EditContacts extends Component {
                 alignItems="center"
               >
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label="Home Phone"
                   margin="normal"
@@ -190,7 +187,7 @@ export default class EditContacts extends Component {
                 />
 
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={this.state.emailError ? "Required email" : "email"}
                   error={this.state.emailError}
@@ -220,7 +217,7 @@ export default class EditContacts extends Component {
                 alignItems="center"
               >
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={this.state.cityError ? "Required city" : "city"}
                   error={this.state.cityError}
@@ -243,7 +240,7 @@ export default class EditContacts extends Component {
                 />
 
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={
                     this.state.state_or_provinceError
@@ -277,7 +274,7 @@ export default class EditContacts extends Component {
                 alignItems="center"
               >
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={
                     this.state.postal_codeError
@@ -303,7 +300,7 @@ export default class EditContacts extends Component {
                   }}
                 />
                 <TextField
-                  required
+                  
                   id="standard-required"
                   label={
                     this.state.countryError ? "Required  Country" : "Country"
