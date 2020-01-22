@@ -61,7 +61,7 @@ export default function AddGroupModal({
         `http://localhost:3001/group/create`,
         {
           userid: match.params.id,
-          groupname: group
+          groupname: group[0].toUpperCase() + group.slice(1)
         },
         headers
       )
@@ -69,6 +69,7 @@ export default function AddGroupModal({
         alert("Group Created");
         setOpen({ ...open, group: false });
         setGroups([...groups, res.data]);
+        setGroup("");
       })
       .catch(error => {
         console.log(error);

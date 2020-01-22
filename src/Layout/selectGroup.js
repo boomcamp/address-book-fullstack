@@ -51,7 +51,7 @@ export default function GroupedContact({
     axios
       .get(`http://localhost:3001/group/list/${match.params.id}`, headers)
       .then(res => {
-        setGroups(res.data.groups);
+        setGroups(res.data);
       })
       .catch(error => {
         try {

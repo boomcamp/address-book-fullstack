@@ -119,8 +119,8 @@ export default function Registration(props) {
     e.preventDefault();
     axios
       .post(`http://localhost:3001/signup`, {
-        fname: user.fname,
-        lname: user.lname,
+        fname: user.fname[0].toUpperCase() + user.fname.slice(1),
+        lname: user.lname[0].toUpperCase() + user.lname.slice(1),
         username: user.username,
         email: user.email,
         password: user.password

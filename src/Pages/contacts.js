@@ -13,8 +13,11 @@ import Paper from "@material-ui/core/Paper";
 import Delete from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Remove from "@material-ui/icons/HighlightOff";
+import Grid from "@material-ui/core/Grid";
+
 import Axios from "axios";
 import * as ls from "local-storage";
+
 import Layout from "../Layout/layout";
 import EditContactModal from "../Modal/editContact";
 import DeleteContactModal from "../Modal/deleteContact";
@@ -76,7 +79,6 @@ export default function Contacts({ match, history }) {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -179,10 +181,11 @@ export default function Contacts({ match, history }) {
                       align="center"
                       style={{ cursor: "pointer" }}
                     >
-                      {row.first_name}
+                      {row.first_name[0].toUpperCase() +
+                        row.first_name.slice(1)}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.last_name}
+                      {row.last_name[0].toUpperCase() + row.last_name.slice(1)}
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {row.mobile_phone}

@@ -29,7 +29,7 @@ module.exports = {
     const db = req.app.get("db");
     db.groups
       .find({ userid: req.params.id })
-      .then(group => res.status(200).json({ groups: group }))
+      .then(group => res.status(200).json(group))
       .catch(err => {
         console.error(err);
         res.status(500).end();
@@ -39,10 +39,10 @@ module.exports = {
     const db = req.app.get("db");
     const { groupid, contactid } = req.body;
     db.grouplist
-      .findOne({ contactid })
+      .findOne({ groupid, contactid })
       .then(data => {
         if (data) {
-          throw new Error("Contacts already added");
+          throw new Error("Already added to Group");
         }
         return db.grouplist
           .insert({
@@ -53,9 +53,10 @@ module.exports = {
           .catch(() => res.status(500).end());
       })
       .catch(err => {
-        if ("Contacts already added".includes(err.message)) {
+        if ("Already added to Group".includes(err.message)) {
           res.status(400).json({ error: err.message });
         } else {
+          console.error(err);
           res.status(500).end();
         }
       });

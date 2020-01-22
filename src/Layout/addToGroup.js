@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -7,8 +7,8 @@ import axios from "axios";
 
 const ITEM_HEIGHT = 48;
 
-export default function AddToGroup({ headers, match, idContact, groups }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+export default function AddToGroup({ headers, groups, idContact }) {
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   const handleClick = event => {
@@ -19,7 +19,7 @@ export default function AddToGroup({ headers, match, idContact, groups }) {
     setAnchorEl(null);
   };
 
-  const handleAdd = id => {
+  const handleAdd = (id, name) => {
     setAnchorEl(null);
     axios
       .post(
@@ -30,7 +30,16 @@ export default function AddToGroup({ headers, match, idContact, groups }) {
         },
         headers
       )
-      .then(() => alert("Added"));
+      .then(() =>
+        alert(`Added to Group ${name[0].toUpperCase() + name.slice(1)}`)
+      )
+      .catch(error => {
+        try {
+          alert(error.response.data.error);
+        } catch {
+          console.log(error);
+        }
+      });
   };
 
   return (
@@ -43,6 +52,7 @@ export default function AddToGroup({ headers, match, idContact, groups }) {
       >
         <GroupAddIcon style={{ color: "black" }} />
       </IconButton>
+
       <Menu
         id="long-menu"
         anchorEl={anchorEl}
@@ -60,7 +70,10 @@ export default function AddToGroup({ headers, match, idContact, groups }) {
           <MenuItem key={groups.length}>No Group/s Added</MenuItem>
         ) : (
           groups.map((group, i) => (
-            <MenuItem key={i} onClick={() => handleAdd(group.id)}>
+            <MenuItem
+              key={i}
+              onClick={() => handleAdd(group.id, group.groupname)}
+            >
               {group.groupname}
             </MenuItem>
           ))

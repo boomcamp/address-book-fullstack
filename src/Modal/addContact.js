@@ -123,6 +123,18 @@ export default function AddContactModal({
         setOpen({ ...open, contact: false });
         setRows([...rows, res.data]);
         setAll([...all, res.data]);
+        setContact({
+          first_name: "",
+          last_name: "",
+          home_phone: "",
+          mobile_phone: "",
+          work_phone: "",
+          email: "",
+          city: "",
+          state_or_province: "",
+          postal_code: "",
+          country: ""
+        });
       })
       .catch(error => {
         console.log(error);
