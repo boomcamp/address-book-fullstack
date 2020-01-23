@@ -1,0 +1,17 @@
+.register-form {
+  padding:50px;
+  background-color:white;
+  box-shadow: 2px 0px 10px 2px gray;
+}
+
+.register-form-button {
+  width: 100%;
+}
+.register-container{
+  background:white;  
+  align-items: center;
+  margin-top:20px;
+  display: flex;
+  justify-content: center;
+  flex-direction:column
+}

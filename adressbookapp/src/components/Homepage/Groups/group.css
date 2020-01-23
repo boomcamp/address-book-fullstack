@@ -1,0 +1,18 @@
+.root{
+  flex-grow: 1,
+}
+.paper{
+  padding: theme-spacing(2);
+  text-align: center;
+  color: theme-palette-text-secondary;
+}
+.cardGroups{
+  display: flex;
+  padding: 10px;
+  margin: 20px;
+  flex-wrap: wrap;
+  flex-direction: row;
+  box-shadow: 0px 0px 0px 0px;
+}
+
+

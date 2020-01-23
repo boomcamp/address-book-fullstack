@@ -1,0 +1,33 @@
+.example-input .ant-input {
+  width: 205px;
+}
+.example-input{
+  padding-left: 20px
+}
+.selectContacts{
+  width: 100px; 
+  float: right;
+   margin-right: 10px
+}
+.searchContacts{
+  width: 200px; 
+  float: right;
+}
+@media screen and (max-width: 375px) {
+  .selectContacts{
+    width: 80px; 
+  }
+  .searchContacts{
+    width: 150px; 
+    float: right;
+  }
+}
+@media screen and (max-width: 320px) {
+  .selectContacts{
+    width: 80px; 
+  }
+  .searchContacts{
+    width: 120px; 
+    float: right;
+  }
+}

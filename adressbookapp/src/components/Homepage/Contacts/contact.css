@@ -1,0 +1,64 @@
+.root{
+  flex-grow: 1,
+}
+.paper{
+  padding: theme-spacing(2);
+  text-align: center;
+  color: theme-palette-text-secondary;
+}
+.card{
+  display: flex;
+  padding: 10px;
+  margin: 20px;
+  flex-wrap: no-wrap;
+  flex-direction: row;
+  box-shadow: 0px 0px 0px 0px;
+}
+
+.displayCard{
+  width: 240px; 
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+@media screen and (max-width: 320px) {
+  .displayCard{
+    width: 100px;
+    margin-bottom: 10px;
+    margin-right:70px;
+  }
+  .card{
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 375px) {
+  .displayCard{
+    width: 200px; 
+    margin-right: 10px; 
+    margin-bottom: 10px;
+  }
+}
+@media screen and (max-width: 425px) {
+  .displayCard{
+    width: 370px; 
+    margin-right: 10px; 
+    margin-bottom: 10px;
+  }
+  .card{
+    flex-direction: column;
+  }
+
+}
+@media screen and (max-width: 768px) {
+  .displayCard{
+    width: 310px; 
+    margin-right: 10px; 
+    margin-bottom: 10px;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .displayCard{
+    width: 240px; 
+    margin-right: 10px; 
+    margin-bottom: 10px;
+  }
+}
