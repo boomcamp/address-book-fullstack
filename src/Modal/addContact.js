@@ -345,15 +345,23 @@ export default function AddContactModal({
                     />
                   </Grid>
                 </Grid>
-                <Button
-                  style={{ cursor: "pointer" }}
-                  onClick={e => addContact(e)}
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
                 >
-                  Add
-                </Button>
+                  <Button
+                    style={{ cursor: "pointer", width: 130 }}
+                    onClick={e => addContact(e)}
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                  >
+                    Add
+                  </Button>
+                </div>
               </form>
             </div>
           </Container>

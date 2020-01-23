@@ -210,7 +210,9 @@ export default function Layout(props) {
                     ls.clear();
                   }}
                 >
-                  <LogOut />
+                  <Tooltip title="Log Out">
+                    <LogOut />
+                  </Tooltip>
                 </IconButton>
               </Link>
             </div>

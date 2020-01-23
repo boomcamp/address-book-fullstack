@@ -131,15 +131,23 @@ export default function AddGroupModal({
                     value={group}
                     onChange={handleInput}
                   />
-                  <Button
-                    style={{ cursor: "pointer" }}
-                    onClick={e => addGroup(e)}
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}
                   >
-                    Add
-                  </Button>
+                    <Button
+                      style={{ cursor: "pointer", width: 130 }}
+                      onClick={e => addGroup(e)}
+                      variant="contained"
+                      color="primary"
+                      className={classes.submit}
+                    >
+                      Add
+                    </Button>
+                  </div>
                 </Grid>
               </form>
             </div>
