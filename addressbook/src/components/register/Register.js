@@ -18,6 +18,9 @@ import { useForm } from "react-hook-form";
 export const Register = props => {
   const { handleOnChange, registrationData, setRedirect } = props.data;
   const { register, handleSubmit, errors, setError, clearError } = useForm();
+  React.useEffect(() => {
+    setError("disableBtn", "notMatch", "disabled");
+  }, []);
 
   const handleRegister = () => {
     const data = registrationData;
@@ -151,6 +154,7 @@ export const Register = props => {
                   "Password don't match!"
                 );
               }
+              clearError("disableBtn");
               clearError("confirmPassword");
             }}
             name="confirmPassword"
@@ -169,7 +173,9 @@ export const Register = props => {
             <Link to="/" style={decoration} onClick={() => setRedirect(true)}>
               <span>Sign in instead</span>
             </Link>
-            <Button type="submit">Sign Up</Button>
+            <Button type="submit" disabled={!!errors.disableBtn}>
+              Sign Up
+            </Button>
           </Box>
         </form>
       </RegisterCont>
