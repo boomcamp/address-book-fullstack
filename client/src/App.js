@@ -297,7 +297,7 @@ export default class App extends Component {
       user_id: localStorage.getItem("userId"),
       group_name: this.state.groupName
     };
-    return this.state.group_name
+    return this.state.groupName
       ? axios
           .post("http://localhost:4001/groups/create", Obj, {
             headers: {
@@ -307,7 +307,8 @@ export default class App extends Component {
           .then(() => {
             this.setState({
               isLoading: true,
-              isModal: false
+              isModal: false,
+              groupName: null
             });
             toast.success(`Group has been Successfully Added`);
           })
@@ -389,7 +390,8 @@ export default class App extends Component {
           .then(() => {
             this.setState({
               isLoading: true,
-              isModal: false
+              isModal: false,
+              fname: null
             });
             toast.success(`Contact has been Successfully Added`);
           })
