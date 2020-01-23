@@ -105,6 +105,12 @@ class GroupList extends Component {
       this.handleSelect();
       localStorage.removeItem("idGroup");
       localStorage.removeItem("name");
+    
+    } else if(this.state.groupEdit ===""){
+      this.handleOpenSnackbar("Empty", "#9a0707");
+      this.setState({
+        icon: "error"
+      });
     } else {
       const idGroup = localStorage.getItem("idGroup");
       const id = localStorage.getItem("id");
