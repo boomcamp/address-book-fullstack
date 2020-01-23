@@ -81,12 +81,14 @@ export const Register = props => {
             onChange={e => {
               handleOnChange("register", e.target);
               if (!usernameRegex.test(e.target.value)) {
+                setError("disableBtn", "notMatch", "disabled");
                 return setError(
                   "username",
                   "notMatch",
                   "Must have at least 6 Alpha-Numeric characters!"
                 );
               }
+              clearError("disableBtn");
               clearError("username");
             }}
             name="username"
@@ -105,8 +107,10 @@ export const Register = props => {
             onChange={e => {
               handleOnChange("register", e.target);
               if (!emailRegex.test(e.target.value)) {
+                setError("disableBtn", "notMatch", "disabled");
                 return setError("email", "notMatch", "Email must be valid!");
               }
+              clearError("disableBtn");
               clearError("email");
             }}
             name="email"
@@ -124,12 +128,14 @@ export const Register = props => {
             onChange={e => {
               handleOnChange("register", e.target);
               if (e.target.value.length < 6) {
+                setError("disableBtn", "notMatch", "disabled");
                 return setError(
                   "password",
                   "notMatch",
                   "Must have at least 6 character"
                 );
               }
+              clearError("disableBtn");
               clearError("password");
             }}
             name="password"
@@ -148,6 +154,7 @@ export const Register = props => {
             onChange={e => {
               handleOnChange("register", e.target);
               if (!(registrationData.password === e.target.value)) {
+                setError("disableBtn", "notMatch", "disabled");
                 return setError(
                   "confirmPassword",
                   "notMatch",
