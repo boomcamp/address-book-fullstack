@@ -18,6 +18,7 @@
 .displayCard{
   width: 240px; 
   margin-bottom: 10px;
+  margin-right: 10px;
 }
 @media screen and (max-width: 320px) {
   .displayCard{
