@@ -71,7 +71,9 @@ export default class App extends React.Component {
     };
     axios
       .post("http://localhost:4005/register", inputs)
-      .then(() => {})
+      .then(() => {
+      this.setState({ success: true });
+    })
       .catch(err => {
         console.log(err);
         try {
