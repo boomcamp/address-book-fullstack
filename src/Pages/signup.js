@@ -156,7 +156,6 @@ export default function Registration(props) {
                 value={user.fname}
                 id="firstName"
                 label="First Name"
-                autoFocus
                 onBlur={e => requiredData(e)}
                 onChange={handleInput}
                 error={err.fname.required}
