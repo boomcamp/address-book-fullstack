@@ -34,7 +34,7 @@ massive({
     //delete contact //ok
     app.delete('/api/contact/:id', contacts.deleteContact);
     //list all contacts not in group //ok
-    app.get('/api/group/:id/not_in_group', groups.listContactsNotInGroup);
+    app.get('/api/:userID/group/:id/not_in_group', groups.listContactsNotInGroup);
     //list all contacts in group //ok
     app.get('/api/group/:id/contacts', groups.listContacts);
     //list all groups //ok

@@ -81,7 +81,6 @@ module.exports = {
         // newContact.push(groupMembers[index]);
         db.groups_members.insert({ groupID: id, abID: groupMembers[index]})
         .then(contact => newContact.push(contact))
-        console.log(index+1)
         if(groupMembers.length === Number(index)+1){
           res.status(201).send(newContact);
         }
@@ -137,9 +136,9 @@ module.exports = {
   },
   listContactsNotInGroup: (req, res) => {
     const db = req.app.get("db");
-    const { id } = req.params;
+    const { userID, id } = req.params;
 
-    db.query(`SELECT DISTINCT * FROM address_book as ab WHERE NOT EXISTS(SELECT * FROM groups_members as gm WHERE ab."abID" = gm."abID" AND gm."groupID" = ${id})`)
+    db.query(`SELECT DISTINCT * FROM address_book as ab WHERE NOT EXISTS(SELECT * FROM groups_members as gm WHERE ab."abID" = gm."abID" AND gm."groupID" = ${id}) AND ab."userID" = ${userID}`)
     .then(contacts => {
       res.status(200).send(contacts);
     })

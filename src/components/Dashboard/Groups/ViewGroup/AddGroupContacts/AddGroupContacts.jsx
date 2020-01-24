@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function AddGroupContacts({data, fetchGroupMembers}) {
+function AddGroupContacts({data, fetchGroupMembers, }) {
 
   const classes = useStyles();
 
@@ -38,10 +38,12 @@ function AddGroupContacts({data, fetchGroupMembers}) {
 
   const [members, setMembers] = useState([]);
 
+  const sessionid = localStorage.getItem('sessionid');
+
   const fetchContactsFn = () => {
     axios({
       method: 'get',
-      url: `http://localhost:3002/api/group/${data.groupID}/not_in_group`
+      url: `http://localhost:3002/api/${sessionid}/group/${data.groupID}/not_in_group`
     })
     .then(response => {
       setContacts(response.data);

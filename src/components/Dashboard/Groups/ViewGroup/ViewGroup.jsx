@@ -71,7 +71,7 @@ function ViewGroup({ data, fetchGroupsFn, deleteNotif }) {
   }, [])
 
   const [editName, setEditName] = useState(false);
-  const [newGroupName, setNewGroupName] = useState('');
+  const [newGroupName, setNewGroupName] = useState(data.groupName);
 
   const nameHandleChange = (e) => {
     setNewGroupName(e.target.value);
@@ -92,7 +92,7 @@ function ViewGroup({ data, fetchGroupsFn, deleteNotif }) {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true
-      });
+      }); 
       setEditName(false);
       fetchGroupsFn();
     })
