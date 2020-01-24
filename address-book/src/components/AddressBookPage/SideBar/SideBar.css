@@ -1,0 +1,114 @@
+* {
+  box-sizing: content-box;
+}
+
+.header-menu-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: #004c8b;
+  color: white;
+}
+
+.tabs-container {
+  background: #004c8b;
+  padding: 5px;
+  /* width: 200px; */
+  font-size: 0.8em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  height: 28px;
+  border-right: 1px #00569c solid;
+}
+
+.tabs-container:hover {
+  background: #44c4ff;
+}
+
+.active-tab {
+  background: #03a9f4;
+}
+
+.container-close {
+  height: 100%;
+  width: 15px;
+  background: #ffffff;
+  position: absolute;
+  right: 0%;
+  cursor: pointer;
+  color: rgb(155, 155, 155);
+  z-index: 51;
+  border-left: 1px solid rgb(218, 218, 218);
+}
+
+.container-close:hover {
+  color: rgb(87, 87, 87);
+  background: #fff8f8;
+}
+
+.close-icon {
+  position: relative;
+  top: 45%;
+  padding: 4px;
+}
+
+.form-contact-container {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background: white;
+  z-index: 100;
+}
+
+.header-add-fx {
+  width: 100%;
+  height: 20px;
+  background: #03a9f4;
+  z-index: 50;
+  position: absolute;
+}
+
+.groups-contact {
+  position: absolute;
+  width: 100%;
+  background: white;
+  z-index: 100;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
+}
+
+/* tablets */
+@media only screen and (min-width: 600px) {
+  .form-contact-container {
+    position: absolute;
+    width: 500px;
+    height: 100vh;
+    background: white;
+    z-index: 100;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  .groups-contact {
+    width: 350px;
+  }
+}
+
+/* Desktop */
+@media only screen and (min-width: 768px) {
+  .form-contact-container {
+    position: absolute;
+    width: 750px;
+    height: 100vh;
+    background: white;
+    z-index: 100;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  .groups-contact {
+    width: 500px;
+  }
+}
