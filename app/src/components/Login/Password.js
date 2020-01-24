@@ -30,7 +30,7 @@ export default function LoginPage({ handleLogin, prevStep, handleChange, warn, h
     };
 
     return (
-        <Grid container className={classes.root}>
+        <Grid container className={classes.root} style={{ minWidth: 370 }}>
             <ToastContainer enableMulticontainer />
             <Grid item xs={12} sm={6} md={4} lg={3}>
                 <Card className={classes.card}>
