@@ -74,7 +74,7 @@ export const ContactDetails = props => {
           <Label>Home Phone:</Label>
           <Span>
             <Phone style={icon} />
-            {rowData.homme_phone ? rowData.homme_phone : "N/A"}
+            {rowData.home_phone ? rowData.home_phone : "N/A"}
           </Span>
         </Row>
         <Row>
