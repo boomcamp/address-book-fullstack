@@ -135,6 +135,16 @@ export const Register = props => {
                   "Must have at least 6 character"
                 );
               }
+
+              if (!(registrationData.confirmPassword === e.target.value)) {
+                setError("disableBtn", "notMatch", "disabled");
+                return setError(
+                  "password",
+                  "notMatch",
+                  "Password don't match!"
+                );
+              }
+              clearError("confirmPassword");
               clearError("disableBtn");
               clearError("password");
             }}
@@ -163,6 +173,7 @@ export const Register = props => {
               }
               clearError("disableBtn");
               clearError("confirmPassword");
+              clearError("password");
             }}
             name="confirmPassword"
             variant="outlined"
