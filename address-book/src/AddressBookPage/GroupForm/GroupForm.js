@@ -302,7 +302,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   textfields: {
-    width: "300px",
+    width: '1000px',
     margin: "10px"
   },
   chip: {
