@@ -27,6 +27,7 @@ export default function MainPage() {
 
   const setTableData = data => {
     setInit(true);
+    setState(null);
     console.log(data.data);
     setTableState(data.data);
   };
